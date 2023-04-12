@@ -8,11 +8,15 @@ ClientGame::ClientGame(void)
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
 
+    //Create packet and store data (Packet type for now)
     Packet packet;
     packet.packet_type = INIT_CONNECTION;
 
+
+    //Converts into sendable bytes
     packet.serialize(packet_data);
 
+    //Send the bytes
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 
 }
@@ -33,6 +37,8 @@ void ClientGame::sendActionPackets()
 
 void ClientGame::update()
 {
+
+    //Recieve raw data into network data
     Packet packet;
     int data_length = network->receivePackets(network_data);
 

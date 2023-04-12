@@ -117,6 +117,19 @@ int ServerNetwork::receiveData(unsigned int client_id, char* recvbuf)
             printf("Connection closed\n");
             closesocket(currentSocket);
         }
+
+
+        //Change later if things break
+        else if (iResult == WSAECONNRESET) {
+            printf("Connection reset\n");
+            closesocket(currentSocket);
+        }
+
+        //Change later if things break
+        else if (iResult == WSAECONNABORTED) {
+            printf("Connection aborted\n");
+            closesocket(currentSocket);
+        }
         return iResult;
     }
     return 0;
