@@ -6,9 +6,8 @@ class ClientGame
 {
 
 public:
-    char network_data[MAX_PACKET_SIZE];
 
-
+    ServertoClientData incomingData;
     ClientGame();
     ~ClientGame(void);
 
@@ -16,7 +15,7 @@ public:
 
     void sendActionPackets();
 
-
+    int recieveData();
 
     void update();
 };

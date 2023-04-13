@@ -98,7 +98,6 @@ bool ServerNetwork::acceptNewClient(unsigned int& id)
 
         // insert new client into session id table
         sessions.insert(pair<unsigned int, SOCKET>(id, ClientSocket));
-
         return true;
     }
 
@@ -135,6 +134,38 @@ int ServerNetwork::receiveData(unsigned int client_id, char* recvbuf)
     return 0;
 }
 
+int ServerNetwork::receiveDeserialize(vector<ClienttoServerData>& incomingDataList)
+{
+    Packet<ClienttoServerData> packet;
+
+    // go through all clients
+    std::map<unsigned int, SOCKET>::iterator iter;
+
+    for (iter = sessions.begin(); iter != sessions.end(); iter++)
+    {
+        int data_length = receiveData(iter->first, network_data);
+
+
+        if (data_length <= 0)
+        {
+            //no data recieved
+            continue;
+        }
+
+        int i = 0;
+        while (i < (unsigned int)data_length)
+        {
+            packet.deserialize(&(network_data[i]));
+            i += sizeof(Packet<ClienttoServerData>);
+
+            incomingDataList.push_back(ClienttoServerData{ packet.data });
+
+            //printf("error in packet types at server, incorrect type: %u\n", packet.data.data);
+        }
+    }
+    return 0;
+}
+
 // send data to all clients
 void ServerNetwork::sendToAll(char* packets, int totalSize)
 {
@@ -153,4 +184,20 @@ void ServerNetwork::sendToAll(char* packets, int totalSize)
             closesocket(currentSocket);
         }
     }
+}
+
+void ServerNetwork::sendActionPackets()
+{
+    // send action packet
+    const unsigned int packet_size = sizeof(Packet<ServertoClientData>);
+    char packet_data[packet_size];
+
+    Packet<ServertoClientData> packet;
+    packet.packet_type = ACTION_EVENT;
+
+    packet.data = ServertoClientData{ ACTION_EVENT };
+
+    packet.serialize(packet_data);
+
+    sendToAll(packet_data, packet_size);
 }

@@ -108,3 +108,60 @@ int ClientNetwork::receivePackets(char* recvbuf)
 
     return iResult;
 }
+
+int ClientNetwork::initConnection()
+{
+
+    // send init packet
+    const unsigned int packet_size = sizeof(Packet<ClienttoServerData>);
+    char packet_data[packet_size];
+
+    //Create packet and store data (Packet type for now)
+    Packet<ClienttoServerData> packet;
+    packet.packet_type = INIT_CONNECTION;
+    packet.data = ClienttoServerData{ INIT_CONNECTION };
+
+
+    //Converts into sendable bytes
+    packet.serialize(packet_data);
+
+    //Send the bytes
+    return NetworkServices::sendMessage(this->ConnectSocket, packet_data, packet_size);
+}
+
+int ClientNetwork::recieveDeserialize(ServertoClientData & incomingData)
+{
+    Packet<ServertoClientData> packet;
+
+    int data_length = receivePackets(network_data);
+
+    if (data_length <= 0)
+    {
+        //no data recieved
+        return 0;
+    }
+
+    int i = 0;
+    while (i < (unsigned int)data_length)
+    {
+        packet.deserialize(&(network_data[i]));
+        incomingData = packet.data;
+        i += sizeof(Packet<ServertoClientData>);
+    }
+    return 0;
+}
+
+
+void ClientNetwork::sendActionPackets()
+{
+    // send action packet
+    const unsigned int packet_size = sizeof(Packet<ClienttoServerData>);
+    char packet_data[packet_size];
+
+    Packet<ClienttoServerData> packet;
+    packet.packet_type = ACTION_EVENT;
+    packet.data = ClienttoServerData{ ACTION_EVENT };
+    packet.serialize(packet_data);
+
+    NetworkServices::sendMessage(ConnectSocket, packet_data, packet_size);
+}

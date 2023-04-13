@@ -2,73 +2,53 @@
 
 ClientGame::ClientGame(void)
 {
+
+    //Network Initializatio
     network = new ClientNetwork();
+    network->initConnection();
 
-    // send init packet
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
-
-    //Create packet and store data (Packet type for now)
-    Packet packet;
-    packet.packet_type = INIT_CONNECTION;
-
-
-    //Converts into sendable bytes
-    packet.serialize(packet_data);
-
-    //Send the bytes
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
-
+    //TODO Game Initialization
 }
 
-void ClientGame::sendActionPackets()
+
+
+
+//Converts from network's data to gamedata
+int ClientGame::recieveData()
 {
-    // send action packet
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
-
-    Packet packet;
-    packet.packet_type = ACTION_EVENT;
-
-    packet.serialize(packet_data);
-
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+    network->recieveDeserialize(incomingData);
+    return 0;
 }
 
 void ClientGame::update()
 {
+    //TODO Render
 
-    //Recieve raw data into network data
-    Packet packet;
-    int data_length = network->receivePackets(network_data);
 
-    if (data_length <= 0)
-    {
-        //no data recieved
-        return;
+
+    //Recieve Data
+    //Recieve incoming server data into gamestate
+    recieveData();
+
+    //TODO Get and send Inputs
+
+
+    //Send Data to Server
+    switch (incomingData.data) {
+
+    case ACTION_EVENT:
+
+        printf("client received action event packet from server\n");
+
+        network->sendActionPackets();
+
+        break;
+
+    default:
+
+        //printf("error in packet types at client, incorrect type: %u\n", incomingData.data);
+
+        break;
     }
-
-    int i = 0;
-    while (i < (unsigned int)data_length)
-    {
-        packet.deserialize(&(network_data[i]));
-        i += sizeof(Packet);
-
-        switch (packet.packet_type) {
-
-        case ACTION_EVENT:
-
-            printf("client received action event packet from server\n");
-
-            sendActionPackets();
-
-            break;
-
-        default:
-
-            printf("error in packet types\n");
-
-            break;
-        }
-    }
+    
 }

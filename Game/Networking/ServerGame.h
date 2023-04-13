@@ -1,10 +1,13 @@
 #pragma once
 #include "ServerNetwork.h"
+#include <vector>
 
 class ServerGame
 {
 
 public:
+
+    vector<ClienttoServerData> incomingDataList;
 
     ServerGame(void);
     ~ServerGame(void);
@@ -12,8 +15,6 @@ public:
     void receiveFromClients();
 
     void update();
-
-    void sendActionPackets();
 private:
 
     // IDs for the clients connecting for table in ServerNetwork 
@@ -22,6 +23,4 @@ private:
     // The ServerNetwork object 
     ServerNetwork* network;
 
-    // data buffer
-    char network_data[MAX_PACKET_SIZE];
 };

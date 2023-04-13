@@ -37,9 +37,9 @@ void serverLoop(void* arg)
 
 void clientLoop()
 {
+    
     while (true)
     {
-        
         //do game stuff
        client1->update();
        client2->update();
@@ -47,4 +47,5 @@ void clientLoop()
        client4->update();
        
     }
+    
 }

@@ -21,6 +21,10 @@ class ClientNetwork
 
 public:
 
+    char network_data[MAX_PACKET_SIZE];
+
+    //OutgoingDataServer network_data;
+
     // for error checking function calls in Winsock library
     int iResult;
 
@@ -32,4 +36,10 @@ public:
     ~ClientNetwork(void);
 
     int receivePackets(char *);
+
+    int initConnection();
+
+    int recieveDeserialize(ServertoClientData & incomingData);
+
+    void sendActionPackets();
 };
