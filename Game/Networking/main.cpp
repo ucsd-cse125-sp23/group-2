@@ -7,8 +7,10 @@ void serverLoop(void*);
 void clientLoop(void);
 
 ServerGame* server;
-ClientGame* client;
-
+ClientGame* client1;
+ClientGame* client2;
+ClientGame* client3;
+ClientGame* client4;
 int main()
 {
 
@@ -17,8 +19,11 @@ int main()
     // create thread with arbitrary argument for the run function
     _beginthread(serverLoop, 0, (void*)12);
 
-    // initialize the client
-    client = new ClientGame();
+    // initialize the clients
+    client1 = new ClientGame();
+    client2 = new ClientGame();
+    client3 = new ClientGame();
+    client4 = new ClientGame();
     clientLoop();
 }
 
@@ -34,7 +39,12 @@ void clientLoop()
 {
     while (true)
     {
+        
         //do game stuff
-       client->update();
+       client1->update();
+       client2->update();
+       client3->update();
+       client4->update();
+       
     }
 }

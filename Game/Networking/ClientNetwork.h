@@ -9,8 +9,6 @@
 
 // size of our buffer
 #define DEFAULT_BUFLEN 512
-// port to connect sockets through 
-#define DEFAULT_PORT "6881"
 // Server IP
 #define SERVER_IP "127.0.0.1"
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
