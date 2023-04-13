@@ -24,7 +24,11 @@ void ServerGame::update()
         client_id++;
     }
 
+    //Receve Input
     receiveFromClients();
+
+    //Step Game
+
 }
 
 void ServerGame::receiveFromClients()

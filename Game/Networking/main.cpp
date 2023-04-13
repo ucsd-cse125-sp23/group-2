@@ -1,8 +1,18 @@
 #include "ServerGame.h"
 #include "ClientGame.h"
+#include <chrono>
+#include <ctime>    
 // used for multi-threading
 #include <process.h>
+#include <thread>
+#define TICKRATE 20
 
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <unistd.h>
+#endif
+  
 void serverLoop(void*);
 void clientLoop(void);
 
@@ -29,9 +39,21 @@ int main()
 
 void serverLoop(void* arg)
 {
+    std::chrono::duration<double> ticklength = 1s / TICKRATE;
     while (true)
     {
+        auto start = std::chrono::system_clock::now();
+        // Some computation here
         server->update();
+        auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed = end - start;
+        std::chrono::duration<double> sleeptime = ticklength - (start - end);
+        if (sleeptime > 0s) {
+            std::this_thread::sleep_for(sleeptime);
+        }
+        else {
+            printf("server update took too long!\n");
+        }
     }
 }
 
