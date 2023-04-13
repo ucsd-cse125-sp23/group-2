@@ -1,44 +1,11 @@
 #include "ClientGame.h"
 
-GLFWwindow* createWindow()
-{
-    glewExperimental = true;
-
-    if (!glfwInit()) {
-        fprintf(stderr, "Failed to initialize GLFW\n");
-    }
-
-    glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    GLFWwindow* window;
-    window = glfwCreateWindow(1024, 768, "HelloWorld", NULL, NULL);
-    if (window == NULL) {
-        fprintf(stderr, "Failed to open GLFW window");
-        glfwTerminate();
-    }
-
-    glfwMakeContextCurrent(window);
-    glewExperimental = true;
-    if (glewInit() != GLEW_OK) {
-        fprintf(stderr, "Failed to initialize GLEW\n");
-    }
-
-    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-
-    return window;
-}
-
 ClientGame::ClientGame(void)
 {
 
     //Network Initializatio
     network = new ClientNetwork();
     network->initConnection();
-    window = createWindow();
 
     //TODO Game Initialization
 }
