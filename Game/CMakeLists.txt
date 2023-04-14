@@ -11,6 +11,10 @@ set(
     src/NetworkServices.cpp
     src/ServerGame.cpp
     src/ServerNetwork.cpp
+    src/graphics/Camera.cpp
+    src/graphics/GameWindow.cpp
+    src/graphics/Player.cpp
+    src/graphics/Shader.cpp
 )
 
 # Add header files
@@ -22,6 +26,11 @@ set(
     src/NetworkServices.h
     src/ServerGame.h
     src/ServerNetwork.h
+    src/graphics/Camera.h
+    src/graphics/core.h
+    src/graphics/GameWindow.h
+    src/graphics/Player.h
+    src/graphics/Shader.h
 )
 
 # Require GL
