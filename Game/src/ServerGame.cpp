@@ -28,7 +28,33 @@ void ServerGame::update()
     receiveFromClients();
 
     //Step Game
+    step();
 
+    //Send Data to Clients
+    ServertoClientData newPackage;
+    packageData(newPackage);
+    //std::cout << newPackage.moveForward << "\n";
+    network->sendActionPackets(newPackage);
+}
+
+void ServerGame::step()
+{
+    glm::vec3 translation(0, 0, 0);
+
+    while (!incomingDataList.empty()) {
+        ClienttoServerData in = incomingDataList.front();
+        if (in.moveForward)
+            translation.z += -.02;
+        if (in.moveLeft)
+            translation.x += -.02;
+        if (in.moveBack)
+            translation.z += .02;
+        if (in.moveRight)
+            translation.x += .02;
+        incomingDataList.pop();
+    }
+
+    gameState.playerTranslation = translation;
 }
 
 void ServerGame::receiveFromClients()
@@ -36,33 +62,11 @@ void ServerGame::receiveFromClients()
 
     network->receiveDeserialize(incomingDataList);
 
-    for (ClienttoServerData in : incomingDataList) {
-        switch (in.data) {
+}
 
-        case INIT_CONNECTION:
-
-            printf("server received init packet from client\n");
-
-            network->sendActionPackets();
-
-            break;
-
-        case ACTION_EVENT:
-
-            printf("server received action event packet from client\n");
-
-            network->sendActionPackets();
-
-            break;
-
-        default:
-
-            printf("error in packet types at server, incorrect type: %u\n", in.data);
-
-            break;
-        }
-    }
-
+void ServerGame::packageData(ServertoClientData& data)
+{
+    data = gameState;
 }
 
 

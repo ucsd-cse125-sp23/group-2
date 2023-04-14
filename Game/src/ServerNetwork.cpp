@@ -105,7 +105,7 @@ bool ServerNetwork::acceptNewClient(unsigned int& id)
 }
 
 // recieve incoming data
-int ServerNetwork::receiveDeserialize(vector<ClienttoServerData>& incomingDataList)
+int ServerNetwork::receiveDeserialize(queue<ClienttoServerData>& incomingDataList)
 {
     Packet<ClienttoServerData> packet;
 
@@ -129,7 +129,7 @@ int ServerNetwork::receiveDeserialize(vector<ClienttoServerData>& incomingDataLi
             packet.deserialize(&(network_data[i]));
             i += sizeof(Packet<ClienttoServerData>);
 
-            incomingDataList.push_back(ClienttoServerData{ packet.data });
+            incomingDataList.push(ClienttoServerData{ packet.data });
 
             //printf("error in packet types at server, incorrect type: %u\n", packet.data.data);
         }

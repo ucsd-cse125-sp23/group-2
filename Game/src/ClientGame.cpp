@@ -60,7 +60,7 @@ void ClientGame::update()
     network->sendActionPackets(newPackage);
 
     //pass through ServertoClientData
-    gameWindow->update(movement(newPackage));
+    gameWindow->update(incomingData);
     
 }
 
@@ -69,6 +69,10 @@ void ClientGame::packageData(ClienttoServerData& data) {
     data.moveBack = moveBack;
     data.moveLeft = moveLeft;
     data.moveRight = moveRight;
+    moveForward = false;
+    moveBack = false;
+    moveLeft = false;
+    moveRight = false;
 }
 void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {

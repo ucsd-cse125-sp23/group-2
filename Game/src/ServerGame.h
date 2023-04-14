@@ -1,20 +1,28 @@
 #pragma once
 #include "ServerNetwork.h"
 #include <vector>
+#include <queue>
+
 
 class ServerGame
 {
 
 public:
 
-    vector<ClienttoServerData> incomingDataList;
+    queue<ClienttoServerData> incomingDataList;
+
+    ServertoClientData gameState;
 
     ServerGame(void);
     ~ServerGame(void);
 
     void receiveFromClients();
 
+    void packageData(ServertoClientData& data);
+
     void update();
+
+    void step();
 private:
 
     // IDs for the clients connecting for table in ServerNetwork 

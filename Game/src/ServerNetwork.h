@@ -6,6 +6,7 @@
 #include <map>
 #include "NetworkData.h"
 #include<vector>
+#include<queue>
 using namespace std;
 #pragma comment (lib, "Ws2_32.lib")
 #define DEFAULT_BUFLEN 512
@@ -43,7 +44,7 @@ public:
     bool acceptNewClient(unsigned int& id);
 
     // receive incoming data
-    int receiveDeserialize(vector<ClienttoServerData>& incomingDataList);
+    int receiveDeserialize(queue<ClienttoServerData>& incomingDataList);
     
     // send data to all clients
     void sendActionPackets(ServertoClientData & outgoingData);
