@@ -41,5 +41,5 @@ public:
 
     int recieveDeserialize(ServertoClientData & incomingData);
 
-    void sendActionPackets();
+    void sendActionPackets(ClienttoServerData & outgoingData);
 };

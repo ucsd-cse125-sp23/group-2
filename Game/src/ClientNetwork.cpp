@@ -152,7 +152,7 @@ int ClientNetwork::recieveDeserialize(ServertoClientData & incomingData)
 }
 
 
-void ClientNetwork::sendActionPackets()
+void ClientNetwork::sendActionPackets(ClienttoServerData& outgoingData)
 {
     // send action packet
     const unsigned int packet_size = sizeof(Packet<ClienttoServerData>);

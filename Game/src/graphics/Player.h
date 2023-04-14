@@ -20,6 +20,7 @@ public:
 
     void draw(const glm::mat4& viewProjMtx, GLuint shader);
     void update();
+    void update(glm::vec3 & translation);
 
     void spin(float deg);
 };

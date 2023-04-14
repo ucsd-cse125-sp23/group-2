@@ -3,6 +3,7 @@
 #include "core.h"
 #include "Camera.h"
 #include "Player.h"
+#include "../NetworkData.h"
 class GameWindow {
 private:
 	//Window Properties
@@ -31,9 +32,9 @@ public:
 	void resizeCallback(GLFWwindow* window, int width, int height);
 
 	// update and draw functions
-	void idleCallback();
+	void idleCallback(ServertoClientData&);
 	void displayCallback();
-	void update();
+	void update(ServertoClientData &);
 
 	// helper to reset camera
 	void resetCamera();

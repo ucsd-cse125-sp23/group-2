@@ -1,5 +1,6 @@
 #pragma once
 #include <string.h>
+#include "graphics/core.h"
 
 #define MAX_PACKET_SIZE 1000000
 
@@ -15,10 +16,12 @@ enum PacketTypes {
 
 struct ClienttoServerData {
     unsigned int data;
+    bool moveForward, moveBack, moveLeft, moveRight;
 };
 
 struct ServertoClientData {
     unsigned int data;
+    glm::vec3 playerTranslation;
 };
 
 //Packet wrapper for data sent across network, must define with

@@ -1,5 +1,9 @@
 #include "ClientGame.h"
 
+bool ClientGame::moveForward = 0;
+bool ClientGame::moveBack = 0;
+bool ClientGame::moveRight = 0;
+bool ClientGame::moveLeft = 0;
 
 ClientGame::ClientGame(void)
 {
@@ -11,6 +15,7 @@ ClientGame::ClientGame(void)
     //TODO Game Initialization
     gameWindow = new GameWindow(800, 600);
     gameWindow->setup();
+    setup_callbacks();
 }
 
 
@@ -21,6 +26,23 @@ int ClientGame::recieveData()
     return 0;
 }
 
+/*
+ServertoClientData movement(ClienttoServerData& data) {
+    glm::vec3 translation(0,0,0);
+    if (data.moveForward)
+        translation.z = -.02;
+    if (data.moveLeft)
+        translation.x = -.02;
+    if (data.moveBack)
+        translation.z = .02;
+    if (data.moveRight)
+        translation.x = .02;
+
+    ServertoClientData newPackage;
+    newPackage.playerTranslation = translation;
+    return newPackage;
+}
+*/
 void ClientGame::update()
 {
     //TODO Render
@@ -31,31 +53,61 @@ void ClientGame::update()
     //Recieve incoming server data into gamestate
     recieveData();
 
-    //TODO Get and send Inputs
-
-
     //Send Data to Server
-    switch (incomingData.data) {
+    ClienttoServerData newPackage;
+    packageData(newPackage);
+    //std::cout << newPackage.moveForward << "\n";
+    network->sendActionPackets(newPackage);
 
-    case ACTION_EVENT:
-
-        printf("client received action event packet from server\n");
-
-        network->sendActionPackets();
-
-        break;
-
-    default:
-
-        //printf("error in packet types at client, incorrect type: %u\n", incomingData.data);
-
-        break;
-    }
-
-    gameWindow->update();
+    //pass through ServertoClientData
+    gameWindow->update(movement(newPackage));
     
 }
 
-void ClientGame::setup_callbacks() {
+void ClientGame::packageData(ClienttoServerData& data) {
+    data.moveForward = moveForward;
+    data.moveBack = moveBack;
+    data.moveLeft = moveLeft;
+    data.moveRight = moveRight;
+}
+void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (action == GLFW_PRESS) {
+        switch (key) {
+        case GLFW_KEY_W:
+            moveForward = true;
+            break;
+        case GLFW_KEY_A:
+            moveLeft = true;
+            break;
+        case GLFW_KEY_S:
+            moveBack = true;
+            break;
+        case GLFW_KEY_D:
+            moveRight = true;
+            break;
+        default: break;
+        }
+    }
+    else if (action == GLFW_RELEASE) {
+        switch (key) {
+        case GLFW_KEY_W:
+            moveForward = false;
+            break;
+        case GLFW_KEY_A:
+            moveLeft = false;
+            break;
+        case GLFW_KEY_S:
+            moveBack = false;
+            break;
+        case GLFW_KEY_D:
+            moveRight = false;
+            break;
+        default: break;
+        }
+    }
+}
 
+void ClientGame::setup_callbacks() {
+    // Set the key callback.
+    glfwSetKeyCallback(gameWindow->window, ClientGame::keyCallback);
 }

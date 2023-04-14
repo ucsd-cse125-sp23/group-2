@@ -109,9 +109,9 @@ bool GameWindow::initializeObjects() {
     return true;
 }
 
-void GameWindow::idleCallback() {
+void GameWindow::idleCallback(ServertoClientData& incomingData) {
     cam->Update();
-    player->update();
+    player->update(incomingData.playerTranslation);
 }
 
 void GameWindow::displayCallback() {
@@ -120,9 +120,9 @@ void GameWindow::displayCallback() {
     glfwPollEvents();
     glfwSwapBuffers(window);
 }
-void GameWindow::update() {
+void GameWindow::update(ServertoClientData & incomingData) {
     displayCallback();
-    idleCallback();
+    idleCallback(incomingData);
 }
 
 // helper to reset the camera
