@@ -14,13 +14,13 @@ enum PacketTypes {
 
 };
 
+// Struct containing all data to be sent from client to server
 struct ClienttoServerData {
-    unsigned int data;
     bool moveForward, moveBack, moveLeft, moveRight;
 };
 
+// Struct containing all data to be sent from server to client
 struct ServertoClientData {
-    unsigned int data;
     glm::vec3 playerTranslation;
 };
 

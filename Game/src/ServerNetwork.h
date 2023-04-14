@@ -12,6 +12,11 @@ using namespace std;
 
 class ServerNetwork
 {
+private:
+    // receive incoming packets from clients
+    int receivePackets(unsigned int client_id, char* recvbuf);
+    // send packet to all clients
+    void sendToAll(char* packets, int totalSize);
 
 public:
 
@@ -38,11 +43,8 @@ public:
     bool acceptNewClient(unsigned int& id);
 
     // receive incoming data
-    int receiveData(unsigned int client_id, char* recvbuf);
-
     int receiveDeserialize(vector<ClienttoServerData>& incomingDataList);
+    
     // send data to all clients
-    void sendToAll(char* packets, int totalSize);
-
-    void sendActionPackets();
+    void sendActionPackets(ServertoClientData & outgoingData);
 };

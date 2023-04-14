@@ -151,7 +151,7 @@ int ClientNetwork::recieveDeserialize(ServertoClientData & incomingData)
     return 0;
 }
 
-
+// 
 void ClientNetwork::sendActionPackets(ClienttoServerData& outgoingData)
 {
     // send action packet
@@ -160,7 +160,7 @@ void ClientNetwork::sendActionPackets(ClienttoServerData& outgoingData)
 
     Packet<ClienttoServerData> packet;
     packet.packet_type = ACTION_EVENT;
-    packet.data = ClienttoServerData{ ACTION_EVENT };
+    packet.data = ClienttoServerData{outgoingData};
     packet.serialize(packet_data);
 
     NetworkServices::sendMessage(ConnectSocket, packet_data, packet_size);

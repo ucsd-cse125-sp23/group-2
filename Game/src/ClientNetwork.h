@@ -18,7 +18,9 @@
 
 class ClientNetwork
 {
-
+private: 
+    // receive incoming packets from server
+    int receivePackets(char*);
 public:
 
     char network_data[MAX_PACKET_SIZE];
@@ -35,11 +37,11 @@ public:
     ClientNetwork(void);
     ~ClientNetwork(void);
 
-    int receivePackets(char *);
-
     int initConnection();
 
+    // receive incoming data
     int recieveDeserialize(ServertoClientData & incomingData);
 
+    // send data to all server
     void sendActionPackets(ClienttoServerData & outgoingData);
 };
