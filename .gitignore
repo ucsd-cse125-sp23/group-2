@@ -19,6 +19,7 @@
 
 # Build results
 Game/Build/
+out/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
