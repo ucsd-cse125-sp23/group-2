@@ -26,23 +26,6 @@ int ClientGame::recieveData()
     return 0;
 }
 
-/*
-ServertoClientData movement(ClienttoServerData& data) {
-    glm::vec3 translation(0,0,0);
-    if (data.moveForward)
-        translation.z = -.02;
-    if (data.moveLeft)
-        translation.x = -.02;
-    if (data.moveBack)
-        translation.z = .02;
-    if (data.moveRight)
-        translation.x = .02;
-
-    ServertoClientData newPackage;
-    newPackage.playerTranslation = translation;
-    return newPackage;
-}
-*/
 void ClientGame::update()
 {
     //TODO Render
@@ -69,11 +52,8 @@ void ClientGame::packageData(ClienttoServerData& data) {
     data.moveBack = moveBack;
     data.moveLeft = moveLeft;
     data.moveRight = moveRight;
-    moveForward = false;
-    moveBack = false;
-    moveLeft = false;
-    moveRight = false;
 }
+
 void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         switch (key) {

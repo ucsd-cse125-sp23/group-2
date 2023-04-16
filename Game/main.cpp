@@ -5,7 +5,6 @@
 // used for multi-threading
 #include <process.h>
 #include <thread>
-#define TICKRATE 20
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -39,7 +38,7 @@ int main()
 
 void serverLoop(void* arg)
 {
-    std::chrono::duration<double> ticklength = 1s / TICKRATE;
+    std::chrono::duration<double> ticklength = 1s / TICK_RATE;
     while (true)
     {
         auto start = std::chrono::system_clock::now();

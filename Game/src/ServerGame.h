@@ -2,7 +2,7 @@
 #include "ServerNetwork.h"
 #include <vector>
 #include <queue>
-
+#define TICK_RATE 128
 
 class ServerGame
 {

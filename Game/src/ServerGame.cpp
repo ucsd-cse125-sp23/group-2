@@ -37,20 +37,22 @@ void ServerGame::update()
     network->sendActionPackets(newPackage);
 }
 
+// Speed of movement in units per second
+const float MOVE_SPEED = 1;
+const float MOVE_DELTA = (MOVE_SPEED / TICK_RATE);
 void ServerGame::step()
 {
     glm::vec3 translation(0, 0, 0);
-
     while (!incomingDataList.empty()) {
         ClienttoServerData in = incomingDataList.front();
         if (in.moveForward)
-            translation.z += -.02;
+            translation.z = -1 * MOVE_DELTA;
         if (in.moveLeft)
-            translation.x += -.02;
+            translation.x = -1 * MOVE_DELTA;
         if (in.moveBack)
-            translation.z += .02;
+            translation.z = MOVE_DELTA;
         if (in.moveRight)
-            translation.x += .02;
+            translation.x = MOVE_DELTA;
         incomingDataList.pop();
     }
 
