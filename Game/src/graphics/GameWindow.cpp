@@ -111,7 +111,7 @@ bool GameWindow::initializeObjects() {
 
 void GameWindow::idleCallback(ServertoClientData& incomingData) {
     cam->Update();
-    player->update(incomingData.playerTranslation);
+    player->update(incomingData.playerPosition);
 }
 
 void GameWindow::displayCallback() {

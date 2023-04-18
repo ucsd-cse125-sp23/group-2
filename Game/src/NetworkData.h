@@ -17,11 +17,15 @@ enum PacketTypes {
 // Struct containing all data to be sent from client to server
 struct ClienttoServerData {
     bool moveForward, moveBack, moveLeft, moveRight;
+
+    void print() {
+        printf("Moveforward: %d, Moveback: %d, MoveLeft: %d, MoveRIght: %d\n", moveForward, moveBack, moveLeft, moveRight);
+    }
 };
 
 // Struct containing all data to be sent from server to client
 struct ServertoClientData {
-    glm::vec3 playerTranslation;
+    glm::vec3 playerPosition;
 };
 
 //Packet wrapper for data sent across network, must define with

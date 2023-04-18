@@ -9,7 +9,7 @@ class ServerGame
 
 public:
 
-    queue<ClienttoServerData> incomingDataList;
+    queue<ClienttoServerData> incomingDataLists[NUM_CLIENTS];
 
     ServertoClientData gameState;
 
@@ -23,12 +23,12 @@ public:
     void update();
 
     void step();
-private:
 
-    // IDs for the clients connecting for table in ServerNetwork 
-    static unsigned int client_id;
+    void sendPackets();
+private:
 
     // The ServerNetwork object 
     ServerNetwork* network;
+
 
 };

@@ -156,9 +156,13 @@ void Player::update() {
     // Spin the cube
     spin(0.05f);
 }
-
+/*
 void Player::update(glm::vec3& translation) {
     model = model * glm::translate(translation);
+}
+*/
+void Player::update(glm::vec3& position) {
+    model[3] = glm::vec4(position, 1.0f);
 }
 
 void Player::spin(float deg) {

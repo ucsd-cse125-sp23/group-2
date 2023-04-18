@@ -8,9 +8,10 @@ ServerNetwork::ServerNetwork(void)
 
     // our sockets for the server
     ListenSocket = INVALID_SOCKET;
-    ClientSocket = INVALID_SOCKET;
 
-
+    for (int i = 0; i < NUM_CLIENTS; ++i) {
+        sessions[i] = INVALID_SOCKET;
+    }
 
     // address info for the server to listen to
     struct addrinfo* result = NULL;
@@ -85,10 +86,10 @@ ServerNetwork::ServerNetwork(void)
 }
 
 // accept new connections
-bool ServerNetwork::acceptNewClient(unsigned int& id)
+bool ServerNetwork::acceptNewClient()
 {
     // if client waiting, accept the connection and save the socket
-    ClientSocket = accept(ListenSocket, NULL, NULL);
+    SOCKET ClientSocket = accept(ListenSocket, NULL, NULL);
 
     if (ClientSocket != INVALID_SOCKET)
     {
@@ -96,42 +97,41 @@ bool ServerNetwork::acceptNewClient(unsigned int& id)
         char value = 1;
         setsockopt(ClientSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof(value));
 
-        // insert new client into session id table
-        sessions.insert(pair<unsigned int, SOCKET>(id, ClientSocket));
-        return true;
+        // insert new client into session id table (return false if full)
+        return (insertClient(ClientSocket) != NUM_CLIENTS);
     }
 
     return false;
 }
 
 // recieve incoming data
-int ServerNetwork::receiveDeserialize(queue<ClienttoServerData>& incomingDataList)
+int ServerNetwork::receiveDeserialize(queue<ClienttoServerData>(& incomingDataLists)[NUM_CLIENTS])
 {
     Packet<ClienttoServerData> packet;
 
-    // go through all clients
-    std::map<unsigned int, SOCKET>::iterator iter;
-
-    for (iter = sessions.begin(); iter != sessions.end(); iter++)
+    for (unsigned int i = 0; i < NUM_CLIENTS; ++i)
     {
-        int data_length = receivePackets(iter->first, network_data);
+
+        if (sessions[i] != INVALID_SOCKET) {
+            int data_length = receivePackets(i, network_data);
 
 
-        if (data_length <= 0)
-        {
-            //no data recieved
-            continue;
-        }
+            if (data_length <= 0)
+            {
+                //no data recieved
+                continue;
+            }
 
-        int i = 0;
-        while (i < (unsigned int)data_length)
-        {
-            packet.deserialize(&(network_data[i]));
-            i += sizeof(Packet<ClienttoServerData>);
+            int data_red = 0;
+            while (data_red < (unsigned int)data_length)
+            {
+                packet.deserialize(&(network_data[i]));
+                data_red += sizeof(Packet<ClienttoServerData>);
 
-            incomingDataList.push(ClienttoServerData{ packet.data });
+                incomingDataLists[i].push(ClienttoServerData{ packet.data });
 
-            //printf("error in packet types at server, incorrect type: %u\n", packet.data.data);
+                //printf("error in packet types at server, incorrect type: %u\n", packet.data.data);
+            }
         }
     }
     return 0;
@@ -140,7 +140,7 @@ int ServerNetwork::receiveDeserialize(queue<ClienttoServerData>& incomingDataLis
 // receive incoming packets from certain client
 int ServerNetwork::receivePackets(unsigned int client_id, char* recvbuf)
 {
-    if (sessions.find(client_id) != sessions.end())
+    if (client_id < NUM_CLIENTS)
     {
         SOCKET currentSocket = sessions[client_id];
         iResult = NetworkServices::receiveMessage(currentSocket, recvbuf, MAX_PACKET_SIZE);
@@ -148,6 +148,7 @@ int ServerNetwork::receivePackets(unsigned int client_id, char* recvbuf)
         {
             printf("Connection closed\n");
             closesocket(currentSocket);
+            sessions[client_id] = INVALID_SOCKET;
         }
 
 
@@ -155,12 +156,14 @@ int ServerNetwork::receivePackets(unsigned int client_id, char* recvbuf)
         else if (iResult == WSAECONNRESET) {
             printf("Connection reset\n");
             closesocket(currentSocket);
+            sessions[client_id] = INVALID_SOCKET;
         }
 
         //Change later if things break
         else if (iResult == WSAECONNABORTED) {
             printf("Connection aborted\n");
             closesocket(currentSocket);
+            sessions[client_id] = INVALID_SOCKET;
         }
         return iResult;
     }
@@ -188,18 +191,32 @@ void ServerNetwork::sendActionPackets(ServertoClientData & outgoingData)
 void ServerNetwork::sendToAll(char* packets, int totalSize)
 {
     SOCKET currentSocket;
-    std::map<unsigned int, SOCKET>::iterator iter;
     int iSendResult;
 
-    for (iter = sessions.begin(); iter != sessions.end(); iter++)
+    for (unsigned int i = 0; i < NUM_CLIENTS; ++i)
     {
-        currentSocket = iter->second;
-        iSendResult = NetworkServices::sendMessage(currentSocket, packets, totalSize);
+        currentSocket = sessions[i];
 
-        if (iSendResult == SOCKET_ERROR)
-        {
-            printf("send failed with error: %d\n", WSAGetLastError());
-            closesocket(currentSocket);
+        if (currentSocket != INVALID_SOCKET) {
+            iSendResult = NetworkServices::sendMessage(currentSocket, packets, totalSize);
+
+            if (iSendResult == SOCKET_ERROR)
+            {
+                printf("send failed with error: %d\n", WSAGetLastError());
+                closesocket(currentSocket);
+                sessions[i] = INVALID_SOCKET;
+            }
         }
     }
+}
+
+int ServerNetwork::insertClient(SOCKET & ClientSocket)
+{
+    for (int i = 0; i < NUM_CLIENTS; ++i) {
+        if (sessions[i] == INVALID_SOCKET) {
+            sessions[i] = ClientSocket;
+            return i;
+        }
+    }
+    return NUM_CLIENTS;
 }
