@@ -8,6 +8,8 @@ ServerGame::ServerGame(void)
 
     gameState.playerPosition = glm::vec3(0, 0, 0);
 
+    debug[0] = '\0';
+
 }
 
 void ServerGame::update()
@@ -23,6 +25,10 @@ void ServerGame::update()
 
     //Step Game
     step();
+
+    //Debug
+    printf(debug);
+    debug[0] = '\0';
 }
 
 
@@ -32,6 +38,8 @@ const float MOVE_SPEED = 16;
 const float MOVE_DELTA = (MOVE_SPEED / TICK_RATE);
 void ServerGame::step()
 {
+    char msg[100];
+    msg[0] = '\0';
     glm::vec3 translation(0, 0, 0);
     for (int i = 0; i < NUM_CLIENTS; ++i) {
         while (!incomingDataLists[i].empty()) {
@@ -44,6 +52,9 @@ void ServerGame::step()
                 translation.z = MOVE_DELTA;
             if (in.moveRight)
                 translation.x = MOVE_DELTA;
+            if (in.moveRight)
+                in.print(msg);
+            strcat(debug, msg);
             incomingDataLists[i].pop();
         }
     }

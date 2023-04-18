@@ -3,7 +3,7 @@
 #include <vector>
 #include <queue>
 #define TICK_RATE 128
-
+#define DEBUG_BUFFER 100000
 class ServerGame
 {
 
@@ -29,6 +29,9 @@ private:
 
     // The ServerNetwork object 
     ServerNetwork* network;
+
+    //Debug Buffer
+    char debug[DEBUG_BUFFER];
 
 
 };

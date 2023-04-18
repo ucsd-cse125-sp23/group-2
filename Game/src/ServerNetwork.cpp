@@ -111,10 +111,8 @@ int ServerNetwork::receiveDeserialize(queue<ClienttoServerData>(& incomingDataLi
 
     for (unsigned int i = 0; i < NUM_CLIENTS; ++i)
     {
-
         if (sessions[i] != INVALID_SOCKET) {
             int data_length = receivePackets(i, network_data);
-
 
             if (data_length <= 0)
             {
@@ -125,7 +123,7 @@ int ServerNetwork::receiveDeserialize(queue<ClienttoServerData>(& incomingDataLi
             int data_red = 0;
             while (data_red < (unsigned int)data_length)
             {
-                packet.deserialize(&(network_data[i]));
+                packet.deserialize(&(network_data[data_red]));
                 data_red += sizeof(Packet<ClienttoServerData>);
 
                 incomingDataLists[i].push(ClienttoServerData{ packet.data });

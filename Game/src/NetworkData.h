@@ -18,8 +18,8 @@ enum PacketTypes {
 struct ClienttoServerData {
     bool moveForward, moveBack, moveLeft, moveRight;
 
-    void print() {
-        printf("Moveforward: %d, Moveback: %d, MoveLeft: %d, MoveRIght: %d\n", moveForward, moveBack, moveLeft, moveRight);
+    void print(char * buf) {
+        sprintf(buf, "Moveforward: %d, Moveback: %d, MoveLeft: %d, MoveRIght: %d\n", moveForward, moveBack, moveLeft, moveRight);
     }
 };
 
