@@ -22,7 +22,7 @@ ClientGame::ClientGame(void)
 //Converts from network's data to gamedata
 int ClientGame::recieveData()
 {
-    network->recieveDeserialize(incomingData);
+    network->recieveDeserialize(incomingData, initData);
     return 0;
 }
 
@@ -43,7 +43,9 @@ void ClientGame::update()
     network->sendActionPackets(newPackage);
 
     //pass through ServertoClientData
-    gameWindow->update(incomingData);
+
+    //Check init connection
+    gameWindow->update(incomingData, initData.id);
     
 }
 

@@ -30,7 +30,7 @@ int main()
 
     // initialize the clients
     client1 = new ClientGame();
-    //client2 = new ClientGame();
+    client2 = new ClientGame();
     //client3 = new ClientGame();
     //client4 = new ClientGame();
     clientLoop();
@@ -64,7 +64,7 @@ void clientLoop()
     {
         //do game stuff
        client1->update();
-       //client2->update();
+       client2->update();
        //client3->update();
        //client4->update();
        
