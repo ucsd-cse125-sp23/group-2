@@ -6,6 +6,7 @@
 #include "GameConstants.h"
 
 #define MAX_PACKET_SIZE 1000000
+#define NUM_CLIENTS 4
 
 enum PacketTypes {
 
@@ -29,7 +30,12 @@ struct ServertoClientData {
     std::array<Active, MAX_ENTITIES> activity;
     std::array<Position, MAX_ENTITIES> positions;
     std::array<Model, MAX_ENTITIES> models;
+    glm::vec3 playerPosition[NUM_CLIENTS];
+};
 
+//Struct for intializing the client id
+struct ServertoClientInit {
+    unsigned int id;
 };
 
 //Packet wrapper for data sent across network, must define with

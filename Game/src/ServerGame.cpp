@@ -3,7 +3,7 @@
 ServerGame::ServerGame(void)
 {
 
-    // set up the server network to listen 
+    // set up the server network to listen
     network = new ServerNetwork();
 
     initializeGame();
@@ -22,7 +22,7 @@ void ServerGame::initializeGame()
         GameData::positions[i] = glm::vec3(i,0,i);
         GameData::velocities[i] = glm::vec3(0,0,0);
         GameData::models[i].modelID = MODEL_ID_ROVER;
-        GameData::tags[i] = 
+        GameData::tags[i] =
         ComponentTags::Active   +
         ComponentTags::Position +
         ComponentTags::Velocity +
@@ -127,14 +127,17 @@ void ServerGame::step()
                 translation.z = MOVE_DELTA;
             if (in.moveRight)
                 translation.x = MOVE_DELTA;
-            if (in.moveRight)
-                in.print(msg);
-            strcat(debug, msg);
             incomingDataLists[i].pop();
         }
+        //in.print(msg);
+        sprintf(msg, "Client: %d, Translation x: %f, Trans z: %f\n",i,  translation.x, translation.z);
+        strcat(debug, msg);
+
+        gameState.playerPosition[i] = gameState.playerPosition[i] + translation;
+        translation = glm::vec3(0, 0, 0);
     }
 
-    gameState.playerPosition = gameState.playerPosition + translation;
+
 }
 */
 
@@ -161,6 +164,3 @@ void ServerGame::packageData(ServertoClientData& data)
     data.models = GameData::models;
     data.activity = GameData::activity;
 }
-
-
-

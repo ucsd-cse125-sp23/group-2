@@ -32,9 +32,9 @@ public:
 	void resizeCallback(GLFWwindow* window, int width, int height);
 
 	// update and draw functions
-	void idleCallback(ServertoClientData&);
+	void idleCallback(ServertoClientData&, int);
 	void displayCallback();
-	void update(ServertoClientData &);
+	void update(ServertoClientData &, int);
 
 	// helper to reset camera
 	void resetCamera();
