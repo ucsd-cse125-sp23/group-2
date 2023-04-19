@@ -129,9 +129,10 @@ int ClientNetwork::initConnection()
     return NetworkServices::sendMessage(this->ConnectSocket, packet_data, packet_size);
 }
 
-int ClientNetwork::recieveDeserialize(ServertoClientData & incomingData)
+int ClientNetwork::recieveDeserialize(ServertoClientData& incomingData, ServertoClientInit & initData)
 {
-    Packet<ServertoClientData> packet;
+    Packet<ServertoClientData> datapacket;
+    Packet<ServertoClientInit> initpacket;
 
     int data_length = receivePackets(network_data);
 
@@ -144,9 +145,18 @@ int ClientNetwork::recieveDeserialize(ServertoClientData & incomingData)
     int i = 0;
     while (i < (unsigned int)data_length)
     {
-        packet.deserialize(&(network_data[i]));
-        incomingData = packet.data;
-        i += sizeof(Packet<ServertoClientData>);
+        datapacket.deserialize(&(network_data[i]));
+        switch (datapacket.packet_type) {
+        case INIT_CONNECTION:
+            initpacket.deserialize(&(network_data[i]));
+            initData = initpacket.data;
+            i += sizeof(Packet<ServertoClientInit>);
+            break;
+        case ACTION_EVENT:
+            incomingData = datapacket.data;
+            i += sizeof(Packet<ServertoClientData>);
+            break;
+        }
     }
     return 0;
 }

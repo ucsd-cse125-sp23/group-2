@@ -13,6 +13,7 @@ private:
 public:
 
     ServertoClientData incomingData;
+    ServertoClientInit initData;
     ClientGame();
     ~ClientGame(void);
 

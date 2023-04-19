@@ -40,7 +40,7 @@ public:
     int initConnection();
 
     // receive incoming data
-    int recieveDeserialize(ServertoClientData & incomingData);
+    int recieveDeserialize(ServertoClientData & incomingData, ServertoClientInit& initData);
 
     // send data to all server
     void sendActionPackets(ClienttoServerData & outgoingData);

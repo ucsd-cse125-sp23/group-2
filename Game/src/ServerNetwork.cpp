@@ -97,8 +97,34 @@ bool ServerNetwork::acceptNewClient()
         char value = 1;
         setsockopt(ClientSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof(value));
 
+        // send action packet
+        const unsigned int packet_size = sizeof(Packet<ServertoClientInit>);
+        char packet_data[packet_size];
+
+        Packet<ServertoClientInit> packet;
+        packet.packet_type = INIT_CONNECTION;
+        
+        unsigned int id = insertClient(ClientSocket);
+        packet.data = ServertoClientInit{ id };
+
+        packet.serialize(packet_data);
+
+
+        if (id == NUM_CLIENTS) {
+            return false;
+        }
+        int iSendResult = NetworkServices::sendMessage(ClientSocket, packet_data, packet_size);
+
+        if (iSendResult == SOCKET_ERROR)
+        {
+            printf("send failed with error: %d\n", WSAGetLastError());
+            closesocket(ClientSocket);
+            sessions[id] = INVALID_SOCKET;
+        }
+        
+
         // insert new client into session id table (return false if full)
-        return (insertClient(ClientSocket) != NUM_CLIENTS);
+        return true;
     }
 
     return false;
