@@ -1,0 +1,23 @@
+//The max number of each entity type (CAN BE MODIFIED)
+#define NUM_PLAYERS 4
+#define NUM_ENEMIES 20
+#define NUM_TOWERS 20
+#define NUM_RESOURCES 20
+#define NUM_PROJECTILES 50
+
+//Model ID's
+#define MODEL_ID_ROVER 0
+//.... ADD MORE ...
+
+//The Start and End indices of the entity array for each entity type (DO NOT MODIFY)
+#define ENEMY_START         (NUM_PLAYERS)
+#define ENEMY_END           (NUM_PLAYERS + NUM_ENEMIES)
+#define TOWER_START         (NUM_PLAYERS + NUM_ENEMIES)
+#define TOWER_END           (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS)
+#define RESOURCE_START      (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS)
+#define RESOURCE_END        (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES)
+#define PROJECTILE_START    (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES)
+#define PROJECTILE_END      (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES + NUM_PROJECTILES)
+
+//Total number of entities (DO NOT MODIFY)
+#define MAX_ENTITIES (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES + NUM_PROJECTILES)

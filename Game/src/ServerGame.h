@@ -2,8 +2,12 @@
 #include "ServerNetwork.h"
 #include <vector>
 #include <queue>
+#include <array>
+#include "EntityComponentSystem.h"
+#include "GameConstants.h"
 #define TICK_RATE 128
 #define DEBUG_BUFFER 100000
+namespace ECS = EntityComponentSystem;
 class ServerGame
 {
 
@@ -20,9 +24,11 @@ public:
 
     void packageData(ServertoClientData& data);
 
-    void update();
+    void initializeGame();
 
-    void step();
+    void handleInputs();
+
+    void update();
 
     void sendPackets();
 private:

@@ -1,10 +1,11 @@
 #pragma once
 #include <string.h>
+#include <array>
 #include "graphics/core.h"
+#include "EntityComponentSystem.h"
+#include "GameConstants.h"
 
 #define MAX_PACKET_SIZE 1000000
-
-struct GameData;
 
 enum PacketTypes {
 
@@ -25,7 +26,10 @@ struct ClienttoServerData {
 
 // Struct containing all data to be sent from server to client
 struct ServertoClientData {
-    glm::vec3 playerPosition;
+    std::array<Active, MAX_ENTITIES> activity;
+    std::array<Position, MAX_ENTITIES> positions;
+    std::array<Model, MAX_ENTITIES> models;
+
 };
 
 //Packet wrapper for data sent across network, must define with

@@ -6,9 +6,52 @@ ServerGame::ServerGame(void)
     // set up the server network to listen 
     network = new ServerNetwork();
 
-    gameState.playerPosition = glm::vec3(0, 0, 0);
+    initializeGame();
 
     debug[0] = '\0';
+
+}
+
+//Populate Component Arrays
+void ServerGame::initializeGame()
+{
+    //Initialize Players
+    for (int i = 0; i < NUM_PLAYERS; i++)
+    {
+        GameData::activity[i] = true;
+        GameData::positions[i] = glm::vec3(i,0,i);
+        GameData::velocities[i] = glm::vec3(0,0,0);
+        GameData::models[i].modelID = MODEL_ID_ROVER;
+        GameData::tags[i] = 
+        ComponentTags::Active   +
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::Model;
+        //TODO: Other Model Data
+    }
+
+    //Initialize Enemies
+    for (int i = ENEMY_START; i < ENEMY_END; i++)
+    {
+        GameData::activity[i] = false;
+        //TODO
+    }
+
+    //Intialize Towers
+    for (int i = TOWER_START; i < TOWER_END; i++)
+    {
+        GameData::activity[i] = false;
+        //TODO
+    }
+
+    //Intialize Resources
+
+    //Initialize Projectiles
+    for (int i = PROJECTILE_START; i < PROJECTILE_END; i++)
+    {
+        GameData::activity[i] = false;
+        //TODO
+    }
 
 }
 
@@ -23,8 +66,11 @@ void ServerGame::update()
     //Receve Input
     receiveFromClients();
 
-    //Step Game
-    step();
+    handleInputs();
+
+    EntityComponentSystem::update();
+
+    //sendPackets();
 
     //Debug
     printf(debug);
@@ -36,6 +82,35 @@ void ServerGame::update()
 // Speed of movement in units per second
 const float MOVE_SPEED = 16;
 const float MOVE_DELTA = (MOVE_SPEED / TICK_RATE);
+void ServerGame::handleInputs()
+{
+
+    char msg[100];
+    msg[0] = '\0';
+
+    for(int i = 0; i < NUM_CLIENTS; i++)
+    {
+        while (!incomingDataLists[i].empty())
+        {
+            ClienttoServerData in = incomingDataLists[i].front();
+            GameData::velocities[i] = glm::vec3(0,GameData::velocities[i].y,0);
+            if (in.moveForward)
+                GameData::velocities[i].z = -1 * MOVE_SPEED;
+            if (in.moveLeft)
+                GameData::velocities[i].x = -1 * MOVE_SPEED;
+            if (in.moveBack)
+                GameData::velocities[i].z = MOVE_SPEED;
+            if (in.moveRight)
+                GameData::velocities[i].x = MOVE_SPEED;
+            if (in.moveRight)
+                in.print(msg);
+        }
+    }
+
+}
+
+
+/*
 void ServerGame::step()
 {
     char msg[100];
@@ -61,6 +136,7 @@ void ServerGame::step()
 
     gameState.playerPosition = gameState.playerPosition + translation;
 }
+*/
 
 void ServerGame::sendPackets()
 {
@@ -81,7 +157,9 @@ void ServerGame::receiveFromClients()
 
 void ServerGame::packageData(ServertoClientData& data)
 {
-    data = gameState;
+    data.positions = GameData::positions;
+    data.models = GameData::models;
+    data.activity = GameData::activity;
 }
 
 
