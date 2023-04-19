@@ -1,4 +1,5 @@
 //The max number of each entity type (CAN BE MODIFIED)
+#pragma once
 #define NUM_PLAYERS 4
 #define NUM_ENEMIES 20
 #define NUM_TOWERS 20

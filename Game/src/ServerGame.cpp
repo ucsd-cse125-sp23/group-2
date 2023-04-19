@@ -102,9 +102,10 @@ void ServerGame::handleInputs()
                 GameData::velocities[i].z = MOVE_SPEED;
             if (in.moveRight)
                 GameData::velocities[i].x = MOVE_SPEED;
-            if (in.moveRight)
-                in.print(msg);
+
+            incomingDataLists[i].pop();
         }
+        //in.print(msg);
     }
 
 }
