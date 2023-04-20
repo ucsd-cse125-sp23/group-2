@@ -22,7 +22,7 @@ ClientGame* client3;
 ClientGame* client4;
 int main()
 {
-
+    
     // initialize the server
     server = new ServerGame();
     // create thread with arbitrary argument for the run function
