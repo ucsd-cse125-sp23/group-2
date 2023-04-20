@@ -26,6 +26,16 @@ public:
 
     void initializeGame();
 
+    void initPlayers();
+
+    void initEnemies();
+
+    void initTowers();
+
+    void initResources();
+
+    void initProjectiles();
+
     void handleInputs();
 
     void update();

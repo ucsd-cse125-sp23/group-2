@@ -15,44 +15,97 @@ ServerGame::ServerGame(void)
 //Populate Component Arrays
 void ServerGame::initializeGame()
 {
+    initPlayers();
+    //initEnemies();
+    //initTowers();
+    //initResources();
+    //initProjectiles();
+}
+
+void ServerGame::initPlayers() 
+{
     //Initialize Players
     for (int i = 0; i < NUM_PLAYERS; i++)
     {
         GameData::activity[i] = true;
-        GameData::positions[i] = glm::vec3(i,0,i);
-        GameData::velocities[i] = glm::vec3(0,0,0);
+        GameData::positions[i] = glm::vec3(i, 0, i);
+        GameData::velocities[i] = glm::vec3(0, 0, 0);
         GameData::models[i].modelID = MODEL_ID_ROVER;
         GameData::tags[i] =
+            ComponentTags::Active +
+            ComponentTags::Position +
+            ComponentTags::Velocity +
+            ComponentTags::Model;
+        //TODO: Other Model Data
+    }
+}
+
+void ServerGame::initEnemies() 
+{
+
+    //Create Path (TEMP FOR TESTING) TODO: REMOVE FOR FINAL VERSION
+    glm::vec3 testPath[PATH_LENGTH] = { glm::vec3(0,0,0), glm::vec3(0,0,-10), glm::vec3(0,0,0), glm::vec3(0,0,-10), glm::vec3(0,0,0), glm::vec3(0,0,-10) };
+
+    //TEMP INIT FOR TESTING (1 enemy) TODO: REMOVE FOR FINAL VERSION
+    GameData::activity[ENEMY_START] = true;
+    GameData::positions[ENEMY_START] = glm::vec3(0, 0, 0);
+    memcpy(GameData::pathStructs[ENEMY_START].pathNodes, testPath, sizeof(GameData::pathStructs[ENEMY_START].pathNodes));
+    GameData::pathStructs[ENEMY_START].currentNode = 0;
+    GameData::pathStructs[ENEMY_START].moveSpeed = 0.1;
+    GameData::tags[ENEMY_START] =
         ComponentTags::Active   +
         ComponentTags::Position +
         ComponentTags::Velocity +
+        ComponentTags::PathData +
         ComponentTags::Model;
-        //TODO: Other Model Data
+
+    //Initialize Enemies (TODO: REMOVE +1 ON i INIT FOR FINAL VERSION)
+    for (int i = ENEMY_START+1; i < ENEMY_END; i++)
+    {
+        GameData::activity[i] = false;
+        GameData::positions[i] = glm::vec3(0, 0, 0);
+        memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[ENEMY_START].pathNodes));
+        GameData::pathStructs[i].currentNode = 0;
+        GameData::pathStructs[i].moveSpeed = 0.1;
+        GameData::tags[i] =
+            ComponentTags::Active +
+            ComponentTags::Position +
+            ComponentTags::Velocity +
+            ComponentTags::PathData +
+            ComponentTags::Model;
     }
 
-    //Initialize Enemies
+
+    /*
     for (int i = ENEMY_START; i < ENEMY_END; i++)
     {
         GameData::activity[i] = false;
-        //TODO
     }
+    */
+}
 
-    //Intialize Towers
+//TODO
+void ServerGame::initTowers() 
+{
     for (int i = TOWER_START; i < TOWER_END; i++)
     {
         GameData::activity[i] = false;
-        //TODO
     }
+}
 
-    //Intialize Resources
+//TODO
+void ServerGame::initResources() 
+{
 
-    //Initialize Projectiles
+}
+
+//TODO
+void ServerGame::initProjectiles() 
+{
     for (int i = PROJECTILE_START; i < PROJECTILE_END; i++)
     {
         GameData::activity[i] = false;
-        //TODO
     }
-
 }
 
 void ServerGame::update()
@@ -80,7 +133,7 @@ void ServerGame::update()
 
 
 // Speed of movement in units per second
-const float MOVE_SPEED = 16;
+const float MOVE_SPEED = 0.1;
 const float MOVE_DELTA = (MOVE_SPEED / TICK_RATE);
 void ServerGame::handleInputs()
 {

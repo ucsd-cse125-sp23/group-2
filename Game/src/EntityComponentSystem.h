@@ -3,8 +3,7 @@
 #include <array>
 #include "graphics/core.h"
 #include "GameConstants.h"
-
-#define PATH_LENGTH 4
+#include <math.h>
 
 //Entity type
 using Entity = uint32_t;
@@ -18,6 +17,7 @@ struct PathData //Data for entity pathing
 {
     glm::vec3 pathNodes[PATH_LENGTH]; //3D positions in which entity will need to change direction
     int currentNode; //Index of current node that entity is pathing towards
+    float moveSpeed; //distance enemy covers in 1 server tick
 };
 
 struct Model //3D Model to render for the entity
@@ -56,7 +56,10 @@ namespace EntityComponentSystem
     //Contains Calls to ALL systems
     void update();
 
-    //If Entity has Path Data do pathing, else check velocity comp for players
+    //Move entities that have a velocity component
     void sysMovement();
+
+    //Do pathfinding for entities that have a path component
+    void sysPathing();
 
 };
