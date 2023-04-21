@@ -15,6 +15,7 @@ set(
     src/graphics/GameWindow.cpp
     src/graphics/Player.cpp
     src/graphics/Shader.cpp
+    src/LoadingHelper.cpp
 )
 
 # Add header files
@@ -31,6 +32,7 @@ set(
     src/graphics/GameWindow.h
     src/graphics/Player.h
     src/graphics/Shader.h
+    src/LoadingHelper.h
 )
 
 # Require GL
