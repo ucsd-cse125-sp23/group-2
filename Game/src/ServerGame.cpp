@@ -60,8 +60,8 @@ void ServerGame::step()
             incomingDataLists[i].pop();
         }
         //in.print(msg);
-        sprintf(msg, "Client: %d, Translation x: %f, Trans z: %f\n",i,  translation.x, translation.z);
-        strcat(debug, msg);
+        //sprintf(msg, "Client: %d, Translation x: %f, Trans z: %f\n",i,  translation.x, translation.z);
+        //strcat(debug, msg);
 
         gameState.playerPosition[i] = gameState.playerPosition[i] + translation;
         translation = glm::vec3(0, 0, 0);
