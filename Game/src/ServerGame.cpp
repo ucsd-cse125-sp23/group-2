@@ -31,6 +31,7 @@ void ServerGame::initPlayers()
         GameData::positions[i] = glm::vec3(i, 0, i);
         GameData::velocities[i] = glm::vec3(0, 0, 0);
         GameData::models[i].modelID = MODEL_ID_ROVER;
+        GameData::models[i].asciiRep = 'P';
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
@@ -43,7 +44,7 @@ void ServerGame::initPlayers()
 void ServerGame::initEnemies() 
 {
     //Create Path (TEMP FOR TESTING) TODO: REMOVE FOR FINAL VERSION
-    glm::vec3 testPath[PATH_LENGTH] = { glm::vec3(12,21,17), glm::vec3(-5,0,-10), glm::vec3(10,0,5), glm::vec3(0,72,-10), glm::vec3(0,0,0), glm::vec3(33,-2,33) };
+    glm::vec3 testPath[PATH_LENGTH] = { glm::vec3(0,0,31), glm::vec3(31,0,31), glm::vec3(31,0,0), glm::vec3(15,0,0), glm::vec3(15,0,15), glm::vec3(7,0,15) };
 
     //Initialize Enemies
     for (int i = ENEMY_START; i < ENEMY_END; i++)
@@ -53,6 +54,7 @@ void ServerGame::initEnemies()
         memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[i].pathNodes));
         GameData::pathStructs[i].currentNode = 0;
         GameData::pathStructs[i].moveSpeed = 0.1;
+        GameData::models[i].asciiRep = 'E';
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
@@ -68,9 +70,9 @@ int curTick = 0;
 int curEntity = ENEMY_START;
 void ServerGame::testing_staggeredSpawn() 
 {
-    if (curTick >= TICK_RATE * 3)
+    if (curTick >= TICK_RATE * 2)
     {
-        cout << "Entity " << curEntity << " Spawned in!\n";
+        //cout << "Entity " << curEntity << " Spawned in!\n";
         GameData::activity[curEntity] = true;
         GameData::positions[curEntity] = glm::vec3(0, 0, 0);
         GameData::pathStructs[curEntity].currentNode = 0;
@@ -108,7 +110,7 @@ void ServerGame::initProjectiles()
     }
 }
 
-
+// Update function called every tick
 void ServerGame::update()
 {
     // get new clients
@@ -124,13 +126,14 @@ void ServerGame::update()
 
     EntityComponentSystem::update();
 
-    //sendPackets();
-
-    //Debug
+    //Print debug message buffer
     printf(debug);
     debug[0] = '\0';
 
     testing_staggeredSpawn(); //TODO: Remove this after testing concludes
+    if (curTick % 16 == 0) {
+        asciiView();
+    }
 }
 
 
@@ -200,11 +203,9 @@ void ServerGame::step()
 
 void ServerGame::sendPackets()
 {
-
     //Send Data to Clients
     ServertoClientData newPackage;
     packageData(newPackage);
-    //std::cout << newPackage.moveForward << "\n";
     network->sendActionPackets(newPackage);
 }
 
@@ -220,4 +221,37 @@ void ServerGame::packageData(ServertoClientData& data)
     data.positions = GameData::positions;
     data.models = GameData::models;
     data.activity = GameData::activity;
+}
+
+const int GRID_X = 32;
+const int GRID_Z = 32;
+void ServerGame::asciiView() {
+    // "Clear" the screen
+    cout << string(GRID_X, '\n');
+    // Create "grid"
+    char grid[GRID_X][GRID_Z];
+    // Initialize it with all periods
+    memset(grid, '.', sizeof(grid));
+    for (Entity e = 0; e < MAX_ENTITIES; e++) {
+        // Continue to next entity if this one is not active
+        if (!GameData::activity[e]) { continue; }
+        // Continue to next entity if this one doesn't have position
+        if ((GameData::tags[e] & ComponentTags::Position) != ComponentTags::Position) { continue; }
+        // Continue to next entity if this one doesn't have model
+        if ((GameData::tags[e] & ComponentTags::Model) != ComponentTags::Model) { continue; }
+        // Floor entity position
+        int xCoord = floor(GameData::positions[e].x);
+        int zCoord = floor(GameData::positions[e].z);
+        // If its within grid bounds, add to grid
+        if (xCoord >= 0 && xCoord < GRID_X && zCoord >= 0 && zCoord < GRID_Z) {
+            grid[xCoord][zCoord] = GameData::models[e].asciiRep;
+        }
+    }
+    // Print the grid
+    for (int i = 0; i < GRID_X; ++i) {
+        for (int j = 0; j < GRID_Z; ++j) {
+            cout << grid[i][j];
+        }
+        cout << endl;
+    }
 }

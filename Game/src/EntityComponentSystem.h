@@ -23,6 +23,7 @@ struct PathData //Data for entity pathing
 struct Model //3D Model to render for the entity
 {
     int modelID;
+    char asciiRep;
     //TODO: Other Model Data
 };
 
@@ -47,7 +48,7 @@ namespace GameData
     extern std::array<Position, MAX_ENTITIES> positions;
     extern std::array<Velocity, MAX_ENTITIES> velocities;
     extern std::array<PathData, MAX_ENTITIES> pathStructs;
-    extern std::array<Model, MAX_ENTITIES> models;
+    extern std::array<Model, MAX_ENTITIES> models;   
 }
 
 namespace EntityComponentSystem

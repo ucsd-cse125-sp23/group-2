@@ -48,29 +48,27 @@ void EntityComponentSystem::sysPathing()
         {
             //Check if entity has reached its currently tracked destination (+/- 1 unit)
             glm::vec3 nodePos = GameData::pathStructs[e].pathNodes[GameData::pathStructs[e].currentNode];
-            bool xCloseEnough = (GameData::positions[e].x < nodePos.x + 1 && GameData::positions[e].x > nodePos.x - 1);
-            bool yCloseEnough = (GameData::positions[e].y < nodePos.y + 1 && GameData::positions[e].y > nodePos.y - 1);
-            bool zCloseEnough = (GameData::positions[e].z < nodePos.z + 1 && GameData::positions[e].z > nodePos.z - 1);
-            if (xCloseEnough && yCloseEnough && zCloseEnough) 
+            bool closeEnough = glm::distance(nodePos, GameData::positions[e]) < 1;
+            //bool closeEnough = glm::round(GameData::positions[e]) == glm::round(nodePos);
+            if (closeEnough) 
             {
                 //Node reached, increment current Node
-                std::cout << "Entity " << e << " Reached Node " << GameData::pathStructs[e].currentNode << "\n";
+                //std::cout << "Entity " << e << " Reached Node " << GameData::pathStructs[e].currentNode << "\n";
                 GameData::pathStructs[e].currentNode++;
             }
 
             //Check if entity has reached the final pathNode (currentNode now out of bounds)
             if (GameData::pathStructs[e].currentNode >= PATH_LENGTH) 
             {
-                //TODO: (Temporarily Set Enemey to inactive once it reaches the end of the path)
+                //TODO: (Temporarily Set Enemy to inactive once it reaches the end of the path)
                 GameData::activity[e] = false;
-                std::cout << "Entity " << e << " Reached the end of its path! (Despawning...)\n";
+                //std::cout << "Entity " << e << " Reached the end of its path! (Despawning...)\n";
                 continue;
             }
 
             //Update entity velocity vector to move towards tracked node
             glm::vec3 direction = GameData::pathStructs[e].pathNodes[GameData::pathStructs[e].currentNode] - GameData::positions[e];
-            float magnitude = sqrt(pow(direction.x, 2) + pow(direction.y, 2) + pow(direction.z, 2));
-            GameData::velocities[e] = (direction / magnitude) * GameData::pathStructs[e].moveSpeed;
+            GameData::velocities[e] = glm::normalize(direction) * GameData::pathStructs[e].moveSpeed;
         }
     }
 }

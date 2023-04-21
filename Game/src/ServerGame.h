@@ -53,5 +53,7 @@ private:
     //Debug Buffer
     char debug[DEBUG_BUFFER];
 
+    void asciiView();
+
 
 };
