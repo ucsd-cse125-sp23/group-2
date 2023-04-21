@@ -1,6 +1,6 @@
-#include "Player.h"
+#include "Mob.h"
 
-Player::Player(int i, glm::vec3 cubeMin, glm::vec3 cubeMax) {
+Mob::Mob(int i, glm::vec3 cubeMin, glm::vec3 cubeMax) {
     // Model matrix.
     active = false;
     id = i;
@@ -8,7 +8,7 @@ Player::Player(int i, glm::vec3 cubeMin, glm::vec3 cubeMax) {
 
     // The color of the cube. Try setting it to something else!
     //color = glm::vec3(1.0f, 0.95f, 0.1f);
-    color = glm::vec3(0.37f, 0.55f, 0.55f);
+    color = glm::vec3(1.0f,0.0f, 0.0f);
 
     // Specify vertex positions
     positions = {
@@ -126,7 +126,7 @@ Player::Player(int i, glm::vec3 cubeMin, glm::vec3 cubeMax) {
     glBindVertexArray(0);
 }
 
-Player::~Player() {
+Mob::~Mob() {
     // Delete the VBOs and the VAO.
     glDeleteBuffers(1, &VBO_positions);
     glDeleteBuffers(1, &VBO_normals);
@@ -134,7 +134,7 @@ Player::~Player() {
     glDeleteVertexArrays(1, &VAO);
 }
 
-void Player::draw(const glm::mat4& viewProjMtx, GLuint shader) {
+void Mob::draw(const glm::mat4& viewProjMtx, GLuint shader) {
     // actiavte the shader program
     glUseProgram(shader);
 
@@ -154,20 +154,20 @@ void Player::draw(const glm::mat4& viewProjMtx, GLuint shader) {
     glUseProgram(0);
 }
 
-void Player::update() {
+void Mob::update() {
     // Spin the cube
     spin(0.05f);
 }
 /*
-void Player::update(glm::vec3& translation) {
+void Mob::update(glm::vec3& translation) {
     model = model * glm::translate(translation);
 }
 */
-void Player::update(glm::vec3& position) {
+void Mob::update(glm::vec3& position) {
     model[3] = glm::vec4(position, 1.0f);
 }
 
-void Player::spin(float deg) {
+void Mob::spin(float deg) {
     // Update the model matrix by multiplying a rotation matrix
     model = model * glm::rotate(glm::radians(deg), glm::vec3(0.0f, 1.0f, 0.0f));
 }

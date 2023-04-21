@@ -2,7 +2,7 @@
 #include "Shader.h"
 #include "core.h"
 #include "Camera.h"
-#include "Player.h"
+#include "GameWorld.h"
 #include "../NetworkData.h"
 class GameWindow {
 private:
@@ -12,7 +12,7 @@ private:
 	const char* windowTitle;
 
 	//objects to render
-	Player* player;
+	GameWorld* gameWorld;
 
 	// Shader Program
 	GLuint shaderProgram;

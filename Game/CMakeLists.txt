@@ -12,6 +12,8 @@ set(
     src/ServerGame.cpp
     src/ServerNetwork.cpp
     src/EntityComponentSystem.cpp
+    src/graphics/GameWorld.cpp
+    src/graphics/Mobs.cpp
     src/graphics/Camera.cpp
     src/graphics/GameWindow.cpp
     src/graphics/Player.cpp
@@ -29,6 +31,8 @@ set(
     src/ServerNetwork.h
     src/EntityComponentSystem.h
     src/GameConstants.h
+    src/graphics/GameWorld.h
+    src/graphics/Mobs.h
     src/graphics/Camera.h
     src/graphics/core.h
     src/graphics/GameWindow.h

@@ -3,6 +3,10 @@
 #include "core.h"
 class Player {
 private:
+
+    bool active;
+    int id;
+
     GLuint VAO;
     GLuint VBO_positions, VBO_normals, EBO;
 
@@ -15,7 +19,7 @@ private:
     std::vector<unsigned int> indices;
 
 public:
-    Player(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
+    Player(int i, glm::vec3 cubeMin = glm::vec3(-0.2, -0.2, -0.2), glm::vec3 cubeMax = glm::vec3(0.2, 0.2, 0.2));
     ~Player();
 
     void draw(const glm::mat4& viewProjMtx, GLuint shader);
@@ -23,4 +27,7 @@ public:
     void update(glm::vec3 & translation);
 
     void spin(float deg);
+    void setActive(bool a) { active = a; };
+    bool getActive() { return active; };
+    
 };

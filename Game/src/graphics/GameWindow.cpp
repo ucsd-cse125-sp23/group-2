@@ -62,7 +62,7 @@ GameWindow::~GameWindow() {
 }
 
 void GameWindow::cleanUp() {
-    delete player;
+    
 
     glDeleteProgram(shaderProgram);
 }
@@ -105,18 +105,22 @@ void GameWindow::resizeCallback(GLFWwindow* window, int w, int h) {
     cam->SetAspect(float(width) / float(height));
 }
 bool GameWindow::initializeObjects() {
-    player = new Player();
+    gameWorld = new GameWorld();
+    gameWorld->init();
     return true;
 }
 
 void GameWindow::idleCallback(ServertoClientData& incomingData, int id) {
     cam->Update();
-    player->update(incomingData.positions[id]);
+    gameWorld->update(incomingData, id);
+    //player->update(incomingData.positions[id]);
 }
 
 void GameWindow::displayCallback() {
+    glfwMakeContextCurrent(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    player->draw(cam->GetViewProjectMtx(), shaderProgram);
+    //player->draw(cam->GetViewProjectMtx(), shaderProgram);
+    gameWorld->draw(cam->GetViewProjectMtx(), shaderProgram);
     glfwPollEvents();
     glfwSwapBuffers(window);
 }
