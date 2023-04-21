@@ -4,6 +4,10 @@
 #include "../LoadingHelper.h"
 class Player {
 private:
+
+    bool active;
+    int id;
+
     GLuint VAO;
     GLuint VBO_positions, VBO_normals, VBO_uvs, EBO;
 
@@ -17,7 +21,7 @@ private:
     std::vector<glm::vec3> normals;
 
 public:
-    Player(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
+    Player(int i);
     ~Player();
 
     void draw(const glm::mat4& viewProjMtx, GLuint shader);
@@ -25,4 +29,7 @@ public:
     void update(glm::vec3 & translation);
 
     void spin(float deg);
+    void setActive(bool a) { active = a; };
+    bool getActive() { return active; };
+    
 };
