@@ -16,7 +16,7 @@ ServerGame::ServerGame(void)
 void ServerGame::initializeGame()
 {
     initPlayers();
-    //initEnemies();
+    initEnemies();
     //initTowers();
     //initResources();
     //initProjectiles();
@@ -42,29 +42,15 @@ void ServerGame::initPlayers()
 
 void ServerGame::initEnemies() 
 {
-
     //Create Path (TEMP FOR TESTING) TODO: REMOVE FOR FINAL VERSION
-    glm::vec3 testPath[PATH_LENGTH] = { glm::vec3(0,0,0), glm::vec3(0,0,-10), glm::vec3(0,0,0), glm::vec3(0,0,-10), glm::vec3(0,0,0), glm::vec3(0,0,-10) };
+    glm::vec3 testPath[PATH_LENGTH] = { glm::vec3(12,21,17), glm::vec3(-5,0,-10), glm::vec3(10,0,5), glm::vec3(0,72,-10), glm::vec3(0,0,0), glm::vec3(33,-2,33) };
 
-    //TEMP INIT FOR TESTING (1 enemy) TODO: REMOVE FOR FINAL VERSION
-    GameData::activity[ENEMY_START] = true;
-    GameData::positions[ENEMY_START] = glm::vec3(0, 0, 0);
-    memcpy(GameData::pathStructs[ENEMY_START].pathNodes, testPath, sizeof(GameData::pathStructs[ENEMY_START].pathNodes));
-    GameData::pathStructs[ENEMY_START].currentNode = 0;
-    GameData::pathStructs[ENEMY_START].moveSpeed = 0.1;
-    GameData::tags[ENEMY_START] =
-        ComponentTags::Active   +
-        ComponentTags::Position +
-        ComponentTags::Velocity +
-        ComponentTags::PathData +
-        ComponentTags::Model;
-
-    //Initialize Enemies (TODO: REMOVE +1 ON i INIT FOR FINAL VERSION)
-    for (int i = ENEMY_START+1; i < ENEMY_END; i++)
+    //Initialize Enemies
+    for (int i = ENEMY_START; i < ENEMY_END; i++)
     {
         GameData::activity[i] = false;
         GameData::positions[i] = glm::vec3(0, 0, 0);
-        memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[ENEMY_START].pathNodes));
+        memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[i].pathNodes));
         GameData::pathStructs[i].currentNode = 0;
         GameData::pathStructs[i].moveSpeed = 0.1;
         GameData::tags[i] =
@@ -74,14 +60,28 @@ void ServerGame::initEnemies()
             ComponentTags::PathData +
             ComponentTags::Model;
     }
+}
 
 
-    /*
-    for (int i = ENEMY_START; i < ENEMY_END; i++)
+//TESTING: STAGGERED SPAWN (TODO: REMOVE AFTER TESTING)
+int curTick = 0;
+int curEntity = ENEMY_START;
+void ServerGame::testing_staggeredSpawn() 
+{
+    if (curTick >= TICK_RATE * 3)
     {
-        GameData::activity[i] = false;
+        cout << "Entity " << curEntity << " Spawned in!\n";
+        GameData::activity[curEntity] = true;
+        GameData::positions[curEntity] = glm::vec3(0, 0, 0);
+        GameData::pathStructs[curEntity].currentNode = 0;
+        curTick = 0;
+        curEntity++;
     }
-    */
+    if (curEntity >= ENEMY_END)
+    {
+        curEntity = ENEMY_START;
+    }
+    curTick++;
 }
 
 //TODO
@@ -108,6 +108,7 @@ void ServerGame::initProjectiles()
     }
 }
 
+
 void ServerGame::update()
 {
     // get new clients
@@ -128,6 +129,8 @@ void ServerGame::update()
     //Debug
     printf(debug);
     debug[0] = '\0';
+
+    testing_staggeredSpawn(); //TODO: Remove this after testing concludes
 }
 
 

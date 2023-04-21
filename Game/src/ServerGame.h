@@ -41,6 +41,10 @@ public:
     void update();
 
     void sendPackets();
+
+    //TODO: Remove this method after testing
+    void testing_staggeredSpawn();
+
 private:
 
     // The ServerNetwork object 

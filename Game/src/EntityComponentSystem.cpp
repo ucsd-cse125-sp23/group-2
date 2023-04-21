@@ -14,7 +14,7 @@ namespace GameData
 //Call all systems each update
 void EntityComponentSystem::update()
 {
-    //sysPathing();
+    sysPathing();
     sysMovement();
 }
 
@@ -46,12 +46,15 @@ void EntityComponentSystem::sysPathing()
         //check if this entity has a PathData component to do pathing
         if ((GameData::tags[e] & ComponentTags::PathData) == ComponentTags::PathData)
         {
-
-            //Check if entity has reached its currently tracked destination
-            if (GameData::positions[e] == GameData::pathStructs[e].pathNodes[GameData::pathStructs[e].currentNode]) 
+            //Check if entity has reached its currently tracked destination (+/- 1 unit)
+            glm::vec3 nodePos = GameData::pathStructs[e].pathNodes[GameData::pathStructs[e].currentNode];
+            bool xCloseEnough = (GameData::positions[e].x < nodePos.x + 1 && GameData::positions[e].x > nodePos.x - 1);
+            bool yCloseEnough = (GameData::positions[e].y < nodePos.y + 1 && GameData::positions[e].y > nodePos.y - 1);
+            bool zCloseEnough = (GameData::positions[e].z < nodePos.z + 1 && GameData::positions[e].z > nodePos.z - 1);
+            if (xCloseEnough && yCloseEnough && zCloseEnough) 
             {
                 //Node reached, increment current Node
-                printf("Node Reached by Test Entity\n");
+                std::cout << "Entity " << e << " Reached Node " << GameData::pathStructs[e].currentNode << "\n";
                 GameData::pathStructs[e].currentNode++;
             }
 
@@ -60,7 +63,7 @@ void EntityComponentSystem::sysPathing()
             {
                 //TODO: (Temporarily Set Enemey to inactive once it reaches the end of the path)
                 GameData::activity[e] = false;
-                printf("Test entity reached the end of its path\n");
+                std::cout << "Entity " << e << " Reached the end of its path! (Despawning...)\n";
                 continue;
             }
 
