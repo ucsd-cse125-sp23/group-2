@@ -24,4 +24,4 @@
 //.... ADD MORE ...
 
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
-#define PATH_LENGTH 6
+#define PATH_LENGTH 8

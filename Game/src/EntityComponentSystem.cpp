@@ -49,7 +49,7 @@ void EntityComponentSystem::sysPathing()
             //Check if entity has reached its currently tracked destination (+/- 1 unit)
             glm::vec3 nodePos = GameData::pathStructs[e].pathNodes[GameData::pathStructs[e].currentNode];
             bool closeEnough = glm::distance(nodePos, GameData::positions[e]) < 1;
-            //bool closeEnough = glm::round(GameData::positions[e]) == glm::round(nodePos);
+            //bool closeEnough = glm::floor(GameData::positions[e]) == glm::floor(nodePos);
             if (closeEnough) 
             {
                 //Node reached, increment current Node

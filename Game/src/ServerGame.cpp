@@ -28,7 +28,7 @@ void ServerGame::initPlayers()
     for (int i = 0; i < NUM_PLAYERS; i++)
     {
         GameData::activity[i] = true;
-        GameData::positions[i] = glm::vec3(i, 0, i);
+        GameData::positions[i] = glm::vec3(0, 0, 0);
         GameData::velocities[i] = glm::vec3(0, 0, 0);
         GameData::models[i].modelID = MODEL_ID_ROVER;
         GameData::models[i].asciiRep = 'P';
@@ -39,18 +39,25 @@ void ServerGame::initPlayers()
             ComponentTags::Model;
         //TODO: Other Model Data
     }
+    //TODO: Change
+    //Manually set spawn positions
+    GameData::positions[0] = glm::vec3(0, 0, 0);
+    GameData::positions[1] = glm::vec3(0, 0, 1);
+    GameData::positions[2] = glm::vec3(1, 0, 0);
+    GameData::positions[3] = glm::vec3(1, 0, 1);
+
 }
 
 void ServerGame::initEnemies() 
 {
     //Create Path (TEMP FOR TESTING) TODO: REMOVE FOR FINAL VERSION
-    glm::vec3 testPath[PATH_LENGTH] = { glm::vec3(0,0,31), glm::vec3(31,0,31), glm::vec3(31,0,0), glm::vec3(15,0,0), glm::vec3(15,0,15), glm::vec3(7,0,15) };
+    glm::vec3 testPath[PATH_LENGTH] = { glm::vec3(15,0,31), glm::vec3(31,0,15), glm::vec3(15,0,15), glm::vec3(0,0,31), glm::vec3(0,0,15), glm::vec3(31,0,7), glm::vec3(31,0,0), glm::vec3(0, 0, 0)};
 
     //Initialize Enemies
     for (int i = ENEMY_START; i < ENEMY_END; i++)
     {
         GameData::activity[i] = false;
-        GameData::positions[i] = glm::vec3(0, 0, 0);
+        GameData::positions[i] = glm::vec3(31, 0, 31);
         memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[i].pathNodes));
         GameData::pathStructs[i].currentNode = 0;
         GameData::pathStructs[i].moveSpeed = 0.1;
@@ -70,11 +77,11 @@ int curTick = 0;
 int curEntity = ENEMY_START;
 void ServerGame::testing_staggeredSpawn() 
 {
-    if (curTick >= TICK_RATE * 2)
+    if (curTick >= TICK_RATE)
     {
         //cout << "Entity " << curEntity << " Spawned in!\n";
         GameData::activity[curEntity] = true;
-        GameData::positions[curEntity] = glm::vec3(0, 0, 0);
+        GameData::positions[curEntity] = glm::vec3(31, 0, 31);
         GameData::pathStructs[curEntity].currentNode = 0;
         curTick = 0;
         curEntity++;
@@ -131,7 +138,7 @@ void ServerGame::update()
     debug[0] = '\0';
 
     testing_staggeredSpawn(); //TODO: Remove this after testing concludes
-    if (curTick % 16 == 0) {
+    if (curTick % 4 == 0) {
         asciiView();
     }
 }
@@ -227,7 +234,8 @@ const int GRID_X = 32;
 const int GRID_Z = 32;
 void ServerGame::asciiView() {
     // "Clear" the screen
-    cout << string(GRID_X, '\n');
+    printf("\033[2J");
+    printf("\033[%d;%dH", 0, 0);
     // Create "grid"
     char grid[GRID_X][GRID_Z];
     // Initialize it with all periods
