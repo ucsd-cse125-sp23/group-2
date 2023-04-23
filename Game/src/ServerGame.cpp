@@ -139,7 +139,7 @@ void ServerGame::update()
 
     testing_staggeredSpawn(); //TODO: Remove this after testing concludes
     if (curTick % 4 == 0) {
-        asciiView();
+        //asciiView();
     }
 }
 

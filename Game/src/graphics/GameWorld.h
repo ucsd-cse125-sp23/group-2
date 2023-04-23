@@ -1,6 +1,7 @@
 #pragma once
 #include "Player.h"
 #include "Mob.h"
+#include "Camera.h"
 #include "../GameConstants.h"
 #include "../NetworkData.h"
 class GameWorld {
@@ -10,6 +11,10 @@ private:
     std::array <Player*, NUM_CLIENTS> players;
     std::array <Mob*, NUM_ENEMIES> mobs;
 
+    Camera* cam;
+    static float prevX, prevY, currX, currY, scrollY;
+    //static int mouseDX, mouseDY;
+
 public:
     void init();
 
@@ -17,5 +22,10 @@ public:
     void update(ServertoClientData& incomingData, int id);
 
     //render all active entities
-    void draw(const glm::mat4& viewProjMtx, GLuint shader);
+    void draw(GLuint shader);
+
+    //callbacks - for interaction
+    static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+    static void mouse_callback(GLFWwindow* window, int button, int action, int mods);
+    static void cursor_callback(GLFWwindow* window, double currX, double currY);
 };

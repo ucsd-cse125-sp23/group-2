@@ -95,4 +95,6 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
 void ClientGame::setup_callbacks() {
     // Set the key callback.
     glfwSetKeyCallback(gameWindow->window, ClientGame::keyCallback);
+
+    glfwSetCursorPosCallback(gameWindow->window, GameWorld::cursor_callback);
 }

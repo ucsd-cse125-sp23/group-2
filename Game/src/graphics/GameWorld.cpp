@@ -1,4 +1,5 @@
 #include "GameWorld.h"
+float GameWorld::prevX, GameWorld::prevY,GameWorld::currX, GameWorld::currY, GameWorld::scrollY = 0;
 
 void GameWorld::init() {
 	currID = 0;
@@ -10,6 +11,7 @@ void GameWorld::init() {
 		mobs[i - ENEMY_START] = new Mob(currID);
 		currID++;
 	}
+	cam = new Camera();
 }
 
 void GameWorld::update(ServertoClientData& incomingData, int id) {
@@ -26,10 +28,18 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 			mobs[i - ENEMY_START]->update(incomingData.positions[i]);
 		}
 	}
+
+	int maxDelta = 100;
+	int dx = glm::clamp((int)(currX - prevX), -maxDelta, maxDelta);
+	int dy = glm::clamp(-((int)(currY - prevY)), -maxDelta, maxDelta);
+	prevX = (int)currX;
+	prevY = (int)currY;
+	cam->update(players[id]->getPosition(), dx, dy, scrollY);
 }
 
 //render all active entities
-void GameWorld::draw(const glm::mat4& viewProjMtx, GLuint shader) {
+void GameWorld::draw(GLuint shader) {
+	const glm::mat4& viewProjMtx = cam->GetViewProjectMtx();
 	for (Player* p : players) {
 		if (p->getActive()) {
 			p->draw(viewProjMtx, shader);
@@ -41,4 +51,10 @@ void GameWorld::draw(const glm::mat4& viewProjMtx, GLuint shader) {
 			m->draw(viewProjMtx, shader);
 		}
 	}
+}
+
+void GameWorld::cursor_callback(GLFWwindow* window, double cX, double cY) {
+
+	currX = cX;
+	currY = cY;
 }

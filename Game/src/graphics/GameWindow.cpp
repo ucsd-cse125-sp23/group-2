@@ -33,6 +33,8 @@ GameWindow::GameWindow(int width, int height) {
         //return NULL;
     }
 
+   // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
     // Make the context of the window.
     glfwMakeContextCurrent(window);
 
@@ -43,8 +45,8 @@ GameWindow::GameWindow(int width, int height) {
     glfwSwapInterval(0);
 
     // set up the camera
-    cam = new Camera();
-    cam->SetAspect(float(width) / float(height));
+    //cam = new Camera();
+    //cam->SetAspect(float(width) / float(height));
 
     // Call the resize callback to make sure things get drawn immediately.
     resizeCallback(window, width, height);
@@ -67,6 +69,7 @@ void GameWindow::cleanUp() {
     glDeleteProgram(shaderProgram);
 }
 void GameWindow::setup() {
+   
     // Enable depth buffering.
     glEnable(GL_DEPTH_TEST);
     // Related to shaders and z value comparisons for the depth buffer.
@@ -102,7 +105,7 @@ void GameWindow::resizeCallback(GLFWwindow* window, int w, int h) {
     // Set the viewport size.
     glViewport(0, 0, width, height);
 
-    cam->SetAspect(float(width) / float(height));
+    //cam->SetAspect(float(width) / float(height));
 }
 bool GameWindow::initializeObjects() {
     gameWorld = new GameWorld();
@@ -111,8 +114,8 @@ bool GameWindow::initializeObjects() {
 }
 
 void GameWindow::idleCallback(ServertoClientData& incomingData, int id) {
-    cam->Update();
     gameWorld->update(incomingData, id);
+    //cam->update(mouseDX, mouseDY, scrollY);
     //player->update(incomingData.positions[id]);
 }
 
@@ -120,7 +123,7 @@ void GameWindow::displayCallback() {
     glfwMakeContextCurrent(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //player->draw(cam->GetViewProjectMtx(), shaderProgram);
-    gameWorld->draw(cam->GetViewProjectMtx(), shaderProgram);
+    gameWorld->draw(shaderProgram);
     glfwPollEvents();
     glfwSwapBuffers(window);
 }
@@ -129,8 +132,4 @@ void GameWindow::update(ServertoClientData & incomingData, int id) {
     idleCallback(incomingData, id);
 }
 
-// helper to reset the camera
-void GameWindow::resetCamera() {
-    cam->Reset();
-    cam->SetAspect(float(width) / float(height));
-}
+
