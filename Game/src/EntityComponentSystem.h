@@ -27,6 +27,13 @@ struct Model //3D Model to render for the entity
     //TODO: Other Model Data
 };
 
+struct PhysCollider //Information for collisions
+{
+    glm::vec3 AABB; //Axis Aligned Bound Box vector
+
+    //TODO: Pointer to a mesh for narrow phase
+};
+
 //Define Component Tags
 using Tag = uint32_t;
 namespace ComponentTags
@@ -35,7 +42,8 @@ namespace ComponentTags
     constexpr Tag Position  = 0x1 << 1;
     constexpr Tag Velocity  = 0x1 << 2;
     constexpr Tag PathData  = 0x1 << 3;
-    constexpr Tag Model     = 0x1 << 4;
+    constexpr Tag Model = 0x1 << 4;
+    constexpr Tag Collidable = 0x1 << 5;
 }
 
 namespace GameData
@@ -48,7 +56,8 @@ namespace GameData
     extern std::array<Position, MAX_ENTITIES> positions;
     extern std::array<Velocity, MAX_ENTITIES> velocities;
     extern std::array<PathData, MAX_ENTITIES> pathStructs;
-    extern std::array<Model, MAX_ENTITIES> models;   
+    extern std::array<Model, MAX_ENTITIES> models;
+    extern std::array<PhysCollider, MAX_ENTITIES> colliders;
 }
 
 namespace EntityComponentSystem
@@ -62,5 +71,8 @@ namespace EntityComponentSystem
 
     //Do pathfinding for entities that have a path component
     void sysPathing();
+    
+    //Detect and Resolve Collisions
+    void sysCollisions();
 
 };

@@ -30,21 +30,23 @@ void ServerGame::initPlayers()
         GameData::activity[i] = true;
         GameData::positions[i] = glm::vec3(0, 0, 0);
         GameData::velocities[i] = glm::vec3(0, 0, 0);
+        GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].modelID = MODEL_ID_ROVER;
         GameData::models[i].asciiRep = 'P';
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
             ComponentTags::Velocity +
-            ComponentTags::Model;
+            ComponentTags::Model +
+            ComponentTags::Collidable;
         //TODO: Other Model Data
     }
     //TODO: Change
     //Manually set spawn positions
     GameData::positions[0] = glm::vec3(0, 0, 0);
-    GameData::positions[1] = glm::vec3(0, 0, 1);
-    GameData::positions[2] = glm::vec3(1, 0, 0);
-    GameData::positions[3] = glm::vec3(1, 0, 1);
+    GameData::positions[1] = glm::vec3(0, 0, 3);
+    GameData::positions[2] = glm::vec3(3, 0, 0);
+    GameData::positions[3] = glm::vec3(3, 0, 3);
 
 }
 
@@ -139,7 +141,7 @@ void ServerGame::update()
 
     testing_staggeredSpawn(); //TODO: Remove this after testing concludes
     if (curTick % 4 == 0) {
-        asciiView();
+        //asciiView();
     }
 }
 
