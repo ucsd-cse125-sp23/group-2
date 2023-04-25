@@ -9,8 +9,9 @@ namespace GameData
   std::array<Velocity, MAX_ENTITIES> velocities;
   std::array<PathData, MAX_ENTITIES> pathStructs;
   std::array<Model, MAX_ENTITIES> models;
-  std::array<PhysCollider, MAX_ENTITIES> colliders;
+  std::array<Collider, MAX_ENTITIES> colliders;
   std::queue<CollisionEvent> colevents;
+  std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
 }
 
 //Call all systems each update
@@ -158,16 +159,26 @@ void EntityComponentSystem::sysDetectCollisions()
 
 void EntityComponentSystem::resolveCollisions()
 {
-    while(!GameData::colevents.empty())
+    while (!GameData::colevents.empty())
     {
         CollisionEvent ce = GameData::colevents.front();
         GameData::colevents.pop();
         Entity e = ce.e;
         Entity o = ce.o;
-        //check if this entity has a position, has collided,and has a phys collider
-        if ((GameData::tags[e] & (ComponentTags::Position +ComponentTags::Collidable)) == ComponentTags::Position +  ComponentTags::Collidable)
+        //Rigid Body Collision
+        if ((GameData::tags[e] & (ComponentTags::RigidBody)) == ComponentTags::RigidBody)
         {
-            GameData::positions[e] +=  ce.pen;
+            if (!GameData::rigidbodies[e].fixed) {
+                GameData::positions[e] += ce.pen;
+            }
+
+        }
+
+
+
+
+        if ((GameData::tags[e] & (ComponentTags::DiesOnCollision)) == ComponentTags::DiesOnCollision) {
+            GameData::activity[e] = false;
         }
     }
 }
