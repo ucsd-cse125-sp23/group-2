@@ -105,7 +105,6 @@ int ClientNetwork::receivePackets(char* recvbuf)
         WSACleanup();
         exit(1);
     }
-
     return iResult;
 }
 
@@ -156,6 +155,9 @@ int ClientNetwork::recieveDeserialize(ServertoClientData& incomingData, Serverto
             incomingData = datapacket.data;
             i += sizeof(Packet<ServertoClientData>);
             break;
+        default:
+            printf("Bad packet_type: %u, Data Length: %d\n", datapacket.packet_type, data_length);
+            i += data_length;
         }
     }
     return 0;
