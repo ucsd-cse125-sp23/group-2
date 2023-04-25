@@ -76,6 +76,19 @@ ClientNetwork::ClientNetwork(void) {
         WSACleanup();
         exit(1);
     }
+
+    // Set the mode of the socket to be nonblocking
+    u_long iMode = 1;
+
+    iResult = ioctlsocket(ConnectSocket, FIONBIO, &iMode);
+    if (iResult == SOCKET_ERROR)
+    {
+        printf("ioctlsocket failed with error: %d\n", WSAGetLastError());
+        closesocket(ConnectSocket);
+        WSACleanup();
+        exit(1);
+    }
+
     //disable nagle
     char value = 1;
     setsockopt(ConnectSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof(value));
