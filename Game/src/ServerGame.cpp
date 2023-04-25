@@ -38,7 +38,8 @@ void ServerGame::initPlayers()
             ComponentTags::Position +
             ComponentTags::Velocity +
             ComponentTags::Model +
-            ComponentTags::Collidable;
+            ComponentTags::Collidable+
+            ComponentTags::RigidBody;
         //TODO: Other Model Data
     }
     //TODO: Change
@@ -65,13 +66,16 @@ void ServerGame::initEnemies()
         GameData::pathStructs[i].moveSpeed = 0.1;
         GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].asciiRep = 'E';
+        GameData::rigidbodies[i].fixed = true;
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
             ComponentTags::Velocity +
             ComponentTags::PathData +
             ComponentTags::Model +
-            ComponentTags::Collidable;;
+            ComponentTags::Collidable+
+            //ComponentTags::DiesOnCollision +
+            ComponentTags::RigidBody;
     }
 }
 
