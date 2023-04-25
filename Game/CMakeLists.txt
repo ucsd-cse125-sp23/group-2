@@ -11,6 +11,10 @@ set(
     src/NetworkServices.cpp
     src/ServerGame.cpp
     src/ServerNetwork.cpp
+    src/LoadingHelper.cpp
+    src/EntityComponentSystem.cpp
+    src/graphics/GameWorld.cpp
+    src/graphics/Mob.cpp
     src/graphics/Camera.cpp
     src/graphics/GameWindow.cpp
     src/graphics/Player.cpp
@@ -26,6 +30,11 @@ set(
     src/NetworkServices.h
     src/ServerGame.h
     src/ServerNetwork.h
+    src/LoadingHelper.h
+    src/EntityComponentSystem.h
+    src/GameConstants.h
+    src/graphics/GameWorld.h
+    src/graphics/Mob.h
     src/graphics/Camera.h
     src/graphics/core.h
     src/graphics/GameWindow.h

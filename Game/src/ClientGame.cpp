@@ -43,7 +43,6 @@ void ClientGame::update()
     network->sendActionPackets(newPackage);
 
     //pass through ServertoClientData
-
     //Check init connection
     gameWindow->update(incomingData, initData.id);
     
