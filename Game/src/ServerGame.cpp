@@ -63,13 +63,15 @@ void ServerGame::initEnemies()
         memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[i].pathNodes));
         GameData::pathStructs[i].currentNode = 0;
         GameData::pathStructs[i].moveSpeed = 0.1;
+        GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].asciiRep = 'E';
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
             ComponentTags::Velocity +
             ComponentTags::PathData +
-            ComponentTags::Model;
+            ComponentTags::Model +
+            ComponentTags::Collidable;;
     }
 }
 

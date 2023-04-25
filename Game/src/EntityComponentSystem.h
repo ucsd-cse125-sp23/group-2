@@ -34,6 +34,15 @@ struct PhysCollider //Information for collisions
     //TODO: Pointer to a mesh for narrow phase
 };
 
+struct Collision 
+{
+    //Penetration vector
+    glm::vec3 pen;
+
+    //Other object
+    int other;
+};
+
 //Define Component Tags
 using Tag = uint32_t;
 namespace ComponentTags
@@ -44,6 +53,7 @@ namespace ComponentTags
     constexpr Tag PathData  = 0x1 << 3;
     constexpr Tag Model = 0x1 << 4;
     constexpr Tag Collidable = 0x1 << 5;
+    constexpr Tag HasCollided = 0x1 << 6;
 }
 
 namespace GameData
@@ -58,6 +68,7 @@ namespace GameData
     extern std::array<PathData, MAX_ENTITIES> pathStructs;
     extern std::array<Model, MAX_ENTITIES> models;
     extern std::array<PhysCollider, MAX_ENTITIES> colliders;
+    extern std::array<Collision, MAX_ENTITIES> collisions;
 }
 
 namespace EntityComponentSystem
@@ -72,7 +83,12 @@ namespace EntityComponentSystem
     //Do pathfinding for entities that have a path component
     void sysPathing();
     
-    //Detect and Resolve Collisions
-    void sysCollisions();
+    //Detect Collisions
+    void sysDetectCollisions();
+
+    //Resolve Physical Collisions
+    void sysPhysCollisionResponse();
+    //Do projectiles
+    
 
 };
