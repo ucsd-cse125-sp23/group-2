@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <queue>
+
 #include <array>
 #include "graphics/core.h"
 #include "GameConstants.h"
@@ -34,13 +36,10 @@ struct PhysCollider //Information for collisions
     //TODO: Pointer to a mesh for narrow phase
 };
 
-struct Collision 
-{
-    //Penetration vector
+struct CollisionEvent {
+    Entity e;
+    Entity o;
     glm::vec3 pen;
-
-    //Other object
-    int other;
 };
 
 //Define Component Tags
@@ -53,7 +52,6 @@ namespace ComponentTags
     constexpr Tag PathData  = 0x1 << 3;
     constexpr Tag Model = 0x1 << 4;
     constexpr Tag Collidable = 0x1 << 5;
-    constexpr Tag HasCollided = 0x1 << 6;
 }
 
 namespace GameData
@@ -68,7 +66,10 @@ namespace GameData
     extern std::array<PathData, MAX_ENTITIES> pathStructs;
     extern std::array<Model, MAX_ENTITIES> models;
     extern std::array<PhysCollider, MAX_ENTITIES> colliders;
-    extern std::array<Collision, MAX_ENTITIES> collisions;
+
+
+    //Events
+    extern std::queue<CollisionEvent> colevents;
 }
 
 namespace EntityComponentSystem
@@ -86,8 +87,8 @@ namespace EntityComponentSystem
     //Detect Collisions
     void sysDetectCollisions();
 
-    //Resolve Physical Collisions
-    void sysPhysCollisionResponse();
+    //Handle&Resolve Collisions
+    void resolveCollisions();
     //Do projectiles
     
 
