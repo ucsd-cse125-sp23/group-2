@@ -10,8 +10,7 @@ namespace GameData
   std::array<PathData, MAX_ENTITIES> pathStructs;
   std::array<Model, MAX_ENTITIES> models;
   std::array<PhysCollider, MAX_ENTITIES> colliders;
-  std::array<Collision, MAX_ENTITIES> collisions;
-
+  std::queue<CollisionEvent> colevents;
 }
 
 //Call all systems each update
@@ -20,7 +19,7 @@ void EntityComponentSystem::update()
     sysPathing();
     sysMovement();
     sysDetectCollisions();
-    sysPhysCollisionResponse();
+    resolveCollisions();
 }
 
 //Move Entities that contain a Velocity Component
@@ -145,10 +144,8 @@ void EntityComponentSystem::sysDetectCollisions()
                             pen[index-3] = -1*diff2[index-3];
                         }
 
-                        //Create Collision objects in e
-                        GameData::tags[e] += ComponentTags::HasCollided;
-                        GameData::collisions[e].pen = pen;
-                        GameData::collisions[e].other = o;
+                        //Create Collision Event objects in e
+                        GameData::colevents.push(CollisionEvent{ e, o, pen });
 
                         //printf("Diff1: %f, %f, %f,  Diff2: %f, %f, %f\n Index: %d, Minn: %f\n", diff1.x, diff1.y, diff1.z, diff2.x, diff2.y, diff2.z, index, min);
                     }
@@ -159,20 +156,18 @@ void EntityComponentSystem::sysDetectCollisions()
     }
 }
 
-void EntityComponentSystem::sysPhysCollisionResponse()
+void EntityComponentSystem::resolveCollisions()
 {
-    for (Entity e = 0; e < MAX_ENTITIES; e++)
+    while(!GameData::colevents.empty())
     {
-        //Continue to next entity if this one is not active
-        if (!GameData::activity[e]) { continue; }
-
+        CollisionEvent ce = GameData::colevents.front();
+        GameData::colevents.pop();
+        Entity e = ce.e;
+        Entity o = ce.o;
         //check if this entity has a position, has collided,and has a phys collider
-        if ((GameData::tags[e] & (ComponentTags::Position + ComponentTags::HasCollided+ComponentTags::Collidable)) == ComponentTags::Position + ComponentTags::HasCollided + ComponentTags::Collidable)
+        if ((GameData::tags[e] & (ComponentTags::Position +ComponentTags::Collidable)) == ComponentTags::Position +  ComponentTags::Collidable)
         {
-            GameData::positions[e] +=  GameData::collisions[e].pen;
-
-            //Zeroing out collided tag
-            GameData::tags[e] ^= ComponentTags::HasCollided;
+            GameData::positions[e] +=  ce.pen;
         }
     }
 }

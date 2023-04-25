@@ -150,7 +150,7 @@ void ServerGame::update()
 
 
 // Speed of movement in units per second
-const float MOVE_SPEED = 0.1;
+const float MOVE_SPEED = 0.2;
 const float MOVE_DELTA = (MOVE_SPEED / TICK_RATE);
 void ServerGame::handleInputs()
 {
@@ -179,38 +179,6 @@ void ServerGame::handleInputs()
     }
 
 }
-
-
-/*
-void ServerGame::step()
-{
-    char msg[100];
-    msg[0] = '\0';
-    glm::vec3 translation(0, 0, 0);
-    for (int i = 0; i < NUM_CLIENTS; ++i) {
-        while (!incomingDataLists[i].empty()) {
-            ClienttoServerData in = incomingDataLists[i].front();
-            if (in.moveForward)
-                translation.z = -1 * MOVE_DELTA;
-            if (in.moveLeft)
-                translation.x = -1 * MOVE_DELTA;
-            if (in.moveBack)
-                translation.z = MOVE_DELTA;
-            if (in.moveRight)
-                translation.x = MOVE_DELTA;
-            incomingDataLists[i].pop();
-        }
-        //in.print(msg);
-        //sprintf(msg, "Client: %d, Translation x: %f, Trans z: %f\n",i,  translation.x, translation.z);
-        //strcat(debug, msg);
-
-        gameState.playerPosition[i] = gameState.playerPosition[i] + translation;
-        translation = glm::vec3(0, 0, 0);
-    }
-
-
-}
-*/
 
 void ServerGame::sendPackets()
 {
