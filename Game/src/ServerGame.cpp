@@ -153,9 +153,6 @@ void ServerGame::update()
 
 
 
-// Speed of movement in units per second
-const float MOVE_SPEED = 0.2;
-const float MOVE_DELTA = (MOVE_SPEED / TICK_RATE);
 void ServerGame::handleInputs()
 {
 
