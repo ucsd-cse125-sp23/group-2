@@ -53,6 +53,10 @@ struct Health {
     float curHealth;
 };
 
+struct CollisionDmg {
+    float damage;
+};
+
 //Define Component Tags
 using Tag = uint32_t;
 namespace ComponentTags
@@ -66,6 +70,7 @@ namespace ComponentTags
     constexpr Tag DiesOnCollision = 0x1 << 6;
     constexpr Tag RigidBody = 0x1 << 7;
     constexpr Tag Health = 0x1 << 8;
+    constexpr Tag CollisionDmg = 0x1 << 9;
 }
 
 namespace GameData
@@ -74,7 +79,7 @@ namespace GameData
     //Entity Tag is a 32 bit int that denotes the components attached to the enitity
     extern std::array<Tag, MAX_ENTITIES> tags; 
 
-    extern std::array<Active, MAX_ENTITIES> activity;
+    extern std::array<Active, MAX_ENTITIES> activity;   
     extern std::array<Position, MAX_ENTITIES> positions;
     extern std::array<Velocity, MAX_ENTITIES> velocities;
     extern std::array<PathData, MAX_ENTITIES> pathStructs;
@@ -82,6 +87,7 @@ namespace GameData
     extern std::array<Collider, MAX_ENTITIES> colliders;
     extern std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
     extern std::array<Health, MAX_ENTITIES> healths;
+    extern std::array<CollisionDmg, MAX_ENTITIES> coldmg;
 
 
     //Events
@@ -107,5 +113,5 @@ namespace EntityComponentSystem
     void resolveCollisions();
 
     //Poison, owie
-    void dmgAll();
+    void sysHealth();
 };

@@ -68,8 +68,9 @@ void ServerGame::initEnemies()
         GameData::pathStructs[i].moveSpeed = MOVE_SPEED_ADJ;
         GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].asciiRep = 'E';
-        GameData::rigidbodies[i].fixed = true;
-        GameData::healths[i].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
+        //GameData::rigidbodies[i].fixed = true;
+        GameData::healths[i].maxHealth = GameData::healths[i].curHealth = ENEMY_BASE_HEALTH;
+        GameData::coldmg[i].damage = 30.0f;
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
@@ -77,9 +78,10 @@ void ServerGame::initEnemies()
             ComponentTags::PathData +
             ComponentTags::Model +
             ComponentTags::Collidable+
-            //ComponentTags::DiesOnCollision +
+            ComponentTags::DiesOnCollision +
             ComponentTags::RigidBody +
-            ComponentTags::Health;
+            ComponentTags::Health +
+            ComponentTags::CollisionDmg;
     }
 }
 
@@ -205,6 +207,7 @@ void ServerGame::packageData(ServertoClientData& data)
     data.positions = GameData::positions;
     data.models = GameData::models;
     data.activity = GameData::activity;
+    data.healths = GameData::healths;
 }
 
 const int GRID_X = 32;

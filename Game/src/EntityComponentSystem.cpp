@@ -13,6 +13,7 @@ namespace GameData
   std::queue<CollisionEvent> colevents;
   std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
   std::array<Health, MAX_ENTITIES> healths;
+  std::array<CollisionDmg, MAX_ENTITIES> coldmg;
 }
 
 //Call all systems each update
@@ -22,7 +23,7 @@ void EntityComponentSystem::update()
     sysMovement();
     sysDetectCollisions();
     resolveCollisions();
-    dmgAll();
+    sysHealth();
 }
 
 //Move Entities that contain a Velocity Component
@@ -182,17 +183,31 @@ void EntityComponentSystem::resolveCollisions()
         if ((GameData::tags[e] & (ComponentTags::DiesOnCollision)) == ComponentTags::DiesOnCollision) {
             GameData::activity[e] = false;
         }
+
+        if ((GameData::tags[e] & (ComponentTags::CollisionDmg)) == ComponentTags::CollisionDmg) {
+            if ((GameData::tags[o] & (ComponentTags::Health)) == ComponentTags::Health) {
+                GameData::healths[o].curHealth -= GameData::coldmg[e].damage;
+            }
+        }
+
+        if ((GameData::tags[o] & (ComponentTags::CollisionDmg)) == ComponentTags::CollisionDmg) {
+            if ((GameData::tags[e] & (ComponentTags::Health)) == ComponentTags::Health) {
+                GameData::healths[e].curHealth -= GameData::coldmg[o].damage;
+            }
+        }
+
+
     }
 }
 
-void EntityComponentSystem::dmgAll()
+void EntityComponentSystem::sysHealth()
 {
     for (int i = 0; i < MAX_ENTITIES; ++i) {
         if (GameData::activity[i] == false) {
             continue;
         }
         if ((ComponentTags::Health & GameData::tags[i]) == ComponentTags::Health) {
-            GameData::healths[i].curHealth -= 0.1f;
+            //GameData::healths[i].curHealth -= 0.1f;
             if (GameData::healths[i].curHealth <= 0.0) {
                 GameData::activity[i] = false;
             }
