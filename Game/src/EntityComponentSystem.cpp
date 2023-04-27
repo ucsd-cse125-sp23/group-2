@@ -9,6 +9,8 @@ namespace GameData
   std::array<Velocity, MAX_ENTITIES> velocities;
   std::array<PathData, MAX_ENTITIES> pathStructs;
   std::array<Model, MAX_ENTITIES> models;
+  std::array<HitpointData, MAX_ENTITIES> hitpointStructs;
+  std::array<Turret, MAX_ENTITIES> turrets;
 }
 
 //Call all systems each update
@@ -16,6 +18,8 @@ void EntityComponentSystem::update()
 {
     sysPathing();
     sysMovement();
+    sysTurretFire();
+    sysHealthStatus();
 }
 
 //Move Entities that contain a Velocity Component
@@ -69,6 +73,74 @@ void EntityComponentSystem::sysPathing()
             //Update entity velocity vector to move towards tracked node
             glm::vec3 direction = GameData::pathStructs[e].pathNodes[GameData::pathStructs[e].currentNode] - GameData::positions[e];
             GameData::velocities[e] = glm::normalize(direction) * GameData::pathStructs[e].moveSpeed;
+        }
+    }
+}
+
+void EntityComponentSystem::sysTurretFire() 
+{
+    for (Entity e = 0; e < MAX_ENTITIES; e++)
+    {
+        //Continue to next entity if this one is not active
+        if (!GameData::activity[e]) { continue; }
+
+        //check if this entity has a turret component
+        if ((GameData::tags[e] & ComponentTags::Turret) == ComponentTags::Turret)
+        {
+            //Find closest enemy to shoot
+            Entity closestEnemy = e; //initialized to turret ID in case of no valid target found
+            float closestDistance = GameData::turrets[e].range + 1; //Set closest found distance to out of range
+            //Loop Thru enemies and find one in range
+            for (Entity i = ENEMY_START; i < ENEMY_END; i++) 
+            {
+                //Check if enemy is active
+                if (!GameData::activity[i]) { continue; }
+                //Check if enemy is in range
+                float enemyDistance = glm::distance(GameData::positions[e], GameData::positions[i]);
+                if (enemyDistance < GameData::turrets[e].range)
+                {
+                    //check if this enemy is the new closest entity
+                    if (enemyDistance < closestDistance) 
+                    {
+                        closestEnemy = i;
+                        closestDistance = enemyDistance;
+                    }
+                }
+            }
+
+            //If a valid target was found, fire at them
+            if (closestEnemy != e) 
+            {
+                GameData::hitpointStructs[closestEnemy].HP -= GameData::turrets[e].damage;
+                //std::cout << "Test Tower Fired at Enemey: " << closestEnemy - ENEMY_START << "\n";
+            }
+        }
+    }
+}
+
+//Check entity health death conditions
+void EntityComponentSystem::sysHealthStatus() 
+{
+    for (Entity e = 0; e < MAX_ENTITIES; e++)
+    {
+        //Continue to next entity if this one is not active
+        if (!GameData::activity[e]) { continue; }
+
+        //check if this entity has a health component
+        if ((GameData::tags[e] & ComponentTags::HitpointData) == ComponentTags::HitpointData)
+        {
+            //TEST OUTPUT FOR VISUALIZER
+            if (GameData::hitpointStructs[e].HP <= 10)
+            {
+                GameData::models[e].asciiRep = 'X';
+            }
+
+            //set to inactive if health at or below 0
+            if (GameData::hitpointStructs[e].HP <= 0) 
+            {
+                GameData::activity[e] = false;
+                //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
+            }
         }
     }
 }

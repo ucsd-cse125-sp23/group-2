@@ -27,15 +27,29 @@ struct Model //3D Model to render for the entity
     //TODO: Other Model Data
 };
 
+struct HitpointData //Data for keeping track of enemy health
+{
+    int maxHP; //Used to render health bars (scale = HP/maxHP)
+    int HP; //Entity health (Hitpoints)
+};
+
+struct Turret //Component of Towers
+{
+    float range; //The range of the tower
+    int damage; //The damage that the turret deals per tick
+};
+
 //Define Component Tags
 using Tag = uint32_t;
 namespace ComponentTags
 {
-    constexpr Tag Active    = 0x1;
-    constexpr Tag Position  = 0x1 << 1;
-    constexpr Tag Velocity  = 0x1 << 2;
-    constexpr Tag PathData  = 0x1 << 3;
-    constexpr Tag Model     = 0x1 << 4;
+    constexpr Tag Active        = 0x1;
+    constexpr Tag Position      = 0x1 << 1;
+    constexpr Tag Velocity      = 0x1 << 2;
+    constexpr Tag PathData      = 0x1 << 3;
+    constexpr Tag Model         = 0x1 << 4;
+    constexpr Tag HitpointData  = 0x1 << 5;
+    constexpr Tag Turret        = 0x1 << 6;
 }
 
 namespace GameData
@@ -49,6 +63,8 @@ namespace GameData
     extern std::array<Velocity, MAX_ENTITIES> velocities;
     extern std::array<PathData, MAX_ENTITIES> pathStructs;
     extern std::array<Model, MAX_ENTITIES> models;   
+    extern std::array<HitpointData, MAX_ENTITIES> hitpointStructs;
+    extern std::array<Turret, MAX_ENTITIES> turrets;
 }
 
 namespace EntityComponentSystem
@@ -63,4 +79,9 @@ namespace EntityComponentSystem
     //Do pathfinding for entities that have a path component
     void sysPathing();
 
+    //All automated turret / tower firing
+    void sysTurretFire();
+
+    //Check the status of entity's HP
+    void sysHealthStatus();
 };

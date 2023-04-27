@@ -17,7 +17,7 @@ void ServerGame::initializeGame()
 {
     initPlayers();
     initEnemies();
-    //initTowers();
+    initTowers();
     //initResources();
     //initProjectiles();
 }
@@ -62,11 +62,14 @@ void ServerGame::initEnemies()
         GameData::pathStructs[i].currentNode = 0;
         GameData::pathStructs[i].moveSpeed = 0.1;
         GameData::models[i].asciiRep = 'E';
+        GameData::hitpointStructs[i].maxHP = 100;
+        GameData::hitpointStructs[i].HP = 100;
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
             ComponentTags::Velocity +
             ComponentTags::PathData +
+            ComponentTags::HitpointData +
             ComponentTags::Model;
     }
 }
@@ -83,6 +86,9 @@ void ServerGame::testing_staggeredSpawn()
         GameData::activity[curEntity] = true;
         GameData::positions[curEntity] = glm::vec3(31, 0, 31);
         GameData::pathStructs[curEntity].currentNode = 0;
+        GameData::hitpointStructs[curEntity].maxHP = 100;
+        GameData::hitpointStructs[curEntity].HP = 100;
+        GameData::models[curEntity].asciiRep = 'E';
         curTick = 0;
         curEntity++;
     }
@@ -96,7 +102,20 @@ void ServerGame::testing_staggeredSpawn()
 //TODO
 void ServerGame::initTowers() 
 {
-    for (int i = TOWER_START; i < TOWER_END; i++)
+
+    //TESTING: Create a towers
+    GameData::activity[TOWER_START] = true;
+    GameData::positions[TOWER_START] = glm::vec3(1, 0, 15);
+    GameData::turrets[TOWER_START].damage = 1;
+    GameData::turrets[TOWER_START].range = 5;
+    GameData::models[TOWER_START].asciiRep = 'T';
+    GameData::tags[TOWER_START] =
+        ComponentTags::Active +
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Turret;
+
+    for (int i = TOWER_START + 1; i < TOWER_END; i++)
     {
         GameData::activity[i] = false;
     }
@@ -138,6 +157,7 @@ void ServerGame::update()
     debug[0] = '\0';
 
     testing_staggeredSpawn(); //TODO: Remove this after testing concludes
+
     if (curTick % 4 == 0) {
         asciiView();
     }
