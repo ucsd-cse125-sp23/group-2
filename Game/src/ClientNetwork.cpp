@@ -88,6 +88,7 @@ ClientNetwork::ClientNetwork(void) {
         WSACleanup();
         exit(1);
     }
+
     //disable nagle
     char value = 1;
     setsockopt(ConnectSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof(value));
@@ -105,7 +106,6 @@ int ClientNetwork::receivePackets(char* recvbuf)
         WSACleanup();
         exit(1);
     }
-
     return iResult;
 }
 
@@ -148,14 +148,27 @@ int ClientNetwork::recieveDeserialize(ServertoClientData& incomingData, Serverto
         datapacket.deserialize(&(network_data[i]));
         switch (datapacket.packet_type) {
         case INIT_CONNECTION:
+            if ( (data_length - i) < sizeof(Packet<ServertoClientInit>)) {
+                printf("Bad packet_type: %u, Data Remaining: %d, Data length %d\n", datapacket.packet_type, (data_length - i), data_length);
+                i += data_length;
+                break;
+            }
             initpacket.deserialize(&(network_data[i]));
             initData = initpacket.data;
             i += sizeof(Packet<ServertoClientInit>);
             break;
         case ACTION_EVENT:
+            if ((data_length - i) < sizeof(Packet<ServertoClientData>)) {
+                printf("Bad packet_type: %u, Data Remaining: %d, Data length %d\n", datapacket.packet_type, (data_length - i), data_length);
+                i += data_length;
+                break;
+            }
             incomingData = datapacket.data;
             i += sizeof(Packet<ServertoClientData>);
             break;
+        default:
+            printf("Bad packet_type: %u, Data Remaining: %d, Data length %d\n", datapacket.packet_type, (data_length - i), data_length);
+            i += data_length;
         }
     }
     return 0;
