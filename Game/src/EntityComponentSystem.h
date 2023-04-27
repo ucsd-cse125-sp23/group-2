@@ -29,13 +29,6 @@ struct Model //3D Model to render for the entity
     //TODO: Other Model Data
 };
 
-
-struct HitpointData //Data for keeping track of enemy health
-{
-    int maxHP; //Used to render health bars (scale = HP/maxHP)
-    int HP; //Entity health (Hitpoints)
-};
-
 struct Turret //Component of Towers
 {
     float range; //The range of the tower
@@ -62,21 +55,30 @@ struct CollisionEvent {
 
 };
 
+struct Health {
+    float maxHealth;
+    float curHealth;
+};
+
+struct CollisionDmg {
+    float damage;
+};
+
 //Define Component Tags
 using Tag = uint32_t;
 namespace ComponentTags
 {
-    constexpr Tag Active            = 0x1;
-    constexpr Tag Position          = 0x1 << 1;
-    constexpr Tag Velocity          = 0x1 << 2;
-    constexpr Tag PathData          = 0x1 << 3;
-    constexpr Tag Model             = 0x1 << 4;
-    constexpr Tag Collidable        = 0x1 << 5;
-    constexpr Tag DiesOnCollision   = 0x1 << 6;
-    constexpr Tag RigidBody         = 0x1 << 7;
-    constexpr Tag HitpointData      = 0x1 << 8;
-    constexpr Tag Turret            = 0x1 << 10;
-
+    constexpr Tag Active    = 0x1;
+    constexpr Tag Position  = 0x1 << 1;
+    constexpr Tag Velocity  = 0x1 << 2;
+    constexpr Tag PathData  = 0x1 << 3;
+    constexpr Tag Model = 0x1 << 4;
+    constexpr Tag Collidable = 0x1 << 5;
+    constexpr Tag DiesOnCollision = 0x1 << 6;
+    constexpr Tag RigidBody = 0x1 << 7;
+    constexpr Tag Health = 0x1 << 8;
+    constexpr Tag CollisionDmg = 0x1 << 9;
+    constexpr Tag Turret = 0x1 << 10;
 }
 
 namespace GameData
@@ -85,15 +87,16 @@ namespace GameData
     //Entity Tag is a 32 bit int that denotes the components attached to the enitity
     extern std::array<Tag, MAX_ENTITIES> tags;
 
-    extern std::array<Active, MAX_ENTITIES> activity;
+    extern std::array<Active, MAX_ENTITIES> activity;   
     extern std::array<Position, MAX_ENTITIES> positions;
     extern std::array<Velocity, MAX_ENTITIES> velocities;
     extern std::array<PathData, MAX_ENTITIES> pathStructs;
     extern std::array<Model, MAX_ENTITIES> models;
-    extern std::array<HitpointData, MAX_ENTITIES> hitpointStructs;
     extern std::array<Turret, MAX_ENTITIES> turrets;
     extern std::array<Collider, MAX_ENTITIES> colliders;
     extern std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
+    extern std::array<Health, MAX_ENTITIES> healths;
+    extern std::array<CollisionDmg, MAX_ENTITIES> coldmg;
 
 
     //Events

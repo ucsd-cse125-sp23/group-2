@@ -30,6 +30,7 @@ struct ServertoClientData {
     std::array<Active, MAX_ENTITIES> activity;
     std::array<Position, MAX_ENTITIES> positions;
     std::array<Model, MAX_ENTITIES> models;
+    std::array<Health, MAX_ENTITIES> healths;
 };
 
 //Struct for intializing the client id

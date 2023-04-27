@@ -5,9 +5,12 @@
 #define NUM_TOWERS 20
 #define NUM_RESOURCES 20
 #define NUM_PROJECTILES 50
+
 // Speed of movement in units per second
 const float MOVE_SPEED = 20;
 
+const float PLAYER_BASE_HEALTH = 119;
+const float ENEMY_BASE_HEALTH = 118;
 
 //The Start and End indices of the entity array for each entity type (DO NOT MODIFY)
 #define ENEMY_START         (NUM_PLAYERS)

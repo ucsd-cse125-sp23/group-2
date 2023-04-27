@@ -9,11 +9,12 @@ namespace GameData
   std::array<Velocity, MAX_ENTITIES> velocities;
   std::array<PathData, MAX_ENTITIES> pathStructs;
   std::array<Model, MAX_ENTITIES> models;
-  std::array<HitpointData, MAX_ENTITIES> hitpointStructs;
   std::array<Turret, MAX_ENTITIES> turrets;
   std::array<Collider, MAX_ENTITIES> colliders;
   std::queue<CollisionEvent> colevents;
   std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
+  std::array<Health, MAX_ENTITIES> healths;
+  std::array<CollisionDmg, MAX_ENTITIES> coldmg;
 }
 
 //Call all systems each update
@@ -115,7 +116,7 @@ void EntityComponentSystem::sysTurretFire()
             //If a valid target was found, fire at them
             if (closestEnemy != e)
             {
-                GameData::hitpointStructs[closestEnemy].HP -= GameData::turrets[e].damage;
+                GameData::healths[closestEnemy].curHealth -= GameData::turrets[e].damage;
                 //std::cout << "Test Tower Fired at Enemey: " << closestEnemy - ENEMY_START << "\n";
             }
         }
@@ -199,33 +200,6 @@ void EntityComponentSystem::sysDetectCollisions()
     }
 }
 
-//Check entity health death conditions
-void EntityComponentSystem::sysHealthStatus()
-{
-    for (Entity e = 0; e < MAX_ENTITIES; e++)
-    {
-        //Continue to next entity if this one is not active
-        if (!GameData::activity[e]) { continue; }
-
-        //check if this entity has a health component
-        if ((GameData::tags[e] & ComponentTags::HitpointData) == ComponentTags::HitpointData)
-        {
-            //TEST OUTPUT FOR VISUALIZER
-            if (GameData::hitpointStructs[e].HP <= 10)
-            {
-                GameData::models[e].asciiRep = 'X';
-            }
-
-            //set to inactive if health at or below 0
-            if (GameData::hitpointStructs[e].HP <= 0)
-            {
-                GameData::activity[e] = false;
-                //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
-            }
-        }
-    }
-}
-
 void EntityComponentSystem::resolveCollisions()
 {
     while (!GameData::colevents.empty())
@@ -248,6 +222,47 @@ void EntityComponentSystem::resolveCollisions()
 
         if ((GameData::tags[e] & (ComponentTags::DiesOnCollision)) == ComponentTags::DiesOnCollision) {
             GameData::activity[e] = false;
+        }
+
+        if ((GameData::tags[e] & (ComponentTags::CollisionDmg)) == ComponentTags::CollisionDmg) {
+            if ((GameData::tags[o] & (ComponentTags::Health)) == ComponentTags::Health) {
+                GameData::healths[o].curHealth -= GameData::coldmg[e].damage;
+            }
+        }
+
+        if ((GameData::tags[o] & (ComponentTags::CollisionDmg)) == ComponentTags::CollisionDmg) {
+            if ((GameData::tags[e] & (ComponentTags::Health)) == ComponentTags::Health) {
+                GameData::healths[e].curHealth -= GameData::coldmg[o].damage;
+            }
+        }
+
+
+    }
+}
+
+//Check entity health death conditions
+void EntityComponentSystem::sysHealthStatus()
+{
+    for (Entity e = 0; e < MAX_ENTITIES; e++)
+    {
+        //Continue to next entity if this one is not active
+        if (!GameData::activity[e]) { continue; }
+
+        //check if this entity has a health component
+        if ((GameData::tags[e] & ComponentTags::Health) == ComponentTags::Health)
+        {
+            //TEST OUTPUT FOR VISUALIZER
+            if (GameData::healths[e].curHealth <= 10)
+            {
+                GameData::models[e].asciiRep = 'X';
+            }
+
+            //set to inactive if health at or below 0
+            if (GameData::healths[e].curHealth <= 0)
+            {
+                GameData::activity[e] = false;
+                //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
+            }
         }
     }
 }

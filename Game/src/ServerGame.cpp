@@ -33,13 +33,15 @@ void ServerGame::initPlayers()
         GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].modelID = MODEL_ID_ROVER;
         GameData::models[i].asciiRep = 'P';
+        GameData::healths[i].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
             ComponentTags::Velocity +
             ComponentTags::Model +
             ComponentTags::Collidable+
-            ComponentTags::RigidBody;
+            ComponentTags::RigidBody+
+            ComponentTags::Health;
         //TODO: Other Model Data
     }
     //TODO: Change
@@ -66,19 +68,20 @@ void ServerGame::initEnemies()
         GameData::pathStructs[i].moveSpeed = MOVE_SPEED_ADJ;
         GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].asciiRep = 'E';
-        GameData::hitpointStructs[i].maxHP = 100;
-        GameData::hitpointStructs[i].HP = 100;
-        GameData::rigidbodies[i].fixed = true;
+        //GameData::rigidbodies[i].fixed = true;
+        GameData::healths[i].maxHealth = GameData::healths[i].curHealth = ENEMY_BASE_HEALTH;
+        GameData::coldmg[i].damage = 30.0f;
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
             ComponentTags::Velocity +
             ComponentTags::PathData +
-            ComponentTags::HitpointData +
             ComponentTags::Model +
             ComponentTags::Collidable+
-            //ComponentTags::DiesOnCollision +
-            ComponentTags::RigidBody;
+            ComponentTags::DiesOnCollision +
+            ComponentTags::RigidBody +
+            ComponentTags::Health +
+            ComponentTags::CollisionDmg;
     }
 }
 
@@ -94,8 +97,7 @@ void ServerGame::testing_staggeredSpawn()
         GameData::activity[curEntity] = true;
         GameData::positions[curEntity] = glm::vec3(31, 0, 31);
         GameData::pathStructs[curEntity].currentNode = 0;
-        GameData::hitpointStructs[curEntity].maxHP = 100;
-        GameData::hitpointStructs[curEntity].HP = 100;
+        GameData::healths[curEntity].curHealth = ENEMY_BASE_HEALTH;
         GameData::models[curEntity].asciiRep = 'E';
         curTick = 0;
         curEntity++;
@@ -167,7 +169,7 @@ void ServerGame::update()
     testing_staggeredSpawn(); //TODO: Remove this after testing concludes
 
     if (curTick % 4 == 0) {
-        //asciiView();
+        asciiView();
     }
 }
 
@@ -221,6 +223,7 @@ void ServerGame::packageData(ServertoClientData& data)
     data.positions = GameData::positions;
     data.models = GameData::models;
     data.activity = GameData::activity;
+    data.healths = GameData::healths;
 }
 
 const int GRID_X = 32;
