@@ -2,6 +2,7 @@
 
 void GameWorld::init() {
 	currID = 0;
+	env = new Skybox();
 	for (int i = 0; i < NUM_PLAYERS; i++) {
 		players[i] = new Player(currID);
 		currID++;
@@ -29,7 +30,9 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 }
 
 //render all active entities
-void GameWorld::draw(const glm::mat4& viewProjMtx, GLuint shader) {
+void GameWorld::draw(const glm::mat4& viewProjMtx, Shader* shader, Shader* skyboxShader) {
+	env->draw(viewProjMtx, skyboxShader);
+
 	for (Player* p : players) {
 		if (p->getActive()) {
 			p->draw(viewProjMtx, shader);
@@ -41,4 +44,5 @@ void GameWorld::draw(const glm::mat4& viewProjMtx, GLuint shader) {
 			m->draw(viewProjMtx, shader);
 		}
 	}
+
 }

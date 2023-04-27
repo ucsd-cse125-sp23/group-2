@@ -11,7 +11,7 @@ set(
     src/NetworkServices.cpp
     src/ServerGame.cpp
     src/ServerNetwork.cpp
-    src/LoadingHelper.cpp
+    src/graphics/LoadingHelper.cpp
     src/EntityComponentSystem.cpp
     src/graphics/GameWorld.cpp
     src/graphics/Mob.cpp
@@ -19,6 +19,8 @@ set(
     src/graphics/GameWindow.cpp
     src/graphics/Player.cpp
     src/graphics/Shader.cpp
+    src/graphics/stb_image.cpp
+    src/graphics/Skybox.cpp
 )
 
 # Add header files
@@ -30,7 +32,7 @@ set(
     src/NetworkServices.h
     src/ServerGame.h
     src/ServerNetwork.h
-    src/LoadingHelper.h
+    src/graphics/LoadingHelper.h
     src/EntityComponentSystem.h
     src/GameConstants.h
     src/graphics/GameWorld.h
@@ -40,6 +42,8 @@ set(
     src/graphics/GameWindow.h
     src/graphics/Player.h
     src/graphics/Shader.h
+    src/graphics/stb_image.h
+    src/graphics/Skybox.h
 )
 
 # Require GL

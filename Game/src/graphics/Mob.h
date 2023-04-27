@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "core.h"
-#include "../LoadingHelper.h"
+#include "LoadingHelper.h"
 class Mob {
 private:
 
@@ -24,7 +24,7 @@ public:
     Mob(int i);
     ~Mob();
 
-    void draw(const glm::mat4& viewProjMtx, GLuint shader);
+    void draw(const glm::mat4& viewProjMtx, Shader* shader);
     void update();
     void update(glm::vec3& translation);
 

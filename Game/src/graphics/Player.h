@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "core.h"
-#include "../LoadingHelper.h"
+#include "LoadingHelper.h"
 class Player {
 private:
 
@@ -10,6 +10,8 @@ private:
 
     GLuint VAO;
     GLuint VBO_positions, VBO_normals, VBO_uvs, EBO;
+
+    unsigned int cubeTexture;
 
     glm::mat4 model;
     glm::vec3 color;
@@ -24,7 +26,7 @@ public:
     Player(int i);
     ~Player();
 
-    void draw(const glm::mat4& viewProjMtx, GLuint shader);
+    void draw(const glm::mat4& viewProjMtx, Shader* shader);
     void update();
     void update(glm::vec3 & translation);
 

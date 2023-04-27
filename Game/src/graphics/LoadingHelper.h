@@ -5,7 +5,8 @@
 #include <cstring>
 #include <map>
 
-#include "graphics/core.h"
+#include "core.h"
+#include "stb_image.h"
 
 bool loadOBJ(
 	const char* path,
@@ -40,3 +41,7 @@ void indexVBO(
 	std::vector<glm::vec2>& out_uvs,
 	std::vector<glm::vec3>& out_normals
 );
+
+unsigned int loadTexture(char const* path);
+
+unsigned int loadCubemap(std::vector<std::string> faces);
