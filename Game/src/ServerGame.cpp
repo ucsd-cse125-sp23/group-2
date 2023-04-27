@@ -63,7 +63,7 @@ void ServerGame::initEnemies()
         GameData::positions[i] = glm::vec3(31, 0, 31);
         memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[i].pathNodes));
         GameData::pathStructs[i].currentNode = 0;
-        GameData::pathStructs[i].moveSpeed = 0.1;
+        GameData::pathStructs[i].moveSpeed = MOVE_SPEED_ADJ;
         GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].asciiRep = 'E';
         GameData::rigidbodies[i].fixed = true;
@@ -166,13 +166,13 @@ void ServerGame::handleInputs()
             ClienttoServerData in = incomingDataLists[i].front();
             GameData::velocities[i] = glm::vec3(0,GameData::velocities[i].y,0);
             if (in.moveForward)
-                GameData::velocities[i].z = -1 * MOVE_SPEED;
+                GameData::velocities[i].z = -1 * MOVE_SPEED_ADJ;
             if (in.moveLeft)
-                GameData::velocities[i].x = -1 * MOVE_SPEED;
+                GameData::velocities[i].x = -1 * MOVE_SPEED_ADJ;
             if (in.moveBack)
-                GameData::velocities[i].z = MOVE_SPEED;
+                GameData::velocities[i].z = MOVE_SPEED_ADJ;
             if (in.moveRight)
-                GameData::velocities[i].x = MOVE_SPEED;
+                GameData::velocities[i].x = MOVE_SPEED_ADJ;
 
             incomingDataLists[i].pop();
         }

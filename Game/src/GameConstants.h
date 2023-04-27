@@ -6,7 +6,7 @@
 #define NUM_RESOURCES 20
 #define NUM_PROJECTILES 50
 // Speed of movement in units per second
-const float MOVE_SPEED = 0.2;
+const float MOVE_SPEED = 20;
 
 
 //The Start and End indices of the entity array for each entity type (DO NOT MODIFY)
