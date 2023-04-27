@@ -148,16 +148,26 @@ int ClientNetwork::recieveDeserialize(ServertoClientData& incomingData, Serverto
         datapacket.deserialize(&(network_data[i]));
         switch (datapacket.packet_type) {
         case INIT_CONNECTION:
+            if ( (data_length - i) < sizeof(Packet<ServertoClientInit>)) {
+                printf("Bad packet_type: %u, Data Remaining: %d, Data length %d\n", datapacket.packet_type, (data_length - i), data_length);
+                i += data_length;
+                break;
+            }
             initpacket.deserialize(&(network_data[i]));
             initData = initpacket.data;
             i += sizeof(Packet<ServertoClientInit>);
             break;
         case ACTION_EVENT:
+            if ((data_length - i) < sizeof(Packet<ServertoClientData>)) {
+                printf("Bad packet_type: %u, Data Remaining: %d, Data length %d\n", datapacket.packet_type, (data_length - i), data_length);
+                i += data_length;
+                break;
+            }
             incomingData = datapacket.data;
             i += sizeof(Packet<ServertoClientData>);
             break;
         default:
-            printf("Bad packet_type: %u, Data Length: %d\n", datapacket.packet_type, data_length);
+            printf("Bad packet_type: %u, Data Remaining: %d, Data length %d\n", datapacket.packet_type, (data_length - i), data_length);
             i += data_length;
         }
     }
