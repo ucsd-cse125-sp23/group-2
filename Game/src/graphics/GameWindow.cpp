@@ -64,9 +64,7 @@ GameWindow::~GameWindow() {
 }
 
 void GameWindow::cleanUp() {
-    
-
-    glDeleteProgram(shaderProgram);
+    shaderProgram->cleanup();
 }
 void GameWindow::setup() {
    
@@ -86,14 +84,9 @@ void GameWindow::setup() {
 }
 bool GameWindow::initializeProgram() {
     // Create a shader program with a vertex shader and a fragment shader.
-    shaderProgram = LoadShaders("shaders/shader.vert", "shaders/shader.frag");
+    shaderProgram = new Shader("shaders/shader.vert", "shaders/shader.frag");
+    skyboxProgram = new Shader("shaders/skybox.vert", "shaders/skybox.frag");
     //cubeShader = LoadShaders("shaders/shader.vert", "shaders/shader.frag");
-
-    // Check the shader program.
-    if (!shaderProgram) {
-        std::cerr << "Failed to initialize shader program" << std::endl;
-        return false;
-    }
 
     return true;
 }
@@ -123,7 +116,7 @@ void GameWindow::displayCallback() {
     glfwMakeContextCurrent(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //player->draw(cam->GetViewProjectMtx(), shaderProgram);
-    gameWorld->draw(shaderProgram);
+    gameWorld->draw(shaderProgram, skyboxProgram);
     glfwPollEvents();
     glfwSwapBuffers(window);
 }

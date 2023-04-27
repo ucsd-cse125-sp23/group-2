@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "core.h"
-#include "../LoadingHelper.h"
+#include "LoadingHelper.h"
 class Player {
 private:
 
@@ -25,7 +25,7 @@ public:
     Player(int i);
     ~Player();
 
-    void draw(const glm::mat4& viewProjMtx, GLuint shader);
+    void draw(const glm::mat4& viewProjMtx, Shader* shader);
     void update();
     void update(glm::vec3 & translation);
 

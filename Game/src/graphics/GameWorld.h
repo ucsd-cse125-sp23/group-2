@@ -1,6 +1,8 @@
 #pragma once
 #include "Player.h"
 #include "Mob.h"
+#include "Skybox.h"
+#include "Shader.h"
 #include "Camera.h"
 #include "../GameConstants.h"
 #include "../NetworkData.h"
@@ -10,6 +12,7 @@ private:
     int currID;
     std::array <Player*, NUM_CLIENTS> players;
     std::array <Mob*, NUM_ENEMIES> mobs;
+    Skybox* env;
 
     Camera* cam;
     static float prevX, prevY, currX, currY, scrollY;
@@ -22,7 +25,7 @@ public:
     void update(ServertoClientData& incomingData, int id);
 
     //render all active entities
-    void draw(GLuint shader);
+    void draw(Shader* shader, Shader* skyboxShader);
 
     //callbacks - for interaction
     static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);

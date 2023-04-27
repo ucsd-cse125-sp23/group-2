@@ -1,5 +1,4 @@
 #pragma once
-#include "Shader.h"
 #include "core.h"
 #include "Camera.h"
 #include "GameWorld.h"
@@ -15,7 +14,8 @@ private:
 	GameWorld* gameWorld;
 
 	// Shader Program
-	GLuint shaderProgram;
+	Shader* shaderProgram;
+	Shader* skyboxProgram;
 
 	//camera
 	//Camera* cam;
