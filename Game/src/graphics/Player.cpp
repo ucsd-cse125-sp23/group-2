@@ -91,6 +91,7 @@ void Player::update(glm::vec3& translation) {
 }
 */
 void Player::update(glm::vec3& position) {
+    this->position = position;
     model[3] = glm::vec4(position, 1.0f);
 }
 
@@ -98,3 +99,4 @@ void Player::spin(float deg) {
     // Update the model matrix by multiplying a rotation matrix
     model = model * glm::rotate(glm::radians(deg), glm::vec3(0.0f, 1.0f, 0.0f));
 }
+

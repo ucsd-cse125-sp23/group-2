@@ -18,7 +18,9 @@ private:
 	Shader* skyboxProgram;
 
 	//camera
-	Camera* cam;
+	//Camera* cam;
+	//static float prevX, prevY, scrollY;
+	//static int mouseDX, mouseDY;
 public:
 	GLFWwindow* window;
 
@@ -40,4 +42,7 @@ public:
 	void resetCamera();
 
 	//callbacks - for interaction
+	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+	static void mouse_callback(GLFWwindow* window, int button, int action, int mods);
+	static void cursor_callback(GLFWwindow* window, double currX, double currY);
 };

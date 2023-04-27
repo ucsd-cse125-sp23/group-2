@@ -3,6 +3,7 @@
 #include "Mob.h"
 #include "Skybox.h"
 #include "Shader.h"
+#include "Camera.h"
 #include "../GameConstants.h"
 #include "../NetworkData.h"
 class GameWorld {
@@ -13,6 +14,10 @@ private:
     std::array <Mob*, NUM_ENEMIES> mobs;
     Skybox* env;
 
+    Camera* cam;
+    static float prevX, prevY, currX, currY, scrollY;
+    //static int mouseDX, mouseDY;
+
 public:
     void init();
 
@@ -20,5 +25,10 @@ public:
     void update(ServertoClientData& incomingData, int id);
 
     //render all active entities
-    void draw(const glm::mat4& viewProjMtx, Shader* shader, Shader* skyboxShader);
+    void draw(Shader* shader, Shader* skyboxShader);
+
+    //callbacks - for interaction
+    static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+    static void mouse_callback(GLFWwindow* window, int button, int action, int mods);
+    static void cursor_callback(GLFWwindow* window, double currX, double currY);
 };

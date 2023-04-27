@@ -7,6 +7,7 @@ private:
 
     bool active;
     int id;
+    glm::vec3 position;
 
     GLuint VAO;
     GLuint VBO_positions, VBO_normals, VBO_uvs, EBO;
@@ -33,5 +34,7 @@ public:
     void spin(float deg);
     void setActive(bool a) { active = a; };
     bool getActive() { return active; };
+    glm::vec3 getPosition() { return position; };
+    float getYRotation();
     
 };
