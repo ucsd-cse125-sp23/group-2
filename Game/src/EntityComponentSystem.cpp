@@ -12,6 +12,7 @@ namespace GameData
   std::array<Collider, MAX_ENTITIES> colliders;
   std::queue<CollisionEvent> colevents;
   std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
+  std::array<Health, MAX_ENTITIES> healths;
 }
 
 //Call all systems each update
@@ -21,6 +22,7 @@ void EntityComponentSystem::update()
     sysMovement();
     sysDetectCollisions();
     resolveCollisions();
+    dmgAll();
 }
 
 //Move Entities that contain a Velocity Component
@@ -179,6 +181,22 @@ void EntityComponentSystem::resolveCollisions()
 
         if ((GameData::tags[e] & (ComponentTags::DiesOnCollision)) == ComponentTags::DiesOnCollision) {
             GameData::activity[e] = false;
+        }
+    }
+}
+
+void EntityComponentSystem::dmgAll()
+{
+    for (int i = 0; i < MAX_ENTITIES; ++i) {
+        if (GameData::activity[i] == false) {
+            continue;
+        }
+        if ((ComponentTags::Health & GameData::tags[i]) == ComponentTags::Health) {
+            GameData::healths[i].curHealth -= 0.1f;
+            if (GameData::healths[i].curHealth <= 0.0) {
+                GameData::activity[i] = false;
+            }
+            printf("Entity %d, health: %f\n", i, GameData::healths[i].curHealth);
         }
     }
 }

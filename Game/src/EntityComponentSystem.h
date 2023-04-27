@@ -48,6 +48,11 @@ struct CollisionEvent {
     glm::vec3 pen;
 };
 
+struct Health {
+    float maxHealth;
+    float curHealth;
+};
+
 //Define Component Tags
 using Tag = uint32_t;
 namespace ComponentTags
@@ -60,6 +65,7 @@ namespace ComponentTags
     constexpr Tag Collidable = 0x1 << 5;
     constexpr Tag DiesOnCollision = 0x1 << 6;
     constexpr Tag RigidBody = 0x1 << 7;
+    constexpr Tag Health = 0x1 << 8;
 }
 
 namespace GameData
@@ -75,6 +81,7 @@ namespace GameData
     extern std::array<Model, MAX_ENTITIES> models;
     extern std::array<Collider, MAX_ENTITIES> colliders;
     extern std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
+    extern std::array<Health, MAX_ENTITIES> healths;
 
 
     //Events
@@ -99,5 +106,6 @@ namespace EntityComponentSystem
     //Handle&Resolve Collisions
     void resolveCollisions();
 
-
+    //Poison, owie
+    void dmgAll();
 };

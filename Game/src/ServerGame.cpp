@@ -33,13 +33,15 @@ void ServerGame::initPlayers()
         GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].modelID = MODEL_ID_ROVER;
         GameData::models[i].asciiRep = 'P';
+        GameData::healths[i].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
             ComponentTags::Velocity +
             ComponentTags::Model +
             ComponentTags::Collidable+
-            ComponentTags::RigidBody;
+            ComponentTags::RigidBody+
+            ComponentTags::Health;
         //TODO: Other Model Data
     }
     //TODO: Change
@@ -67,6 +69,7 @@ void ServerGame::initEnemies()
         GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].asciiRep = 'E';
         GameData::rigidbodies[i].fixed = true;
+        GameData::healths[i].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
@@ -75,7 +78,8 @@ void ServerGame::initEnemies()
             ComponentTags::Model +
             ComponentTags::Collidable+
             //ComponentTags::DiesOnCollision +
-            ComponentTags::RigidBody;
+            ComponentTags::RigidBody +
+            ComponentTags::Health;
     }
 }
 
