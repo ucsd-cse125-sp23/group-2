@@ -30,9 +30,9 @@ set(
     src/NetworkServices.h
     src/ServerGame.h
     src/ServerNetwork.h
+    src/LoadingHelper.h
     src/EntityComponentSystem.h
     src/GameConstants.h
-    src/LoadingHelper.h
     src/graphics/GameWorld.h
     src/graphics/Mob.h
     src/graphics/Camera.h
