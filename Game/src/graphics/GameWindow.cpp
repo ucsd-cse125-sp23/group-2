@@ -116,7 +116,7 @@ void GameWindow::displayCallback() {
     glfwMakeContextCurrent(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //player->draw(cam->GetViewProjectMtx(), shaderProgram);
-    gameWorld->draw(shaderProgram);
+    gameWorld->draw(shaderProgram, skyboxProgram);
     glfwPollEvents();
     glfwSwapBuffers(window);
 }

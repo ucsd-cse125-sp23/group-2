@@ -12,8 +12,6 @@ private:
     GLuint VAO;
     GLuint VBO_positions, VBO_normals, VBO_uvs, EBO;
 
-    unsigned int cubeTexture;
-
     glm::mat4 model;
     glm::vec3 color;
 

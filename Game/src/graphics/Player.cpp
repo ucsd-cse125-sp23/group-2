@@ -7,9 +7,7 @@ Player::Player(int i) {
     model = glm::mat4(1.0f);
 
     // The color of the cube. Try setting it to something else!
-    //color = glm::vec3(1.0f, 0.95f, 0.1f);
-    color = glm::vec3(0.37f, 0.55f, 0.55f);
-
+    color = glm::vec3(0.0f, 0.0f, 1.0f);
     bool res = loadOBJ("../assets/cube.obj", indices, vertices, uvs, normals);
 
     // Generate a vertex array (VAO) and two vertex buffer objects (VBO).
@@ -44,8 +42,6 @@ Player::Player(int i) {
     // Unbind the VBOs.
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
-    cubeTexture = loadTexture("../assets/container.jpg");
     
 }
 
@@ -70,8 +66,6 @@ void Player::draw(const glm::mat4& viewProjMtx, Shader* shader) {
     // Bind the VAO
     glBindVertexArray(VAO);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, cubeTexture);
     // draw the points using triangles, indexed with the EBO
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_SHORT, 0);
 
