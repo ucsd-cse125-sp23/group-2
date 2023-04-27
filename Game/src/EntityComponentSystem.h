@@ -66,16 +66,16 @@ struct CollisionEvent {
 using Tag = uint32_t;
 namespace ComponentTags
 {
-    constexpr Tag Active    = 0x1;
-    constexpr Tag Position  = 0x1 << 1;
-    constexpr Tag Velocity  = 0x1 << 2;
-    constexpr Tag PathData  = 0x1 << 3;
-    constexpr Tag Model = 0x1 << 4;
-    constexpr Tag Collidable = 0x1 << 5;
-    constexpr Tag DiesOnCollision = 0x1 << 6;
-    constexpr Tag RigidBody = 0x1 << 7;
-    constexpr Tag HitpointData  = 0x1 << 8;
-    constexpr Tag Turret        = 0x1 << 10;
+    constexpr Tag Active            = 0x1;
+    constexpr Tag Position          = 0x1 << 1;
+    constexpr Tag Velocity          = 0x1 << 2;
+    constexpr Tag PathData          = 0x1 << 3;
+    constexpr Tag Model             = 0x1 << 4;
+    constexpr Tag Collidable        = 0x1 << 5;
+    constexpr Tag DiesOnCollision   = 0x1 << 6;
+    constexpr Tag RigidBody         = 0x1 << 7;
+    constexpr Tag HitpointData      = 0x1 << 8;
+    constexpr Tag Turret            = 0x1 << 10;
 
 }
 
