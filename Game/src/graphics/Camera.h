@@ -65,9 +65,8 @@ public:
     void SetIncline(float i) { Incline = i; }
 
     float getAngleAroundPlayer() { return angleAroundPlayer; };
-    float GetDistance() { return Distance; }
-    float GetAzimuth() { return Azimuth; }
-    float GetIncline() { return Incline; }
+    glm::vec3 getDirectionVector();
+    glm::vec3 getCameraPosition() { return position; };
 
     const glm::mat4 &GetViewProjectMtx() { return ViewProjectMtx; }
 

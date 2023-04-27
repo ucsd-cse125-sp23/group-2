@@ -17,7 +17,7 @@ void Camera::update(glm::vec3 & playerPos, float dx, float dy, float sy) {
     calcCameraPosition(horizontalDist, verticalDist);
     yaw = 180 - angleAroundPlayer;
     calcViewProjectMtx();
-    std::cout << "angle: " << angleAroundPlayer << "\n";
+    //std::cout << "angle: " << angleAroundPlayer << "\n";
     /*
     glm::mat4 world(1);
     world[3][2] = Distance;
@@ -69,6 +69,14 @@ void Camera::calcViewProjectMtx() {
     glm::mat4 project = glm::perspective(glm::radians(FOV), Aspect, NearClip, FarClip);
     ViewProjectMtx = project * vm;
     
+}
+
+glm::vec3 Camera::getDirectionVector() {
+    glm::vec3 directionVector = glm::vec3(glm::cos(glm::radians(-pitch)) * glm::sin(glm::radians(angleAroundPlayer)),
+        glm::sin(glm::radians(-pitch)),
+        glm::cos(glm::radians(-pitch)) * glm::cos(glm::radians(angleAroundPlayer)));
+    //std::cout << "vector: " << directionVector.x << " " << directionVector.y << " " << directionVector.z << "\n ";
+    return directionVector;
 }
 void Camera::Reset() {
     position = glm::vec3(0, 0, 0);

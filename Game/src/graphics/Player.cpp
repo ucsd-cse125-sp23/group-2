@@ -8,7 +8,7 @@ Player::Player(int i) {
 
     // The color of the cube. Try setting it to something else!
     color = glm::vec3(0.0f, 0.0f, 1.0f);
-    bool res = loadOBJ("../assets/cube.obj", indices, vertices, uvs, normals);
+    bool res = loadOBJ("../assets/rover.obj", indices, vertices, uvs, normals);
 
     // Generate a vertex array (VAO) and two vertex buffer objects (VBO).
     glGenVertexArrays(1, &VAO);
@@ -86,6 +86,16 @@ void Player::update(glm::vec3& translation) {
 */
 void Player::update(glm::vec3& position) {
     this->position = position;
+    /*
+    float angle = orientation;
+    if (v.x != 0) {
+       angle = glm::atan(v.z / v.x);
+    }
+    float deltaAngle = angle - orientation;
+
+    orientation = angle;
+    model = model * glm::rotate(deltaAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+    */
     model[3] = glm::vec4(position, 1.0f);
 }
 

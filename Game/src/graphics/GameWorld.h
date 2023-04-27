@@ -28,6 +28,8 @@ public:
     void draw(Shader* shader, Shader* skyboxShader);
     
     float getCamAngle() { return cam->getAngleAroundPlayer(); };
+    glm::vec3 getCamDirectionVector() { return cam->getDirectionVector(); };
+    glm::vec3 getCamPosition() { return cam->getCameraPosition(); };
     //callbacks - for interaction
     static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
     static void mouse_callback(GLFWwindow* window, int button, int action, int mods);

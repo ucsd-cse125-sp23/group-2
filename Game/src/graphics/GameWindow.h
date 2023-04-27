@@ -41,6 +41,8 @@ public:
 	void resetCamera();
 
 	float getCamAngle() { return gameWorld->getCamAngle(); };
+	glm::vec3 getCamDirectionVector() { return gameWorld->getCamDirectionVector(); };
+	glm::vec3 getCamPosition() { return gameWorld->getCamPosition(); };
 
 	//callbacks - for interaction
 	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);

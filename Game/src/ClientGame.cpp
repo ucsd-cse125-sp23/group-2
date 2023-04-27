@@ -54,6 +54,8 @@ void ClientGame::packageData(ClienttoServerData& data) {
     data.moveLeft = moveLeft;
     data.moveRight = moveRight;
     data.camAngleAroundPlayer = gameWindow->getCamAngle();
+    data.camDirectionVector = gameWindow->getCamDirectionVector();
+    data.camPosition = gameWindow->getCamPosition();
 }
 
 void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {

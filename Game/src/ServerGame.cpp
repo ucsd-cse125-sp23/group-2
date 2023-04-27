@@ -235,6 +235,7 @@ void ServerGame::packageData(ServertoClientData& data)
     data.positions = GameData::positions;
     data.models = GameData::models;
     data.activity = GameData::activity;
+
 }
 
 const int GRID_X = 32;

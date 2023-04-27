@@ -8,6 +8,7 @@ private:
     bool active;
     int id;
     glm::vec3 position;
+    float orientation;
 
     GLuint VAO;
     GLuint VBO_positions, VBO_normals, VBO_uvs, EBO;
