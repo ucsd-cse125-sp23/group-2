@@ -30,21 +30,24 @@ void ServerGame::initPlayers()
         GameData::activity[i] = true;
         GameData::positions[i] = glm::vec3(0, 0, 0);
         GameData::velocities[i] = glm::vec3(0, 0, 0);
+        GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].modelID = MODEL_ID_ROVER;
         GameData::models[i].asciiRep = 'P';
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
             ComponentTags::Velocity +
-            ComponentTags::Model;
+            ComponentTags::Model +
+            ComponentTags::Collidable+
+            ComponentTags::RigidBody;
         //TODO: Other Model Data
     }
     //TODO: Change
     //Manually set spawn positions
     GameData::positions[0] = glm::vec3(0, 0, 0);
-    GameData::positions[1] = glm::vec3(0, 0, 1);
-    GameData::positions[2] = glm::vec3(1, 0, 0);
-    GameData::positions[3] = glm::vec3(1, 0, 1);
+    GameData::positions[1] = glm::vec3(0, 0, 3);
+    GameData::positions[2] = glm::vec3(3, 0, 0);
+    GameData::positions[3] = glm::vec3(3, 0, 3);
 
 }
 
@@ -60,14 +63,19 @@ void ServerGame::initEnemies()
         GameData::positions[i] = glm::vec3(31, 0, 31);
         memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[i].pathNodes));
         GameData::pathStructs[i].currentNode = 0;
-        GameData::pathStructs[i].moveSpeed = 0.1;
+        GameData::pathStructs[i].moveSpeed = MOVE_SPEED_ADJ;
+        GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].asciiRep = 'E';
+        GameData::rigidbodies[i].fixed = true;
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
             ComponentTags::Velocity +
             ComponentTags::PathData +
-            ComponentTags::Model;
+            ComponentTags::Model +
+            ComponentTags::Collidable+
+            //ComponentTags::DiesOnCollision +
+            ComponentTags::RigidBody;
     }
 }
 
@@ -139,15 +147,12 @@ void ServerGame::update()
 
     testing_staggeredSpawn(); //TODO: Remove this after testing concludes
     if (curTick % 4 == 0) {
-        asciiView();
+        //asciiView();
     }
 }
 
 
 
-// Speed of movement in units per second
-const float MOVE_SPEED = 0.1;
-const float MOVE_DELTA = (MOVE_SPEED / TICK_RATE);
 void ServerGame::handleInputs()
 {
 
@@ -161,13 +166,13 @@ void ServerGame::handleInputs()
             ClienttoServerData in = incomingDataLists[i].front();
             GameData::velocities[i] = glm::vec3(0,GameData::velocities[i].y,0);
             if (in.moveForward)
-                GameData::velocities[i].z = -1 * MOVE_SPEED;
+                GameData::velocities[i].z = -1 * MOVE_SPEED_ADJ;
             if (in.moveLeft)
-                GameData::velocities[i].x = -1 * MOVE_SPEED;
+                GameData::velocities[i].x = -1 * MOVE_SPEED_ADJ;
             if (in.moveBack)
-                GameData::velocities[i].z = MOVE_SPEED;
+                GameData::velocities[i].z = MOVE_SPEED_ADJ;
             if (in.moveRight)
-                GameData::velocities[i].x = MOVE_SPEED;
+                GameData::velocities[i].x = MOVE_SPEED_ADJ;
 
             incomingDataLists[i].pop();
         }
@@ -175,38 +180,6 @@ void ServerGame::handleInputs()
     }
 
 }
-
-
-/*
-void ServerGame::step()
-{
-    char msg[100];
-    msg[0] = '\0';
-    glm::vec3 translation(0, 0, 0);
-    for (int i = 0; i < NUM_CLIENTS; ++i) {
-        while (!incomingDataLists[i].empty()) {
-            ClienttoServerData in = incomingDataLists[i].front();
-            if (in.moveForward)
-                translation.z = -1 * MOVE_DELTA;
-            if (in.moveLeft)
-                translation.x = -1 * MOVE_DELTA;
-            if (in.moveBack)
-                translation.z = MOVE_DELTA;
-            if (in.moveRight)
-                translation.x = MOVE_DELTA;
-            incomingDataLists[i].pop();
-        }
-        //in.print(msg);
-        //sprintf(msg, "Client: %d, Translation x: %f, Trans z: %f\n",i,  translation.x, translation.z);
-        //strcat(debug, msg);
-
-        gameState.playerPosition[i] = gameState.playerPosition[i] + translation;
-        translation = glm::vec3(0, 0, 0);
-    }
-
-
-}
-*/
 
 void ServerGame::sendPackets()
 {

@@ -7,6 +7,7 @@
 #include "GameConstants.h"
 #define TICK_RATE 128
 #define DEBUG_BUFFER 100000
+const float MOVE_SPEED_ADJ = MOVE_SPEED / TICK_RATE;
 namespace ECS = EntityComponentSystem;
 class ServerGame
 {

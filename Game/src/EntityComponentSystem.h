@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <queue>
+
 #include <array>
 #include "graphics/core.h"
 #include "GameConstants.h"
@@ -27,6 +29,25 @@ struct Model //3D Model to render for the entity
     //TODO: Other Model Data
 };
 
+struct Collider //Information for collisions
+{
+    glm::vec3 AABB; //Axis Aligned Bound Box vector
+
+    //TODO: Pointer to a mesh for narrow phase
+};
+
+struct RigidBodyInfo //Information for collisions
+{
+    bool fixed;
+    int mass;
+};
+
+struct CollisionEvent {
+    Entity e;
+    Entity o;
+    glm::vec3 pen;
+};
+
 //Define Component Tags
 using Tag = uint32_t;
 namespace ComponentTags
@@ -35,7 +56,10 @@ namespace ComponentTags
     constexpr Tag Position  = 0x1 << 1;
     constexpr Tag Velocity  = 0x1 << 2;
     constexpr Tag PathData  = 0x1 << 3;
-    constexpr Tag Model     = 0x1 << 4;
+    constexpr Tag Model = 0x1 << 4;
+    constexpr Tag Collidable = 0x1 << 5;
+    constexpr Tag DiesOnCollision = 0x1 << 6;
+    constexpr Tag RigidBody = 0x1 << 7;
 }
 
 namespace GameData
@@ -48,7 +72,13 @@ namespace GameData
     extern std::array<Position, MAX_ENTITIES> positions;
     extern std::array<Velocity, MAX_ENTITIES> velocities;
     extern std::array<PathData, MAX_ENTITIES> pathStructs;
-    extern std::array<Model, MAX_ENTITIES> models;   
+    extern std::array<Model, MAX_ENTITIES> models;
+    extern std::array<Collider, MAX_ENTITIES> colliders;
+    extern std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
+
+
+    //Events
+    extern std::queue<CollisionEvent> colevents;
 }
 
 namespace EntityComponentSystem
@@ -62,5 +92,12 @@ namespace EntityComponentSystem
 
     //Do pathfinding for entities that have a path component
     void sysPathing();
+    
+    //Detect Collisions
+    void sysDetectCollisions();
+
+    //Handle&Resolve Collisions
+    void resolveCollisions();
+
 
 };
