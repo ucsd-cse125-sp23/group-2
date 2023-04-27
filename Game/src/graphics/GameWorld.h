@@ -26,7 +26,8 @@ public:
 
     //render all active entities
     void draw(Shader* shader, Shader* skyboxShader);
-
+    
+    float getCamAngle() { return cam->getAngleAroundPlayer(); };
     //callbacks - for interaction
     static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
     static void mouse_callback(GLFWwindow* window, int button, int action, int mods);

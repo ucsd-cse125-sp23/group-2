@@ -64,6 +64,7 @@ public:
     void SetAzimuth(float a) { Azimuth = a; }
     void SetIncline(float i) { Incline = i; }
 
+    float getAngleAroundPlayer() { return angleAroundPlayer; };
     float GetDistance() { return Distance; }
     float GetAzimuth() { return Azimuth; }
     float GetIncline() { return Incline; }

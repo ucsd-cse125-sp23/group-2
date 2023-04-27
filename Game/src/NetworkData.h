@@ -18,6 +18,7 @@ enum PacketTypes {
 
 // Struct containing all data to be sent from client to server
 struct ClienttoServerData {
+    float camAngleAroundPlayer;
     bool moveForward, moveBack, moveLeft, moveRight;
 
     void print(char * buf) {

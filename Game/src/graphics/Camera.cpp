@@ -18,7 +18,6 @@ void Camera::update(glm::vec3 & playerPos, float dx, float dy, float sy) {
     yaw = 180 - angleAroundPlayer;
     calcViewProjectMtx();
     std::cout << "angle: " << angleAroundPlayer << "\n";
-    
     /*
     glm::mat4 world(1);
     world[3][2] = Distance;
