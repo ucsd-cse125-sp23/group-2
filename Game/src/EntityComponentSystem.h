@@ -26,6 +26,7 @@ struct Model //3D Model to render for the entity
 {
     int modelID;
     char asciiRep;
+    glm::vec3 orientation;
     //TODO: Other Model Data
 };
 
