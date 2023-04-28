@@ -116,7 +116,7 @@ void EntityComponentSystem::sysTurretFire()
             //If a valid target was found, fire at them
             if (closestEnemy != e)
             {
-                GameData::healths[closestEnemy].curHealth -= GameData::turrets[e].damage;
+                GameData::healths[closestEnemy].curHealth -= (GameData::turrets[e].damage);
                 //std::cout << "Test Tower Fired at Enemey: " << closestEnemy - ENEMY_START << "\n";
             }
         }
