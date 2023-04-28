@@ -45,6 +45,7 @@ Mob::Mob(int i) {
     // Unbind the VBOs.
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+
 }
 
 Mob::~Mob() {
@@ -55,14 +56,14 @@ Mob::~Mob() {
     glDeleteVertexArrays(1, &VAO);
 }
 
-void Mob::draw(const glm::mat4& viewProjMtx, GLuint shader) {
+void Mob::draw(const glm::mat4& viewProjMtx, Shader* shader) {
     // actiavte the shader program
-    glUseProgram(shader);
+    shader->use();
 
     // get the locations and send the uniforms to the shader
-    glUniformMatrix4fv(glGetUniformLocation(shader, "viewProj"), 1, false, (float*)&viewProjMtx);
-    glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, (float*)&model);
-    glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
+    shader->setMat4("viewProj", viewProjMtx);
+    shader->setMat4("model", model);
+    shader->setVec3("DiffuseColor", color);
 
     // Bind the VAO
     glBindVertexArray(VAO);

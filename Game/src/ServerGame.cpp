@@ -169,7 +169,7 @@ void ServerGame::update()
     testing_staggeredSpawn(); //TODO: Remove this after testing concludes
 
     if (curTick % 4 == 0) {
-        asciiView();
+        //asciiView();
     }
 }
 
@@ -187,14 +187,29 @@ void ServerGame::handleInputs()
         {
             ClienttoServerData in = incomingDataLists[i].front();
             GameData::velocities[i] = glm::vec3(0,GameData::velocities[i].y,0);
+            float camAngle = in.camAngleAroundPlayer;
+            glm::vec3 forwardDirection = glm::vec3(glm::sin(glm::radians(camAngle)), 0.0f, glm::cos(glm::radians(camAngle)));
+            glm::vec3 leftDirection = glm::vec3(glm::sin(glm::radians(camAngle + 90)), 0.0f, glm::cos(glm::radians(camAngle + 90)));
             if (in.moveForward)
-                GameData::velocities[i].z = -1 * MOVE_SPEED_ADJ;
+                GameData::velocities[i] += MOVE_SPEED_ADJ * forwardDirection;
+                //GameData::velocities[i].z = -1 * MOVE_SPEED;
             if (in.moveLeft)
-                GameData::velocities[i].x = -1 * MOVE_SPEED_ADJ;
+                GameData::velocities[i] += MOVE_SPEED_ADJ * leftDirection;
+                //GameData::velocities[i].x = -1 * MOVE_SPEED;
             if (in.moveBack)
-                GameData::velocities[i].z = MOVE_SPEED_ADJ;
+                GameData::velocities[i] += -MOVE_SPEED_ADJ * forwardDirection;
+               // GameData::velocities[i].z = MOVE_SPEED;
             if (in.moveRight)
-                GameData::velocities[i].x = MOVE_SPEED_ADJ;
+                GameData::velocities[i] += -MOVE_SPEED_ADJ * leftDirection;
+                //GameData::velocities[i].x = MOVE_SPEED;
+
+            incomingDataLists[i].pop();
+        }
+        //in.print(msg);
+    }
+
+}
+
 
             incomingDataLists[i].pop();
         }

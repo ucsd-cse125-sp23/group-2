@@ -18,6 +18,8 @@ enum PacketTypes {
 
 // Struct containing all data to be sent from client to server
 struct ClienttoServerData {
+    float camAngleAroundPlayer;
+    glm::vec3 camDirectionVector, camPosition;
     bool moveForward, moveBack, moveLeft, moveRight;
 
     void print(char * buf) {

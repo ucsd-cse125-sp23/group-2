@@ -7,9 +7,7 @@ Player::Player(int i) {
     model = glm::mat4(1.0f);
 
     // The color of the cube. Try setting it to something else!
-    //color = glm::vec3(1.0f, 0.95f, 0.1f);
-    color = glm::vec3(0.37f, 0.55f, 0.55f);
-
+    color = glm::vec3(0.0f, 0.0f, 1.0f);
     bool res = loadOBJ("../assets/rover.obj", indices, vertices, uvs, normals);
 
     // Generate a vertex array (VAO) and two vertex buffer objects (VBO).
@@ -55,14 +53,15 @@ Player::~Player() {
     glDeleteVertexArrays(1, &VAO);
 }
 
-void Player::draw(const glm::mat4& viewProjMtx, GLuint shader) {
+void Player::draw(const glm::mat4& viewProjMtx, Shader* shader) {
     // actiavte the shader program
-    glUseProgram(shader);
+    shader->use();
 
     // get the locations and send the uniforms to the shader
-    glUniformMatrix4fv(glGetUniformLocation(shader, "viewProj"), 1, false, (float*)&viewProjMtx);
-    glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, (float*)&model);
-    glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
+    shader->setMat4("viewProj", viewProjMtx);
+    shader->setMat4("model", model);
+    shader->setVec3("DiffuseColor", color);
+
 
     // Bind the VAO
     glBindVertexArray(VAO);
@@ -86,6 +85,17 @@ void Player::update(glm::vec3& translation) {
 }
 */
 void Player::update(glm::vec3& position) {
+    this->position = position;
+    /*
+    float angle = orientation;
+    if (v.x != 0) {
+       angle = glm::atan(v.z / v.x);
+    }
+    float deltaAngle = angle - orientation;
+
+    orientation = angle;
+    model = model * glm::rotate(deltaAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+    */
     model[3] = glm::vec4(position, 1.0f);
 }
 
@@ -93,3 +103,4 @@ void Player::spin(float deg) {
     // Update the model matrix by multiplying a rotation matrix
     model = model * glm::rotate(glm::radians(deg), glm::vec3(0.0f, 1.0f, 0.0f));
 }
+
