@@ -107,6 +107,9 @@ void EntityComponentSystem::sysTurretFire()
                     //check if this enemy is the new closest entity
                     if (enemyDistance < closestDistance)
                     {
+                        //Set Orientation in model to new orientation
+                        GameData::models[e].dirNorm = glm::normalize(GameData::positions[i] - GameData::positions[e]);
+
                         closestEnemy = i;
                         closestDistance = enemyDistance;
                     }
