@@ -210,14 +210,6 @@ void ServerGame::handleInputs()
 
 }
 
-
-            incomingDataLists[i].pop();
-        }
-        //in.print(msg);
-    }
-
-}
-
 void ServerGame::sendPackets()
 {
     //Send Data to Clients
