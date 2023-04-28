@@ -219,22 +219,24 @@ void EntityComponentSystem::resolveCollisions()
 
 
 
-
+        //Check if dies on Collision
         if ((GameData::tags[e] & (ComponentTags::DiesOnCollision)) == ComponentTags::DiesOnCollision) {
             GameData::activity[e] = false;
         }
 
+        //Do on collision damage
         if ((GameData::tags[e] & (ComponentTags::CollisionDmg)) == ComponentTags::CollisionDmg) {
             if ((GameData::tags[o] & (ComponentTags::Health)) == ComponentTags::Health) {
                 GameData::healths[o].curHealth -= GameData::coldmg[e].damage;
             }
         }
-
         if ((GameData::tags[o] & (ComponentTags::CollisionDmg)) == ComponentTags::CollisionDmg) {
             if ((GameData::tags[e] & (ComponentTags::Health)) == ComponentTags::Health) {
                 GameData::healths[e].curHealth -= GameData::coldmg[o].damage;
             }
         }
+
+
 
 
     }
