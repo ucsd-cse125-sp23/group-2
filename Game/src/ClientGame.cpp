@@ -4,6 +4,7 @@ bool ClientGame::moveForward = 0;
 bool ClientGame::moveBack = 0;
 bool ClientGame::moveRight = 0;
 bool ClientGame::moveLeft = 0;
+bool ClientGame::playerattacking = 0;
 
 ClientGame::ClientGame(void)
 {
@@ -47,13 +48,7 @@ void ClientGame::update()
     //pass through ServertoClientData
     //Check init connection
     gameWindow->update(incomingData, initData.id);
-
-    /*
-    if (count > 1000) {
-        printf("Player %d position is %f, %f, %f\n", initData.id, incomingData.positions[initData.id].x, incomingData.positions[initData.id].y, incomingData.positions[initData.id].z);
-        count-=1000;
-    }
-    */
+    
     
 }
 
@@ -62,6 +57,7 @@ void ClientGame::packageData(ClienttoServerData& data) {
     data.moveBack = moveBack;
     data.moveLeft = moveLeft;
     data.moveRight = moveRight;
+    data.shoot = playerattacking;
     data.camAngleAroundPlayer = gameWindow->getCamAngle();
     data.camDirectionVector = gameWindow->getCamDirectionVector();
     data.camPosition = gameWindow->getCamPosition();
@@ -104,9 +100,30 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
     }
 }
 
+void ClientGame::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (action == GLFW_PRESS) {
+        switch (button) {
+        case GLFW_MOUSE_BUTTON_LEFT:
+            playerattacking = true;
+            break;
+        default: break;
+        }
+    }
+    else if (action == GLFW_RELEASE) {
+        switch (button) {
+        case GLFW_MOUSE_BUTTON_LEFT:
+            playerattacking = false;
+            break;
+        default: break;
+        }
+    }
+}
+
 void ClientGame::setup_callbacks() {
     // Set the key callback.
     glfwSetKeyCallback(gameWindow->window, ClientGame::keyCallback);
 
     glfwSetCursorPosCallback(gameWindow->window, GameWorld::cursor_callback);
+    glfwSetMouseButtonCallback(gameWindow->window, ClientGame::mouse_button_callback);
 }

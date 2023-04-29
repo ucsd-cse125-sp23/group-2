@@ -100,7 +100,7 @@ void ServerGame::initEnemies()
 int curEntity = ENEMY_START;
 void ServerGame::testing_staggeredSpawn()
 {
-    if (curTick >= TICK_RATE)
+    if (curTick % TICK_RATE == 0)
     {
         //cout << "Entity " << curEntity << " Spawned in!\n";
         GameData::activity[curEntity] = true;
@@ -108,7 +108,6 @@ void ServerGame::testing_staggeredSpawn()
         GameData::pathStructs[curEntity].currentNode = 0;
         GameData::healths[curEntity].curHealth = ENEMY_BASE_HEALTH;
         GameData::models[curEntity].asciiRep = 'E';
-        curTick = 0;
         curEntity++;
     }
     if (curEntity >= ENEMY_END)

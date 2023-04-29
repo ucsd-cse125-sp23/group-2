@@ -145,6 +145,4 @@ namespace EntityComponentSystem
 
     //Check the status of entity's HP
     void sysHealthStatus();
-
-    //Player Attacks
 };
