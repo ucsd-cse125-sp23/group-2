@@ -10,7 +10,8 @@
 const float MOVE_SPEED = 20;
 
 const float PLAYER_BASE_HEALTH = 119;
-const float ENEMY_BASE_HEALTH = 118;
+const float ENEMY_BASE_HEALTH = 100;
+const float TURRET_BASE_DPS = 200;
 
 //The Start and End indices of the entity array for each entity type (DO NOT MODIFY)
 #define ENEMY_START         (NUM_PLAYERS)

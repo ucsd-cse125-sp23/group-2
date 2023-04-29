@@ -46,7 +46,7 @@ struct Model //3D Model to render for the entity
 struct Turret //Component of Towers
 {
     float range; //The range of the tower
-    int damage; //The damage that the turret deals per tick
+    float damage; //The damage that the turret deals per second
 };
 
 struct Collider //Information for collisions

@@ -123,7 +123,7 @@ void ServerGame::initTowers()
     //TESTING: Create a towers
     GameData::activity[TOWER_START] = true;
     GameData::positions[TOWER_START] = glm::vec3(1, 0, 15);
-    GameData::turrets[TOWER_START].damage = 1;
+    GameData::turrets[TOWER_START].damage = TURRET_DMG_ADJ;
     GameData::turrets[TOWER_START].range = 5;
     GameData::models[TOWER_START].asciiRep = 'T';
     GameData::hostilities[TOWER_START].team = Teams::Martians;
