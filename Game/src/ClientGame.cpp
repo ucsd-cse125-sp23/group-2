@@ -28,6 +28,8 @@ int ClientGame::recieveData()
 
 void ClientGame::update()
 {
+    static int count = 0;
+    count++;
     //TODO Render
 
     // Draw nothing, see you in tutorial 2 !
@@ -45,6 +47,13 @@ void ClientGame::update()
     //pass through ServertoClientData
     //Check init connection
     gameWindow->update(incomingData, initData.id);
+
+    /*
+    if (count > 1000) {
+        printf("Player %d position is %f, %f, %f\n", initData.id, incomingData.positions[initData.id].x, incomingData.positions[initData.id].y, incomingData.positions[initData.id].z);
+        count-=1000;
+    }
+    */
     
 }
 

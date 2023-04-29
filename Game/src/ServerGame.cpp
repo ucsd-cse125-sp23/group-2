@@ -188,7 +188,7 @@ void ServerGame::handleInputs()
             ClienttoServerData in = incomingDataLists[i].front();
             GameData::velocities[i] = glm::vec3(0,GameData::velocities[i].y,0);
 
-            if (in.moveForward || in.moveBack || in.moveLeft || in.moveRight) {
+            if ( ((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
                 float camAngle = in.camAngleAroundPlayer;
                 glm::vec3 direction = glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f));
                 GameData::velocities[i] += MOVE_SPEED_ADJ * direction;
