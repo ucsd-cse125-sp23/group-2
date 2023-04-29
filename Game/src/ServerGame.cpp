@@ -10,6 +10,8 @@ ServerGame::ServerGame(void)
 
     debug[0] = '\0';
 
+    curTick = 0;
+
 }
 
 //Populate Component Arrays
@@ -94,7 +96,7 @@ void ServerGame::initEnemies()
 
 
 //TESTING: STAGGERED SPAWN (TODO: REMOVE AFTER TESTING)
-int curTick = 0;
+
 int curEntity = ENEMY_START;
 void ServerGame::testing_staggeredSpawn()
 {
@@ -113,7 +115,7 @@ void ServerGame::testing_staggeredSpawn()
     {
         curEntity = ENEMY_START;
     }
-    curTick++;
+
 }
 
 //TODO
@@ -181,6 +183,7 @@ void ServerGame::update()
     if (curTick % 4 == 0) {
         //asciiView();
     }
+    curTick++;
 }
 
 

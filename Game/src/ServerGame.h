@@ -57,5 +57,5 @@ private:
 
     void asciiView();
 
-
+    unsigned int curTick;
 };
