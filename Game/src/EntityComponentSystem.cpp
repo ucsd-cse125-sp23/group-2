@@ -15,6 +15,7 @@ namespace GameData
   std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
   std::array<Health, MAX_ENTITIES> healths;
   std::array<CollisionDmg, MAX_ENTITIES> coldmg;
+  std::array<Hostility, MAX_ENTITIES> hostilities;
 }
 
 //Call all systems each update
@@ -96,10 +97,12 @@ void EntityComponentSystem::sysTurretFire()
             Entity closestEnemy = e; //initialized to turret ID in case of no valid target found
             float closestDistance = GameData::turrets[e].range + 1; //Set closest found distance to out of range
             //Loop Thru enemies and find one in range
-            for (Entity i = ENEMY_START; i < ENEMY_END; i++)
+            for (Entity i = 0; i < MAX_ENTITIES; i++)
             {
                 //Check if enemy is active
                 if (!GameData::activity[i]) { continue; }
+                //Check if hostileto
+                if (!(GameData::hostilities[e].hostileTo & GameData::hostilities[i].team)) { continue; }
                 //Check if enemy is in range
                 float enemyDistance = glm::distance(GameData::positions[e], GameData::positions[i]);
                 if (enemyDistance < GameData::turrets[e].range)
@@ -229,13 +232,19 @@ void EntityComponentSystem::resolveCollisions()
 
         //Do on collision damage
         if ((GameData::tags[e] & (ComponentTags::CollisionDmg)) == ComponentTags::CollisionDmg) {
-            if ((GameData::tags[o] & (ComponentTags::Health)) == ComponentTags::Health) {
-                GameData::healths[o].curHealth -= GameData::coldmg[e].damage;
+            //Check if hostileto
+            if ((GameData::hostilities[e].hostileTo & GameData::hostilities[o].team)) {
+                if ((GameData::tags[o] & (ComponentTags::Health)) == ComponentTags::Health) {
+                    GameData::healths[o].curHealth -= GameData::coldmg[e].damage;
+                }
             }
         }
         if ((GameData::tags[o] & (ComponentTags::CollisionDmg)) == ComponentTags::CollisionDmg) {
-            if ((GameData::tags[e] & (ComponentTags::Health)) == ComponentTags::Health) {
-                GameData::healths[e].curHealth -= GameData::coldmg[o].damage;
+            //Check if hostileto
+            if ((GameData::hostilities[o].hostileTo & GameData::hostilities[e].team)) {
+                if ((GameData::tags[e] & (ComponentTags::Health)) == ComponentTags::Health) {
+                    GameData::healths[e].curHealth -= GameData::coldmg[o].damage;
+                }
             }
         }
 

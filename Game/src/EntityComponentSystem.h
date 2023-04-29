@@ -15,6 +15,19 @@ using Active = bool; //Is Entity active in the scene?
 using Position = glm::vec3; //Entity Position in 3D Space
 using Velocity = glm::vec3; //Entity Velocity in 3D Space
 
+using TeamID = uint32_t;
+namespace Teams {
+    constexpr TeamID Players = 0x1;
+    constexpr TeamID Martians = 0x1 << 1;
+    constexpr TeamID Towers = 0x1 << 2;
+    constexpr TeamID Environment = 0x1 << 3;
+}
+
+struct Hostility {
+    TeamID team;
+    TeamID hostileTo;
+};
+
 struct PathData //Data for entity pathing
 {
     glm::vec3 pathNodes[PATH_LENGTH]; //3D positions in which entity will need to change direction
@@ -80,7 +93,10 @@ namespace ComponentTags
     constexpr Tag Health = 0x1 << 8;
     constexpr Tag CollisionDmg = 0x1 << 9;
     constexpr Tag Turret = 0x1 << 10;
+    constexpr Tag Hostility = 0x1 << 11;
 }
+
+
 
 namespace GameData
 {
@@ -98,6 +114,7 @@ namespace GameData
     extern std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
     extern std::array<Health, MAX_ENTITIES> healths;
     extern std::array<CollisionDmg, MAX_ENTITIES> coldmg;
+    extern std::array<Hostility, MAX_ENTITIES> hostilities;
 
 
     //Events

@@ -34,6 +34,9 @@ void ServerGame::initPlayers()
         GameData::models[i].modelID = MODEL_ID_ROVER;
         GameData::models[i].asciiRep = 'P';
         GameData::healths[i].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
+        GameData::hostilities[i].team = Teams::Players;
+        GameData::hostilities[i].hostileTo = Teams::Environment+Teams::Martians;
+
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
@@ -41,7 +44,8 @@ void ServerGame::initPlayers()
             ComponentTags::Model +
             ComponentTags::Collidable+
             ComponentTags::RigidBody+
-            ComponentTags::Health;
+            ComponentTags::Health +
+            ComponentTags::Hostility;;
         //TODO: Other Model Data
     }
     //TODO: Change
@@ -71,6 +75,8 @@ void ServerGame::initEnemies()
         //GameData::rigidbodies[i].fixed = true;
         GameData::healths[i].maxHealth = GameData::healths[i].curHealth = ENEMY_BASE_HEALTH;
         GameData::coldmg[i].damage = 30.0f;
+        GameData::hostilities[i].team = Teams::Martians;
+        GameData::hostilities[i].hostileTo = Teams::Players + Teams::Towers;
         GameData::tags[i] =
             ComponentTags::Active +
             ComponentTags::Position +
@@ -81,7 +87,8 @@ void ServerGame::initEnemies()
             ComponentTags::DiesOnCollision +
             ComponentTags::RigidBody +
             ComponentTags::Health +
-            ComponentTags::CollisionDmg;
+            ComponentTags::CollisionDmg +
+            ComponentTags::Hostility;;
     }
 }
 
@@ -119,11 +126,14 @@ void ServerGame::initTowers()
     GameData::turrets[TOWER_START].damage = 1;
     GameData::turrets[TOWER_START].range = 5;
     GameData::models[TOWER_START].asciiRep = 'T';
+    GameData::hostilities[TOWER_START].team = Teams::Martians;
+    GameData::hostilities[TOWER_START].hostileTo = Teams::Players + Teams::Towers;
     GameData::tags[TOWER_START] =
         ComponentTags::Active +
         ComponentTags::Position +
         ComponentTags::Model +
-        ComponentTags::Turret;
+        ComponentTags::Turret +
+        ComponentTags::Hostility;
 
     for (int i = TOWER_START + 1; i < TOWER_END; i++)
     {
