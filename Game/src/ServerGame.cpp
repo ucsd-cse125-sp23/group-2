@@ -61,9 +61,8 @@ void ServerGame::initPlayers()
 
 void ServerGame::initEnemies()
 {
-    //Create Path (TEMP FOR TESTING) TODO: REMOVE FOR FINAL VERSION
-    glm::vec3 testPath[PATH_LENGTH] = { glm::vec3(15,0,31), glm::vec3(31,0,15), glm::vec3(15,0,15), glm::vec3(0,0,31), glm::vec3(0,0,15), glm::vec3(31,0,7), glm::vec3(31,0,0), glm::vec3(0, 0, 0)};
-
+    
+    /*
     //Initialize Enemies
     for (int i = ENEMY_START; i < ENEMY_END; i++)
     {
@@ -90,8 +89,9 @@ void ServerGame::initEnemies()
             ComponentTags::RigidBody +
             ComponentTags::Health +
             ComponentTags::CollisionDmg +
-            ComponentTags::Hostility;;
+            ComponentTags::Hostility;
     }
+    */
 }
 
 
@@ -102,19 +102,51 @@ void ServerGame::testing_staggeredSpawn()
 {
     if (curTick % TICK_RATE == 0)
     {
-        //cout << "Entity " << curEntity << " Spawned in!\n";
-        GameData::activity[curEntity] = true;
-        GameData::positions[curEntity] = glm::vec3(31, 0, 31);
-        GameData::pathStructs[curEntity].currentNode = 0;
-        GameData::healths[curEntity].curHealth = ENEMY_BASE_HEALTH;
-        GameData::models[curEntity].asciiRep = 'E';
-        curEntity++;
+        curEntity = createEnemy();
+        if (curEntity != INVALID_ENTITY) {
+            //cout << "Entity " << curEntity << " Spawned in!\n";
+            GameData::activity[curEntity] = true;
+            GameData::positions[curEntity] = glm::vec3(31, 0, 31);
+            GameData::pathStructs[curEntity].currentNode = 0;
+            GameData::healths[curEntity].curHealth = ENEMY_BASE_HEALTH;
+            GameData::models[curEntity].asciiRep = 'E';
+        }
     }
-    if (curEntity >= ENEMY_END)
-    {
-        curEntity = ENEMY_START;
-    }
+}
 
+Entity ServerGame::createEnemy()
+{
+    Entity i = ECS::createEntity();
+    if (i == INVALID_ENTITY) {
+        return i;
+    }
+    //Create Path (TEMP FOR TESTING) TODO: REMOVE FOR FINAL VERSION
+    glm::vec3 testPath[PATH_LENGTH] = { glm::vec3(15,0,31), glm::vec3(31,0,15), glm::vec3(15,0,15), glm::vec3(0,0,31), glm::vec3(0,0,15), glm::vec3(31,0,7), glm::vec3(31,0,0), glm::vec3(0, 0, 0) };
+    GameData::activity[i] = true;
+    GameData::positions[i] = glm::vec3(31, 0, 31);
+    memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[i].pathNodes));
+    GameData::pathStructs[i].currentNode = 0;
+    GameData::pathStructs[i].moveSpeed = MOVE_SPEED_ADJ;
+    GameData::colliders[i] = { glm::vec3(1, 1, 1) };
+    GameData::models[i].asciiRep = 'E';
+    //GameData::rigidbodies[i].fixed = true;
+    GameData::healths[i].maxHealth = GameData::healths[i].curHealth = ENEMY_BASE_HEALTH;
+    GameData::coldmg[i].damage = 30.0f;
+    GameData::hostilities[i].team = Teams::Martians;
+    GameData::hostilities[i].hostileTo = Teams::Players + Teams::Towers;
+    GameData::tags[i] =
+        ComponentTags::Active +
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::PathData +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::DiesOnCollision +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility;
+    return i;
 }
 
 //TODO

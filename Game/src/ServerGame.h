@@ -47,6 +47,8 @@ public:
     //TODO: Remove this method after testing
     void testing_staggeredSpawn();
 
+    //Create Enemy (Temp function) Eventuall load enemies from prefabs
+    Entity createEnemy();
 private:
 
     // The ServerNetwork object 

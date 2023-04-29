@@ -9,6 +9,7 @@
 
 //Entity type
 using Entity = uint32_t;
+const Entity INVALID_ENTITY = MAX_ENTITIES;
 
 //Define Component Tpyes (Max Components = 32)
 using Active = bool; //Is Entity active in the scene?
@@ -83,6 +84,7 @@ struct CollisionDmg {
 struct AttackModule {
     bool isAttacking;
     AttackID attack;
+    int cooldown; //Remaining coooldown in ticks
 };
 
 //Define Component Tags
@@ -154,4 +156,9 @@ namespace EntityComponentSystem
 
     //Check the status of entity's HP
     void sysHealthStatus();
+
+    //Attacks!
+    void sysAttacks();
+
+    Entity createEntity();
 };

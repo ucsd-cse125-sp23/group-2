@@ -281,3 +281,35 @@ void EntityComponentSystem::sysHealthStatus()
         }
     }
 }
+
+void EntityComponentSystem::sysAttacks()
+{
+
+    for (int e = 0; e < MAX_ENTITIES; ++e) {
+        //Continue to next entity if this one is not active
+        if (!GameData::activity[e]) { continue; }
+
+        if ((GameData::tags[e] & ComponentTags::Attacker) == ComponentTags::Attacker) {
+            GameData::attackmodules[e].cooldown--;
+            if (!GameData::attackmodules[e].isAttacking) { continue; }
+            if (GameData::attackmodules[e].cooldown <= 0) {
+
+            }
+        }
+    }
+}
+
+//Create an empty projectile 
+Entity EntityComponentSystem::createEntity()
+{
+    //Once we get instancing and modelID rendering setup,
+    for (int i = ENEMY_START; i < ENEMY_END; ++i) {
+        if (!GameData::activity[i]) {
+            GameData::activity[i] = true;
+            GameData::tags[i] = ComponentTags::Active;
+            return i;
+        }
+    }
+    return INVALID_ENTITY;
+}
+
