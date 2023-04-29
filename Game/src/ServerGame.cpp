@@ -195,6 +195,7 @@ void ServerGame::handleInputs()
 
     for(int i = 0; i < NUM_CLIENTS; i++)
     {
+        GameData::attackmodules[i].isAttacking = false;
         while (!incomingDataLists[i].empty())
         {
             ClienttoServerData in = incomingDataLists[i].front();
@@ -206,8 +207,12 @@ void ServerGame::handleInputs()
                 GameData::velocities[i] += MOVE_SPEED_ADJ * direction;
             }
 
+            if (in.shoot) {
+                GameData::attackmodules[i].isAttacking = in.shoot;
+            }
             incomingDataLists[i].pop();
         }
+
         //in.print(msg);
     }
 

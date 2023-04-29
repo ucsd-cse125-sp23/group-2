@@ -16,6 +16,7 @@ namespace GameData
   std::array<Health, MAX_ENTITIES> healths;
   std::array<CollisionDmg, MAX_ENTITIES> coldmg;
   std::array<Hostility, MAX_ENTITIES> hostilities;
+  std::array<AttackModule, MAX_ENTITIES> attackmodules;
 }
 
 //Call all systems each update

@@ -15,6 +15,8 @@ using Active = bool; //Is Entity active in the scene?
 using Position = glm::vec3; //Entity Position in 3D Space
 using Velocity = glm::vec3; //Entity Velocity in 3D Space
 
+using AttackID = uint32_t;
+
 using TeamID = uint32_t;
 namespace Teams {
     constexpr TeamID Players = 0x1;
@@ -78,6 +80,11 @@ struct CollisionDmg {
     float damage;
 };
 
+struct AttackModule {
+    bool isAttacking;
+    AttackID attack;
+};
+
 //Define Component Tags
 using Tag = uint32_t;
 namespace ComponentTags
@@ -94,6 +101,7 @@ namespace ComponentTags
     constexpr Tag CollisionDmg = 0x1 << 9;
     constexpr Tag Turret = 0x1 << 10;
     constexpr Tag Hostility = 0x1 << 11;
+    constexpr Tag Attacker = 0x1 << 12;
 }
 
 
@@ -115,6 +123,7 @@ namespace GameData
     extern std::array<Health, MAX_ENTITIES> healths;
     extern std::array<CollisionDmg, MAX_ENTITIES> coldmg;
     extern std::array<Hostility, MAX_ENTITIES> hostilities;
+    extern std::array<AttackModule, MAX_ENTITIES> attackmodules;
 
 
     //Events
