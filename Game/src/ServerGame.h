@@ -47,7 +47,7 @@ public:
     //TODO: Remove this method after testing
     void testing_staggeredSpawn();
 
-    //Create Enemy (Temp function) Eventuall load enemies from prefabs
+    //Create Enemy (Temp function) replace with load from prefab
     Entity createEnemy();
 private:
 

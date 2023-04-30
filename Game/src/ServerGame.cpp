@@ -38,6 +38,9 @@ void ServerGame::initPlayers()
         GameData::healths[i].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
         GameData::hostilities[i].team = Teams::Players;
         GameData::hostilities[i].hostileTo = Teams::Environment+Teams::Martians;
+        GameData::attackmodules[i].targetPos = glm::vec3(0, 0, 0);
+        GameData::attackmodules[i].cooldown = 0;
+
 
         GameData::tags[i] =
             ComponentTags::Active +
@@ -47,7 +50,8 @@ void ServerGame::initPlayers()
             ComponentTags::Collidable+
             ComponentTags::RigidBody+
             ComponentTags::Health +
-            ComponentTags::Hostility;;
+            ComponentTags::Hostility +
+            ComponentTags::Attacker;
         //TODO: Other Model Data
     }
     //TODO: Change
@@ -244,7 +248,9 @@ void ServerGame::handleInputs()
             }
             incomingDataLists[i].pop();
         }
-
+        if (GameData::attackmodules[i].isAttacking) {
+            //printf("ShootingInput\n");
+        }
         //in.print(msg);
     }
 

@@ -85,6 +85,7 @@ struct AttackModule {
     bool isAttacking;
     AttackID attack;
     int cooldown; //Remaining coooldown in ticks
+    glm::vec3 targetPos;
 };
 
 //Define Component Tags
@@ -161,4 +162,9 @@ namespace EntityComponentSystem
     void sysAttacks();
 
     Entity createEntity();
+
+    //Temp function (to be repalced withload from prefab)
+    Entity createProjectile();
+    
+    Entity loadPrefab();
 };
