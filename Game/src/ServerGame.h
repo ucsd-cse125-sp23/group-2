@@ -5,7 +5,6 @@
 #include <array>
 #include "EntityComponentSystem.h"
 #include "GameConstants.h"
-#define TICK_RATE 128
 #define DEBUG_BUFFER 100000
 const float MOVE_SPEED_ADJ = MOVE_SPEED / TICK_RATE;
 const float TURRET_DMG_ADJ = TURRET_BASE_DPS / TICK_RATE;
@@ -60,4 +59,6 @@ private:
     void asciiView();
 
     unsigned int curTick;
+
+    void playerAttack(Entity i, glm::vec3& camdir, glm::vec3& campos);
 };

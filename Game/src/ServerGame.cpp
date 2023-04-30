@@ -213,7 +213,7 @@ void ServerGame::update()
     printf(debug);
     debug[0] = '\0';
 
-    testing_staggeredSpawn(); //TODO: Remove this after testing concludes
+    //testing_staggeredSpawn(); //TODO: Remove this after testing concludes
 
     if (curTick % 4 == 0) {
         //asciiView();
@@ -231,6 +231,8 @@ void ServerGame::handleInputs()
 
     for(int i = 0; i < NUM_CLIENTS; i++)
     {
+        glm::vec3 camDirection;
+        glm::vec3 camPosition;
         GameData::attackmodules[i].isAttacking = false;
         while (!incomingDataLists[i].empty())
         {
@@ -239,16 +241,21 @@ void ServerGame::handleInputs()
 
             if ( ((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
                 float camAngle = in.camAngleAroundPlayer;
-                glm::vec3 direction = glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f));
-                GameData::velocities[i] += MOVE_SPEED_ADJ * direction;
+                glm::vec3 moveDirection = glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f));
+                GameData::velocities[i] += MOVE_SPEED_ADJ * moveDirection;
             }
 
             if (in.shoot) {
                 GameData::attackmodules[i].isAttacking = in.shoot;
+                camDirection = in.camDirectionVector;
+                camPosition = in.camPosition;
+
             }
             incomingDataLists[i].pop();
         }
-        if (GameData::attackmodules[i].isAttacking) {
+
+        if (GameData::attackmodules[i].isAttacking && GameData::attackmodules[i].cooldown <= 0) {
+            playerAttack(i, camDirection, camPosition);
             //printf("ShootingInput\n");
         }
         //in.print(msg);
@@ -311,4 +318,10 @@ void ServerGame::asciiView() {
         }
         cout << endl;
     }
+}
+
+void ServerGame::playerAttack(Entity e, glm::vec3& camdir, glm::vec3& campos)
+{
+    GameData::attackmodules[e].targetPos = ECS::computeRaycast(campos, camdir, glm::distance(campos, GameData::positions[e])+glm::length(GameData::colliders[e].AABB), FLT_MAX);
+    printf("Targer pos (%f, %f, %f)", GameData::attackmodules[e].targetPos.x, GameData::attackmodules[e].targetPos.y, GameData::attackmodules[e].targetPos.z);
 }
