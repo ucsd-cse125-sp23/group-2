@@ -6,9 +6,25 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
 #include "core.h"
 
-GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path);
+class Shader
+{
+public:
+	Shader();
+	Shader(const char* vertex_path, const char* fragment_path);
+
+	void use();
+	void cleanup();
+	void setBool(const std::string& name, bool value) const;
+	void setInt(const std::string& name, int value) const;
+	void setMat4(const std::string& name, const glm::mat4& mat) const;
+	void setFloat(const std::string& name, float value) const;
+	void setVec3(const std::string& name, const glm::vec3& value) const;
+private:
+	unsigned int ID;
+};

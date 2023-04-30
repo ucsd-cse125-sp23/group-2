@@ -5,6 +5,7 @@
 #define NUM_TOWERS 20
 #define NUM_RESOURCES 20
 #define NUM_PROJECTILES 50
+#define TICK_RATE 128
 
 // Speed of movement in units per second
 const float MOVE_SPEED = 20;

@@ -15,17 +15,22 @@ namespace GameData
   std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
   std::array<Health, MAX_ENTITIES> healths;
   std::array<CollisionDmg, MAX_ENTITIES> coldmg;
+  std::array<Hostility, MAX_ENTITIES> hostilities;
+  std::array<LifeSpan, MAX_ENTITIES> lifespans;
+  std::array<AttackModule, MAX_ENTITIES> attackmodules;
 }
 
 //Call all systems each update
 void EntityComponentSystem::update()
 {
+    sysAttacks();
     sysPathing();
     sysMovement();
     sysTurretFire();
     sysHealthStatus();
     sysDetectCollisions();
     resolveCollisions();
+    sysLifeSpan();
 }
 
 //Move Entities that contain a Velocity Component
@@ -96,10 +101,12 @@ void EntityComponentSystem::sysTurretFire()
             Entity closestEnemy = e; //initialized to turret ID in case of no valid target found
             float closestDistance = GameData::turrets[e].range + 1; //Set closest found distance to out of range
             //Loop Thru enemies and find one in range
-            for (Entity i = ENEMY_START; i < ENEMY_END; i++)
+            for (Entity i = 0; i < MAX_ENTITIES; i++)
             {
                 //Check if enemy is active
                 if (!GameData::activity[i]) { continue; }
+                //Check if hostileto
+                if (!(GameData::hostilities[e].hostileTo & GameData::hostilities[i].team)) { continue; }
                 //Check if enemy is in range
                 float enemyDistance = glm::distance(GameData::positions[e], GameData::positions[i]);
                 if (enemyDistance < GameData::turrets[e].range)
@@ -107,6 +114,9 @@ void EntityComponentSystem::sysTurretFire()
                     //check if this enemy is the new closest entity
                     if (enemyDistance < closestDistance)
                     {
+                        //Set Orientation in model to new orientation
+                        GameData::models[e].dirNorm = glm::normalize(GameData::positions[i] - GameData::positions[e]);
+
                         closestEnemy = i;
                         closestDistance = enemyDistance;
                     }
@@ -209,7 +219,7 @@ void EntityComponentSystem::resolveCollisions()
         Entity e = ce.e;
         Entity o = ce.o;
         //Rigid Body Collision
-        if ((GameData::tags[e] & (ComponentTags::RigidBody)) == ComponentTags::RigidBody)
+        if (((GameData::tags[e] & (ComponentTags::RigidBody)) == ComponentTags::RigidBody)&& (GameData::tags[o] & (ComponentTags::RigidBody)) == ComponentTags::RigidBody)
         {
             if (!GameData::rigidbodies[e].fixed) {
                 GameData::positions[e] += ce.pen;
@@ -219,22 +229,30 @@ void EntityComponentSystem::resolveCollisions()
 
 
 
-
+        //Check if dies on Collision
         if ((GameData::tags[e] & (ComponentTags::DiesOnCollision)) == ComponentTags::DiesOnCollision) {
             GameData::activity[e] = false;
         }
 
+        //Do on collision damage
         if ((GameData::tags[e] & (ComponentTags::CollisionDmg)) == ComponentTags::CollisionDmg) {
-            if ((GameData::tags[o] & (ComponentTags::Health)) == ComponentTags::Health) {
-                GameData::healths[o].curHealth -= GameData::coldmg[e].damage;
+            //Check if hostileto
+            if ((GameData::hostilities[e].hostileTo & GameData::hostilities[o].team)) {
+                if ((GameData::tags[o] & (ComponentTags::Health)) == ComponentTags::Health) {
+                    GameData::healths[o].curHealth -= GameData::coldmg[e].damage;
+                }
+            }
+        }
+        if ((GameData::tags[o] & (ComponentTags::CollisionDmg)) == ComponentTags::CollisionDmg) {
+            //Check if hostileto
+            if ((GameData::hostilities[o].hostileTo & GameData::hostilities[e].team)) {
+                if ((GameData::tags[e] & (ComponentTags::Health)) == ComponentTags::Health) {
+                    GameData::healths[e].curHealth -= GameData::coldmg[o].damage;
+                }
             }
         }
 
-        if ((GameData::tags[o] & (ComponentTags::CollisionDmg)) == ComponentTags::CollisionDmg) {
-            if ((GameData::tags[e] & (ComponentTags::Health)) == ComponentTags::Health) {
-                GameData::healths[e].curHealth -= GameData::coldmg[o].damage;
-            }
-        }
+
 
 
     }
@@ -266,3 +284,145 @@ void EntityComponentSystem::sysHealthStatus()
         }
     }
 }
+
+void EntityComponentSystem::sysAttacks()
+{
+
+    for (int e = 0; e < MAX_ENTITIES; ++e) {
+        //Continue to next entity if this one is not active
+        if (!GameData::activity[e]) { continue; }
+
+        if ((GameData::tags[e] & ComponentTags::Attacker) == ComponentTags::Attacker) {
+
+            if (GameData::attackmodules[e].isAttacking) {
+                //printf("Attacker %u is attacking, checking cooldown\n", e);
+                if (GameData::attackmodules[e].cooldown <= 0) {
+                    printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::attackmodules[e].cooldown);
+                    Entity attack = createProjectile(); //TODO: Can add support for multi entity attacks where create returns a list
+                    if (attack == INVALID_ENTITY) {
+                        printf("Invalid Entity (ran of of projectiles)\n");
+                        continue;
+                    }
+                    //Create transformation matrix from prefab dim, to attacker dim
+                    glm::vec3 normRelTarget = glm::normalize(GameData::attackmodules[e].targetPos - GameData::positions[e]);
+                    float angle = glm::acos(-normRelTarget.z);
+                    glm::vec3 axis = glm::vec3(normRelTarget.y, -normRelTarget.x, 0);
+                    glm::mat4 transform = glm::translate(GameData::positions[e]) * glm::rotate(angle, axis);
+
+                    //Transform positions and velocity relative to attacker
+                    GameData::positions[attack] = transform * glm::vec4(GameData::positions[attack], 1);
+                    GameData::velocities[attack] = transform * glm::vec4(GameData::velocities[attack], 0);
+                    //Set Hostility
+                    GameData::hostilities[attack].team = GameData::hostilities[e].team;
+                    GameData::hostilities[attack].hostileTo = GameData::hostilities[e].hostileTo;
+
+                    //Set cooldown TODO, should be its own component in an attack
+                    GameData::attackmodules[e].cooldown = 64;
+                }
+               
+            }
+            GameData::attackmodules[e].cooldown--;
+        }
+    }
+}
+
+void EntityComponentSystem::sysLifeSpan()
+{
+    for (Entity e = 0; e < MAX_ENTITIES; e++)
+    {
+        //Continue to next entity if this one is not active
+        if (!GameData::activity[e]) { continue; }
+
+        //check if this entity has a health component
+        if ((GameData::tags[e] & ComponentTags::LifeSpan) == ComponentTags::LifeSpan)
+        {
+            GameData::lifespans[e] -= 1.0f / TICK_RATE;
+            if (GameData::lifespans[e] <= 0) {
+                GameData::activity[e] = false;
+            }
+        }
+    }
+}
+
+//Create an empty projectile 
+Entity EntityComponentSystem::createEntity()
+{
+    //Once we get instancing and modelID rendering setup,
+    for (int i = ENEMY_START; i < ENEMY_END; ++i) {
+        if (!GameData::activity[i]) {
+            GameData::activity[i] = true;
+            GameData::tags[i] = ComponentTags::Active;
+            return i;
+        }
+    }
+    return INVALID_ENTITY;
+}
+
+Entity EntityComponentSystem::createProjectile()
+{
+    Entity i = createEntity();
+    if (i == INVALID_ENTITY) {
+        return i;
+    }
+    //Create Path (TEMP FOR TESTING) TODO: REMOVE FOR FINAL VERSION
+    GameData::activity[i] = true;
+    GameData::positions[i] = glm::vec3(0, 0, -4);
+    GameData::velocities[i] = glm::vec3(0, 0, -0.5);
+    GameData::colliders[i] = { glm::vec3(1, 1, 1) };
+    GameData::models[i].asciiRep = 'E';
+    GameData::coldmg[i].damage = 30.0f;
+    GameData::lifespans[i] = 5;
+
+    GameData::tags[i] =
+        ComponentTags::Active +
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::DiesOnCollision +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::LifeSpan;
+    return i;
+    return Entity();
+}
+
+glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, float tminog, float tmaxog)
+{
+    float tfirst = 1024;
+    glm::vec3 dirNorm = glm::normalize(dir);
+    float tmin = tminog;
+    float tmax = tmaxog;
+    for (Entity e = 0; e < MAX_ENTITIES; ++e) {
+        if (!GameData::activity[e]) { continue; }
+
+        if ((GameData::tags[e] & (ComponentTags::Collidable + ComponentTags::RigidBody)) == (ComponentTags::Collidable + ComponentTags::RigidBody)) {
+            glm::vec3 max = GameData::positions[e] + GameData::colliders[e].AABB;
+            glm::vec3 min = GameData::positions[e] - GameData::colliders[e].AABB;
+            tmin = tminog;
+            tmax = tmaxog;
+            for (int a = 0; a < 3; ++a) {
+                float invD = 1.0f / dirNorm[a];
+                float t0 = (min[a] - pos[a]) * invD;
+                float t1 = (max[a] - pos[a]) * invD;
+                if (invD < 0.0f) {
+                    std::swap(t0, t1);
+                }
+                tmin = t0 > tmin ? t0 : tmin;
+                tmax = t1 < tmax ? t1 : tmax;
+                if (tmax > tmin) {
+                    if (tmin < tfirst) {
+                        tfirst = tmin;
+                    }
+                }
+            }
+        }
+    }
+    if (tfirst == 1024) {
+        printf("Firing at nothing");
+    }
+
+
+    return pos + (dirNorm * tfirst);
+}
+
