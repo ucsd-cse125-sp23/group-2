@@ -227,8 +227,10 @@ void ServerNetwork::sendToAll(char* packets, int totalSize)
             if (iSendResult == SOCKET_ERROR)
             {
                 printf("send failed with error: %d\n", WSAGetLastError());
-                closesocket(currentSocket);
-                sessions[i] = INVALID_SOCKET;
+                if (WSAGetLastError() != WSAEWOULDBLOCK) {
+                    closesocket(currentSocket);
+                    sessions[i] = INVALID_SOCKET;
+                }
             }
         }
     }
@@ -238,6 +240,7 @@ int ServerNetwork::insertClient(SOCKET & ClientSocket)
 {
     for (int i = 0; i < NUM_CLIENTS; ++i) {
         if (sessions[i] == INVALID_SOCKET) {
+            printf("Inserting new client with id %d", i);
             sessions[i] = ClientSocket;
             return i;
         }
