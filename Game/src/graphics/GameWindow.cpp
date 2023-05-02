@@ -50,8 +50,6 @@ GameWindow::GameWindow(int width, int height) {
 
     // Call the resize callback to make sure things get drawn immediately.
     resizeCallback(window, width, height);
-
-    setup();
 }
 
 GameWindow::~GameWindow() {

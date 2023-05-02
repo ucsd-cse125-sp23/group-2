@@ -5,6 +5,7 @@ Player::Player(int i) {
     active = false;
     id = i;
     model = glm::mat4(1.0f);
+<<<<<<< Updated upstream
 
     // The color of the cube. Try setting it to something else!
     color = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -33,44 +34,41 @@ Player::Player(int i) {
     glBindBuffer(GL_ARRAY_BUFFER, VBO_uvs);
     glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), uvs.data(), GL_STATIC_DRAW);
 
+=======
+>>>>>>> Stashed changes
     
-    // Generate EBO, bind the EBO to the bound VAO and send the data
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned short), indices.data(), GL_STATIC_DRAW);
+    // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
+    stbi_set_flip_vertically_on_load(true);
 
-    // Unbind the VBOs.
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    // configure global opengl state
+    // -----------------------------
+    glEnable(GL_DEPTH_TEST);
+
+    // build and compile shaders
+    // -------------------------
+    ourShader = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+
+    // load models
+    // -----------
+    ourModel = new ObjectModel("../assets/cube.obj");
+
     
 }
 
 Player::~Player() {
-    // Delete the VBOs and the VAO.
-    glDeleteBuffers(1, &VBO_positions);
-    glDeleteBuffers(1, &VBO_normals);
-    glDeleteBuffers(1, &EBO);
-    glDeleteVertexArrays(1, &VAO);
+    
 }
 
 void Player::draw(const glm::mat4& viewProjMtx, Shader* shader) {
     // actiavte the shader program
-    shader->use();
+    ourShader->use();
 
     // get the locations and send the uniforms to the shader
-    shader->setMat4("viewProj", viewProjMtx);
-    shader->setMat4("model", model);
-    shader->setVec3("DiffuseColor", color);
+    ourShader->setMat4("viewProj", viewProjMtx);
+    ourShader->setMat4("model", model);
 
+    ourModel->Draw(*ourShader);
 
-    // Bind the VAO
-    glBindVertexArray(VAO);
-
-    // draw the points using triangles, indexed with the EBO
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_SHORT, 0);
-
-    // Unbind the VAO and shader program
-    glBindVertexArray(0);
     glUseProgram(0);
 
 }
