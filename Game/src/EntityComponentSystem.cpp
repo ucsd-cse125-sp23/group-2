@@ -297,7 +297,7 @@ void EntityComponentSystem::sysAttacks()
             if (GameData::attackmodules[e].isAttacking) {
                 //printf("Attacker %u is attacking, checking cooldown\n", e);
                 if (GameData::attackmodules[e].cooldown <= 0) {
-                    printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::attackmodules[e].cooldown);
+                    //printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::attackmodules[e].cooldown);
                     Entity attack = createProjectile(); //TODO: Can add support for multi entity attacks where create returns a list
                     if (attack == INVALID_ENTITY) {
                         printf("Invalid Entity (ran of of projectiles)\n");
@@ -389,9 +389,6 @@ Entity EntityComponentSystem::createProjectile()
 
 glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, float tminog, float tmaxog)
 {
-    printf("Cam pos: %f %f %f\n", pos.x, pos.y, pos.z);
-    printf("Cam dir: %f %f %f\n", dir.x, dir.y, dir.z);
-
     float tfirst = 1024;
     glm::vec3 dirNorm = glm::normalize(dir);
     float tmin = tminog;
@@ -420,15 +417,17 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
             }
             if (intersect) {
                 if (tmin < tfirst) {
-                    printf("Firing at entity %d\n", e);
+                    //printf("Firing at entity %d\n", e);
                     tfirst = tmin;
                 }
             }
         }
     }
+    /*
     if (tfirst == 1024) {
         printf("Firing at nothing\n");
     }
+    */
 
 
     return pos + (dirNorm * tfirst);

@@ -325,5 +325,5 @@ void ServerGame::asciiView() {
 void ServerGame::playerAttack(Entity e, glm::vec3& camdir, glm::vec3& campos)
 {
     GameData::attackmodules[e].targetPos = ECS::computeRaycast(campos, camdir, glm::distance(campos, GameData::positions[e])+glm::length(GameData::colliders[e].AABB), FLT_MAX);
-    printf("Targer pos (%f, %f, %f)", GameData::attackmodules[e].targetPos.x, GameData::attackmodules[e].targetPos.y, GameData::attackmodules[e].targetPos.z);
+    //printf("Targer pos (%f, %f, %f)\n", GameData::attackmodules[e].targetPos.x, GameData::attackmodules[e].targetPos.y, GameData::attackmodules[e].targetPos.z);
 }
