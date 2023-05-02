@@ -11,7 +11,6 @@ set(
     src/NetworkServices.cpp
     src/ServerGame.cpp
     src/ServerNetwork.cpp
-    src/LoadingHelper.cpp
     src/EntityComponentSystem.cpp
     src/graphics/GameWorld.cpp
     src/graphics/Mob.cpp
@@ -19,6 +18,8 @@ set(
     src/graphics/GameWindow.cpp
     src/graphics/Player.cpp
     src/graphics/Shader.cpp
+    src/graphics/stb_image.cpp
+    src/graphics/Skybox.cpp
 )
 
 # Add header files
@@ -30,7 +31,6 @@ set(
     src/NetworkServices.h
     src/ServerGame.h
     src/ServerNetwork.h
-    src/LoadingHelper.h
     src/EntityComponentSystem.h
     src/GameConstants.h
     src/graphics/GameWorld.h
@@ -40,6 +40,10 @@ set(
     src/graphics/GameWindow.h
     src/graphics/Player.h
     src/graphics/Shader.h
+    src/graphics/stb_image.h
+    src/graphics/Skybox.h
+    src/graphics/ObjectModel.h
+    src/graphics/Mesh.h
 )
 
 # Require GL
@@ -59,12 +63,18 @@ link_directories(
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3)
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3.lib assimp-vc143-mt.lib)
 
 # Move assets to .exe
-add_custom_target(CopyShaders ALL
+add_custom_command(TARGET mars-rover-client POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory
-	"${PROJECT_SOURCE_DIR}/shaders"
-	"${CMAKE_BINARY_DIR}/shaders"
+	"${CMAKE_SOURCE_DIR}/shaders"
+	"${PROJECT_BINARY_DIR}/shaders"
 )
-add_dependencies(mars-rover-client CopyShaders)
+
+# Move dll to .exe
+add_custom_command(TARGET mars-rover-client POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	"${CMAKE_SOURCE_DIR}/dll"
+	"${PROJECT_BINARY_DIR}"
+)

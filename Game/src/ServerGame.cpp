@@ -165,14 +165,34 @@ void ServerGame::handleInputs()
         {
             ClienttoServerData in = incomingDataLists[i].front();
             GameData::velocities[i] = glm::vec3(0,GameData::velocities[i].y,0);
-            if (in.moveForward)
-                GameData::velocities[i].z = -1 * MOVE_SPEED_ADJ;
-            if (in.moveLeft)
-                GameData::velocities[i].x = -1 * MOVE_SPEED_ADJ;
-            if (in.moveBack)
-                GameData::velocities[i].z = MOVE_SPEED_ADJ;
-            if (in.moveRight)
-                GameData::velocities[i].x = MOVE_SPEED_ADJ;
+            float camAngle = in.camAngleAroundPlayer;
+            float orientationChange = 0;
+            int inputs = 0;
+            glm::vec3 forwardDirection = glm::vec3(glm::sin(glm::radians(camAngle)), 0.0f, glm::cos(glm::radians(camAngle)));
+            glm::vec3 leftDirection = glm::vec3(glm::sin(glm::radians(camAngle + 90)), 0.0f, glm::cos(glm::radians(camAngle + 90)));
+            if (in.moveForward) {
+                GameData::velocities[i] += MOVE_SPEED * forwardDirection;
+                orientationChange += - camAngle + 90;
+                inputs++;
+            }
+            if (in.moveLeft) {
+                GameData::velocities[i] += MOVE_SPEED * leftDirection;
+                orientationChange += -camAngle;
+                inputs++;
+            }
+            if (in.moveBack) {
+                GameData::velocities[i] += -MOVE_SPEED * forwardDirection;
+                orientationChange += - camAngle + 270;
+                inputs++;
+            }
+            if (in.moveRight) {
+                GameData::velocities[i] += -MOVE_SPEED * leftDirection;
+                orientationChange += - camAngle + 180;;
+                inputs++;
+            }
+            if (inputs != 0) {
+                GameData::models[i].modelOrientation = orientationChange / inputs;
+            }
 
             incomingDataLists[i].pop();
         }
@@ -180,6 +200,7 @@ void ServerGame::handleInputs()
     }
 
 }
+
 
 void ServerGame::sendPackets()
 {
@@ -201,6 +222,7 @@ void ServerGame::packageData(ServertoClientData& data)
     data.positions = GameData::positions;
     data.models = GameData::models;
     data.activity = GameData::activity;
+
 }
 
 const int GRID_X = 32;

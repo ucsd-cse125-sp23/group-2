@@ -27,6 +27,9 @@ struct Model //3D Model to render for the entity
     int modelID;
     char asciiRep;
     //TODO: Other Model Data
+
+    //degrees
+    float modelOrientation;
 };
 
 struct Collider //Information for collisions
@@ -67,7 +70,6 @@ namespace GameData
     //List of entities index by entity ID
     //Entity Tag is a 32 bit int that denotes the components attached to the enitity
     extern std::array<Tag, MAX_ENTITIES> tags; 
-
     extern std::array<Active, MAX_ENTITIES> activity;
     extern std::array<Position, MAX_ENTITIES> positions;
     extern std::array<Velocity, MAX_ENTITIES> velocities;

@@ -8,14 +8,15 @@ bool ClientGame::moveLeft = 0;
 ClientGame::ClientGame(void)
 {
 
+
     //Network Initializatio
     network = new ClientNetwork();
     network->initConnection();
 
     //TODO Game Initialization
     gameWindow = new GameWindow(800, 600);
-    gameWindow->setup();
     setup_callbacks();
+
 }
 
 
@@ -53,6 +54,9 @@ void ClientGame::packageData(ClienttoServerData& data) {
     data.moveBack = moveBack;
     data.moveLeft = moveLeft;
     data.moveRight = moveRight;
+    data.camAngleAroundPlayer = gameWindow->getCamAngle();
+    data.camDirectionVector = gameWindow->getCamDirectionVector();
+    data.camPosition = gameWindow->getCamPosition();
 }
 
 void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -95,4 +99,9 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
 void ClientGame::setup_callbacks() {
     // Set the key callback.
     glfwSetKeyCallback(gameWindow->window, ClientGame::keyCallback);
+
+    glfwSetCursorPosCallback(gameWindow->window, GameWorld::cursor_callback);
+
+    // Set the window resize callback.
+    glfwSetWindowSizeCallback(gameWindow->window, GameWindow::resizeCallback);
 }

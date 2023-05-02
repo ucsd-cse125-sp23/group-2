@@ -1,5 +1,4 @@
 #pragma once
-#include "Shader.h"
 #include "core.h"
 #include "Camera.h"
 #include "GameWorld.h"
@@ -15,10 +14,13 @@ private:
 	GameWorld* gameWorld;
 
 	// Shader Program
-	GLuint shaderProgram;
+	Shader* shaderProgram;
+	Shader* skyboxProgram;
 
 	//camera
-	Camera* cam;
+	//Camera* cam;
+	//static float prevX, prevY, scrollY;
+	//static int mouseDX, mouseDY;
 public:
 	GLFWwindow* window;
 
@@ -29,7 +31,6 @@ public:
 	bool initializeObjects();
 	void cleanUp();
 
-	void resizeCallback(GLFWwindow* window, int width, int height);
 
 	// update and draw functions
 	void idleCallback(ServertoClientData&, int);
@@ -39,5 +40,10 @@ public:
 	// helper to reset camera
 	void resetCamera();
 
+	float getCamAngle() { return gameWorld->getCamAngle(); };
+	glm::vec3 getCamDirectionVector() { return gameWorld->getCamDirectionVector(); };
+	glm::vec3 getCamPosition() { return gameWorld->getCamPosition(); };
+
 	//callbacks - for interaction
+	static void resizeCallback(GLFWwindow* window, int width, int height);
 };
