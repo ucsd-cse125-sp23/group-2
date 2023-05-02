@@ -23,6 +23,7 @@ private:
     int receivePackets(char*);
 public:
 
+    unsigned int ndloc;
     char network_data[MAX_PACKET_SIZE];
 
     //OutgoingDataServer network_data;

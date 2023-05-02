@@ -4,6 +4,7 @@ bool ClientGame::moveForward = 0;
 bool ClientGame::moveBack = 0;
 bool ClientGame::moveRight = 0;
 bool ClientGame::moveLeft = 0;
+bool ClientGame::playerattacking = 0;
 
 ClientGame::ClientGame(void)
 {
@@ -29,6 +30,8 @@ int ClientGame::recieveData()
 
 void ClientGame::update()
 {
+    static int count = 0;
+    count++;
     //TODO Render
 
     // Draw nothing, see you in tutorial 2 !
@@ -47,6 +50,7 @@ void ClientGame::update()
     //Check init connection
     gameWindow->update(incomingData, initData.id);
     
+    
 }
 
 void ClientGame::packageData(ClienttoServerData& data) {
@@ -54,6 +58,7 @@ void ClientGame::packageData(ClienttoServerData& data) {
     data.moveBack = moveBack;
     data.moveLeft = moveLeft;
     data.moveRight = moveRight;
+    data.shoot = playerattacking;
     data.camAngleAroundPlayer = gameWindow->getCamAngle();
     data.camDirectionVector = gameWindow->getCamDirectionVector();
     data.camPosition = gameWindow->getCamPosition();
@@ -96,6 +101,26 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
     }
 }
 
+void ClientGame::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (action == GLFW_PRESS) {
+        switch (button) {
+        case GLFW_MOUSE_BUTTON_LEFT:
+            playerattacking = true;
+            break;
+        default: break;
+        }
+    }
+    else if (action == GLFW_RELEASE) {
+        switch (button) {
+        case GLFW_MOUSE_BUTTON_LEFT:
+            playerattacking = false;
+            break;
+        default: break;
+        }
+    }
+}
+
 void ClientGame::setup_callbacks() {
     // Set the key callback.
     glfwSetKeyCallback(gameWindow->window, ClientGame::keyCallback);
@@ -104,4 +129,5 @@ void ClientGame::setup_callbacks() {
 
     // Set the window resize callback.
     glfwSetWindowSizeCallback(gameWindow->window, GameWindow::resizeCallback);
+    glfwSetMouseButtonCallback(gameWindow->window, ClientGame::mouse_button_callback);
 }

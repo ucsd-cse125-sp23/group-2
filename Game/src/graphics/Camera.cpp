@@ -83,12 +83,12 @@ glm::vec3 Camera::getDirectionVector() {
 }
 void Camera::Reset() {
     position = glm::vec3(0, 0, 0);
-    distanceFromPlayer = 8;
+    distanceFromPlayer = 5;
     angleAroundPlayer = 0;
     pitch = 25;
     yaw = 0;
 
-    FOV = 66.0f;
+    FOV = 90.0f;
     Aspect = 1.33f;
     NearClip = 0.1f;
     FarClip = 1000.0f;
