@@ -30,7 +30,7 @@ public:
 	bool initializeProgram();
 	bool initializeObjects();
 	void cleanUp();
-	void resizeCallback(GLFWwindow* window, int width, int height);
+
 
 	// update and draw functions
 	void idleCallback(ServertoClientData&, int);
@@ -45,7 +45,5 @@ public:
 	glm::vec3 getCamPosition() { return gameWorld->getCamPosition(); };
 
 	//callbacks - for interaction
-	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-	static void mouse_callback(GLFWwindow* window, int button, int action, int mods);
-	static void cursor_callback(GLFWwindow* window, double currX, double currY);
+	static void resizeCallback(GLFWwindow* window, int width, int height);
 };

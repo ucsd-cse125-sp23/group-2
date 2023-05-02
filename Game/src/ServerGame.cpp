@@ -242,6 +242,7 @@ void ServerGame::handleInputs()
             if ( ((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
                 float camAngle = in.camAngleAroundPlayer;
                 glm::vec3 moveDirection = glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f));
+                GameData::models[i].modelOrientation = -camAngle + glm::degrees(glm::acos(moveDirection.y));
                 GameData::velocities[i] += MOVE_SPEED_ADJ * moveDirection;
             }
 
@@ -262,6 +263,7 @@ void ServerGame::handleInputs()
     }
 
 }
+
 
 void ServerGame::sendPackets()
 {
