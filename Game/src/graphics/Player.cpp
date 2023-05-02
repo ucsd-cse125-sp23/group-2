@@ -9,7 +9,7 @@ Player::Player(int i) {
 
     // The color of the cube. Try setting it to something else!
     color = glm::vec3(0.0f, 0.2f, 0.8f);
-    bool res = loadOBJ("../assets/rover.obj", indices, vertices, uvs, normals);
+    bool res = loadOBJ("../assets/cube.obj", indices, vertices, uvs, normals);
 
     // Generate a vertex array (VAO) and two vertex buffer objects (VBO).
     glGenVertexArrays(1, &VAO);

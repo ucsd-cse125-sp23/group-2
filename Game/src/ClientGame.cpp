@@ -14,7 +14,6 @@ ClientGame::ClientGame(void)
 
     //TODO Game Initialization
     gameWindow = new GameWindow(800, 600);
-    gameWindow->setup();
     setup_callbacks();
 }
 
