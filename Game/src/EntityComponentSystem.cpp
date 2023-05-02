@@ -389,6 +389,9 @@ Entity EntityComponentSystem::createProjectile()
 
 glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, float tminog, float tmaxog)
 {
+    printf("Cam pos: %f %f %f\n", pos.x, pos.y, pos.z);
+    printf("Cam dir: %f %f %f\n", dir.x, dir.y, dir.z);
+
     float tfirst = 1024;
     glm::vec3 dirNorm = glm::normalize(dir);
     float tmin = tminog;
@@ -401,6 +404,7 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
             glm::vec3 min = GameData::positions[e] - GameData::colliders[e].AABB;
             tmin = tminog;
             tmax = tmaxog;
+            bool intersect = true;
             for (int a = 0; a < 3; ++a) {
                 float invD = 1.0f / dirNorm[a];
                 float t0 = (min[a] - pos[a]) * invD;
@@ -410,16 +414,20 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
                 }
                 tmin = t0 > tmin ? t0 : tmin;
                 tmax = t1 < tmax ? t1 : tmax;
-                if (tmax > tmin) {
-                    if (tmin < tfirst) {
-                        tfirst = tmin;
-                    }
+                if (tmax <= tmin) {
+                    intersect = false;
+                }
+            }
+            if (intersect) {
+                if (tmin < tfirst) {
+                    printf("Firing at entity %d\n", e);
+                    tfirst = tmin;
                 }
             }
         }
     }
     if (tfirst == 1024) {
-        printf("Firing at nothing");
+        printf("Firing at nothing\n");
     }
 
 
