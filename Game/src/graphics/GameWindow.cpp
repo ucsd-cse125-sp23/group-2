@@ -34,7 +34,7 @@ GameWindow::GameWindow(int width, int height) {
     }
 
    // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // Make the context of the window.
     glfwMakeContextCurrent(window);
 

@@ -19,7 +19,7 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 	for (int i = 0; i < NUM_PLAYERS; i++) {
 		players[i]->setActive(incomingData.activity[i]);
 		if (incomingData.activity[i]) {
-			players[i]->update(incomingData.positions[i]);
+			players[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
 		}
 	}
 

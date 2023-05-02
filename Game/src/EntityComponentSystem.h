@@ -25,6 +25,9 @@ struct Model //3D Model to render for the entity
     int modelID;
     char asciiRep;
     //TODO: Other Model Data
+
+    //degrees
+    float modelOrientation;
 };
 
 //Define Component Tags

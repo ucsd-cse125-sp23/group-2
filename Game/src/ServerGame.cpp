@@ -161,20 +161,33 @@ void ServerGame::handleInputs()
             ClienttoServerData in = incomingDataLists[i].front();
             GameData::velocities[i] = glm::vec3(0,GameData::velocities[i].y,0);
             float camAngle = in.camAngleAroundPlayer;
+            float orientationChange = 0;
+            int inputs = 0;
             glm::vec3 forwardDirection = glm::vec3(glm::sin(glm::radians(camAngle)), 0.0f, glm::cos(glm::radians(camAngle)));
             glm::vec3 leftDirection = glm::vec3(glm::sin(glm::radians(camAngle + 90)), 0.0f, glm::cos(glm::radians(camAngle + 90)));
-            if (in.moveForward)
+            if (in.moveForward) {
                 GameData::velocities[i] += MOVE_SPEED * forwardDirection;
-                //GameData::velocities[i].z = -1 * MOVE_SPEED;
-            if (in.moveLeft)
+                orientationChange += - camAngle + 90;
+                inputs++;
+            }
+            if (in.moveLeft) {
                 GameData::velocities[i] += MOVE_SPEED * leftDirection;
-                //GameData::velocities[i].x = -1 * MOVE_SPEED;
-            if (in.moveBack)
+                orientationChange += -camAngle;
+                inputs++;
+            }
+            if (in.moveBack) {
                 GameData::velocities[i] += -MOVE_SPEED * forwardDirection;
-               // GameData::velocities[i].z = MOVE_SPEED;
-            if (in.moveRight)
+                orientationChange += - camAngle + 270;
+                inputs++;
+            }
+            if (in.moveRight) {
                 GameData::velocities[i] += -MOVE_SPEED * leftDirection;
-                //GameData::velocities[i].x = MOVE_SPEED;
+                orientationChange += - camAngle + 180;;
+                inputs++;
+            }
+            if (inputs != 0) {
+                GameData::models[i].modelOrientation = orientationChange / inputs;
+            }
 
             incomingDataLists[i].pop();
         }

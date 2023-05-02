@@ -4,10 +4,11 @@ Player::Player(int i) {
     // Model matrix.
     active = false;
     id = i;
+    orientation = 0;
     model = glm::mat4(1.0f);
 
     // The color of the cube. Try setting it to something else!
-    color = glm::vec3(0.0f, 0.0f, 1.0f);
+    color = glm::vec3(0.0f, 0.2f, 0.8f);
     bool res = loadOBJ("../assets/rover.obj", indices, vertices, uvs, normals);
 
     // Generate a vertex array (VAO) and two vertex buffer objects (VBO).
@@ -84,8 +85,10 @@ void Player::update(glm::vec3& translation) {
     model = model * glm::translate(translation);
 }
 */
-void Player::update(glm::vec3& position) {
+void Player::update(glm::vec3& position, float deg) {
     this->position = position;
+    float orientationDiff = orientation - deg;
+    orientation = deg;
     /*
     float angle = orientation;
     if (v.x != 0) {
@@ -96,6 +99,7 @@ void Player::update(glm::vec3& position) {
     orientation = angle;
     model = model * glm::rotate(deltaAngle, glm::vec3(0.0f, 1.0f, 0.0f));
     */
+    model *= glm::rotate(glm::radians(orientationDiff), glm::vec3(0.0f, 1.0f, 0.0f));
     model[3] = glm::vec4(position, 1.0f);
 }
 

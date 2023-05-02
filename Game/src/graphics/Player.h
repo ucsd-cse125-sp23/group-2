@@ -28,7 +28,7 @@ public:
 
     void draw(const glm::mat4& viewProjMtx, Shader* shader);
     void update();
-    void update(glm::vec3 & translation);
+    void update(glm::vec3 & translation, float degrees);
 
     void spin(float deg);
     void setActive(bool a) { active = a; };
