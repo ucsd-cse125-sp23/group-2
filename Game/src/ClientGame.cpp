@@ -8,6 +8,7 @@ bool ClientGame::moveLeft = 0;
 ClientGame::ClientGame(void)
 {
 
+
     //Network Initializatio
     network = new ClientNetwork();
     network->initConnection();
@@ -15,6 +16,7 @@ ClientGame::ClientGame(void)
     //TODO Game Initialization
     gameWindow = new GameWindow(800, 600);
     setup_callbacks();
+
 }
 
 
@@ -99,4 +101,7 @@ void ClientGame::setup_callbacks() {
     glfwSetKeyCallback(gameWindow->window, ClientGame::keyCallback);
 
     glfwSetCursorPosCallback(gameWindow->window, GameWorld::cursor_callback);
+
+    // Set the window resize callback.
+    glfwSetWindowSizeCallback(gameWindow->window, GameWindow::resizeCallback);
 }

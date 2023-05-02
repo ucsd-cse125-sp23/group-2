@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
 #include "core.h"
-#include "LoadingHelper.h"
+#include "Shader.h"
+#include "ObjectModel.h"
 class Player {
 private:
 
@@ -10,17 +11,12 @@ private:
     glm::vec3 position;
     float orientation;
 
-    GLuint VAO;
-    GLuint VBO_positions, VBO_normals, VBO_uvs, EBO;
 
     glm::mat4 model;
     glm::vec3 color;
 
-    // Cube Information
-    std::vector<unsigned short> indices;
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec2> uvs;
-    std::vector<glm::vec3> normals;
+    Shader* ourShader;
+    ObjectModel* ourModel;
 
 public:
     Player(int i);

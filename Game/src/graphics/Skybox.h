@@ -1,5 +1,6 @@
 #include "core.h"
-#include "LoadingHelper.h"
+#include "Shader.h"
+#include "stb_image.h"
 
 class Skybox {
 
@@ -10,9 +11,6 @@ public:
 	unsigned int texture;
 
 private:
-
-
-
-
+	unsigned int loadCubemap(std::vector<std::string> faces);
 
 };

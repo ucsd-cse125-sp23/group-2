@@ -93,10 +93,8 @@ bool GameWindow::initializeProgram() {
 
 
 void GameWindow::resizeCallback(GLFWwindow* window, int w, int h) {
-    width = w;
-    height = h;
     // Set the viewport size.
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, w, h);
 
     //cam->SetAspect(float(width) / float(height));
 }

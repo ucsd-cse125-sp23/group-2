@@ -4,7 +4,7 @@
 
 #include "Camera.h"
 
-int VerticalCamOffset = 2;
+float VerticalCamOffset = 3.0f;
 
 Camera::Camera() {
     Reset();
