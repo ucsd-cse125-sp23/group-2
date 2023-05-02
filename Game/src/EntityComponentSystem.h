@@ -5,6 +5,7 @@
 #include <array>
 #include "graphics/core.h"
 #include "GameConstants.h"
+
 #include <math.h>
 
 //Entity type

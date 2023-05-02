@@ -1,5 +1,5 @@
 #include "EntityComponentSystem.h"
-
+#include "Prefabs.h"
 namespace GameData
 {
   std::array<Tag, MAX_ENTITIES> tags;
@@ -298,24 +298,27 @@ void EntityComponentSystem::sysAttacks()
                 //printf("Attacker %u is attacking, checking cooldown\n", e);
                 if (GameData::attackmodules[e].cooldown <= 0) {
                     //printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::attackmodules[e].cooldown);
-                    Entity attack = createProjectile(); //TODO: Can add support for multi entity attacks where create returns a list
-                    if (attack == INVALID_ENTITY) {
-                        printf("Invalid Entity (ran of of projectiles)\n");
-                        continue;
-                    }
                     //Create transformation matrix from prefab dim, to attacker dim
                     glm::vec3 normRelTarget = glm::normalize(GameData::attackmodules[e].targetPos - GameData::positions[e]);
                     float angle = glm::acos(-normRelTarget.z);
                     glm::vec3 axis = glm::vec3(normRelTarget.y, -normRelTarget.x, 0);
                     glm::mat4 transform = glm::translate(GameData::positions[e]) * glm::rotate(angle, axis);
 
-                    //Transform positions and velocity relative to attacker
-                    GameData::positions[attack] = transform * glm::vec4(GameData::positions[attack], 1);
-                    GameData::velocities[attack] = transform * glm::vec4(GameData::velocities[attack], 0);
-                    //Set Hostility
-                    GameData::hostilities[attack].team = GameData::hostilities[e].team;
-                    GameData::hostilities[attack].hostileTo = GameData::hostilities[e].hostileTo;
+                    //Create entities representing attack (projectiles)
+                    std::list<Entity> attacks = prefabMap[Prefabs::ProjectileSpread5](); //TODO: Can add support for multi entity attacks where create returns a list
 
+                    for (auto i = attacks.begin(); i != attacks.end(); ++i) {
+                        Entity attack = *i;
+                        if (attack == INVALID_ENTITY) {
+                            continue;
+                        }
+                        //Transform positions and velocity relative to attacker
+                        GameData::positions[attack] = transform * glm::vec4(GameData::positions[attack], 1);
+                        GameData::velocities[attack] = transform * glm::vec4(GameData::velocities[attack], 0);
+                        //Set Hostility
+                        GameData::hostilities[attack].team = GameData::hostilities[e].team;
+                        GameData::hostilities[attack].hostileTo = GameData::hostilities[e].hostileTo;
+                    }
                     //Set cooldown TODO, should be its own component in an attack
                     GameData::attackmodules[e].cooldown = 64;
                 }
@@ -356,35 +359,6 @@ Entity EntityComponentSystem::createEntity()
         }
     }
     return INVALID_ENTITY;
-}
-
-Entity EntityComponentSystem::createProjectile()
-{
-    Entity i = createEntity();
-    if (i == INVALID_ENTITY) {
-        return i;
-    }
-    //Create Path (TEMP FOR TESTING) TODO: REMOVE FOR FINAL VERSION
-    GameData::activity[i] = true;
-    GameData::positions[i] = glm::vec3(0, 0, -4);
-    GameData::velocities[i] = glm::vec3(0, 0, -0.5);
-    GameData::colliders[i] = { glm::vec3(1, 1, 1) };
-    GameData::models[i].asciiRep = 'E';
-    GameData::coldmg[i].damage = 30.0f;
-    GameData::lifespans[i] = 5;
-
-    GameData::tags[i] =
-        ComponentTags::Active +
-        ComponentTags::Position +
-        ComponentTags::Velocity +
-        ComponentTags::Model +
-        ComponentTags::Collidable +
-        ComponentTags::DiesOnCollision +
-        ComponentTags::CollisionDmg +
-        ComponentTags::Hostility +
-        ComponentTags::LifeSpan;
-    return i;
-    return Entity();
 }
 
 glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, float tminog, float tmaxog)
