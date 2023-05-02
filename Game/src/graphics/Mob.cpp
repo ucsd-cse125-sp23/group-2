@@ -19,7 +19,7 @@ Mob::Mob(int i) {
 
     // load models
     // -----------
-    ourModel = new ObjectModel("../assets/cube.obj");
+    ourModel = new ObjectModel("../assets/martian/martian.obj");
 
 }
 
