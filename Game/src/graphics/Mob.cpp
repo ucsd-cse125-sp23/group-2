@@ -5,6 +5,7 @@ Mob::Mob(int i) {
     active = false;
     id = i;
     model = glm::mat4(1.0f);
+    color = glm::vec3(0.0f, 0.0f, 1.0f);
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     stbi_set_flip_vertically_on_load(true);
@@ -19,7 +20,7 @@ Mob::Mob(int i) {
 
     // load models
     // -----------
-    ourModel = new ObjectModel("../assets/martian/martian.obj");
+    ourModel = new ObjectModel("../assets/cube.obj");
 
 }
 

@@ -9,7 +9,7 @@ private:
     bool active;
     int id;
     glm::vec3 position;
-
+    glm::vec3 color;
     glm::mat4 model;
 
     Shader* ourShader;
