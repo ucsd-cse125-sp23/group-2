@@ -66,16 +66,15 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3.lib assimp-vc143-mt.lib)
 
 # Move assets to .exe
-add_custom_target(CopyShaders ALL
+add_custom_command(TARGET mars-rover-client POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory
-	"${PROJECT_SOURCE_DIR}/shaders"
-	"${CMAKE_BINARY_DIR}/shaders"
+	"${CMAKE_SOURCE_DIR}/shaders"
+	"${PROJECT_BINARY_DIR}/shaders"
 )
 
 # Move dll to .exe
 add_custom_command(TARGET mars-rover-client POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "${PROJECT_SOURCE_DIR}/dll"
-    $<TARGET_FILE_DIR:mars-rover-client>)
-
-add_dependencies(mars-rover-client CopyShaders)
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	"${CMAKE_SOURCE_DIR}/dll"
+	"${PROJECT_BINARY_DIR}"
+)
