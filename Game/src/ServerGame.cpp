@@ -38,6 +38,7 @@ void ServerGame::initPlayers()
         GameData::healths[i].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
         GameData::hostilities[i].team = Teams::Players;
         GameData::hostilities[i].hostileTo = Teams::Environment+Teams::Martians;
+        GameData::attackmodules[i].attack = Prefabs::ProjectileBasic;
         GameData::attackmodules[i].targetPos = glm::vec3(0, 0, 0);
         GameData::attackmodules[i].cooldown = 0;
 

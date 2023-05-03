@@ -1,6 +1,5 @@
 #pragma once
 #include <list>
-#include "EntityComponentSystem.h"
 
 /*
 * The default axis is negative z is the towards the target
@@ -12,6 +11,7 @@
 * (Must transform, positions and velocities to make use of prefabs)
 * 
 */
+using Entity = uint32_t;
 
 std::list<Entity> createProjectileBasic();
 std::list<Entity> createProjectileSpread5();

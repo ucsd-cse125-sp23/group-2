@@ -1,5 +1,5 @@
 #include "EntityComponentSystem.h"
-#include "Prefabs.h"
+
 namespace GameData
 {
   std::array<Tag, MAX_ENTITIES> tags;
@@ -300,16 +300,16 @@ void EntityComponentSystem::sysAttacks()
                     //printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::attackmodules[e].cooldown);
                     //Create transformation matrix from prefab dim, to attacker dim
                     glm::vec3 targetVec = GameData::attackmodules[e].targetPos - GameData::positions[e];
+
                     glm::vec3 normXZ = glm::normalize(glm::vec3(targetVec.x, 0, targetVec.z));
                     float angleXZ = glm::acos(-normXZ.z);
                     glm::vec3 normTarget = glm::normalize(targetVec);
                     float angleY = glm::acos(glm::dot(normXZ, normTarget));
                     glm::vec3 axisXZ = glm::cross(normXZ, normTarget);
-                    //glm::vec3 axis = glm::vec3(normRelTarget.y, -normRelTarget.x, 0);
-                    glm::mat4 transform = glm::translate(GameData::positions[e]) * glm::rotate(angleY, axisXZ) * glm::rotate(angleXZ, glm::vec3(0, 1, 0));
+                    glm::mat4 transform = glm::translate(GameData::positions[e]) * glm::rotate(angleY, axisXZ) * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
 
                     //Create entities representing attack (projectiles)
-                    std::list<Entity> attacks = prefabMap[Prefabs::ProjectileSpread5](); //TODO: Can add support for multi entity attacks where create returns a list
+                    std::list<Entity> attacks = prefabMap[GameData::attackmodules[e].attack]();
 
                     for (auto i = attacks.begin(); i != attacks.end(); ++i) {
                         Entity attack = *i;

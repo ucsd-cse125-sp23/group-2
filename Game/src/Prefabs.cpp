@@ -1,4 +1,5 @@
 #include "Prefabs.h"
+#include "EntityComponentSystem.h"
 using namespace EntityComponentSystem;
 std::list<Entity> createProjectileBasic() {
     std::list<Entity> createdEntities;
