@@ -105,14 +105,14 @@ void ServerGame::initEnemies()
 int curEntity = ENEMY_START;
 void ServerGame::testing_staggeredSpawn()
 {
-    if (curTick >= TICK_RATE * 5)
+    if (curTick >= ENEMY_SPAWNDELAY_TICKS)
     {
         curEntity = createEnemy();
         if (curEntity != INVALID_ENTITY) {
             //cout << "Entity " << curEntity << " Spawned in!\n";
             GameData::activity[curEntity] = true;
-            GameData::positions[curEntity] = glm::vec3(31, 0, 31);
             GameData::pathStructs[curEntity].currentNode = 0;
+            GameData::positions[curEntity] = GameData::pathStructs[curEntity].pathNodes[0];
             GameData::healths[curEntity].curHealth = ENEMY_BASE_HEALTH;
             GameData::models[curEntity].asciiRep = 'E';
         }
@@ -130,9 +130,9 @@ Entity ServerGame::createEnemy()
     //Create Path (TEMP FOR TESTING) TODO: REMOVE FOR FINAL VERSION
     glm::vec3 testPath[PATH_LENGTH] = { glm::vec3(15,0,31), glm::vec3(31,0,15), glm::vec3(15,0,15), glm::vec3(0,0,31), glm::vec3(0,0,15), glm::vec3(31,0,7), glm::vec3(31,0,0), glm::vec3(0, 0, 0) };
     GameData::activity[i] = true;
-    GameData::positions[i] = glm::vec3(31, 0, 31);
-    memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[i].pathNodes));
+    memcpy(GameData::pathStructs[i].pathNodes, Paths::path1, sizeof(GameData::pathStructs[i].pathNodes));
     GameData::pathStructs[i].currentNode = 0;
+    GameData::positions[i] = GameData::pathStructs[i].pathNodes[0];
     GameData::pathStructs[i].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::colliders[i] = { glm::vec3(1, 1, 1) };
     GameData::models[i].asciiRep = 'E';

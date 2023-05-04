@@ -56,3 +56,41 @@ std::list<Entity> createProjectileSpread5() {
     }
     return createdEntities;
 };
+std::list<Entity> createEnemyGroundBasic() {
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::activity[e] = true;
+    GameData::pathStructs[e].currentNode = 0;
+    GameData::pathStructs[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
+    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::models[e].asciiRep = 'E';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
+    GameData::coldmg[e].damage = ENEMEY_GND_BASE_DMG;
+    GameData::hostilities[e].team = Teams::Martians;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+
+    GameData::tags[e] =
+        ComponentTags::Active +
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::PathData +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::DiesOnCollision +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility;
+
+    return createdEntities;
+};
+namespace Paths {
+    glm::vec3 path1[PATH_LENGTH] = { glm::vec3(60,0,0), glm::vec3(40,0,0), glm::vec3(40,0,20), glm::vec3(20,0,20), glm::vec3(20,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) };
+    glm::vec3 path2[PATH_LENGTH] = { glm::vec3(-30,0,0), glm::vec3(-20,0,0), glm::vec3(-20,0,-10), glm::vec3(-10,0,-10), glm::vec3(-10,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) };
+    glm::vec3 path3[PATH_LENGTH] = { glm::vec3(0,0,30), glm::vec3(0,0,20), glm::vec3(-10,0,20), glm::vec3(-10,0,10), glm::vec3(0,0,10), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) };
+    glm::vec3 path4[PATH_LENGTH] = { glm::vec3(0,0,-30), glm::vec3(0,0,-20), glm::vec3(10,0,-20), glm::vec3(10,0,-10), glm::vec3(0,0,-10), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) };
+}

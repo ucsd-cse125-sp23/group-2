@@ -5,6 +5,7 @@
 #include <array>
 #include "EntityComponentSystem.h"
 #include "GameConstants.h"
+#include "Prefabs.h"
 #define DEBUG_BUFFER 100000
 namespace ECS = EntityComponentSystem;
 class ServerGame

@@ -362,6 +362,7 @@ Entity EntityComponentSystem::createEntity()
             return i;
         }
     }
+    //No available inactive enemy slots
     return INVALID_ENTITY;
 }
 

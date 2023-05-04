@@ -20,6 +20,8 @@ const float TURRET_BASE_DPS = 200;
 //ground enemy base movespeed in units/sec
 const float ENEMY_GND_MVSPD_PERSEC = 2;
 
+#define ENEMY_SPAWNDELAY_SEC 5
+
 //ground enemy base attack damage
 const float ENEMEY_GND_BASE_DMG = 30;
 
@@ -39,6 +41,7 @@ const float ENEMEY_GND_BASE_DMG = 30;
 const float ENEMY_GND_BASE_MVSPD = (ENEMY_GND_MVSPD_PERSEC / TICK_RATE);
 const float TURRET_BASE_DMG = (TURRET_BASE_DPS / TICK_RATE);
 const float PLAYER_MVSPD = (PLAYER_MVSPD_PERSEC / TICK_RATE);
+#define ENEMY_SPAWNDELAY_TICKS (ENEMY_SPAWNDELAY_SEC * TICK_RATE)
 
 //The Start and End indices of the entity array for each entity type 
 #define ENEMY_START         (NUM_PLAYERS)
