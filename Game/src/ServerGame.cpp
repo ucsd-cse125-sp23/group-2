@@ -74,7 +74,7 @@ void ServerGame::initEnemies()
         GameData::positions[i] = glm::vec3(31, 0, 31);
         memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[i].pathNodes));
         GameData::pathStructs[i].currentNode = 0;
-        GameData::pathStructs[i].moveSpeed = MOVE_SPEED_ADJ;
+        GameData::pathStructs[i].moveSpeed = PLAYER_MVSPD;
         GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].asciiRep = 'E';
         //GameData::rigidbodies[i].fixed = true;
@@ -104,7 +104,7 @@ void ServerGame::initEnemies()
 int curEntity = ENEMY_START;
 void ServerGame::testing_staggeredSpawn()
 {
-    if (curTick % TICK_RATE == 0)
+    if (curTick >= TICK_RATE * 5)
     {
         curEntity = createEnemy();
         if (curEntity != INVALID_ENTITY) {
@@ -115,6 +115,8 @@ void ServerGame::testing_staggeredSpawn()
             GameData::healths[curEntity].curHealth = ENEMY_BASE_HEALTH;
             GameData::models[curEntity].asciiRep = 'E';
         }
+
+        curTick = 0;
     }
 }
 
@@ -130,12 +132,12 @@ Entity ServerGame::createEnemy()
     GameData::positions[i] = glm::vec3(31, 0, 31);
     memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[i].pathNodes));
     GameData::pathStructs[i].currentNode = 0;
-    GameData::pathStructs[i].moveSpeed = MOVE_SPEED_ADJ;
+    GameData::pathStructs[i].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::colliders[i] = { glm::vec3(1, 1, 1) };
     GameData::models[i].asciiRep = 'E';
     //GameData::rigidbodies[i].fixed = true;
     GameData::healths[i].maxHealth = GameData::healths[i].curHealth = ENEMY_BASE_HEALTH;
-    GameData::coldmg[i].damage = 30.0f;
+    GameData::coldmg[i].damage = ENEMEY_GND_BASE_DMG;
     GameData::hostilities[i].team = Teams::Martians;
     GameData::hostilities[i].hostileTo = Teams::Players + Teams::Towers;
     GameData::tags[i] =
@@ -160,7 +162,7 @@ void ServerGame::initTowers()
     //TESTING: Create a towers
     GameData::activity[TOWER_START] = true;
     GameData::positions[TOWER_START] = glm::vec3(1, 0, 15);
-    GameData::turrets[TOWER_START].damage = TURRET_DMG_ADJ;
+    GameData::turrets[TOWER_START].damage = TURRET_BASE_DMG;
     GameData::turrets[TOWER_START].range = 5;
     GameData::models[TOWER_START].asciiRep = 'T';
     GameData::hostilities[TOWER_START].team = Teams::Martians;
@@ -213,7 +215,7 @@ void ServerGame::update()
     printf(debug);
     debug[0] = '\0';
 
-    //testing_staggeredSpawn(); //TODO: Remove this after testing concludes
+    testing_staggeredSpawn(); //TODO: Remove this after testing concludes
 
     if (curTick % 4 == 0) {
         //asciiView();
@@ -243,7 +245,7 @@ void ServerGame::handleInputs()
                 float camAngle = in.camAngleAroundPlayer;
                 glm::vec3 moveDirection = glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f));
                 GameData::models[i].modelOrientation = -camAngle + glm::degrees(glm::acos(moveDirection.y));
-                GameData::velocities[i] += MOVE_SPEED_ADJ * moveDirection;
+                GameData::velocities[i] += PLAYER_MVSPD * moveDirection;
             }
 
             if (in.shoot) {

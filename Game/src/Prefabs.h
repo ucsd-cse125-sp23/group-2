@@ -9,3 +9,16 @@
 * (Must transform, positions and velocities to make use of prefabs)
 * 
 */
+
+#include <vector>
+#include <queue>
+#include <array>
+#include "EntityComponentSystem.h"
+#include "GameConstants.h"
+
+class Prefabs
+{
+public:
+
+	void enemy_ground_basic(Entity e);
+};
