@@ -5,6 +5,7 @@
 #include <array>
 #include "graphics/core.h"
 #include "GameConstants.h"
+#include "Prefabs.h"
 #include <math.h>
 
 //Entity type
@@ -15,9 +16,6 @@ const Entity INVALID_ENTITY = MAX_ENTITIES;
 using Active = bool; //Is Entity active in the scene?
 using Position = glm::vec3; //Entity Position in 3D Space
 using Velocity = glm::vec3; //Entity Velocity in 3D Space
-
-using AttackID = uint32_t;
-
 using TeamID = uint32_t;
 namespace Teams {
     constexpr TeamID Players = 0x1;
@@ -86,7 +84,7 @@ struct CollisionDmg {
 
 struct AttackModule {
     bool isAttacking;
-    AttackID attack;
+    Prefab attack;
     int cooldown; //Remaining coooldown in ticks
     glm::vec3 targetPos;
 };
