@@ -8,5 +8,3 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include <iostream>
-
-#include "Shader.h"

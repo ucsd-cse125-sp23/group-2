@@ -44,6 +44,9 @@ struct Model //3D Model to render for the entity
     char asciiRep;
     glm::vec3 dirNorm;
     //TODO: Other Model Data
+
+    //degrees
+    float modelOrientation;
 };
 
 struct Turret //Component of Towers

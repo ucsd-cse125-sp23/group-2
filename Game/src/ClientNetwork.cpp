@@ -4,7 +4,7 @@ ClientNetwork::ClientNetwork(void) {
 
     // create WSADATA object
     WSADATA wsaData;
-
+    ndloc = 0;
     // socket
     ConnectSocket = INVALID_SOCKET;
 
@@ -97,8 +97,7 @@ ClientNetwork::ClientNetwork(void) {
 
 int ClientNetwork::receivePackets(char* recvbuf)
 {
-    iResult = NetworkServices::receiveMessage(ConnectSocket, recvbuf, MAX_PACKET_SIZE);
-
+    iResult = NetworkServices::receiveMessage(ConnectSocket, recvbuf, MAX_PACKET_SIZE - ndloc);
     if (iResult == 0)
     {
         printf("Connection closed\n");
@@ -134,23 +133,25 @@ int ClientNetwork::recieveDeserialize(ServertoClientData& incomingData, Serverto
     Packet<ServertoClientData> datapacket;
     Packet<ServertoClientInit> initpacket;
 
-    int data_length = receivePackets(network_data);
-
+    int data_length = receivePackets(&(network_data[ndloc]));
     if (data_length <= 0)
     {
         //no data recieved
         return 0;
     }
+    ndloc += data_length;
 
     int i = 0;
-    while (i < (unsigned int)data_length)
+    while (i < (unsigned int)ndloc)
     {
         datapacket.deserialize(&(network_data[i]));
         switch (datapacket.packet_type) {
         case INIT_CONNECTION:
-            if ( (data_length - i) < sizeof(Packet<ServertoClientInit>)) {
+            if ( (ndloc - i) < sizeof(Packet<ServertoClientInit>)) {
                 printf("Bad packet_type: %u, Data Remaining: %d, Data length %d\n", datapacket.packet_type, (data_length - i), data_length);
-                i += data_length;
+                memcpy(network_data, &(network_data[i]), ndloc - i);
+                ndloc -= i;
+                i += sizeof(Packet<ServertoClientInit>);
                 break;
             }
             initpacket.deserialize(&(network_data[i]));
@@ -158,18 +159,23 @@ int ClientNetwork::recieveDeserialize(ServertoClientData& incomingData, Serverto
             i += sizeof(Packet<ServertoClientInit>);
             break;
         case ACTION_EVENT:
-            if ((data_length - i) < sizeof(Packet<ServertoClientData>)) {
+            if ((ndloc - i) < sizeof(Packet<ServertoClientData>)) {
                 printf("Bad packet_type: %u, Data Remaining: %d, Data length %d\n", datapacket.packet_type, (data_length - i), data_length);
-                i += data_length;
+                memcpy(network_data, &(network_data[i]), ndloc - i);
+                ndloc -= i;
+                i += sizeof(Packet<ServertoClientData>);;
                 break;
             }
             incomingData = datapacket.data;
             i += sizeof(Packet<ServertoClientData>);
             break;
         default:
-            printf("Bad packet_type: %u, Data Remaining: %d, Data length %d\n", datapacket.packet_type, (data_length - i), data_length);
+            printf("Really Bad packet_type: %u, Data Remaining: %d, Data length %d\n", datapacket.packet_type, (data_length - i), data_length);
             i += data_length;
         }
+    }
+    if (i == ndloc) {
+        ndloc = 0;
     }
     return 0;
 }

@@ -4,6 +4,8 @@
 
 #include "Camera.h"
 
+float VerticalCamOffset = 3.0f;
+
 Camera::Camera() {
     Reset();
 }
@@ -42,6 +44,7 @@ void Camera::update(glm::vec3 & playerPos, float dx, float dy, float sy) {
 void calcZoom();
 void Camera::calcPitch(float dy) {
     pitch -= dy * 0.1f;
+    pitch = glm::clamp(pitch, -40.0f, 85.0f);
 }
 void Camera::calcAngle(float dx) {
     angleAroundPlayer -= dx * 0.2f;
@@ -58,7 +61,7 @@ void Camera::calcCameraPosition(float hDist, float vDist) {
     float offsetX = hDist * glm::sin(glm::radians(theta));
     float offsetZ = hDist * glm::cos(glm::radians(theta));
     position.x = playerPosition.x - offsetX;
-    position.y = playerPosition.y + vDist;
+    position.y = playerPosition.y + vDist + VerticalCamOffset;
     position.z = playerPosition.z - offsetZ;
 }
 void Camera::calcViewProjectMtx() {
@@ -80,12 +83,12 @@ glm::vec3 Camera::getDirectionVector() {
 }
 void Camera::Reset() {
     position = glm::vec3(0, 0, 0);
-    distanceFromPlayer = 20;
+    distanceFromPlayer = 5;
     angleAroundPlayer = 0;
     pitch = 25;
     yaw = 0;
 
-    FOV = 70.0f;
+    FOV = 90.0f;
     Aspect = 1.33f;
     NearClip = 0.1f;
     FarClip = 1000.0f;

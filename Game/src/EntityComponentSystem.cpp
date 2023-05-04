@@ -297,7 +297,7 @@ void EntityComponentSystem::sysAttacks()
             if (GameData::attackmodules[e].isAttacking) {
                 //printf("Attacker %u is attacking, checking cooldown\n", e);
                 if (GameData::attackmodules[e].cooldown <= 0) {
-                    printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::attackmodules[e].cooldown);
+                    //printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::attackmodules[e].cooldown);
                     Entity attack = createProjectile(); //TODO: Can add support for multi entity attacks where create returns a list
                     if (attack == INVALID_ENTITY) {
                         printf("Invalid Entity (ran of of projectiles)\n");
@@ -401,6 +401,7 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
             glm::vec3 min = GameData::positions[e] - GameData::colliders[e].AABB;
             tmin = tminog;
             tmax = tmaxog;
+            bool intersect = true;
             for (int a = 0; a < 3; ++a) {
                 float invD = 1.0f / dirNorm[a];
                 float t0 = (min[a] - pos[a]) * invD;
@@ -410,17 +411,23 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
                 }
                 tmin = t0 > tmin ? t0 : tmin;
                 tmax = t1 < tmax ? t1 : tmax;
-                if (tmax > tmin) {
-                    if (tmin < tfirst) {
-                        tfirst = tmin;
-                    }
+                if (tmax <= tmin) {
+                    intersect = false;
+                }
+            }
+            if (intersect) {
+                if (tmin < tfirst) {
+                    //printf("Firing at entity %d\n", e);
+                    tfirst = tmin;
                 }
             }
         }
     }
+    /*
     if (tfirst == 1024) {
-        printf("Firing at nothing");
+        printf("Firing at nothing\n");
     }
+    */
 
 
     return pos + (dirNorm * tfirst);

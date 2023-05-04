@@ -34,7 +34,7 @@ GameWindow::GameWindow(int width, int height) {
     }
 
    // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // Make the context of the window.
     glfwMakeContextCurrent(window);
 
@@ -93,10 +93,8 @@ bool GameWindow::initializeProgram() {
 
 
 void GameWindow::resizeCallback(GLFWwindow* window, int w, int h) {
-    width = w;
-    height = h;
     // Set the viewport size.
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, w, h);
 
     //cam->SetAspect(float(width) / float(height));
 }
