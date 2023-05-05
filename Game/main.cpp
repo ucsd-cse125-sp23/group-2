@@ -1,7 +1,8 @@
 #include "src/ServerGame.h"
 #include "src/ClientGame.h"
 #include <chrono>
-#include <ctime>    
+#include <ctime>   
+#include <iostream>
 // used for multi-threading
 #include <process.h>
 #include <thread>
@@ -46,7 +47,7 @@ void serverLoop(void* arg)
         server->update();
         auto end = std::chrono::system_clock::now();
         std::chrono::duration<double> elapsed = end - start;
-        std::chrono::duration<double> sleeptime = ticklength - (start - end);
+        std::chrono::duration<double> sleeptime = ticklength - elapsed;
         if (sleeptime > 0s) {
             std::this_thread::sleep_for(sleeptime);
         }
