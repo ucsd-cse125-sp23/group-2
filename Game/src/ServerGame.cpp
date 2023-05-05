@@ -43,7 +43,6 @@ void ServerGame::initPlayers()
 
 
         GameData::tags[i] =
-            ComponentTags::Active +
             ComponentTags::Position +
             ComponentTags::Velocity +
             ComponentTags::Model +
@@ -139,7 +138,6 @@ Entity ServerGame::createEnemy()
     GameData::hostilities[i].team = Teams::Martians;
     GameData::hostilities[i].hostileTo = Teams::Players + Teams::Towers;
     GameData::tags[i] =
-        ComponentTags::Active +
         ComponentTags::Position +
         ComponentTags::Velocity +
         ComponentTags::PathData +
@@ -166,7 +164,6 @@ void ServerGame::initTowers()
     GameData::hostilities[TOWER_START].team = Teams::Martians;
     GameData::hostilities[TOWER_START].hostileTo = Teams::Players + Teams::Towers;
     GameData::tags[TOWER_START] =
-        ComponentTags::Active +
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Turret +

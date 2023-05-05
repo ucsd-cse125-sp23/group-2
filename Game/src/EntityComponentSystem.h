@@ -94,20 +94,19 @@ using LifeSpan = float;
 using Tag = uint32_t;
 namespace ComponentTags
 {
-    constexpr Tag Active    = 0x1;
-    constexpr Tag Position  = 0x1 << 1;
-    constexpr Tag Velocity  = 0x1 << 2;
-    constexpr Tag PathData  = 0x1 << 3;
-    constexpr Tag Model = 0x1 << 4;
-    constexpr Tag Collidable = 0x1 << 5;
-    constexpr Tag DiesOnCollision = 0x1 << 6;
-    constexpr Tag RigidBody = 0x1 << 7;
-    constexpr Tag Health = 0x1 << 8;
-    constexpr Tag CollisionDmg = 0x1 << 9;
-    constexpr Tag Turret = 0x1 << 10;
-    constexpr Tag Hostility = 0x1 << 11;
-    constexpr Tag Attacker = 0x1 << 12;
-    constexpr Tag LifeSpan = 0x1 << 13;
+    constexpr Tag Position  = 0x1 << 0;
+    constexpr Tag Velocity  = 0x1 << 1;
+    constexpr Tag PathData  = 0x1 << 2;
+    constexpr Tag Model = 0x1 << 3;
+    constexpr Tag Collidable = 0x1 << 4;
+    constexpr Tag DiesOnCollision = 0x1 << 5;
+    constexpr Tag RigidBody = 0x1 << 6;
+    constexpr Tag Health = 0x1 << 7;
+    constexpr Tag CollisionDmg = 0x1 << 8;
+    constexpr Tag Turret = 0x1 << 9;
+    constexpr Tag Hostility = 0x1 << 10;
+    constexpr Tag Attacker = 0x1 << 11;
+    constexpr Tag LifeSpan = 0x1 << 12;
 
 }
 

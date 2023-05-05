@@ -351,7 +351,6 @@ Entity EntityComponentSystem::createEntity()
     for (int i = ENEMY_START; i < ENEMY_END; ++i) {
         if (!GameData::activity[i]) {
             GameData::activity[i] = true;
-            GameData::tags[i] = ComponentTags::Active;
             return i;
         }
     }
@@ -374,7 +373,6 @@ Entity EntityComponentSystem::createProjectile()
     GameData::lifespans[i] = 5;
 
     GameData::tags[i] =
-        ComponentTags::Active +
         ComponentTags::Position +
         ComponentTags::Velocity +
         ComponentTags::Model +
