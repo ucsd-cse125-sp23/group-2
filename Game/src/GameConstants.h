@@ -10,6 +10,9 @@ const float TICK_RATE = 128;
 //Speed of movement in units per second
 const float PLAYER_MVSPD_PERSEC = 20;
 
+//Initial jump speed
+const float PLAYER_JPSPD_PERSEC = 30;
+
 //Base health values of different game entities
 const float PLAYER_BASE_HEALTH = 119;
 const float ENEMY_BASE_HEALTH = 100;
@@ -18,12 +21,15 @@ const float ENEMY_BASE_HEALTH = 100;
 const float TURRET_BASE_DPS = 200;
 
 //ground enemy base movespeed in units/sec
-const float ENEMY_GND_MVSPD_PERSEC = 2;
+const float ENEMY_GND_MVSPD_PERSEC = 10;
 
 const float ENEMY_SPAWNDELAY_SEC = 2;
 
 //ground enemy base attack damage
 const float ENEMEY_GND_BASE_DMG = 30;
+
+//gravitational acceleration in units per second squared
+const float GRAVITY_SEC = -120;
 
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 8
@@ -41,7 +47,9 @@ const float ENEMEY_GND_BASE_DMG = 30;
 const float ENEMY_GND_BASE_MVSPD = (ENEMY_GND_MVSPD_PERSEC / TICK_RATE);
 const float TURRET_BASE_DMG = (TURRET_BASE_DPS / TICK_RATE);
 const float PLAYER_MVSPD = (PLAYER_MVSPD_PERSEC / TICK_RATE);
+const float PLAYER_JPSPD = (PLAYER_JPSPD_PERSEC / TICK_RATE);
 const float ENEMY_SPAWNDELAY_TICKS = (ENEMY_SPAWNDELAY_SEC * TICK_RATE);
+const float GRAVITY = (GRAVITY_SEC / (TICK_RATE * TICK_RATE));
 
 //The Start and End indices of the entity array for each entity type 
 #define ENEMY_START         (NUM_PLAYERS)

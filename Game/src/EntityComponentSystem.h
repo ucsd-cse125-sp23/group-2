@@ -146,6 +146,9 @@ namespace EntityComponentSystem
     //Move entities that have a velocity component
     void sysMovement();
 
+    //Apply gravity to all rigid bodies
+    void sysGravity();
+
     //Do pathfinding for entities that have a path component
     void sysPathing();
 

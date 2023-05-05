@@ -21,6 +21,7 @@ std::list<Entity> createProjectileBasic() {
         ComponentTags::Velocity +
         ComponentTags::Model +
         ComponentTags::Collidable +
+        ComponentTags::DiesOnCollision +
         ComponentTags::CollisionDmg +
         ComponentTags::Hostility +
         ComponentTags::LifeSpan;
@@ -77,7 +78,6 @@ std::list<Entity> createEnemyGroundBasic() {
         ComponentTags::PathData +
         ComponentTags::Model +
         ComponentTags::Collidable +
-        ComponentTags::DiesOnCollision +
         ComponentTags::RigidBody +
         ComponentTags::Health +
         ComponentTags::CollisionDmg +

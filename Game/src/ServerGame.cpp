@@ -252,6 +252,10 @@ void ServerGame::handleInputs()
                 camPosition = in.camPosition;
 
             }
+
+            if (in.jump && GameData::positions[i].y <= 0) {
+                GameData::velocities[i].y = PLAYER_JPSPD;
+            }
             incomingDataLists[i].pop();
         }
 

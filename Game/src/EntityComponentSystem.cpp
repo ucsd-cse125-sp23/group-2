@@ -25,6 +25,7 @@ void EntityComponentSystem::update()
 {
     sysAttacks();
     sysPathing();
+    sysGravity();
     sysMovement();
     sysTurretFire();
     sysHealthStatus();
@@ -45,6 +46,30 @@ void EntityComponentSystem::sysMovement()
         if ((GameData::tags[e] & ComponentTags::Velocity) == ComponentTags::Velocity)
         {
             GameData::positions[e] = GameData::positions[e] + GameData::velocities[e];
+        }
+    }
+}
+
+//Apply gravity to rigid bodies
+void EntityComponentSystem::sysGravity()
+{
+    for (Entity e = 0; e < MAX_ENTITIES; e++)
+    {
+        //Continue to next entity if this one is not active
+        if (!GameData::activity[e]) { continue; }
+
+        //check if this entity has a is a rigid body
+        if ((GameData::tags[e] & ComponentTags::RigidBody) == ComponentTags::RigidBody)
+        {
+            if (GameData::positions[e].y > 0) {
+                GameData::velocities[e].y += GRAVITY;
+            }
+            else {
+                GameData::positions[e].y = 0;
+                if (GameData::velocities[e].y < 0) {
+                    GameData::velocities[e].y = 0;
+                }
+            }
         }
     }
 }
