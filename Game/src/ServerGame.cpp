@@ -66,36 +66,6 @@ void ServerGame::initPlayers()
 void ServerGame::initEnemies()
 {
 
-    /*
-    //Initialize Enemies
-    for (int i = ENEMY_START; i < ENEMY_END; i++)
-    {
-        GameData::activity[i] = false;
-        GameData::positions[i] = glm::vec3(31, 0, 31);
-        memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[i].pathNodes));
-        GameData::pathStructs[i].currentNode = 0;
-        GameData::pathStructs[i].moveSpeed = PLAYER_MVSPD;
-        GameData::colliders[i] = { glm::vec3(1, 1, 1) };
-        GameData::models[i].asciiRep = 'E';
-        //GameData::rigidbodies[i].fixed = true;
-        GameData::healths[i].maxHealth = GameData::healths[i].curHealth = ENEMY_BASE_HEALTH;
-        GameData::coldmg[i].damage = 30.0f;
-        GameData::hostilities[i].team = Teams::Martians;
-        GameData::hostilities[i].hostileTo = Teams::Players + Teams::Towers;
-        GameData::tags[i] =
-            ComponentTags::Active +
-            ComponentTags::Position +
-            ComponentTags::Velocity +
-            ComponentTags::PathData +
-            ComponentTags::Model +
-            ComponentTags::Collidable+
-            ComponentTags::DiesOnCollision +
-            ComponentTags::RigidBody +
-            ComponentTags::Health +
-            ComponentTags::CollisionDmg +
-            ComponentTags::Hostility;
-    }
-    */
 }
 
 
