@@ -22,6 +22,7 @@ struct ClienttoServerData {
     glm::vec3 camDirectionVector, camPosition;
     bool moveForward, moveBack, moveLeft, moveRight;
     bool shoot;
+    bool jump;
 
     void print(char * buf) {
         sprintf(buf, "Moveforward: %d, Moveback: %d, MoveLeft: %d, MoveRight: %d\n", moveForward, moveBack, moveLeft, moveRight);

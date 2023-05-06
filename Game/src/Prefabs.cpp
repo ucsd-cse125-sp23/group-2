@@ -17,11 +17,11 @@ std::list<Entity> createProjectileBasic() {
     GameData::lifespans[e] = 5;
 
     GameData::tags[e] =
-        ComponentTags::Active +
         ComponentTags::Position +
         ComponentTags::Velocity +
         ComponentTags::Model +
         ComponentTags::Collidable +
+        ComponentTags::DiesOnCollision +
         ComponentTags::CollisionDmg +
         ComponentTags::Hostility +
         ComponentTags::LifeSpan;
@@ -44,7 +44,6 @@ std::list<Entity> createProjectileSpread5() {
         GameData::lifespans[e] = 1;
 
         GameData::tags[e] =
-            ComponentTags::Active +
             ComponentTags::Position +
             ComponentTags::Velocity +
             ComponentTags::Model +
@@ -76,13 +75,11 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
 
     GameData::tags[e] =
-        ComponentTags::Active +
         ComponentTags::Position +
         ComponentTags::Velocity +
         ComponentTags::PathData +
         ComponentTags::Model +
         ComponentTags::Collidable +
-        ComponentTags::DiesOnCollision +
         ComponentTags::RigidBody +
         ComponentTags::Health +
         ComponentTags::CollisionDmg +

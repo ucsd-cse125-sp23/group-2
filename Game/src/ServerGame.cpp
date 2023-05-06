@@ -44,7 +44,6 @@ void ServerGame::initPlayers()
 
 
         GameData::tags[i] =
-            ComponentTags::Active +
             ComponentTags::Position +
             ComponentTags::Velocity +
             ComponentTags::Model +
@@ -66,7 +65,7 @@ void ServerGame::initPlayers()
 
 void ServerGame::initEnemies()
 {
-    
+
     /*
     //Initialize Enemies
     for (int i = ENEMY_START; i < ENEMY_END; i++)
@@ -125,7 +124,6 @@ void ServerGame::initTowers()
     GameData::hostilities[TOWER_START].team = Teams::Martians;
     GameData::hostilities[TOWER_START].hostileTo = Teams::Players + Teams::Towers;
     GameData::tags[TOWER_START] =
-        ComponentTags::Active +
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Turret +
@@ -210,6 +208,10 @@ void ServerGame::handleInputs()
                 camDirection = in.camDirectionVector;
                 camPosition = in.camPosition;
 
+            }
+
+            if (in.jump && GameData::positions[i].y <= 0) {
+                GameData::velocities[i].y = PLAYER_JPSPD;
             }
             incomingDataLists[i].pop();
         }

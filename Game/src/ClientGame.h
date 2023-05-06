@@ -11,6 +11,7 @@ private:
     GameWindow* gameWindow;
     static bool moveForward, moveBack, moveLeft, moveRight;
     static bool playerattacking;
+    static bool jumping;
 public:
 
     ServertoClientData incomingData;

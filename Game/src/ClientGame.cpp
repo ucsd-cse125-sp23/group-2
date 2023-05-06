@@ -5,6 +5,7 @@ bool ClientGame::moveBack = 0;
 bool ClientGame::moveRight = 0;
 bool ClientGame::moveLeft = 0;
 bool ClientGame::playerattacking = 0;
+bool ClientGame::jumping = 0;
 
 ClientGame::ClientGame(void)
 {
@@ -59,6 +60,7 @@ void ClientGame::packageData(ClienttoServerData& data) {
     data.moveLeft = moveLeft;
     data.moveRight = moveRight;
     data.shoot = playerattacking;
+    data.jump = jumping;
     data.camAngleAroundPlayer = gameWindow->getCamAngle();
     data.camDirectionVector = gameWindow->getCamDirectionVector();
     data.camPosition = gameWindow->getCamPosition();
@@ -79,6 +81,9 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
         case GLFW_KEY_D:
             moveRight = true;
             break;
+        case GLFW_KEY_SPACE:
+            jumping = true;
+            break;
         default: break;
         }
     }
@@ -95,6 +100,9 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
             break;
         case GLFW_KEY_D:
             moveRight = false;
+            break;
+        case GLFW_KEY_SPACE:
+            jumping = false;
             break;
         default: break;
         }
