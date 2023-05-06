@@ -19,6 +19,7 @@ namespace GameData
   std::array<LifeSpan, MAX_ENTITIES> lifespans;
   std::array<AttackModule, MAX_ENTITIES> attackmodules;
   std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
+  std::array<Creator, MAX_ENTITIES> creators;
   int logpos = 0;
 }
 
@@ -342,6 +343,9 @@ void EntityComponentSystem::sysAttacks()
                         //Set Hostility
                         GameData::hostilities[attack].team = GameData::hostilities[e].team;
                         GameData::hostilities[attack].hostileTo = GameData::hostilities[e].hostileTo;
+                        //Set creator
+                        GameData::tags[attack] += ComponentTags::Created;
+                        GameData::creators[attack] = e;
                     }
                     //Set cooldown TODO, should be its own component in an attack
                     GameData::attackmodules[e].cooldown = 64;
@@ -434,6 +438,9 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
 void EntityComponentSystem::dealDamage(Entity source, Entity target, float damage)
 {
     GameData::healths[target].curHealth -= damage;
+    if (GameData::tags[source] & ComponentTags::Created) {
+        source = GameData::creators[source];
+    }
     GameData::combatLogs[GameData::logpos].source = source;
     GameData::combatLogs[GameData::logpos].target = target;
     GameData::combatLogs[GameData::logpos].damage = damage;

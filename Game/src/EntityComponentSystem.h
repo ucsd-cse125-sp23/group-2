@@ -98,6 +98,8 @@ struct CombatLog {
 
 using LifeSpan = float;
 
+using Creator = Entity;
+
 //Define Component Tags
 using Tag = uint32_t;
 namespace ComponentTags
@@ -115,6 +117,7 @@ namespace ComponentTags
     constexpr Tag Hostility = 0x1 << 10;
     constexpr Tag Attacker = 0x1 << 11;
     constexpr Tag LifeSpan = 0x1 << 12;
+    constexpr Tag Created = 0x1 << 13;
 
 }
 
@@ -139,6 +142,7 @@ namespace GameData
     extern std::array<Hostility, MAX_ENTITIES> hostilities;
     extern std::array<AttackModule, MAX_ENTITIES> attackmodules;
     extern std::array<LifeSpan, MAX_ENTITIES> lifespans;
+    extern std::array<Creator, MAX_ENTITIES> creators;
 
     //Events
     extern std::queue<CollisionEvent> colevents;
