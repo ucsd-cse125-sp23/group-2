@@ -28,6 +28,8 @@ public:
 
     void initPlayers();
 
+    void initWaves();
+
     void initEnemies();
 
     void initTowers();
@@ -39,6 +41,8 @@ public:
     void handleInputs();
 
     void update();
+
+    void waveSpawner();
 
     void sendPackets();
 

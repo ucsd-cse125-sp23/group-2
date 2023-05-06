@@ -64,7 +64,7 @@ std::list<Entity> createEnemyGroundBasic() {
     }
     GameData::activity[e] = true;
     GameData::pathStructs[e].currentNode = 0;
-    GameData::pathStructs[e].path = rand() % Paths::pathCount;
+    GameData::pathStructs[e].path = 0;
     GameData::pathStructs[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::positions[e] = Paths::path[GameData::pathStructs[e].path][0];
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
@@ -96,5 +96,13 @@ namespace Paths {
         { glm::vec3(0,0,60), glm::vec3(0,0,40), glm::vec3(-20,0,40), glm::vec3(-20,0,20), glm::vec3(0,0,20), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) },
         { glm::vec3(0,0,-60), glm::vec3(0,0,-40), glm::vec3(20,0,-40), glm::vec3(20,0,-20), glm::vec3(0,0,-20), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) }
     };
-    
+}
+namespace WaveData {
+    int currentWave;
+
+    int waveTimers[WAVE_COUNT] = { 5 * TICK_RATE, 30 * TICK_RATE, 30 * TICK_RATE, 30 * TICK_RATE, 30 * TICK_RATE };
+
+    int waveTick; //countdown timer for waves
+
+    std::queue<enemy> waves[WAVE_COUNT];
 }

@@ -19,6 +19,7 @@ void ServerGame::initializeGame()
 {
     initPlayers();
     initEnemies();
+    initWaves();
     //initTowers();
     //initResources();
     //initProjectiles();
@@ -63,22 +64,61 @@ void ServerGame::initPlayers()
 
 }
 
+void ServerGame::initWaves() 
+{
+    WaveData::currentWave = -1;
+    WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave+1];
+
+    //Temp Nested for loop to populate wave vectors
+    for (int i = 0; i < WAVE_COUNT; i++) 
+    {
+        for (int j = 0; j < 15; j++)
+        {
+            enemy e = { PREF_ENEMY_GROUND_BASIC, rand() % Paths::pathCount, 1 * TICK_RATE };
+            WaveData::waves[i].push(e);
+        }
+    }
+}
+
 void ServerGame::initEnemies()
 {
 
 }
 
-
-//TESTING: STAGGERED SPAWN (TODO: REMOVE AFTER TESTING)
-
-int curEntity = ENEMY_START;
-void ServerGame::testing_staggeredSpawn()
+void ServerGame::waveSpawner() 
 {
-    if (curTick >= ENEMY_SPAWNDELAY_TICKS)
+    static int spawnCooldown = 0;
+
+    if (WaveData::waveTick <= 0) 
     {
-        prefabMap[PREF_ENEMY_GROUND_BASIC]();
-        curTick = 0;
+        WaveData::currentWave++;
+        WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave];
+        spawnCooldown = WaveData::waves[WaveData::currentWave].front().cooldown;
     }
+
+    if (WaveData::currentWave >= 0) 
+    {
+        if (!WaveData::waves[WaveData::currentWave].empty()) 
+        {
+            if (spawnCooldown <= 0) 
+            {
+                list<Entity> e = prefabMap[WaveData::waves[WaveData::currentWave].front().id]();
+                if (e.front() != INVALID_ENTITY) 
+                {
+                    GameData::pathStructs[e.front()].path = WaveData::waves[WaveData::currentWave].front().path;
+                    GameData::positions[e.front()] = Paths::path[GameData::pathStructs[e.front()].path][0];
+                    WaveData::waves[WaveData::currentWave].pop();
+                    if (!WaveData::waves[WaveData::currentWave].empty()) 
+                    {
+                        spawnCooldown = WaveData::waves[WaveData::currentWave].front().cooldown;
+                    }
+                }
+            }
+            spawnCooldown--;
+        }
+    }
+
+    WaveData::waveTick--;
 }
 
 //TODO
@@ -136,11 +176,11 @@ void ServerGame::update()
 
     EntityComponentSystem::update();
 
+    waveSpawner();
+
     //Print debug message buffer
     printf(debug);
     debug[0] = '\0';
-
-    testing_staggeredSpawn(); //TODO: Remove this after testing concludes
 
     if (curTick % 4 == 0) {
         //asciiView();

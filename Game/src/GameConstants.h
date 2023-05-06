@@ -35,6 +35,8 @@ const float GRAVITY_SEC = -120;
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 8
 
+#define WAVE_COUNT 5
+
 //Model ID's (For Cory/Will to decide)
 #define MODEL_ID_ROVER 0
 //.... ADD MORE ...

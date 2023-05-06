@@ -1,5 +1,6 @@
 #pragma once
 #include <list>
+#include <queue>
 #include "graphics/core.h"
 #include "GameConstants.h"
 
@@ -37,5 +38,22 @@ namespace Paths {
 	extern int const pathCount;
 	extern glm::vec3 path[4][PATH_LENGTH];
 };
+
+struct enemy {
+	int id;
+	int path;
+	int cooldown;
+};
+
+namespace WaveData {
+
+	extern int currentWave;
+
+	extern int waveTimers[WAVE_COUNT]; //Time before starting wave
+
+	extern int waveTick; //countdown timer for waves
+	
+	extern std::queue<enemy> waves[WAVE_COUNT];
+}
 
 #define PREF_ENEMY_GROUND_BASIC 2
