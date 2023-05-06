@@ -89,7 +89,16 @@ struct AttackModule {
     glm::vec3 targetPos;
 };
 
+struct CombatLog {
+    Entity source;
+    Entity target;
+    float damage;
+    bool killed;
+};
+
 using LifeSpan = float;
+
+using Creator = Entity;
 
 //Define Component Tags
 using Tag = uint32_t;
@@ -108,6 +117,7 @@ namespace ComponentTags
     constexpr Tag Hostility = 0x1 << 10;
     constexpr Tag Attacker = 0x1 << 11;
     constexpr Tag LifeSpan = 0x1 << 12;
+    constexpr Tag Created = 0x1 << 13;
 
 }
 
@@ -132,9 +142,14 @@ namespace GameData
     extern std::array<Hostility, MAX_ENTITIES> hostilities;
     extern std::array<AttackModule, MAX_ENTITIES> attackmodules;
     extern std::array<LifeSpan, MAX_ENTITIES> lifespans;
+    extern std::array<Creator, MAX_ENTITIES> creators;
 
     //Events
     extern std::queue<CollisionEvent> colevents;
+
+    //Logs for Client
+    extern int logpos;
+    extern std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
 }
 
 namespace EntityComponentSystem
@@ -174,12 +189,9 @@ namespace EntityComponentSystem
     //Helper functions
     Entity createEntity();
 
-    //Temp function (to be repalced withload from prefab)
-    Entity createProjectile();
-    
-    //TODO: Implement Prefabs
-    Entity loadPrefab();
-
     //Find the position of intersection with first rigid body (uses Peter Shirley's method at http://psgraphics.blogspot.com/2016/02/new-simple-ray-box-test-from-andrew.html)
     glm::vec3 computeRaycast(glm::vec3& pos, glm::vec3& dir, float tmin, float tmax);
+
+    //Deals damage
+    void dealDamage(Entity source, Entity target, float damage);
 };
