@@ -18,17 +18,21 @@ namespace GameData
   std::array<Hostility, MAX_ENTITIES> hostilities;
   std::array<LifeSpan, MAX_ENTITIES> lifespans;
   std::array<AttackModule, MAX_ENTITIES> attackmodules;
+  std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
+  std::array<Creator, MAX_ENTITIES> creators;
+  int logpos = 0;
 }
 
 //Call all systems each update
 void EntityComponentSystem::update()
 {
+    GameData::logpos = 0;
+    sysHealthStatus();
     sysAttacks();
     sysPathing();
     sysGravity();
     sysMovement();
     sysTurretFire();
-    sysHealthStatus();
     sysDetectCollisions();
     resolveCollisions();
     sysLifeSpan();
@@ -150,7 +154,7 @@ void EntityComponentSystem::sysTurretFire()
             //If a valid target was found, fire at them
             if (closestEnemy != e)
             {
-                GameData::healths[closestEnemy].curHealth -= (GameData::turrets[e].damage);
+                dealDamage(e, closestEnemy, (GameData::turrets[e].damage));
                 //std::cout << "Test Tower Fired at Enemey: " << closestEnemy - ENEMY_START << "\n";
             }
         }
@@ -263,15 +267,7 @@ void EntityComponentSystem::resolveCollisions()
             //Check if hostileto
             if ((GameData::hostilities[e].hostileTo & GameData::hostilities[o].team)) {
                 if ((GameData::tags[o] & (ComponentTags::Health)) == ComponentTags::Health) {
-                    GameData::healths[o].curHealth -= GameData::coldmg[e].damage;
-                }
-            }
-        }
-        if ((GameData::tags[o] & (ComponentTags::CollisionDmg)) == ComponentTags::CollisionDmg) {
-            //Check if hostileto
-            if ((GameData::hostilities[o].hostileTo & GameData::hostilities[e].team)) {
-                if ((GameData::tags[e] & (ComponentTags::Health)) == ComponentTags::Health) {
-                    GameData::healths[e].curHealth -= GameData::coldmg[o].damage;
+                    dealDamage(e, o, GameData::coldmg[e].damage);
                 }
             }
         }
@@ -346,6 +342,9 @@ void EntityComponentSystem::sysAttacks()
                         //Set Hostility
                         GameData::hostilities[attack].team = GameData::hostilities[e].team;
                         GameData::hostilities[attack].hostileTo = GameData::hostilities[e].hostileTo;
+                        //Set creator
+                        GameData::tags[attack] += ComponentTags::Created;
+                        GameData::creators[attack] = e;
                     }
                     //Set cooldown TODO, should be its own component in an attack
                     GameData::attackmodules[e].cooldown = 64;
@@ -433,5 +432,18 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
 
 
     return pos + (dirNorm * tfirst);
+}
+
+void EntityComponentSystem::dealDamage(Entity source, Entity target, float damage)
+{
+    GameData::healths[target].curHealth -= damage;
+    if (GameData::tags[source] & ComponentTags::Created) {
+        source = GameData::creators[source];
+    }
+    GameData::combatLogs[GameData::logpos].source = source;
+    GameData::combatLogs[GameData::logpos].target = target;
+    GameData::combatLogs[GameData::logpos].damage = damage;
+    GameData::combatLogs[GameData::logpos].killed = (GameData::healths[target].curHealth <= 0);
+    GameData::logpos++;
 }
 
