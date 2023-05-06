@@ -107,53 +107,9 @@ void ServerGame::testing_staggeredSpawn()
 {
     if (curTick >= ENEMY_SPAWNDELAY_TICKS)
     {
-        curEntity = createEnemy();
-        if (curEntity != INVALID_ENTITY) {
-            //cout << "Entity " << curEntity << " Spawned in!\n";
-            GameData::activity[curEntity] = true;
-            GameData::pathStructs[curEntity].currentNode = 0;
-            GameData::positions[curEntity] = GameData::pathStructs[curEntity].pathNodes[0];
-            GameData::healths[curEntity].curHealth = ENEMY_BASE_HEALTH;
-            GameData::models[curEntity].asciiRep = 'E';
-        }
-
+        prefabMap[PREF_ENEMY_GROUND_BASIC]();
         curTick = 0;
     }
-}
-
-Entity ServerGame::createEnemy()
-{
-    Entity i = ECS::createEntity();
-    if (i == INVALID_ENTITY) {
-        return i;
-    }
-    //Create Path (TEMP FOR TESTING) TODO: REMOVE FOR FINAL VERSION
-    glm::vec3 testPath[PATH_LENGTH] = { glm::vec3(15,0,31), glm::vec3(31,0,15), glm::vec3(15,0,15), glm::vec3(0,0,31), glm::vec3(0,0,15), glm::vec3(31,0,7), glm::vec3(31,0,0), glm::vec3(0, 0, 0) };
-    GameData::activity[i] = true;
-    memcpy(GameData::pathStructs[i].pathNodes, Paths::path1, sizeof(GameData::pathStructs[i].pathNodes));
-    GameData::pathStructs[i].currentNode = 0;
-    GameData::positions[i] = GameData::pathStructs[i].pathNodes[0];
-    GameData::pathStructs[i].moveSpeed = ENEMY_GND_BASE_MVSPD;
-    GameData::colliders[i] = { glm::vec3(1, 1, 1) };
-    GameData::models[i].asciiRep = 'E';
-    //GameData::rigidbodies[i].fixed = true;
-    GameData::healths[i].maxHealth = GameData::healths[i].curHealth = ENEMY_BASE_HEALTH;
-    GameData::coldmg[i].damage = ENEMEY_GND_BASE_DMG;
-    GameData::hostilities[i].team = Teams::Martians;
-    GameData::hostilities[i].hostileTo = Teams::Players + Teams::Towers;
-    GameData::tags[i] =
-        ComponentTags::Active +
-        ComponentTags::Position +
-        ComponentTags::Velocity +
-        ComponentTags::PathData +
-        ComponentTags::Model +
-        ComponentTags::Collidable +
-        ComponentTags::DiesOnCollision +
-        ComponentTags::RigidBody +
-        ComponentTags::Health +
-        ComponentTags::CollisionDmg +
-        ComponentTags::Hostility;
-    return i;
 }
 
 //TODO

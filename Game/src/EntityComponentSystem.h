@@ -31,7 +31,7 @@ struct Hostility {
 
 struct PathData //Data for entity pathing
 {
-    glm::vec3 pathNodes[PATH_LENGTH]; //3D positions in which entity will need to change direction
+    int path; //The chosen path of the entity ( Paths::path[path#][node#] )
     int currentNode; //Index of current node that entity is pathing towards
     float moveSpeed; //distance enemy covers in 1 server tick
 };

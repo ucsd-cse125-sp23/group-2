@@ -34,8 +34,8 @@ namespace Prefabs {
 };
 
 namespace Paths {
-	extern glm::vec3 path1[PATH_LENGTH];
-	extern glm::vec3 path2[PATH_LENGTH];
-	extern glm::vec3 path3[PATH_LENGTH];
-	extern glm::vec3 path4[PATH_LENGTH];
+	extern int const pathCount;
+	extern glm::vec3 path[4][PATH_LENGTH];
 };
+
+#define PREF_ENEMY_GROUND_BASIC 2

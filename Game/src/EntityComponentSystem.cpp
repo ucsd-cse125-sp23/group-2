@@ -62,9 +62,8 @@ void EntityComponentSystem::sysPathing()
         if ((GameData::tags[e] & ComponentTags::PathData) == ComponentTags::PathData)
         {
             //Check if entity has reached its currently tracked destination (+/- 1 unit)
-            glm::vec3 nodePos = GameData::pathStructs[e].pathNodes[GameData::pathStructs[e].currentNode];
+            glm::vec3 nodePos = Paths::path[GameData::pathStructs[e].path][GameData::pathStructs[e].currentNode];
             bool closeEnough = glm::distance(nodePos, GameData::positions[e]) < 1;
-            //bool closeEnough = glm::floor(GameData::positions[e]) == glm::floor(nodePos);
             if (closeEnough)
             {
                 //Node reached, increment current Node
@@ -82,7 +81,7 @@ void EntityComponentSystem::sysPathing()
             }
 
             //Update entity velocity vector to move towards tracked node
-            glm::vec3 direction = GameData::pathStructs[e].pathNodes[GameData::pathStructs[e].currentNode] - GameData::positions[e];
+            glm::vec3 direction = Paths::path[GameData::pathStructs[e].path][GameData::pathStructs[e].currentNode] - GameData::positions[e];
             GameData::velocities[e] = glm::normalize(direction) * GameData::pathStructs[e].moveSpeed;
         }
     }

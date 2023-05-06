@@ -18,9 +18,9 @@ const float ENEMY_BASE_HEALTH = 100;
 const float TURRET_BASE_DPS = 200;
 
 //ground enemy base movespeed in units/sec
-const float ENEMY_GND_MVSPD_PERSEC = 2;
+const float ENEMY_GND_MVSPD_PERSEC = 5;
 
-const float ENEMY_SPAWNDELAY_SEC = 2;
+const float ENEMY_SPAWNDELAY_SEC = 1;
 
 //ground enemy base attack damage
 const float ENEMEY_GND_BASE_DMG = 30;

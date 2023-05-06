@@ -65,7 +65,9 @@ std::list<Entity> createEnemyGroundBasic() {
     }
     GameData::activity[e] = true;
     GameData::pathStructs[e].currentNode = 0;
+    GameData::pathStructs[e].path = rand() % Paths::pathCount;
     GameData::pathStructs[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
+    GameData::positions[e] = Paths::path[GameData::pathStructs[e].path][0];
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
     GameData::models[e].asciiRep = 'E';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
@@ -89,8 +91,13 @@ std::list<Entity> createEnemyGroundBasic() {
     return createdEntities;
 };
 namespace Paths {
-    glm::vec3 path1[PATH_LENGTH] = { glm::vec3(60,0,0), glm::vec3(40,0,0), glm::vec3(40,0,20), glm::vec3(20,0,20), glm::vec3(20,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) };
-    glm::vec3 path2[PATH_LENGTH] = { glm::vec3(-30,0,0), glm::vec3(-20,0,0), glm::vec3(-20,0,-10), glm::vec3(-10,0,-10), glm::vec3(-10,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) };
-    glm::vec3 path3[PATH_LENGTH] = { glm::vec3(0,0,30), glm::vec3(0,0,20), glm::vec3(-10,0,20), glm::vec3(-10,0,10), glm::vec3(0,0,10), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) };
-    glm::vec3 path4[PATH_LENGTH] = { glm::vec3(0,0,-30), glm::vec3(0,0,-20), glm::vec3(10,0,-20), glm::vec3(10,0,-10), glm::vec3(0,0,-10), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) };
+    int const pathCount = 4;
+    glm::vec3 path[pathCount][PATH_LENGTH] =
+    {
+        { glm::vec3(60,0,0), glm::vec3(40,0,0), glm::vec3(40,0,20), glm::vec3(20,0,20), glm::vec3(20,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) },
+        { glm::vec3(-60,0,0), glm::vec3(-40,0,0), glm::vec3(-40,0,-20), glm::vec3(-20,0,-20), glm::vec3(-20,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) },
+        { glm::vec3(0,0,60), glm::vec3(0,0,40), glm::vec3(-20,0,40), glm::vec3(-20,0,20), glm::vec3(0,0,20), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) },
+        { glm::vec3(0,0,-60), glm::vec3(0,0,-40), glm::vec3(20,0,-40), glm::vec3(20,0,-20), glm::vec3(0,0,-20), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) }
+    };
+    
 }
