@@ -151,7 +151,7 @@ void EntityComponentSystem::sysTurretFire()
             //If a valid target was found, fire at them
             if (closestEnemy != e)
             {
-                GameData::healths[closestEnemy].curHealth -= (GameData::turrets[e].damage);
+                dealDamage(e, closestEnemy, (GameData::turrets[e].damage));
                 //std::cout << "Test Tower Fired at Enemey: " << closestEnemy - ENEMY_START << "\n";
             }
         }
@@ -264,15 +264,7 @@ void EntityComponentSystem::resolveCollisions()
             //Check if hostileto
             if ((GameData::hostilities[e].hostileTo & GameData::hostilities[o].team)) {
                 if ((GameData::tags[o] & (ComponentTags::Health)) == ComponentTags::Health) {
-                    GameData::healths[o].curHealth -= GameData::coldmg[e].damage;
-                }
-            }
-        }
-        if ((GameData::tags[o] & (ComponentTags::CollisionDmg)) == ComponentTags::CollisionDmg) {
-            //Check if hostileto
-            if ((GameData::hostilities[o].hostileTo & GameData::hostilities[e].team)) {
-                if ((GameData::tags[e] & (ComponentTags::Health)) == ComponentTags::Health) {
-                    GameData::healths[e].curHealth -= GameData::coldmg[o].damage;
+                    dealDamage(e, o, GameData::coldmg[e].damage);
                 }
             }
         }
@@ -434,5 +426,10 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
 
 
     return pos + (dirNorm * tfirst);
+}
+
+void EntityComponentSystem::dealDamage(Entity source, Entity target, float damage)
+{
+    GameData::healths[target].curHealth -= damage;
 }
 

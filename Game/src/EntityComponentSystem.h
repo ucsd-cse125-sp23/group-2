@@ -174,12 +174,9 @@ namespace EntityComponentSystem
     //Helper functions
     Entity createEntity();
 
-    //Temp function (to be repalced withload from prefab)
-    Entity createProjectile();
-    
-    //TODO: Implement Prefabs
-    Entity loadPrefab();
-
     //Find the position of intersection with first rigid body (uses Peter Shirley's method at http://psgraphics.blogspot.com/2016/02/new-simple-ray-box-test-from-andrew.html)
     glm::vec3 computeRaycast(glm::vec3& pos, glm::vec3& dir, float tmin, float tmax);
+
+    //Deals damage
+    void dealDamage(Entity source, Entity target, float damage);
 };
