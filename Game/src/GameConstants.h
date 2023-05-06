@@ -5,6 +5,7 @@
 #define NUM_TOWERS 20
 #define NUM_RESOURCES 20
 #define NUM_PROJECTILES 50
+#define CLOG_MAXSIZE 50
 const float TICK_RATE = 128;
 
 //Speed of movement in units per second

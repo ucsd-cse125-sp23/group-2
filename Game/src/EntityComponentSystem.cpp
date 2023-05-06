@@ -18,17 +18,20 @@ namespace GameData
   std::array<Hostility, MAX_ENTITIES> hostilities;
   std::array<LifeSpan, MAX_ENTITIES> lifespans;
   std::array<AttackModule, MAX_ENTITIES> attackmodules;
+  std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
+  int logpos = 0;
 }
 
 //Call all systems each update
 void EntityComponentSystem::update()
 {
+    GameData::logpos = 0;
+    sysHealthStatus();
     sysAttacks();
     sysPathing();
     sysGravity();
     sysMovement();
     sysTurretFire();
-    sysHealthStatus();
     sysDetectCollisions();
     resolveCollisions();
     sysLifeSpan();
@@ -431,5 +434,10 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
 void EntityComponentSystem::dealDamage(Entity source, Entity target, float damage)
 {
     GameData::healths[target].curHealth -= damage;
+    GameData::combatLogs[GameData::logpos].source = source;
+    GameData::combatLogs[GameData::logpos].target = target;
+    GameData::combatLogs[GameData::logpos].damage = damage;
+    GameData::combatLogs[GameData::logpos].killed = (GameData::healths[target].curHealth <= 0);
+    GameData::logpos++;
 }
 

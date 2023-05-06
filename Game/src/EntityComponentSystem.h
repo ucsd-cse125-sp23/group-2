@@ -89,6 +89,13 @@ struct AttackModule {
     glm::vec3 targetPos;
 };
 
+struct CombatLog {
+    Entity source;
+    Entity target;
+    float damage;
+    bool killed;
+};
+
 using LifeSpan = float;
 
 //Define Component Tags
@@ -135,6 +142,10 @@ namespace GameData
 
     //Events
     extern std::queue<CollisionEvent> colevents;
+
+    //Logs for Client
+    extern int logpos;
+    extern std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
 }
 
 namespace EntityComponentSystem

@@ -290,6 +290,8 @@ void ServerGame::packageData(ServertoClientData& data)
     data.models = GameData::models;
     data.activity = GameData::activity;
     data.healths = GameData::healths;
+    data.combatLogs = GameData::combatLogs;
+    data.logsize = GameData::logpos;
 }
 
 const int GRID_X = 32;
