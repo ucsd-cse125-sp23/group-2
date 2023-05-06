@@ -37,7 +37,8 @@ struct ServertoClientData {
     std::array<Health, MAX_ENTITIES> healths;
     int logsize;
     std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
-
+    int currentWave;
+    int numWaves;
 };
 
 //Struct for intializing the client id
