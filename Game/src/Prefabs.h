@@ -61,5 +61,3 @@ namespace WaveData {
 	
 	extern std::queue<enemy> waves[WAVE_COUNT];
 }
-
-#define PREF_ENEMY_GROUND_BASIC 2

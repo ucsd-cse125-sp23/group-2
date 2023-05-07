@@ -70,11 +70,11 @@ void ServerGame::initWaves()
     WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave+1];
 
     //Temp Nested for loop to populate wave vectors
-    for (int i = 0; i < WAVE_COUNT; i++) 
+    for (int i = 0; i < WAVE_COUNT; i++)
     {
         for (int j = 0; j < 15; j++)
         {
-            enemy e = { PREF_ENEMY_GROUND_BASIC, rand() % Paths::pathCount, 1 * TICK_RATE };
+            enemy e = { Prefabs::EnemyGroundBasic, rand() % Paths::pathCount, 1 * TICK_RATE };
             WaveData::waves[i].push(e);
         }
     }
