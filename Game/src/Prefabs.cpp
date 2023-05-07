@@ -15,6 +15,7 @@ std::list<Entity> createProjectileBasic() {
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 30.0f;
     GameData::lifespans[e] = 5;
+    GameData::spawnrates[e] = 0.25;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -42,6 +43,8 @@ std::list<Entity> createProjectileSpread5() {
         GameData::models[e].asciiRep = 'J';
         GameData::coldmg[e].damage = 30.0f;
         GameData::lifespans[e] = 1;
+        GameData::spawnrates[e] = 0.25;
+
 
         GameData::tags[e] =
             ComponentTags::Position +
@@ -55,6 +58,67 @@ std::list<Entity> createProjectileSpread5() {
     }
     return createdEntities;
 };
+std::list<Entity> createProjectileChaos() {
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::activity[e] = true;
+    GameData::positions[e] = glm::vec3(0, 0, -4);
+    GameData::velocities[e] = glm::vec3(0, 0, -0.1);
+    GameData::colliders[e] = { glm::vec3(.25, .25, .25) };
+    GameData::models[e].asciiRep = 'J';
+    GameData::coldmg[e].damage = 30.0f;
+    GameData::lifespans[e] = 10;
+    GameData::spawnrates[e] = 1;
+    GameData::attackmodules[e].isAttacking = true;
+    GameData::attackmodules[e].cooldown = 0.1;
+    GameData::attackmodules[e].attack = Prefabs::ProjectileRandom;
+
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::DiesOnCollision +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::LifeSpan + 
+        ComponentTags::Attacker;
+    return createdEntities;
+}
+std::list<Entity> createProjectileRandom() {
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::activity[e] = true;
+    glm::vec3 randvec = glm::normalize(glm::vec3(rand() % 64 - 32, rand() % 64 - 32, rand() % 64 - 32));
+    GameData::positions[e] = randvec * 4.0f;
+    GameData::velocities[e] = randvec * 0.5f;
+    GameData::colliders[e] = { glm::vec3(.25, .25, .25) };
+    GameData::models[e].asciiRep = 'J';
+    GameData::coldmg[e].damage = 30.0f;
+    GameData::lifespans[e] = 0.5;
+    GameData::spawnrates[e] = 0.1;
+
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::DiesOnCollision +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::LifeSpan;
+    return createdEntities;
+}
 std::list<Entity> createEnemyGroundBasic() {
     std::list<Entity> createdEntities;
     Entity e = createEntity();

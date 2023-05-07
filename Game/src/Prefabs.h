@@ -18,20 +18,26 @@ using Entity = uint32_t;
 
 std::list<Entity> createProjectileBasic();
 std::list<Entity> createProjectileSpread5();
+std::list<Entity> createProjectileChaos();
+std::list<Entity> createProjectileRandom();
 std::list<Entity> createEnemyGroundBasic();
 
-const int NUM_PREFABS = 3;
+const int NUM_PREFABS = 5;
 using Prefab = uint32_t;
 typedef std::list<Entity>(*PrefabFunction)(); // function pointer type
 const PrefabFunction prefabMap[NUM_PREFABS] = {
 	&createProjectileBasic,
 	&createProjectileSpread5,
+	&createProjectileChaos,
+	&createProjectileRandom,
 	&createEnemyGroundBasic};
 
 namespace Prefabs {
 	constexpr Prefab ProjectileBasic = 0;
 	constexpr Prefab ProjectileSpread5 = 1;
-	constexpr Prefab EnemyGroundBasic = 2;
+	constexpr Prefab ProjectileChaos = 2;
+	constexpr Prefab ProjectileRandom = 3;
+	constexpr Prefab EnemyGroundBasic = 4;
 };
 
 namespace Paths {

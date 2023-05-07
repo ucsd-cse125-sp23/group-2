@@ -20,6 +20,7 @@ namespace GameData
   std::array<AttackModule, MAX_ENTITIES> attackmodules;
   std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
   std::array<Creator, MAX_ENTITIES> creators;
+  std::array<SpawnRate, MAX_ENTITIES> spawnrates;
   int logpos = 0;
 }
 
@@ -330,7 +331,8 @@ void EntityComponentSystem::sysAttacks()
 
                     //Create entities representing attack (projectiles)
                     std::list<Entity> attacks = prefabMap[GameData::attackmodules[e].attack]();
-
+                    
+                    float cooldown = 0.0f;
                     for (auto i = attacks.begin(); i != attacks.end(); ++i) {
                         Entity attack = *i;
                         if (attack == INVALID_ENTITY) {
@@ -345,13 +347,14 @@ void EntityComponentSystem::sysAttacks()
                         //Set creator
                         GameData::tags[attack] += ComponentTags::Created;
                         GameData::creators[attack] = e;
+                        cooldown = cooldown < GameData::spawnrates[attack] ? GameData::spawnrates[attack] : cooldown;
                     }
                     //Set cooldown TODO, should be its own component in an attack
-                    GameData::attackmodules[e].cooldown = 64;
+                    GameData::attackmodules[e].cooldown = cooldown;
                 }
                
             }
-            GameData::attackmodules[e].cooldown--;
+            GameData::attackmodules[e].cooldown -= 1.0f / TICK_RATE;
         }
     }
 }

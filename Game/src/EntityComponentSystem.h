@@ -85,7 +85,7 @@ struct CollisionDmg {
 struct AttackModule {
     bool isAttacking;
     Prefab attack;
-    int cooldown; //Remaining coooldown in ticks
+    float cooldown; //Remaining coooldown in seconds
     glm::vec3 targetPos;
 };
 
@@ -99,6 +99,8 @@ struct CombatLog {
 using LifeSpan = float;
 
 using Creator = Entity;
+
+using SpawnRate = float;
 
 //Define Component Tags
 using Tag = uint32_t;
@@ -143,6 +145,7 @@ namespace GameData
     extern std::array<AttackModule, MAX_ENTITIES> attackmodules;
     extern std::array<LifeSpan, MAX_ENTITIES> lifespans;
     extern std::array<Creator, MAX_ENTITIES> creators;
+    extern std::array<SpawnRate, MAX_ENTITIES> spawnrates;
 
     //Events
     extern std::queue<CollisionEvent> colevents;
