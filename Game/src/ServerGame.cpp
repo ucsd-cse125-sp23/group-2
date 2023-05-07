@@ -39,9 +39,9 @@ void ServerGame::initPlayers()
         GameData::healths[i].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
         GameData::hostilities[i].team = Teams::Players;
         GameData::hostilities[i].hostileTo = Teams::Environment+Teams::Martians;
-        GameData::attackmodules[i].attack = Prefabs::ProjectileBasic;
-        GameData::attackmodules[i].targetPos = glm::vec3(0, 0, 0);
-        GameData::attackmodules[i].cooldown = 0;
+        GameData::pattackmodules[i].attack = Prefabs::ProjectileBasic;
+        GameData::pattackmodules[i].targetPos = glm::vec3(0, 0, 0);
+        GameData::pattackmodules[i].cooldown = 0;
 
 
         GameData::tags[i] =
@@ -200,7 +200,7 @@ void ServerGame::handleInputs()
     {
         glm::vec3 camDirection;
         glm::vec3 camPosition;
-        GameData::attackmodules[i].isAttacking = false;
+        GameData::pattackmodules[i].isAttacking = false;
         while (!incomingDataLists[i].empty())
         {
             ClienttoServerData in = incomingDataLists[i].front();
@@ -214,7 +214,7 @@ void ServerGame::handleInputs()
             }
 
             if (in.shoot) {
-                GameData::attackmodules[i].isAttacking = in.shoot;
+                GameData::pattackmodules[i].isAttacking = in.shoot;
                 camDirection = in.camDirectionVector;
                 camPosition = in.camPosition;
 
@@ -226,7 +226,7 @@ void ServerGame::handleInputs()
             incomingDataLists[i].pop();
         }
 
-        if (GameData::attackmodules[i].isAttacking && GameData::attackmodules[i].cooldown <= 0) {
+        if (GameData::pattackmodules[i].isAttacking && GameData::pattackmodules[i].cooldown <= 0) {
             playerAttack(i, camDirection, camPosition);
             //printf("ShootingInput\n");
         }
@@ -299,6 +299,6 @@ void ServerGame::asciiView() {
 
 void ServerGame::playerAttack(Entity e, glm::vec3& camdir, glm::vec3& campos)
 {
-    GameData::attackmodules[e].targetPos = ECS::computeRaycast(campos, camdir, glm::distance(campos, GameData::positions[e])+glm::length(GameData::colliders[e].AABB), FLT_MAX);
-    //printf("Targer pos (%f, %f, %f)\n", GameData::attackmodules[e].targetPos.x, GameData::attackmodules[e].targetPos.y, GameData::attackmodules[e].targetPos.z);
+    GameData::pattackmodules[e].targetPos = ECS::computeRaycast(campos, camdir, glm::distance(campos, GameData::positions[e])+glm::length(GameData::colliders[e].AABB), FLT_MAX);
+    //printf("Targer pos (%f, %f, %f)\n", GameData::pattackmodules[e].targetPos.x, GameData::pattackmodules[e].targetPos.y, GameData::pattackmodules[e].targetPos.z);
 }

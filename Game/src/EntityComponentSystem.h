@@ -82,7 +82,7 @@ struct CollisionDmg {
     float damage;
 };
 
-struct AttackModule {
+struct ProjectileAttackModule {
     bool isAttacking;
     Prefab attack;
     float cooldown; //Remaining coooldown in seconds
@@ -95,6 +95,8 @@ struct CombatLog {
     float damage;
     bool killed;
 };
+
+using State = uint8_t;
 
 using LifeSpan = float;
 
@@ -142,7 +144,7 @@ namespace GameData
     extern std::array<Health, MAX_ENTITIES> healths;
     extern std::array<CollisionDmg, MAX_ENTITIES> coldmg;
     extern std::array<Hostility, MAX_ENTITIES> hostilities;
-    extern std::array<AttackModule, MAX_ENTITIES> attackmodules;
+    extern std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
     extern std::array<LifeSpan, MAX_ENTITIES> lifespans;
     extern std::array<Creator, MAX_ENTITIES> creators;
     extern std::array<SpawnRate, MAX_ENTITIES> spawnrates;

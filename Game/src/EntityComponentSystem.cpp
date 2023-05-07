@@ -17,7 +17,7 @@ namespace GameData
   std::array<CollisionDmg, MAX_ENTITIES> coldmg;
   std::array<Hostility, MAX_ENTITIES> hostilities;
   std::array<LifeSpan, MAX_ENTITIES> lifespans;
-  std::array<AttackModule, MAX_ENTITIES> attackmodules;
+  std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
   std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
   std::array<Creator, MAX_ENTITIES> creators;
   std::array<SpawnRate, MAX_ENTITIES> spawnrates;
@@ -315,12 +315,12 @@ void EntityComponentSystem::sysAttacks()
 
         if ((GameData::tags[e] & ComponentTags::Attacker) == ComponentTags::Attacker) {
 
-            if (GameData::attackmodules[e].isAttacking) {
+            if (GameData::pattackmodules[e].isAttacking) {
                 //printf("Attacker %u is attacking, checking cooldown\n", e);
-                if (GameData::attackmodules[e].cooldown <= 0) {
-                    //printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::attackmodules[e].cooldown);
+                if (GameData::pattackmodules[e].cooldown <= 0) {
+                    //printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::pattackmodules[e].cooldown);
                     //Create transformation matrix from prefab dim, to attacker dim
-                    glm::vec3 targetVec = GameData::attackmodules[e].targetPos - GameData::positions[e];
+                    glm::vec3 targetVec = GameData::pattackmodules[e].targetPos - GameData::positions[e];
 
                     glm::vec3 normXZ = glm::normalize(glm::vec3(targetVec.x, 0, targetVec.z));
                     float angleXZ = glm::acos(-normXZ.z);
@@ -330,7 +330,7 @@ void EntityComponentSystem::sysAttacks()
                     glm::mat4 transform = glm::translate(GameData::positions[e]) * glm::rotate(angleY, axisXZ) * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
 
                     //Create entities representing attack (projectiles)
-                    std::list<Entity> attacks = prefabMap[GameData::attackmodules[e].attack]();
+                    std::list<Entity> attacks = prefabMap[GameData::pattackmodules[e].attack]();
                     
                     float cooldown = 0.0f;
                     for (auto i = attacks.begin(); i != attacks.end(); ++i) {
@@ -350,11 +350,11 @@ void EntityComponentSystem::sysAttacks()
                         cooldown = cooldown < GameData::spawnrates[attack] ? GameData::spawnrates[attack] : cooldown;
                     }
                     //Set cooldown TODO, should be its own component in an attack
-                    GameData::attackmodules[e].cooldown = cooldown;
+                    GameData::pattackmodules[e].cooldown = cooldown;
                 }
                
             }
-            GameData::attackmodules[e].cooldown -= 1.0f / TICK_RATE;
+            GameData::pattackmodules[e].cooldown -= 1.0f / TICK_RATE;
         }
     }
 }

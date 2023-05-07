@@ -73,9 +73,9 @@ std::list<Entity> createProjectileChaos() {
     GameData::coldmg[e].damage = 30.0f;
     GameData::lifespans[e] = 10;
     GameData::spawnrates[e] = 1;
-    GameData::attackmodules[e].isAttacking = true;
-    GameData::attackmodules[e].cooldown = 0.1;
-    GameData::attackmodules[e].attack = Prefabs::ProjectileRandom;
+    GameData::pattackmodules[e].isAttacking = true;
+    GameData::pattackmodules[e].cooldown = 0.1;
+    GameData::pattackmodules[e].attack = Prefabs::ProjectileRandom;
 
 
     GameData::tags[e] =
