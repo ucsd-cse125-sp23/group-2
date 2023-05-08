@@ -13,23 +13,29 @@ using Entity = uint32_t;
 const Entity INVALID_ENTITY = MAX_ENTITIES;
 
 //Define Component Tpyes (Max Components = 32)
+
+
+using LifeSpan = float;
+
+using Creator = Entity;
+
+using SpawnRate = float;
+
+//Define Component Tags
+using Tag = uint32_t;
+
+
 using Active = bool; //Is Entity active in the scene?
 using Position = glm::vec3; //Entity Position in 3D Space
 using Velocity = glm::vec3; //Entity Velocity in 3D Space
 using TeamID = uint32_t;
-using State = uint8_t;
+using State = Tag;
 namespace Teams {
     constexpr TeamID Players = 0x1;
     constexpr TeamID Martians = 0x1 << 1;
     constexpr TeamID Towers = 0x1 << 2;
     constexpr TeamID Environment = 0x1 << 3;
 }
-
-namespace PlayerState {
-    constexpr State Default = 0;
-    constexpr State Build = 1;
-};
-
 
 struct Hostility {
     TeamID team;
@@ -90,9 +96,16 @@ struct CollisionDmg {
 };
 
 struct ProjectileAttackModule {
-    bool isAttacking;
     Prefab attack;
     float cooldown; //Remaining coooldown in seconds
+    glm::vec3 targetPos;
+};
+
+struct ReticlePlacement {
+    bool place;
+    bool targeting;
+    Prefab reticle;
+    Prefab building;
     glm::vec3 targetPos;
 };
 
@@ -104,15 +117,6 @@ struct CombatLog {
 };
 
 
-
-using LifeSpan = float;
-
-using Creator = Entity;
-
-using SpawnRate = float;
-
-//Define Component Tags
-using Tag = uint32_t;
 namespace ComponentTags
 {
     constexpr Tag Position  = 0x1 << 0;
@@ -129,7 +133,7 @@ namespace ComponentTags
     constexpr Tag Attacker = 0x1 << 11;
     constexpr Tag LifeSpan = 0x1 << 12;
     constexpr Tag Created = 0x1 << 13;
-    constexpr Tag PlayerState = 0x1 << 14;
+    constexpr Tag Builder = 0x1 << 14;
 
 }
 

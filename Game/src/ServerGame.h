@@ -52,6 +52,11 @@ public:
     //Create Enemy (Temp function) replace with load from prefab
     Entity createEnemy();
 private:
+    struct PlayerState {
+        static constexpr State Default = 0;
+        static constexpr State Attack = ComponentTags::Attacker;
+        static constexpr State Build = ComponentTags::Builder;
+    };
 
     // The ServerNetwork object 
     ServerNetwork* network;
@@ -64,4 +69,6 @@ private:
     unsigned int curTick;
 
     void playerAttack(Entity i, glm::vec3& camdir, glm::vec3& campos);
+
+    void changeState(Entity e, State post);
 };

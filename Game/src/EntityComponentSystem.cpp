@@ -313,49 +313,45 @@ void EntityComponentSystem::sysAttacks()
     for (int e = 0; e < MAX_ENTITIES; ++e) {
         //Continue to next entity if this one is not active
         if (!GameData::activity[e]) { continue; }
-
+        
         if ((GameData::tags[e] & ComponentTags::Attacker) == ComponentTags::Attacker) {
-
-            if (GameData::pattackmodules[e].isAttacking) {
-                //printf("Attacker %u is attacking, checking cooldown\n", e);
-                if (GameData::pattackmodules[e].cooldown <= 0) {
-                    //printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::pattackmodules[e].cooldown);
-                    //Create transformation matrix from prefab dim, to attacker dim
-                    glm::vec3 targetVec = GameData::pattackmodules[e].targetPos - GameData::positions[e];
-
-                    glm::vec3 normXZ = glm::normalize(glm::vec3(targetVec.x, 0, targetVec.z));
-                    float angleXZ = glm::acos(-normXZ.z);
-                    glm::vec3 normTarget = glm::normalize(targetVec);
-                    float angleY = glm::acos(glm::dot(normXZ, normTarget));
-                    glm::vec3 axisXZ = glm::cross(normXZ, normTarget);
-                    glm::mat4 transform = glm::translate(GameData::positions[e]) * glm::rotate(angleY, axisXZ) * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
-
-                    //Create entities representing attack (projectiles)
-                    std::list<Entity> attacks = prefabMap[GameData::pattackmodules[e].attack]();
-                    
-                    float cooldown = 0.0f;
-                    for (auto i = attacks.begin(); i != attacks.end(); ++i) {
-                        Entity attack = *i;
-                        if (attack == INVALID_ENTITY) {
-                            continue;
-                        }
-                        //Transform positions and velocity relative to attacker
-                        GameData::positions[attack] = transform * glm::vec4(GameData::positions[attack], 1);
-                        GameData::velocities[attack] = transform * glm::vec4(GameData::velocities[attack], 0);
-                        //Set Hostility
-                        GameData::hostilities[attack].team = GameData::hostilities[e].team;
-                        GameData::hostilities[attack].hostileTo = GameData::hostilities[e].hostileTo;
-                        //Set creator
-                        GameData::tags[attack] += ComponentTags::Created;
-                        GameData::creators[attack] = e;
-                        cooldown = cooldown < GameData::spawnrates[attack] ? GameData::spawnrates[attack] : cooldown;
-                    }
-                    //Set cooldown TODO, should be its own component in an attack
-                    GameData::pattackmodules[e].cooldown = cooldown;
-                }
-               
-            }
             GameData::pattackmodules[e].cooldown -= 1.0f / TICK_RATE;
+            //printf("Attacker %u is attacking, checking cooldown\n", e);
+            if (GameData::pattackmodules[e].cooldown <= 0) {
+                //printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::pattackmodules[e].cooldown);
+                //Create transformation matrix from prefab dim, to attacker dim
+                glm::vec3 targetVec = GameData::pattackmodules[e].targetPos - GameData::positions[e];
+
+                glm::vec3 normXZ = glm::normalize(glm::vec3(targetVec.x, 0, targetVec.z));
+                float angleXZ = glm::acos(-normXZ.z);
+                glm::vec3 normTarget = glm::normalize(targetVec);
+                float angleY = glm::acos(glm::dot(normXZ, normTarget));
+                glm::vec3 axisXZ = glm::cross(normXZ, normTarget);
+                glm::mat4 transform = glm::translate(GameData::positions[e]) * glm::rotate(angleY, axisXZ) * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
+
+                //Create entities representing attack (projectiles)
+                std::list<Entity> attacks = prefabMap[GameData::pattackmodules[e].attack]();
+                    
+                float cooldown = 0.0f;
+                for (auto i = attacks.begin(); i != attacks.end(); ++i) {
+                    Entity attack = *i;
+                    if (attack == INVALID_ENTITY) {
+                        continue;
+                    }
+                    //Transform positions and velocity relative to attacker
+                    GameData::positions[attack] = transform * glm::vec4(GameData::positions[attack], 1);
+                    GameData::velocities[attack] = transform * glm::vec4(GameData::velocities[attack], 0);
+                    //Set Hostility
+                    GameData::hostilities[attack].team = GameData::hostilities[e].team;
+                    GameData::hostilities[attack].hostileTo = GameData::hostilities[e].hostileTo;
+                    //Set creator
+                    GameData::tags[attack] += ComponentTags::Created;
+                    GameData::creators[attack] = e;
+                    cooldown = cooldown < GameData::spawnrates[attack] ? GameData::spawnrates[attack] : cooldown;
+                }
+                //Set cooldown TODO, should be its own component in an attack
+                GameData::pattackmodules[e].cooldown = cooldown;
+            }
         }
     }
 }

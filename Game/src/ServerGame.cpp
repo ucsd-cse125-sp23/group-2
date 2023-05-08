@@ -49,12 +49,10 @@ void ServerGame::initPlayers()
             ComponentTags::Position +
             ComponentTags::Velocity +
             ComponentTags::Model +
-            ComponentTags::Collidable+
-            ComponentTags::RigidBody+
+            ComponentTags::Collidable +
+            ComponentTags::RigidBody +
             ComponentTags::Health +
-            ComponentTags::Hostility +
-            ComponentTags::Attacker +
-            ComponentTags::PlayerState;
+            ComponentTags::Hostility;
         //TODO: Other Model Data
     }
     //TODO: Change
@@ -202,7 +200,7 @@ void ServerGame::handleInputs()
     {
         glm::vec3 camDirection;
         glm::vec3 camPosition;
-        GameData::pattackmodules[i].isAttacking = false;
+        bool target = false;
         while (!incomingDataLists[i].empty())
         {
             ClienttoServerData in = incomingDataLists[i].front();
@@ -216,21 +214,32 @@ void ServerGame::handleInputs()
             }
 
             if (in.shoot) {
-                GameData::pattackmodules[i].isAttacking = in.shoot;
+                target = in.shoot;
                 camDirection = in.camDirectionVector;
                 camPosition = in.camPosition;
 
             }
-
+            
+            if (in.build) {
+                changeState(i, PlayerState::Build);
+            }
+            else {
+                changeState(i, PlayerState::Default);
+            }
+            
             if (in.jump && GameData::positions[i].y <= 0) {
                 GameData::velocities[i].y = PLAYER_JPSPD;
             }
             incomingDataLists[i].pop();
         }
 
-        if (GameData::pattackmodules[i].isAttacking && GameData::pattackmodules[i].cooldown <= 0) {
+        if (target && GameData::pattackmodules[i].cooldown <= 0) {
+            changeState(i, PlayerState::Attack);
             playerAttack(i, camDirection, camPosition);
             //printf("ShootingInput\n");
+        }
+        else {
+            changeState(i, PlayerState::Default);
         }
         //in.print(msg);
     }
@@ -303,4 +312,11 @@ void ServerGame::playerAttack(Entity e, glm::vec3& camdir, glm::vec3& campos)
 {
     GameData::pattackmodules[e].targetPos = ECS::computeRaycast(campos, camdir, glm::distance(campos, GameData::positions[e])+glm::length(GameData::colliders[e].AABB), FLT_MAX);
     //printf("Targer pos (%f, %f, %f)\n", GameData::pattackmodules[e].targetPos.x, GameData::pattackmodules[e].targetPos.y, GameData::pattackmodules[e].targetPos.z);
+}
+
+void ServerGame::changeState(Entity e, State post)
+{
+    GameData::tags[e] ^= GameData::states[e];
+    GameData::states[e] = post;
+    GameData::tags[e] &= post;
 }
