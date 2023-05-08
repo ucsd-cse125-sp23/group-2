@@ -224,21 +224,23 @@ void ServerGame::handleInputs()
                 changeState(i, PlayerState::Build);
             }
             else {
-                changeState(i, PlayerState::Default);
+                changeState(i, PlayerState::Default); //May be slow
             }
-            
+
             if (in.jump && GameData::positions[i].y <= 0) {
                 GameData::velocities[i].y = PLAYER_JPSPD;
             }
             incomingDataLists[i].pop();
         }
 
-        if (target && GameData::pattackmodules[i].cooldown <= 0) {
+
+
+        if (target) {
             changeState(i, PlayerState::Attack);
             playerAttack(i, camDirection, camPosition);
-            //printf("ShootingInput\n");
+            printf("ShootingInput\n");
         }
-        else {
+        else{
             changeState(i, PlayerState::Default);
         }
         //in.print(msg);
@@ -318,5 +320,5 @@ void ServerGame::changeState(Entity e, State post)
 {
     GameData::tags[e] ^= GameData::states[e];
     GameData::states[e] = post;
-    GameData::tags[e] &= post;
+    GameData::tags[e] |= post;
 }

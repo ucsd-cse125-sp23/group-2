@@ -313,9 +313,9 @@ void EntityComponentSystem::sysAttacks()
     for (int e = 0; e < MAX_ENTITIES; ++e) {
         //Continue to next entity if this one is not active
         if (!GameData::activity[e]) { continue; }
-        
+        GameData::pattackmodules[e].cooldown -= 1.0f / TICK_RATE;
+
         if ((GameData::tags[e] & ComponentTags::Attacker) == ComponentTags::Attacker) {
-            GameData::pattackmodules[e].cooldown -= 1.0f / TICK_RATE;
             //printf("Attacker %u is attacking, checking cooldown\n", e);
             if (GameData::pattackmodules[e].cooldown <= 0) {
                 //printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::pattackmodules[e].cooldown);
