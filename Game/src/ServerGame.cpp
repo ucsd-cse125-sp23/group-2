@@ -42,6 +42,7 @@ void ServerGame::initPlayers()
         GameData::pattackmodules[i].attack = Prefabs::ProjectileBasic;
         GameData::pattackmodules[i].targetPos = glm::vec3(0, 0, 0);
         GameData::pattackmodules[i].cooldown = 0;
+        GameData::states[i] = 0;
 
 
         GameData::tags[i] =
@@ -52,7 +53,8 @@ void ServerGame::initPlayers()
             ComponentTags::RigidBody+
             ComponentTags::Health +
             ComponentTags::Hostility +
-            ComponentTags::Attacker;
+            ComponentTags::Attacker +
+            ComponentTags::PlayerState;
         //TODO: Other Model Data
     }
     //TODO: Change

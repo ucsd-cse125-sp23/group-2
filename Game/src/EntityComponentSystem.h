@@ -17,12 +17,19 @@ using Active = bool; //Is Entity active in the scene?
 using Position = glm::vec3; //Entity Position in 3D Space
 using Velocity = glm::vec3; //Entity Velocity in 3D Space
 using TeamID = uint32_t;
+using State = uint8_t;
 namespace Teams {
     constexpr TeamID Players = 0x1;
     constexpr TeamID Martians = 0x1 << 1;
     constexpr TeamID Towers = 0x1 << 2;
     constexpr TeamID Environment = 0x1 << 3;
 }
+
+namespace PlayerState {
+    constexpr State Default = 0;
+    constexpr State Build = 1;
+};
+
 
 struct Hostility {
     TeamID team;
@@ -96,7 +103,7 @@ struct CombatLog {
     bool killed;
 };
 
-using State = uint8_t;
+
 
 using LifeSpan = float;
 
@@ -122,6 +129,7 @@ namespace ComponentTags
     constexpr Tag Attacker = 0x1 << 11;
     constexpr Tag LifeSpan = 0x1 << 12;
     constexpr Tag Created = 0x1 << 13;
+    constexpr Tag PlayerState = 0x1 << 14;
 
 }
 
@@ -148,6 +156,7 @@ namespace GameData
     extern std::array<LifeSpan, MAX_ENTITIES> lifespans;
     extern std::array<Creator, MAX_ENTITIES> creators;
     extern std::array<SpawnRate, MAX_ENTITIES> spawnrates;
+    extern std::array<State, MAX_ENTITIES> states;
 
     //Events
     extern std::queue<CollisionEvent> colevents;

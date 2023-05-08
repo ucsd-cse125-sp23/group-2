@@ -22,6 +22,7 @@ namespace GameData
   std::array<Creator, MAX_ENTITIES> creators;
   std::array<SpawnRate, MAX_ENTITIES> spawnrates;
   int logpos = 0;
+  std::array<State, MAX_ENTITIES> states;
 }
 
 //Call all systems each update
