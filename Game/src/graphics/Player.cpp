@@ -21,7 +21,7 @@ Player::Player(int i) {
 
     // load models
     // -----------
-    ourModel = new ObjectModel("../assets/rover/rover.obj");
+    ourModel = new ObjectModel("../assets/Test/Test.obj");
 
     
 }

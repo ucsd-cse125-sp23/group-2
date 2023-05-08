@@ -86,6 +86,7 @@ bool GameWindow::initializeProgram() {
     // Create a shader program with a vertex shader and a fragment shader.
     shaderProgram = new Shader("shaders/shader.vert", "shaders/shader.frag");
     skyboxProgram = new Shader("shaders/skybox.vert", "shaders/skybox.frag");
+    guiProgram = new Shader("shaders/gui.vert", "shaders/gui.frag");
     //cubeShader = LoadShaders("shaders/shader.vert", "shaders/shader.frag");
 
     return true;
@@ -114,7 +115,7 @@ void GameWindow::displayCallback() {
     glfwMakeContextCurrent(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //player->draw(cam->GetViewProjectMtx(), shaderProgram);
-    gameWorld->draw(shaderProgram, skyboxProgram);
+    gameWorld->draw(shaderProgram, skyboxProgram, guiProgram);
     glfwPollEvents();
     glfwSwapBuffers(window);
 }

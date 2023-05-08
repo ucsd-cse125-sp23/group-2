@@ -4,6 +4,7 @@
 #include "Skybox.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "gui/GUIElement.h"
 #include "../GameConstants.h"
 #include "../NetworkData.h"
 class GameWorld {
@@ -12,6 +13,7 @@ private:
     int currID;
     std::array <Player*, NUM_CLIENTS> players;
     std::array <Mob*, NUM_ENEMIES> mobs;
+    std::array <GUIElement*, NUM_GUI> guis;
     Skybox* env;
 
     Camera* cam;
@@ -25,7 +27,7 @@ public:
     void update(ServertoClientData& incomingData, int id);
 
     //render all active entities
-    void draw(Shader* shader, Shader* skyboxShader);
+    void draw(Shader* shader, Shader* skyboxShader, Shader* guiShader);
     
     float getCamAngle() { return cam->getAngleAroundPlayer(); };
     glm::vec3 getCamDirectionVector() { return cam->getDirectionVector(); };

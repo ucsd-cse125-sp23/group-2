@@ -4,6 +4,7 @@ float GameWorld::prevX, GameWorld::prevY,GameWorld::currX, GameWorld::currY, Gam
 void GameWorld::init() {
 	currID = 0;
 	env = new Skybox();
+
 	for (int i = 0; i < NUM_PLAYERS; i++) {
 		players[i] = new Player(currID);
 		currID++;
@@ -11,6 +12,9 @@ void GameWorld::init() {
 	for (int i = ENEMY_START; i < ENEMY_END; i++) {
 		mobs[i - ENEMY_START] = new Mob(currID);
 		currID++;
+	}
+	for (int i = 0; i < NUM_GUI; i++) {
+		guis[i] = new GUIElement();
 	}
 	cam = new Camera();
 }
@@ -39,8 +43,10 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 }
 
 //render all active entities
-void GameWorld::draw(Shader* shader, Shader* skyboxShader) {
+void GameWorld::draw(Shader* shader, Shader* skyboxShader, Shader* guiShader) {
 	const glm::mat4& viewProjMtx = cam->GetViewProjectMtx();
+
+
 	env->draw(viewProjMtx, skyboxShader);
 
 	for (Player* p : players) {
@@ -55,6 +61,12 @@ void GameWorld::draw(Shader* shader, Shader* skyboxShader) {
 		}
 	}
 
+	for (GUIElement* gui : guis) {
+		if (!gui->IsHidden()) {
+			gui->draw(viewProjMtx, guiShader);
+		}
+
+	}
 }
 
 void GameWorld::cursor_callback(GLFWwindow* window, double cX, double cY) {

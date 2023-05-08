@@ -16,6 +16,7 @@ private:
 	// Shader Program
 	Shader* shaderProgram;
 	Shader* skyboxProgram;
+	Shader* guiProgram;
 
 	//camera
 	//Camera* cam;
