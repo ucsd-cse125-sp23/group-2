@@ -28,7 +28,8 @@ const float TURRET_BASE_DPS = 200;
 #define MAX_ENTITIES (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES + NUM_PROJECTILES)
 
 //Model ID's (For Cory/Will to decide)
-#define MODEL_ID_ROVER 0
+#define MODEL_ID_ROVER 3
+#define MODEL_ID_MOB 2
 //.... ADD MORE ...
 
 //Length of LONGEST path in-game (Final value will be determiend by world shape)

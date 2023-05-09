@@ -132,6 +132,7 @@ Entity ServerGame::createEnemy()
     GameData::pathStructs[i].currentNode = 0;
     GameData::pathStructs[i].moveSpeed = MOVE_SPEED_ADJ;
     GameData::colliders[i] = { glm::vec3(1, 1, 1) };
+    GameData::models[i].modelID = MODEL_ID_MOB;
     GameData::models[i].asciiRep = 'E';
     //GameData::rigidbodies[i].fixed = true;
     GameData::healths[i].maxHealth = GameData::healths[i].curHealth = ENEMY_BASE_HEALTH;

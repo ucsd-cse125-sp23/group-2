@@ -37,7 +37,7 @@ void Mob::draw(const glm::mat4& viewProjMtx, Shader* shader) {
     shader->setMat4("viewProj", viewProjMtx);
     shader->setMat4("model", model);
 
-    ourModel->Draw(*ourShader);
+    ourModel->Draw(*shader);
 
     glUseProgram(0);
 }

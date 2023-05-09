@@ -3,15 +3,17 @@
 #include "Mob.h"
 #include "Skybox.h"
 #include "Shader.h"
+#include "ObjectModel.h"
 #include "Camera.h"
 #include "../GameConstants.h"
 #include "../NetworkData.h"
 class GameWorld {
 
 private:
-    int currID;
+
     std::array <Player*, NUM_CLIENTS> players;
     std::array <Mob*, NUM_ENEMIES> mobs;
+    unsigned int playerIndex, mobIndex;
     Skybox* env;
 
     Camera* cam;

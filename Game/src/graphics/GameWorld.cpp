@@ -2,34 +2,48 @@
 float GameWorld::prevX, GameWorld::prevY,GameWorld::currX, GameWorld::currY, GameWorld::scrollY = 0;
 
 void GameWorld::init() {
-	currID = 0;
+
+	//initialize models
 	env = new Skybox();
+
+
 	for (int i = 0; i < NUM_PLAYERS; i++) {
-		players[i] = new Player(currID);
-		currID++;
+		players[i] = new Player(i);
 	}
-	for (int i = ENEMY_START; i < ENEMY_END; i++) {
-		mobs[i - ENEMY_START] = new Mob(currID);
-		currID++;
+	for (int i = 0; i < NUM_ENEMIES; i++) {
+		mobs[i] = new Mob(i);
 	}
+
 	cam = new Camera();
 }
 
 void GameWorld::update(ServertoClientData& incomingData, int id) {
-	for (int i = 0; i < NUM_PLAYERS; i++) {
-		players[i]->setActive(incomingData.activity[i]);
-		if (incomingData.activity[i]) {
-			players[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
+
+	//currently using these indices, should probably keep track of some type of entity ID server side 
+	playerIndex, mobIndex = 0;
+	for (int i = 0; i < incomingData.activity.size(); i++) {
+		switch (incomingData.models[i].modelID){
+		case MODEL_ID_ROVER:
+			players[i]->setActive(incomingData.activity[i]);
+			if (incomingData.activity[i]) {
+				players[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
+			}
+			playerIndex++;
+			break;
+		case MODEL_ID_MOB:
+			mobs[mobIndex]->setActive(incomingData.activity[i]);
+			if (incomingData.activity[i]) {
+				mobs[mobIndex]->update(incomingData.positions[i]);
+			}
+			mobIndex++;
+			break;
+		default:
+			break;
 		}
 	}
 
-	for (int i = ENEMY_START; i < ENEMY_END; i++) {
-		mobs[i - ENEMY_START]->setActive(incomingData.activity[i]);
-		if (incomingData.activity[i]) {
-			mobs[i - ENEMY_START]->update(incomingData.positions[i]);
-		}
-	}
 
+	//control thirdperson camera
 	int maxDelta = 100;
 	int dx = glm::clamp((int)(currX - prevX), -maxDelta, maxDelta);
 	int dy = glm::clamp(-((int)(currY - prevY)), -maxDelta, maxDelta);
@@ -43,11 +57,8 @@ void GameWorld::draw(Shader* shader, Shader* skyboxShader) {
 	const glm::mat4& viewProjMtx = cam->GetViewProjectMtx();
 	env->draw(viewProjMtx, skyboxShader);
 
-	for (Player* p : players) {
-		if (p->getActive()) {
-			p->draw(viewProjMtx, shader);
-		}
-	}
+	Player::setupMesh();
+	Player::draw(viewProjMtx);
 
 	for (Mob* m : mobs) {
 		if (m->getActive()) {
