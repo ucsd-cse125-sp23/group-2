@@ -23,8 +23,9 @@ std::list<Entity> createProjectileRandom();
 std::list<Entity> createEnemyGroundBasic();
 std::list<Entity> createTowerReticle();
 std::list<Entity> createTowerBasic();
+std::list<Entity> createBase();
 
-const int NUM_PREFABS = 7;
+const int NUM_PREFABS = 32;
 using Prefab = uint32_t;
 typedef std::list<Entity>(*PrefabFunction)(); // function pointer type
 const PrefabFunction prefabMap[NUM_PREFABS] = {
@@ -34,7 +35,8 @@ const PrefabFunction prefabMap[NUM_PREFABS] = {
 	&createProjectileRandom,
 	&createEnemyGroundBasic,
 	&createTowerReticle,
-	&createTowerBasic
+	&createTowerBasic,
+	&createBase
 };
 
 namespace Prefabs {
@@ -45,6 +47,7 @@ namespace Prefabs {
 	constexpr Prefab EnemyGroundBasic = 4;
 	constexpr Prefab TowerReticle = 5;
 	constexpr Prefab TowerBasic = 6;
+	constexpr Prefab Base = 7;
 };
 
 namespace Paths {

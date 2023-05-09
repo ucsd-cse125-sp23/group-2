@@ -26,12 +26,6 @@ public:
 
     void initializeGame();
 
-    void initPlayers();
-
-    void initWaves();
-
-    void initResources();
-
     void handleInputs();
 
     void update();
@@ -62,4 +56,12 @@ private:
     void changeState(Entity e, State post);
 
     void playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, float range);
+
+    void initPlayers();
+
+    void initWaves();
+
+    void initResources();
+
+    void initBase();
 };

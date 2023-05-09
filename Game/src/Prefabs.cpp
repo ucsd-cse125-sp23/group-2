@@ -210,10 +210,38 @@ std::list<Entity> createTowerBasic() {
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
-        ComponentTags::Turret +
         ComponentTags::Hostility +
         ComponentTags::RigidBody +
         ComponentTags::Collidable;
+    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+
+    return createdEntities;
+};
+
+
+std::list<Entity> createBase() {
+    std::list<Entity> createdEntities;
+    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::activity[e] = true;
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::models[e].asciiRep = 'B';
+    GameData::hostilities[e].team = Teams::Towers;
+    GameData::hostilities[e].hostileTo = Teams::Martians;
+    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::rigidbodies[e].fixed = true;
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Turret +
+        ComponentTags::Hostility +
+        ComponentTags::RigidBody +
+        ComponentTags::Collidable +
+        ComponentTags::Base;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 

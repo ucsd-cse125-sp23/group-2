@@ -19,6 +19,7 @@ void ServerGame::initializeGame()
 {
     initPlayers();
     initWaves();
+    initBase();
     //initResources();
 }
 
@@ -83,6 +84,10 @@ void ServerGame::initWaves()
             WaveData::waves[i].push(e);
         }
     }
+}
+void ServerGame::initBase()
+{
+    Entity base = prefabMap[Prefabs::Base]().front();
 }
 
 void ServerGame::waveSpawner() 
