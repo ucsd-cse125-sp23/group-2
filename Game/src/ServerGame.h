@@ -40,11 +40,6 @@ public:
 
     void sendPackets();
 
-    //TODO: Remove this method after testing
-    void testing_staggeredSpawn();
-
-    //Create Enemy (Temp function) replace with load from prefab
-    Entity createEnemy();
 private:
     struct PlayerState {
         static constexpr State Default = 0;
