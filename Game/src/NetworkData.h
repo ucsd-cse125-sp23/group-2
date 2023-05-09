@@ -23,6 +23,7 @@ struct ClienttoServerData {
     bool moveForward, moveBack, moveLeft, moveRight;
     bool shoot;
     bool jump;
+    int build;
 
     void print(char * buf) {
         sprintf(buf, "Moveforward: %d, Moveback: %d, MoveLeft: %d, MoveRight: %d\n", moveForward, moveBack, moveLeft, moveRight);

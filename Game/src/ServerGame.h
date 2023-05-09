@@ -30,13 +30,7 @@ public:
 
     void initWaves();
 
-    void initEnemies();
-
-    void initTowers();
-
     void initResources();
-
-    void initProjectiles();
 
     void handleInputs();
 
@@ -46,12 +40,12 @@ public:
 
     void sendPackets();
 
-    //TODO: Remove this method after testing
-    void testing_staggeredSpawn();
-
-    //Create Enemy (Temp function) replace with load from prefab
-    Entity createEnemy();
 private:
+    struct PlayerState {
+        static constexpr State Default = 0;
+        static constexpr State Attack = ComponentTags::Attacker;
+        static constexpr State Build = ComponentTags::Builder;
+    };
 
     // The ServerNetwork object 
     ServerNetwork* network;
@@ -64,4 +58,8 @@ private:
     unsigned int curTick;
 
     void playerAttack(Entity i, glm::vec3& camdir, glm::vec3& campos);
+
+    void changeState(Entity e, State post);
+
+    void playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, float range);
 };

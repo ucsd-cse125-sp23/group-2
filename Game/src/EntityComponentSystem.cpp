@@ -17,11 +17,13 @@ namespace GameData
   std::array<CollisionDmg, MAX_ENTITIES> coldmg;
   std::array<Hostility, MAX_ENTITIES> hostilities;
   std::array<LifeSpan, MAX_ENTITIES> lifespans;
-  std::array<AttackModule, MAX_ENTITIES> attackmodules;
+  std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
   std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
   std::array<Creator, MAX_ENTITIES> creators;
   std::array<SpawnRate, MAX_ENTITIES> spawnrates;
   int logpos = 0;
+  std::array<State, MAX_ENTITIES> states;
+  std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
 }
 
 //Call all systems each update
@@ -36,6 +38,7 @@ void EntityComponentSystem::update()
     sysTurretFire();
     sysDetectCollisions();
     resolveCollisions();
+    sysBuild();
     sysLifeSpan();
 }
 
@@ -187,11 +190,13 @@ void EntityComponentSystem::sysDetectCollisions()
                 //check if this entity has can collide
                 if ((GameData::tags[o] & collides) == collides)
                 {
+                    //If not on same  collision layer skip
+                    if (!(GameData::colliders[e].colwith & GameData::colliders[o].colteam)) { continue; }
                     glm::vec3 maxe = GameData::positions[e] + GameData::colliders[e].AABB;
                     glm::vec3 maxo = GameData::positions[o] + GameData::colliders[o].AABB;
                     glm::vec3 mine = GameData::positions[e] - GameData::colliders[e].AABB;
                     glm::vec3 mino = GameData::positions[o] - GameData::colliders[o].AABB;
-                    if (glm::all(glm::lessThan(mine, maxo)) && glm::all(glm::lessThan(mino, maxe))) {
+                    if (colCheck(e, o)) {
                         glm::vec3 pen = glm::vec3(0);
                         glm::vec3 diff1 = maxo - mine;
                         glm::vec3 diff2 = maxe - mino;
@@ -312,49 +317,45 @@ void EntityComponentSystem::sysAttacks()
     for (int e = 0; e < MAX_ENTITIES; ++e) {
         //Continue to next entity if this one is not active
         if (!GameData::activity[e]) { continue; }
+        GameData::pattackmodules[e].cooldown -= 1.0f / TICK_RATE;
 
         if ((GameData::tags[e] & ComponentTags::Attacker) == ComponentTags::Attacker) {
+            //printf("Attacker %u is attacking, checking cooldown\n", e);
+            if (GameData::pattackmodules[e].cooldown <= 0) {
+                //printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::pattackmodules[e].cooldown);
+                //Create transformation matrix from prefab dim, to attacker dim
+                glm::vec3 targetVec = GameData::pattackmodules[e].targetPos - GameData::positions[e];
 
-            if (GameData::attackmodules[e].isAttacking) {
-                //printf("Attacker %u is attacking, checking cooldown\n", e);
-                if (GameData::attackmodules[e].cooldown <= 0) {
-                    //printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::attackmodules[e].cooldown);
-                    //Create transformation matrix from prefab dim, to attacker dim
-                    glm::vec3 targetVec = GameData::attackmodules[e].targetPos - GameData::positions[e];
+                glm::vec3 normXZ = glm::normalize(glm::vec3(targetVec.x, 0, targetVec.z));
+                float angleXZ = glm::acos(-normXZ.z);
+                glm::vec3 normTarget = glm::normalize(targetVec);
+                float angleY = glm::acos(glm::dot(normXZ, normTarget));
+                glm::vec3 axisXZ = glm::cross(normXZ, normTarget);
+                glm::mat4 transform = glm::translate(GameData::positions[e]) * glm::rotate(angleY, axisXZ) * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
 
-                    glm::vec3 normXZ = glm::normalize(glm::vec3(targetVec.x, 0, targetVec.z));
-                    float angleXZ = glm::acos(-normXZ.z);
-                    glm::vec3 normTarget = glm::normalize(targetVec);
-                    float angleY = glm::acos(glm::dot(normXZ, normTarget));
-                    glm::vec3 axisXZ = glm::cross(normXZ, normTarget);
-                    glm::mat4 transform = glm::translate(GameData::positions[e]) * glm::rotate(angleY, axisXZ) * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
-
-                    //Create entities representing attack (projectiles)
-                    std::list<Entity> attacks = prefabMap[GameData::attackmodules[e].attack]();
+                //Create entities representing attack (projectiles)
+                std::list<Entity> attacks = prefabMap[GameData::pattackmodules[e].attack]();
                     
-                    float cooldown = 0.0f;
-                    for (auto i = attacks.begin(); i != attacks.end(); ++i) {
-                        Entity attack = *i;
-                        if (attack == INVALID_ENTITY) {
-                            continue;
-                        }
-                        //Transform positions and velocity relative to attacker
-                        GameData::positions[attack] = transform * glm::vec4(GameData::positions[attack], 1);
-                        GameData::velocities[attack] = transform * glm::vec4(GameData::velocities[attack], 0);
-                        //Set Hostility
-                        GameData::hostilities[attack].team = GameData::hostilities[e].team;
-                        GameData::hostilities[attack].hostileTo = GameData::hostilities[e].hostileTo;
-                        //Set creator
-                        GameData::tags[attack] += ComponentTags::Created;
-                        GameData::creators[attack] = e;
-                        cooldown = cooldown < GameData::spawnrates[attack] ? GameData::spawnrates[attack] : cooldown;
+                float cooldown = 0.0f;
+                for (auto i = attacks.begin(); i != attacks.end(); ++i) {
+                    Entity attack = *i;
+                    if (attack == INVALID_ENTITY) {
+                        continue;
                     }
-                    //Set cooldown TODO, should be its own component in an attack
-                    GameData::attackmodules[e].cooldown = cooldown;
+                    //Transform positions and velocity relative to attacker
+                    GameData::positions[attack] = transform * glm::vec4(GameData::positions[attack], 1);
+                    GameData::velocities[attack] = transform * glm::vec4(GameData::velocities[attack], 0);
+                    //Set Hostility
+                    GameData::hostilities[attack].team = GameData::hostilities[e].team;
+                    GameData::hostilities[attack].hostileTo = GameData::hostilities[e].hostileTo;
+                    //Set creator
+                    GameData::tags[attack] += ComponentTags::Created;
+                    GameData::creators[attack] = e;
+                    cooldown = cooldown < GameData::spawnrates[attack] ? GameData::spawnrates[attack] : cooldown;
                 }
-               
+                //Set cooldown TODO, should be its own component in an attack
+                GameData::pattackmodules[e].cooldown = cooldown;
             }
-            GameData::attackmodules[e].cooldown -= 1.0f / TICK_RATE;
         }
     }
 }
@@ -377,11 +378,88 @@ void EntityComponentSystem::sysLifeSpan()
     }
 }
 
+void EntityComponentSystem::sysBuild()
+{
+    for (Entity e = 0; e < MAX_ENTITIES; e++)
+    {
+        //Continue to next entity if this one is not active
+        if (!GameData::activity[e]) { continue; }
+
+        //check if this entity has a health component
+        if ((GameData::tags[e] & ComponentTags::Builder) == ComponentTags::Builder)
+        {
+
+            if (!GameData::retplaces[e].validTarget) {
+                
+                if (GameData::retplaces[e].reticle != INVALID_ENTITY) {
+                    //printf("Deleting reticle entity %d\n", GameData::retplaces[e].reticle);
+                    GameData::activity[GameData::retplaces[e].reticle] = false;
+                    GameData::retplaces[e].reticle = INVALID_ENTITY;
+                }
+                
+                
+                continue; 
+            }
+            glm::vec3 targetVec = GameData::retplaces[e].targetPos - GameData::positions[e];
+            glm::vec3 normXZ = glm::normalize(glm::vec3(targetVec.x, 0, targetVec.z));
+            float angleXZ = glm::acos(-normXZ.z);
+            glm::vec3 normTarget = glm::normalize(targetVec);
+            glm::mat4 transform = glm::translate(GameData::retplaces[e].targetPos) * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
+
+            if (GameData::retplaces[e].place) {
+                if ( (GameData::retplaces[e].reticle !=INVALID_ENTITY) && (GameData::activity[GameData::retplaces[e].reticle])) {
+                    
+                    Entity b = prefabMap[GameData::retplaces[e].buildingPrefab]().front();
+
+                    if (b == INVALID_ENTITY) { printf("Too many entities, trying to place building\n"); }
+                    else {
+                        //Transform positions and velocity relative to attacker
+                        GameData::positions[b] = transform * glm::vec4(GameData::positions[b], 1);
+                        GameData::velocities[b] = transform * glm::vec4(GameData::velocities[b], 0);
+                        //Set creator
+                        GameData::tags[b] += ComponentTags::Created;
+                        GameData::creators[b] = e;
+                    }
+
+                }
+                else {
+                    //printf("Attempted to place but reticle is invaid\n");
+                }
+                GameData::retplaces[e].place = false;
+            }
+            
+            
+            Entity r;
+            if ((GameData::retplaces[e].reticle == INVALID_ENTITY) || (!GameData::activity[GameData::retplaces[e].reticle])) {
+                //printf("Generating new reticle\n");
+                r = prefabMap[GameData::retplaces[e].reticlePrefab]().front();
+            }
+            else {
+                r = GameData::retplaces[e].reticle;
+            }
+
+            if (r == INVALID_ENTITY) { //printf("Too many entities, trying to place reticle\n"); 
+            }
+            else {
+                //Transform positions and velocity relative to attacker
+                GameData::positions[r] = glm::vec3(0, 0, 0);
+                GameData::positions[r] = transform * glm::vec4(GameData::positions[r], 1);
+                GameData::velocities[r] = transform * glm::vec4(GameData::velocities[r], 0);
+                GameData::tags[r] ^= ComponentTags::Velocity;
+                //Set creator
+                GameData::tags[r] += ComponentTags::Created;
+                GameData::creators[r] = e;
+                GameData::retplaces[e].reticle = r;
+            }
+        }
+    }
+}
+
 //Create an empty projectile 
-Entity EntityComponentSystem::createEntity()
+Entity EntityComponentSystem::createEntity(int begin, int end)
 {
     //Once we get instancing and modelID rendering setup,
-    for (int i = ENEMY_START; i < ENEMY_END; ++i) {
+    for (int i = begin; i < end; ++i) {
         if (!GameData::activity[i]) {
             GameData::activity[i] = true;
             return i;
@@ -395,6 +473,7 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
 {
     float tfirst = 1024;
     glm::vec3 dirNorm = glm::normalize(dir);
+
     float tmin = tminog;
     float tmax = tmaxog;
     for (Entity e = 0; e < MAX_ENTITIES; ++e) {
@@ -448,5 +527,14 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     GameData::combatLogs[GameData::logpos].damage = damage;
     GameData::combatLogs[GameData::logpos].killed = (GameData::healths[target].curHealth <= 0);
     GameData::logpos++;
+}
+
+bool EntityComponentSystem::colCheck(Entity e, Entity o)
+{
+    glm::vec3 maxe = GameData::positions[e] + GameData::colliders[e].AABB;
+    glm::vec3 maxo = GameData::positions[o] + GameData::colliders[o].AABB;
+    glm::vec3 mine = GameData::positions[e] - GameData::colliders[e].AABB;
+    glm::vec3 mino = GameData::positions[o] - GameData::colliders[o].AABB;
+    return glm::all(glm::lessThan(mine, maxo)) && glm::all(glm::lessThan(mino, maxe));
 }
 

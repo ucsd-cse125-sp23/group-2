@@ -13,15 +13,33 @@ using Entity = uint32_t;
 const Entity INVALID_ENTITY = MAX_ENTITIES;
 
 //Define Component Tpyes (Max Components = 32)
+
+
+using LifeSpan = float;
+
+using Creator = Entity;
+
+using SpawnRate = float;
+
+//Define Component Tags
+using Tag = uint32_t;
+
+
 using Active = bool; //Is Entity active in the scene?
 using Position = glm::vec3; //Entity Position in 3D Space
 using Velocity = glm::vec3; //Entity Velocity in 3D Space
 using TeamID = uint32_t;
+using State = Tag;
 namespace Teams {
     constexpr TeamID Players = 0x1;
     constexpr TeamID Martians = 0x1 << 1;
     constexpr TeamID Towers = 0x1 << 2;
     constexpr TeamID Environment = 0x1 << 3;
+}
+
+namespace CollisionLayer {
+    constexpr TeamID WorldObj = 0x1;
+    constexpr TeamID UIObj = 0x1 << 1;
 }
 
 struct Hostility {
@@ -57,6 +75,9 @@ struct Collider //Information for collisions
 {
     glm::vec3 AABB; //Axis Aligned Bound Box vector
 
+    TeamID colteam;
+    TeamID colwith;
+
     //TODO: Pointer to a mesh for narrow phase
 };
 
@@ -82,10 +103,18 @@ struct CollisionDmg {
     float damage;
 };
 
-struct AttackModule {
-    bool isAttacking;
+struct ProjectileAttackModule {
     Prefab attack;
     float cooldown; //Remaining coooldown in seconds
+    glm::vec3 targetPos;
+};
+
+struct ReticlePlacement {
+    bool place;
+    Prefab reticlePrefab;
+    Prefab buildingPrefab;
+    Entity reticle = INVALID_ENTITY;
+    bool validTarget;
     glm::vec3 targetPos;
 };
 
@@ -96,14 +125,7 @@ struct CombatLog {
     bool killed;
 };
 
-using LifeSpan = float;
 
-using Creator = Entity;
-
-using SpawnRate = float;
-
-//Define Component Tags
-using Tag = uint32_t;
 namespace ComponentTags
 {
     constexpr Tag Position  = 0x1 << 0;
@@ -120,6 +142,7 @@ namespace ComponentTags
     constexpr Tag Attacker = 0x1 << 11;
     constexpr Tag LifeSpan = 0x1 << 12;
     constexpr Tag Created = 0x1 << 13;
+    constexpr Tag Builder = 0x1 << 14;
 
 }
 
@@ -142,10 +165,12 @@ namespace GameData
     extern std::array<Health, MAX_ENTITIES> healths;
     extern std::array<CollisionDmg, MAX_ENTITIES> coldmg;
     extern std::array<Hostility, MAX_ENTITIES> hostilities;
-    extern std::array<AttackModule, MAX_ENTITIES> attackmodules;
+    extern std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
     extern std::array<LifeSpan, MAX_ENTITIES> lifespans;
     extern std::array<Creator, MAX_ENTITIES> creators;
     extern std::array<SpawnRate, MAX_ENTITIES> spawnrates;
+    extern std::array<State, MAX_ENTITIES> states;
+    extern std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
 
     //Events
     extern std::queue<CollisionEvent> colevents;
@@ -189,12 +214,19 @@ namespace EntityComponentSystem
     //LifeSpan
     void sysLifeSpan();
 
-    //Helper functions
-    Entity createEntity();
+    //Building shit
+    void sysBuild();
 
-    //Find the position of intersection with first rigid body (uses Peter Shirley's method at http://psgraphics.blogspot.com/2016/02/new-simple-ray-box-test-from-andrew.html)
+    //Helper functions
+    Entity createEntity(int begin, int end);
+
+    //Find the position of inte rsection with first rigid body (uses Peter Shirley's method at http://psgraphics.blogspot.com/2016/02/new-simple-ray-box-test-from-andrew.html)
     glm::vec3 computeRaycast(glm::vec3& pos, glm::vec3& dir, float tmin, float tmax);
 
     //Deals damage
     void dealDamage(Entity source, Entity target, float damage);
+
+    //Check Collisions between two colliders and return pen
+    bool colCheck(Entity e, Entity o);
+  
 };

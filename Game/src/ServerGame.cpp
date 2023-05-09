@@ -18,11 +18,8 @@ ServerGame::ServerGame(void)
 void ServerGame::initializeGame()
 {
     initPlayers();
-    initEnemies();
     initWaves();
-    //initTowers();
     //initResources();
-    //initProjectiles();
 }
 
 void ServerGame::initPlayers()
@@ -39,20 +36,28 @@ void ServerGame::initPlayers()
         GameData::healths[i].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
         GameData::hostilities[i].team = Teams::Players;
         GameData::hostilities[i].hostileTo = Teams::Environment+Teams::Martians;
-        GameData::attackmodules[i].attack = Prefabs::ProjectileBasic;
-        GameData::attackmodules[i].targetPos = glm::vec3(0, 0, 0);
-        GameData::attackmodules[i].cooldown = 0;
+        GameData::pattackmodules[i].attack = Prefabs::ProjectileBasic;
+        GameData::pattackmodules[i].targetPos = glm::vec3(0, 0, 0);
+        GameData::pattackmodules[i].cooldown = 0;
+        GameData::states[i] = 0;
+        GameData::retplaces[i].buildingPrefab = Prefabs::TowerBasic;
+        GameData::retplaces[i].reticlePrefab = Prefabs::TowerReticle;
+        GameData::retplaces[i].reticle = INVALID_ENTITY;
+        GameData::retplaces[i].place = false;
+        GameData::retplaces[i].validTarget = false;
+        GameData::colliders[i].colteam = CollisionLayer::WorldObj;
+        GameData::colliders[i].colwith = CollisionLayer::WorldObj;
+
 
 
         GameData::tags[i] =
             ComponentTags::Position +
             ComponentTags::Velocity +
             ComponentTags::Model +
-            ComponentTags::Collidable+
-            ComponentTags::RigidBody+
+            ComponentTags::Collidable +
+            ComponentTags::RigidBody +
             ComponentTags::Health +
-            ComponentTags::Hostility +
-            ComponentTags::Attacker;
+            ComponentTags::Hostility;
         //TODO: Other Model Data
     }
     //TODO: Change
@@ -78,11 +83,6 @@ void ServerGame::initWaves()
             WaveData::waves[i].push(e);
         }
     }
-}
-
-void ServerGame::initEnemies()
-{
-
 }
 
 void ServerGame::waveSpawner() 
@@ -122,42 +122,9 @@ void ServerGame::waveSpawner()
 }
 
 //TODO
-void ServerGame::initTowers()
-{
-
-    //TESTING: Create a towers
-    GameData::activity[TOWER_START] = true;
-    GameData::positions[TOWER_START] = glm::vec3(1, 0, 15);
-    GameData::turrets[TOWER_START].damage = TURRET_BASE_DMG;
-    GameData::turrets[TOWER_START].range = 5;
-    GameData::models[TOWER_START].asciiRep = 'T';
-    GameData::hostilities[TOWER_START].team = Teams::Martians;
-    GameData::hostilities[TOWER_START].hostileTo = Teams::Players + Teams::Towers;
-    GameData::tags[TOWER_START] =
-        ComponentTags::Position +
-        ComponentTags::Model +
-        ComponentTags::Turret +
-        ComponentTags::Hostility;
-
-    for (int i = TOWER_START + 1; i < TOWER_END; i++)
-    {
-        GameData::activity[i] = false;
-    }
-}
-
-//TODO
 void ServerGame::initResources()
 {
 
-}
-
-//TODO
-void ServerGame::initProjectiles()
-{
-    for (int i = PROJECTILE_START; i < PROJECTILE_END; i++)
-    {
-        GameData::activity[i] = false;
-    }
 }
 
 // Update function called every tick
@@ -200,12 +167,13 @@ void ServerGame::handleInputs()
     {
         glm::vec3 camDirection;
         glm::vec3 camPosition;
-        GameData::attackmodules[i].isAttacking = false;
+        bool target = false;
         while (!incomingDataLists[i].empty())
         {
             ClienttoServerData in = incomingDataLists[i].front();
             GameData::velocities[i] = glm::vec3(0,GameData::velocities[i].y,0);
-
+            camDirection = in.camDirectionVector;
+            camPosition = in.camPosition;
             if ( ((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
                 float camAngle = in.camAngleAroundPlayer;
                 glm::vec3 moveDirection = glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f));
@@ -214,10 +182,18 @@ void ServerGame::handleInputs()
             }
 
             if (in.shoot) {
-                GameData::attackmodules[i].isAttacking = in.shoot;
-                camDirection = in.camDirectionVector;
-                camPosition = in.camPosition;
-
+                target = in.shoot;
+            }
+            
+            if (in.build) {
+                changeState(i, PlayerState::Build);
+            }
+            else {
+                changeState(i, PlayerState::Default); //May be slow
+                if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
+                    GameData::activity[GameData::retplaces[i].reticle] = false;
+                    GameData::retplaces[i].reticle = INVALID_ENTITY;
+                }
             }
 
             if (in.jump && GameData::positions[i].y <= 0) {
@@ -226,9 +202,23 @@ void ServerGame::handleInputs()
             incomingDataLists[i].pop();
         }
 
-        if (GameData::attackmodules[i].isAttacking && GameData::attackmodules[i].cooldown <= 0) {
-            playerAttack(i, camDirection, camPosition);
+        if (GameData::states[i] == PlayerState::Build) {
+            //printf("Calling Player build\n");
+            playerBuild(i, camDirection, camPosition, TOWER_PLACEMENT_RANGE);
+        }
+
+        if (target) {
+            if (GameData::states[i] == PlayerState::Build) {
+                GameData::retplaces[i].place = true;
+            }
+            else {
+                changeState(i, PlayerState::Attack);
+                playerAttack(i, camDirection, camPosition);
+            }
             //printf("ShootingInput\n");
+        }
+        else if(GameData::states[i] == PlayerState::Attack){
+            changeState(i, PlayerState::Default);
         }
         //in.print(msg);
     }
@@ -299,6 +289,33 @@ void ServerGame::asciiView() {
 
 void ServerGame::playerAttack(Entity e, glm::vec3& camdir, glm::vec3& campos)
 {
-    GameData::attackmodules[e].targetPos = ECS::computeRaycast(campos, camdir, glm::distance(campos, GameData::positions[e])+glm::length(GameData::colliders[e].AABB), FLT_MAX);
-    //printf("Targer pos (%f, %f, %f)\n", GameData::attackmodules[e].targetPos.x, GameData::attackmodules[e].targetPos.y, GameData::attackmodules[e].targetPos.z);
+    GameData::pattackmodules[e].targetPos = ECS::computeRaycast(campos, camdir, glm::distance(campos, GameData::positions[e])+glm::length(GameData::colliders[e].AABB), FLT_MAX);
+    //printf("Targer pos (%f, %f, %f)\n", GameData::pattackmodules[e].targetPos.x, GameData::pattackmodules[e].targetPos.y, GameData::pattackmodules[e].targetPos.z);
+}
+
+void ServerGame::changeState(Entity e, State post)
+{
+    GameData::tags[e] ^= GameData::states[e];
+    GameData::states[e] = post;
+    GameData::tags[e] |= post;
+}
+
+void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, float range)
+{
+    if (camdir.y >= 0) {
+        //printf("You're looking up\n");
+        GameData::retplaces[i].validTarget = false;
+        return;
+    }
+    glm::vec3 dirYNorm = camdir / (camdir.y*-1);
+    glm::vec3 targetpos = glm::vec3(campos.x + dirYNorm.x * campos.y, 0, campos.z + dirYNorm.z * campos.y);
+    if (glm::distance(targetpos, GameData::positions[i]) > range) {
+        //printf("Out of range\n");
+
+        GameData::retplaces[i].validTarget = false;
+        return;
+    }
+    GameData::retplaces[i].targetPos = targetpos;
+    GameData::retplaces[i].validTarget = true;
+    //printf("Valid Target\n");
 }
