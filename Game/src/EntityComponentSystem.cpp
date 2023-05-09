@@ -24,13 +24,14 @@ namespace GameData
   int logpos = 0;
   std::array<State, MAX_ENTITIES> states;
   std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
+  Score score;
 }
 
 //Call all systems each update
 void EntityComponentSystem::update()
 {
     GameData::logpos = 0;
-    sysHealthStatus();
+    sysDeathStatus();
     sysAttacks();
     sysPathing();
     sysGravity();
@@ -265,7 +266,7 @@ void EntityComponentSystem::resolveCollisions()
 
         //Check if dies on Collision
         if ((GameData::tags[e] & (ComponentTags::DiesOnCollision)) == ComponentTags::DiesOnCollision) {
-            GameData::activity[e] = false;
+            causeDeath(e, e);
         }
 
         //Do on collision damage
@@ -284,30 +285,23 @@ void EntityComponentSystem::resolveCollisions()
     }
 }
 
-//Check entity health death conditions
-void EntityComponentSystem::sysHealthStatus()
+//Check entity death flag and set to zero (and do any on death effects
+void EntityComponentSystem::sysDeathStatus()
 {
     for (Entity e = 0; e < MAX_ENTITIES; e++)
     {
         //Continue to next entity if this one is not active
         if (!GameData::activity[e]) { continue; }
 
-        //check if this entity has a health component
-        if ((GameData::tags[e] & ComponentTags::Health) == ComponentTags::Health)
+        //set to inactive if dying flag
+        if ((GameData::tags[e] & ComponentTags::Dead) == ComponentTags::Dead)
         {
             //TEST OUTPUT FOR VISUALIZER
-            if (GameData::healths[e].curHealth <= 10)
-            {
-                GameData::models[e].asciiRep = 'X';
-            }
-
-            //set to inactive if health at or below 0
-            if (GameData::healths[e].curHealth <= 0)
-            {
-                GameData::activity[e] = false;
-                //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
-            }
+            GameData::models[e].asciiRep = 'X';
+            GameData::activity[e] = false;
+            //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
         }
+
     }
 }
 
@@ -525,7 +519,24 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     GameData::combatLogs[GameData::logpos].source = source;
     GameData::combatLogs[GameData::logpos].target = target;
     GameData::combatLogs[GameData::logpos].damage = damage;
-    GameData::combatLogs[GameData::logpos].killed = (GameData::healths[target].curHealth <= 0);
+    if (GameData::healths[target].curHealth <= 0) {
+        causeDeath(source, target);
+    }
+    GameData::logpos++;
+}
+
+void EntityComponentSystem::causeDeath(Entity source, Entity target)
+{
+    if ((GameData::tags[target] & ComponentTags::Dead) == ComponentTags::Dead) {
+        return;
+    }
+    GameData::tags[target] |= ComponentTags::Dead;
+
+    if (source == target) { return; }
+    GameData::combatLogs[GameData::logpos].source = source;
+    GameData::combatLogs[GameData::logpos].target = target;
+    GameData::combatLogs[GameData::logpos].killed = true;
+
     GameData::logpos++;
 }
 

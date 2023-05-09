@@ -125,6 +125,10 @@ struct CombatLog {
     bool killed;
 };
 
+struct Score {
+
+};
+
 
 namespace ComponentTags
 {
@@ -143,6 +147,7 @@ namespace ComponentTags
     constexpr Tag LifeSpan = 0x1 << 12;
     constexpr Tag Created = 0x1 << 13;
     constexpr Tag Builder = 0x1 << 14;
+    constexpr Tag Dead = 0x1 << 15;
 
 }
 
@@ -178,6 +183,7 @@ namespace GameData
     //Logs for Client
     extern int logpos;
     extern std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
+    extern Score score;
 }
 
 namespace EntityComponentSystem
@@ -206,7 +212,7 @@ namespace EntityComponentSystem
     void sysTurretFire();
 
     //Check the status of entity's HP
-    void sysHealthStatus();
+    void sysDeathStatus();
 
     //Attacks!
     void sysAttacks();
@@ -223,8 +229,10 @@ namespace EntityComponentSystem
     //Find the position of inte rsection with first rigid body (uses Peter Shirley's method at http://psgraphics.blogspot.com/2016/02/new-simple-ray-box-test-from-andrew.html)
     glm::vec3 computeRaycast(glm::vec3& pos, glm::vec3& dir, float tmin, float tmax);
 
-    //Deals damage
+    //Deals damage (And will eventuall call death functions)
     void dealDamage(Entity source, Entity target, float damage);
+
+    void causeDeath(Entity source, Entity target);
 
     //Check Collisions between two colliders and return pen
     bool colCheck(Entity e, Entity o);
