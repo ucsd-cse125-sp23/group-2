@@ -438,7 +438,8 @@ void EntityComponentSystem::sysBuild()
                 r = GameData::retplaces[e].reticle;
             }
 
-            if (r == INVALID_ENTITY) { //printf("Too many entities, trying to place reticle\n"); }
+            if (r == INVALID_ENTITY) { //printf("Too many entities, trying to place reticle\n"); 
+            }
             else {
                 //Transform positions and velocity relative to attacker
                 GameData::positions[r] = glm::vec3(0, 0, 0);
