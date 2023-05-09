@@ -392,7 +392,7 @@ void EntityComponentSystem::sysBuild()
             if (!GameData::retplaces[e].validTarget) {
                 
                 if (GameData::retplaces[e].reticle != INVALID_ENTITY) {
-                    printf("Deleting reticle entity %d\n", GameData::retplaces[e].reticle);
+                    //printf("Deleting reticle entity %d\n", GameData::retplaces[e].reticle);
                     GameData::activity[GameData::retplaces[e].reticle] = false;
                     GameData::retplaces[e].reticle = INVALID_ENTITY;
                 }
@@ -423,7 +423,7 @@ void EntityComponentSystem::sysBuild()
 
                 }
                 else {
-                    printf("Attempted to place but reticle is invaid\n");
+                    //printf("Attempted to place but reticle is invaid\n");
                 }
                 GameData::retplaces[e].place = false;
             }
@@ -431,14 +431,14 @@ void EntityComponentSystem::sysBuild()
             
             Entity r;
             if ((GameData::retplaces[e].reticle == INVALID_ENTITY) || (!GameData::activity[GameData::retplaces[e].reticle])) {
-                printf("Generating new reticle\n");
+                //printf("Generating new reticle\n");
                 r = prefabMap[GameData::retplaces[e].reticlePrefab]().front();
             }
             else {
                 r = GameData::retplaces[e].reticle;
             }
 
-            if (r == INVALID_ENTITY) { printf("Too many entities, trying to place reticle\n"); }
+            if (r == INVALID_ENTITY) { //printf("Too many entities, trying to place reticle\n"); }
             else {
                 //Transform positions and velocity relative to attacker
                 GameData::positions[r] = glm::vec3(0, 0, 0);
