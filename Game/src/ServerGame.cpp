@@ -204,7 +204,7 @@ void ServerGame::handleInputs()
 
         if (GameData::states[i] == PlayerState::Build) {
             //printf("Calling Player build\n");
-            playerBuild(i, camDirection, camPosition, 15);
+            playerBuild(i, camDirection, camPosition, TOWER_PLACEMENT_RANGE);
         }
 
         if (target) {
