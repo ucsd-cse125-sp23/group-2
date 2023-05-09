@@ -189,6 +189,10 @@ void ServerGame::handleInputs()
             }
             else {
                 changeState(i, PlayerState::Default); //May be slow
+                if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
+                    GameData::activity[GameData::retplaces[i].reticle] = false;
+                    GameData::retplaces[i].reticle = INVALID_ENTITY;
+                }
             }
 
             if (in.jump && GameData::positions[i].y <= 0) {
