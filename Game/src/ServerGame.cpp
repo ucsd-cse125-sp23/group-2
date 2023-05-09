@@ -18,10 +18,8 @@ ServerGame::ServerGame(void)
 void ServerGame::initializeGame()
 {
     initPlayers();
-    initEnemies();
-    //initTowers();
+    initWaves();
     //initResources();
-    //initProjectiles();
 }
 
 void ServerGame::initPlayers()
@@ -38,20 +36,28 @@ void ServerGame::initPlayers()
         GameData::healths[i].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
         GameData::hostilities[i].team = Teams::Players;
         GameData::hostilities[i].hostileTo = Teams::Environment+Teams::Martians;
-        GameData::attackmodules[i].targetPos = glm::vec3(0, 0, 0);
-        GameData::attackmodules[i].cooldown = 0;
+        GameData::pattackmodules[i].attack = Prefabs::ProjectileBasic;
+        GameData::pattackmodules[i].targetPos = glm::vec3(0, 0, 0);
+        GameData::pattackmodules[i].cooldown = 0;
+        GameData::states[i] = 0;
+        GameData::retplaces[i].buildingPrefab = Prefabs::TowerBasic;
+        GameData::retplaces[i].reticlePrefab = Prefabs::TowerReticle;
+        GameData::retplaces[i].reticle = INVALID_ENTITY;
+        GameData::retplaces[i].place = false;
+        GameData::retplaces[i].validTarget = false;
+        GameData::colliders[i].colteam = CollisionLayer::WorldObj;
+        GameData::colliders[i].colwith = CollisionLayer::WorldObj;
+
 
 
         GameData::tags[i] =
-            ComponentTags::Active +
             ComponentTags::Position +
             ComponentTags::Velocity +
             ComponentTags::Model +
-            ComponentTags::Collidable+
-            ComponentTags::RigidBody+
+            ComponentTags::Collidable +
+            ComponentTags::RigidBody +
             ComponentTags::Health +
-            ComponentTags::Hostility +
-            ComponentTags::Attacker;
+            ComponentTags::Hostility;
         //TODO: Other Model Data
     }
     //TODO: Change
@@ -63,134 +69,62 @@ void ServerGame::initPlayers()
 
 }
 
-void ServerGame::initEnemies()
+void ServerGame::initWaves() 
 {
-    
-    /*
-    //Initialize Enemies
-    for (int i = ENEMY_START; i < ENEMY_END; i++)
+    WaveData::currentWave = -1;
+    WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave+1];
+
+    //Temp Nested for loop to populate wave vectors
+    for (int i = 0; i < WAVE_COUNT; i++)
     {
-        GameData::activity[i] = false;
-        GameData::positions[i] = glm::vec3(31, 0, 31);
-        memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[i].pathNodes));
-        GameData::pathStructs[i].currentNode = 0;
-        GameData::pathStructs[i].moveSpeed = MOVE_SPEED_ADJ;
-        GameData::colliders[i] = { glm::vec3(1, 1, 1) };
-        GameData::models[i].asciiRep = 'E';
-        //GameData::rigidbodies[i].fixed = true;
-        GameData::healths[i].maxHealth = GameData::healths[i].curHealth = ENEMY_BASE_HEALTH;
-        GameData::coldmg[i].damage = 30.0f;
-        GameData::hostilities[i].team = Teams::Martians;
-        GameData::hostilities[i].hostileTo = Teams::Players + Teams::Towers;
-        GameData::tags[i] =
-            ComponentTags::Active +
-            ComponentTags::Position +
-            ComponentTags::Velocity +
-            ComponentTags::PathData +
-            ComponentTags::Model +
-            ComponentTags::Collidable+
-            ComponentTags::DiesOnCollision +
-            ComponentTags::RigidBody +
-            ComponentTags::Health +
-            ComponentTags::CollisionDmg +
-            ComponentTags::Hostility;
-    }
-    */
-}
-
-
-//TESTING: STAGGERED SPAWN (TODO: REMOVE AFTER TESTING)
-
-int curEntity = ENEMY_START;
-void ServerGame::testing_staggeredSpawn()
-{
-    if (curTick % TICK_RATE == 0)
-    {
-        curEntity = createEnemy();
-        if (curEntity != INVALID_ENTITY) {
-            //cout << "Entity " << curEntity << " Spawned in!\n";
-            GameData::activity[curEntity] = true;
-            GameData::positions[curEntity] = glm::vec3(31, 0, 31);
-            GameData::pathStructs[curEntity].currentNode = 0;
-            GameData::healths[curEntity].curHealth = ENEMY_BASE_HEALTH;
-            GameData::models[curEntity].asciiRep = 'E';
+        for (int j = 0; j < 15; j++)
+        {
+            enemy e = { Prefabs::EnemyGroundBasic, rand() % Paths::pathCount, 1 * TICK_RATE };
+            WaveData::waves[i].push(e);
         }
     }
 }
 
-Entity ServerGame::createEnemy()
+void ServerGame::waveSpawner() 
 {
-    Entity i = ECS::createEntity();
-    if (i == INVALID_ENTITY) {
-        return i;
-    }
-    //Create Path (TEMP FOR TESTING) TODO: REMOVE FOR FINAL VERSION
-    glm::vec3 testPath[PATH_LENGTH] = { glm::vec3(15,0,31), glm::vec3(31,0,15), glm::vec3(15,0,15), glm::vec3(0,0,31), glm::vec3(0,0,15), glm::vec3(31,0,7), glm::vec3(31,0,0), glm::vec3(0, 0, 0) };
-    GameData::activity[i] = true;
-    GameData::positions[i] = glm::vec3(31, 0, 31);
-    memcpy(GameData::pathStructs[i].pathNodes, testPath, sizeof(GameData::pathStructs[i].pathNodes));
-    GameData::pathStructs[i].currentNode = 0;
-    GameData::pathStructs[i].moveSpeed = MOVE_SPEED_ADJ;
-    GameData::colliders[i] = { glm::vec3(1, 1, 1) };
-    GameData::models[i].asciiRep = 'E';
-    //GameData::rigidbodies[i].fixed = true;
-    GameData::healths[i].maxHealth = GameData::healths[i].curHealth = ENEMY_BASE_HEALTH;
-    GameData::coldmg[i].damage = 30.0f;
-    GameData::hostilities[i].team = Teams::Martians;
-    GameData::hostilities[i].hostileTo = Teams::Players + Teams::Towers;
-    GameData::tags[i] =
-        ComponentTags::Active +
-        ComponentTags::Position +
-        ComponentTags::Velocity +
-        ComponentTags::PathData +
-        ComponentTags::Model +
-        ComponentTags::Collidable +
-        ComponentTags::DiesOnCollision +
-        ComponentTags::RigidBody +
-        ComponentTags::Health +
-        ComponentTags::CollisionDmg +
-        ComponentTags::Hostility;
-    return i;
-}
+    static int spawnCooldown = 0;
 
-//TODO
-void ServerGame::initTowers()
-{
-
-    //TESTING: Create a towers
-    GameData::activity[TOWER_START] = true;
-    GameData::positions[TOWER_START] = glm::vec3(1, 0, 15);
-    GameData::turrets[TOWER_START].damage = TURRET_DMG_ADJ;
-    GameData::turrets[TOWER_START].range = 5;
-    GameData::models[TOWER_START].asciiRep = 'T';
-    GameData::hostilities[TOWER_START].team = Teams::Martians;
-    GameData::hostilities[TOWER_START].hostileTo = Teams::Players + Teams::Towers;
-    GameData::tags[TOWER_START] =
-        ComponentTags::Active +
-        ComponentTags::Position +
-        ComponentTags::Model +
-        ComponentTags::Turret +
-        ComponentTags::Hostility;
-
-    for (int i = TOWER_START + 1; i < TOWER_END; i++)
+    if (WaveData::waveTick <= 0) 
     {
-        GameData::activity[i] = false;
+        WaveData::currentWave++;
+        WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave];
+        spawnCooldown = WaveData::waves[WaveData::currentWave].front().cooldown;
     }
+
+    if (WaveData::currentWave >= 0) 
+    {
+        if (!WaveData::waves[WaveData::currentWave].empty()) 
+        {
+            if (spawnCooldown <= 0) 
+            {
+                list<Entity> e = prefabMap[WaveData::waves[WaveData::currentWave].front().id]();
+                if (e.front() != INVALID_ENTITY) 
+                {
+                    GameData::pathStructs[e.front()].path = WaveData::waves[WaveData::currentWave].front().path;
+                    GameData::positions[e.front()] = Paths::path[GameData::pathStructs[e.front()].path][0];
+                    WaveData::waves[WaveData::currentWave].pop();
+                    if (!WaveData::waves[WaveData::currentWave].empty()) 
+                    {
+                        spawnCooldown = WaveData::waves[WaveData::currentWave].front().cooldown;
+                    }
+                }
+            }
+            spawnCooldown--;
+        }
+    }
+
+    WaveData::waveTick--;
 }
 
 //TODO
 void ServerGame::initResources()
 {
 
-}
-
-//TODO
-void ServerGame::initProjectiles()
-{
-    for (int i = PROJECTILE_START; i < PROJECTILE_END; i++)
-    {
-        GameData::activity[i] = false;
-    }
 }
 
 // Update function called every tick
@@ -209,11 +143,11 @@ void ServerGame::update()
 
     EntityComponentSystem::update();
 
+    waveSpawner();
+
     //Print debug message buffer
     printf(debug);
     debug[0] = '\0';
-
-    //testing_staggeredSpawn(); //TODO: Remove this after testing concludes
 
     if (curTick % 4 == 0) {
         //asciiView();
@@ -233,31 +167,58 @@ void ServerGame::handleInputs()
     {
         glm::vec3 camDirection;
         glm::vec3 camPosition;
-        GameData::attackmodules[i].isAttacking = false;
+        bool target = false;
         while (!incomingDataLists[i].empty())
         {
             ClienttoServerData in = incomingDataLists[i].front();
             GameData::velocities[i] = glm::vec3(0,GameData::velocities[i].y,0);
-
+            camDirection = in.camDirectionVector;
+            camPosition = in.camPosition;
             if ( ((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
                 float camAngle = in.camAngleAroundPlayer;
                 glm::vec3 moveDirection = glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f));
                 GameData::models[i].modelOrientation = -camAngle + glm::degrees(glm::acos(moveDirection.y));
-                GameData::velocities[i] += MOVE_SPEED_ADJ * moveDirection;
+                GameData::velocities[i] += PLAYER_MVSPD * moveDirection;
             }
 
             if (in.shoot) {
-                GameData::attackmodules[i].isAttacking = in.shoot;
-                camDirection = in.camDirectionVector;
-                camPosition = in.camPosition;
+                target = in.shoot;
+            }
+            
+            if (in.build) {
+                changeState(i, PlayerState::Build);
+            }
+            else {
+                changeState(i, PlayerState::Default); //May be slow
+                if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
+                    GameData::activity[GameData::retplaces[i].reticle] = false;
+                    GameData::retplaces[i].reticle = INVALID_ENTITY;
+                }
+            }
 
+            if (in.jump && GameData::positions[i].y <= 0) {
+                GameData::velocities[i].y = PLAYER_JPSPD;
             }
             incomingDataLists[i].pop();
         }
 
-        if (GameData::attackmodules[i].isAttacking && GameData::attackmodules[i].cooldown <= 0) {
-            playerAttack(i, camDirection, camPosition);
+        if (GameData::states[i] == PlayerState::Build) {
+            //printf("Calling Player build\n");
+            playerBuild(i, camDirection, camPosition, TOWER_PLACEMENT_RANGE);
+        }
+
+        if (target) {
+            if (GameData::states[i] == PlayerState::Build) {
+                GameData::retplaces[i].place = true;
+            }
+            else {
+                changeState(i, PlayerState::Attack);
+                playerAttack(i, camDirection, camPosition);
+            }
             //printf("ShootingInput\n");
+        }
+        else if(GameData::states[i] == PlayerState::Attack){
+            changeState(i, PlayerState::Default);
         }
         //in.print(msg);
     }
@@ -286,6 +247,10 @@ void ServerGame::packageData(ServertoClientData& data)
     data.models = GameData::models;
     data.activity = GameData::activity;
     data.healths = GameData::healths;
+    data.combatLogs = GameData::combatLogs;
+    data.logsize = GameData::logpos;
+    data.currentWave = WaveData::currentWave + 1;
+    data.numWaves = WAVE_COUNT;
 }
 
 const int GRID_X = 32;
@@ -324,6 +289,33 @@ void ServerGame::asciiView() {
 
 void ServerGame::playerAttack(Entity e, glm::vec3& camdir, glm::vec3& campos)
 {
-    GameData::attackmodules[e].targetPos = ECS::computeRaycast(campos, camdir, glm::distance(campos, GameData::positions[e])+glm::length(GameData::colliders[e].AABB), FLT_MAX);
-    //printf("Targer pos (%f, %f, %f)\n", GameData::attackmodules[e].targetPos.x, GameData::attackmodules[e].targetPos.y, GameData::attackmodules[e].targetPos.z);
+    GameData::pattackmodules[e].targetPos = ECS::computeRaycast(campos, camdir, glm::distance(campos, GameData::positions[e])+glm::length(GameData::colliders[e].AABB), FLT_MAX);
+    //printf("Targer pos (%f, %f, %f)\n", GameData::pattackmodules[e].targetPos.x, GameData::pattackmodules[e].targetPos.y, GameData::pattackmodules[e].targetPos.z);
+}
+
+void ServerGame::changeState(Entity e, State post)
+{
+    GameData::tags[e] ^= GameData::states[e];
+    GameData::states[e] = post;
+    GameData::tags[e] |= post;
+}
+
+void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, float range)
+{
+    if (camdir.y >= 0) {
+        //printf("You're looking up\n");
+        GameData::retplaces[i].validTarget = false;
+        return;
+    }
+    glm::vec3 dirYNorm = camdir / (camdir.y*-1);
+    glm::vec3 targetpos = glm::vec3(campos.x + dirYNorm.x * campos.y, 0, campos.z + dirYNorm.z * campos.y);
+    if (glm::distance(targetpos, GameData::positions[i]) > range) {
+        //printf("Out of range\n");
+
+        GameData::retplaces[i].validTarget = false;
+        return;
+    }
+    GameData::retplaces[i].targetPos = targetpos;
+    GameData::retplaces[i].validTarget = true;
+    //printf("Valid Target\n");
 }

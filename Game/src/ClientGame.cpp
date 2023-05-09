@@ -5,6 +5,8 @@ bool ClientGame::moveBack = 0;
 bool ClientGame::moveRight = 0;
 bool ClientGame::moveLeft = 0;
 bool ClientGame::playerattacking = 0;
+bool ClientGame::jumping = 0;
+int ClientGame::build = 0;
 
 ClientGame::ClientGame(void)
 {
@@ -40,6 +42,14 @@ void ClientGame::update()
     //Recieve incoming server data into gamestate
     recieveData();
 
+    /*
+    for (int i = 0; i < incomingData.logsize; ++i) {
+        printf("Recieved %d combat logs: Ent %d, attacked Ent %d, for dmg %f\n", incomingData.logsize, incomingData.combatLogs[i].source, incomingData.combatLogs[i].target, incomingData.combatLogs[i].damage);
+        if (incomingData.combatLogs[i].killed) {
+            printf("And killed it\n");
+        }
+    }
+    */
     //Send Data to Server
     ClienttoServerData newPackage;
     packageData(newPackage);
@@ -59,6 +69,8 @@ void ClientGame::packageData(ClienttoServerData& data) {
     data.moveLeft = moveLeft;
     data.moveRight = moveRight;
     data.shoot = playerattacking;
+    data.jump = jumping;
+    data.build = build;
     data.camAngleAroundPlayer = gameWindow->getCamAngle();
     data.camDirectionVector = gameWindow->getCamDirectionVector();
     data.camPosition = gameWindow->getCamPosition();
@@ -79,6 +91,17 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
         case GLFW_KEY_D:
             moveRight = true;
             break;
+        case GLFW_KEY_SPACE:
+            jumping = true;
+            break;
+        case GLFW_KEY_E:
+            if (build != 0) {
+                build = 0;
+            }
+            else {
+                build = 1;
+            }
+            break;
         default: break;
         }
     }
@@ -95,6 +118,9 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
             break;
         case GLFW_KEY_D:
             moveRight = false;
+            break;
+        case GLFW_KEY_SPACE:
+            jumping = false;
             break;
         default: break;
         }

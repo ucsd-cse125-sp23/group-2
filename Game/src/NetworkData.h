@@ -22,6 +22,8 @@ struct ClienttoServerData {
     glm::vec3 camDirectionVector, camPosition;
     bool moveForward, moveBack, moveLeft, moveRight;
     bool shoot;
+    bool jump;
+    int build;
 
     void print(char * buf) {
         sprintf(buf, "Moveforward: %d, Moveback: %d, MoveLeft: %d, MoveRight: %d\n", moveForward, moveBack, moveLeft, moveRight);
@@ -34,6 +36,10 @@ struct ServertoClientData {
     std::array<Position, MAX_ENTITIES> positions;
     std::array<Model, MAX_ENTITIES> models;
     std::array<Health, MAX_ENTITIES> healths;
+    int logsize;
+    std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
+    int currentWave;
+    int numWaves;
 };
 
 //Struct for intializing the client id

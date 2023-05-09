@@ -11,6 +11,8 @@ private:
     GameWindow* gameWindow;
     static bool moveForward, moveBack, moveLeft, moveRight;
     static bool playerattacking;
+    static bool jumping;
+    static int build; //Normally 0, otherwise is an int representing the tower to build (from their build meny)
 public:
 
     ServertoClientData incomingData;
