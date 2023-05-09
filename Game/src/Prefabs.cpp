@@ -160,27 +160,19 @@ std::list<Entity> createTowerReticle() {
         return createdEntities;
     }
     GameData::activity[e] = true;
-    GameData::pathStructs[e].currentNode = 0;
-    GameData::pathStructs[e].path = 0;
-    GameData::pathStructs[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::turrets[e].damage = TURRET_BASE_DMG;
+    GameData::turrets[e].range = 5;
+    GameData::models[e].asciiRep = 'T';
+    GameData::hostilities[e].team = Teams::Towers;
+    GameData::hostilities[e].hostileTo = Teams::Martians;
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
-    GameData::models[e].asciiRep = 'E';
-    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
-    GameData::coldmg[e].damage = ENEMEY_GND_BASE_DMG;
-    GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
-
     GameData::tags[e] =
         ComponentTags::Position +
-        ComponentTags::Velocity +
-        ComponentTags::PathData +
         ComponentTags::Model +
-        ComponentTags::Collidable +
-        ComponentTags::RigidBody +
-        ComponentTags::Health +
-        ComponentTags::CollisionDmg +
+        ComponentTags::Turret +
         ComponentTags::Hostility +
+        ComponentTags::Collidable +
         ComponentTags::DiesOnCollision;
 
     return createdEntities;
@@ -194,28 +186,21 @@ std::list<Entity> createTowerBasic() {
         return createdEntities;
     }
     GameData::activity[e] = true;
-    GameData::pathStructs[e].currentNode = 0;
-    GameData::pathStructs[e].path = 0;
-    GameData::pathStructs[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::turrets[e].damage = TURRET_BASE_DMG;
+    GameData::turrets[e].range = 5;
+    GameData::models[e].asciiRep = 'T';
+    GameData::hostilities[e].team = Teams::Towers;
+    GameData::hostilities[e].hostileTo = Teams::Martians;
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
-    GameData::models[e].asciiRep = 'E';
-    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
-    GameData::coldmg[e].damage = ENEMEY_GND_BASE_DMG;
-    GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
-
+    GameData::rigidbodies[e].fixed = true;
     GameData::tags[e] =
         ComponentTags::Position +
-        ComponentTags::Velocity +
-        ComponentTags::PathData +
         ComponentTags::Model +
-        ComponentTags::Collidable +
-        ComponentTags::RigidBody +
-        ComponentTags::Health +
-        ComponentTags::CollisionDmg +
+        ComponentTags::Turret +
         ComponentTags::Hostility +
-        ComponentTags::DiesOnCollision;
+        ComponentTags::RigidBody +
+        ComponentTags::Collidable;
 
     return createdEntities;
 };

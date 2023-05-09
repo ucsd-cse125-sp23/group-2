@@ -30,13 +30,7 @@ public:
 
     void initWaves();
 
-    void initEnemies();
-
-    void initTowers();
-
     void initResources();
-
-    void initProjectiles();
 
     void handleInputs();
 
