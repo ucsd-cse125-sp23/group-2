@@ -1,10 +1,10 @@
 //The max number of each entity type (CAN BE MODIFIED - Currently Arbitrary)
 #pragma once
 #define NUM_PLAYERS 4
-#define NUM_ENEMIES 20
-#define NUM_TOWERS 20
-#define NUM_RESOURCES 20
-#define NUM_PROJECTILES 50
+#define NUM_ENEMIES 40
+#define NUM_TOWERS 40
+#define NUM_RESOURCES 100
+#define NUM_PROJECTILES 100
 #define CLOG_MAXSIZE 50
 const float TICK_RATE = 128;
 

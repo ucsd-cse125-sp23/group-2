@@ -154,7 +154,7 @@ std::list<Entity> createEnemyGroundBasic() {
 
 std::list<Entity> createTowerReticle() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(TOWER_START, TOWER_END);
+    Entity e = createEntity(PROJECTILE_START, PROJECTILE_END);
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
