@@ -190,7 +190,8 @@ void EntityComponentSystem::sysDetectCollisions()
                 //check if this entity has can collide
                 if ((GameData::tags[o] & collides) == collides)
                 {
-
+                    //If not on same  collision layer skip
+                    if (!(GameData::colliders[e].colwith & GameData::colliders[o].colteam)) { continue; }
                     glm::vec3 maxe = GameData::positions[e] + GameData::colliders[e].AABB;
                     glm::vec3 maxo = GameData::positions[o] + GameData::colliders[o].AABB;
                     glm::vec3 mine = GameData::positions[e] - GameData::colliders[e].AABB;

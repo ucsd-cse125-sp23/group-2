@@ -3,7 +3,7 @@
 using namespace EntityComponentSystem;
 std::list<Entity> createProjectileBasic() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(PROJECTILE_START, PROJECTILE_END);
+    Entity e = createEntity(ENEMY_START, ENEMY_END);
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -16,6 +16,9 @@ std::list<Entity> createProjectileBasic() {
     GameData::coldmg[e].damage = 30.0f;
     GameData::lifespans[e] = 5;
     GameData::spawnrates[e] = 0.25;
+    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -31,7 +34,7 @@ std::list<Entity> createProjectileBasic() {
 std::list<Entity> createProjectileSpread5() {
     std::list<Entity> createdEntities;
     for (int i = 0; i < 5; ++i) {
-        Entity e = createEntity(PROJECTILE_START, PROJECTILE_END);
+        Entity e = createEntity(ENEMY_START, ENEMY_END);
         createdEntities.push_back(e);
         if (e == INVALID_ENTITY) {
             return createdEntities;
@@ -44,6 +47,8 @@ std::list<Entity> createProjectileSpread5() {
         GameData::coldmg[e].damage = 30.0f;
         GameData::lifespans[e] = 1;
         GameData::spawnrates[e] = 0.25;
+        GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+        GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 
 
         GameData::tags[e] =
@@ -60,7 +65,7 @@ std::list<Entity> createProjectileSpread5() {
 };
 std::list<Entity> createProjectileChaos() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(PROJECTILE_START, PROJECTILE_END);
+    Entity e = createEntity(ENEMY_START, ENEMY_END);
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -75,6 +80,8 @@ std::list<Entity> createProjectileChaos() {
     GameData::spawnrates[e] = 1;
     GameData::pattackmodules[e].cooldown = 0.1;
     GameData::pattackmodules[e].attack = Prefabs::ProjectileRandom;
+    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 
 
     GameData::tags[e] =
@@ -91,7 +98,7 @@ std::list<Entity> createProjectileChaos() {
 }
 std::list<Entity> createProjectileRandom() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(PROJECTILE_START, PROJECTILE_END);
+    Entity e = createEntity(ENEMY_START, ENEMY_END);
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -105,6 +112,8 @@ std::list<Entity> createProjectileRandom() {
     GameData::coldmg[e].damage = 30.0f;
     GameData::lifespans[e] = 0.5;
     GameData::spawnrates[e] = 0.1;
+    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 
 
     GameData::tags[e] =
@@ -136,6 +145,8 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::coldmg[e].damage = ENEMEY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -154,7 +165,7 @@ std::list<Entity> createEnemyGroundBasic() {
 
 std::list<Entity> createTowerReticle() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(PROJECTILE_START, PROJECTILE_END);
+    Entity e = createEntity(ENEMY_START, ENEMY_END);
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -174,13 +185,15 @@ std::list<Entity> createTowerReticle() {
         ComponentTags::Hostility +
         ComponentTags::Collidable +
         ComponentTags::DiesOnCollision;
+    GameData::colliders[e].colteam = CollisionLayer::UIObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 
     return createdEntities;
 }
 
 std::list<Entity> createTowerBasic() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(TOWER_START, TOWER_END);
+    Entity e = createEntity(ENEMY_START, ENEMY_END);
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -201,6 +214,8 @@ std::list<Entity> createTowerBasic() {
         ComponentTags::Hostility +
         ComponentTags::RigidBody +
         ComponentTags::Collidable;
+    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 
     return createdEntities;
 };

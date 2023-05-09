@@ -45,7 +45,8 @@ void ServerGame::initPlayers()
         GameData::retplaces[i].reticle = INVALID_ENTITY;
         GameData::retplaces[i].place = false;
         GameData::retplaces[i].validTarget = false;
-
+        GameData::colliders[i].colteam = CollisionLayer::WorldObj;
+        GameData::colliders[i].colwith = CollisionLayer::WorldObj;
 
 
 

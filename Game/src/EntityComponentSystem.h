@@ -37,6 +37,11 @@ namespace Teams {
     constexpr TeamID Environment = 0x1 << 3;
 }
 
+namespace CollisionLayer {
+    constexpr TeamID WorldObj = 0x1;
+    constexpr TeamID UIObj = 0x1 << 1;
+}
+
 struct Hostility {
     TeamID team;
     TeamID hostileTo;
@@ -69,6 +74,9 @@ struct Turret //Component of Towers
 struct Collider //Information for collisions
 {
     glm::vec3 AABB; //Axis Aligned Bound Box vector
+
+    TeamID colteam;
+    TeamID colwith;
 
     //TODO: Pointer to a mesh for narrow phase
 };
