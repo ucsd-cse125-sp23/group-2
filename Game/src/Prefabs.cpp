@@ -129,7 +129,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::pathStructs[e].currentNode = 0;
     GameData::pathStructs[e].path = 0;
     GameData::pathStructs[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
-    GameData::positions[e] = Paths::path[GameData::pathStructs[e].path][0];
+    GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
     GameData::models[e].asciiRep = 'E';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
@@ -146,10 +146,80 @@ std::list<Entity> createEnemyGroundBasic() {
         ComponentTags::RigidBody +
         ComponentTags::Health +
         ComponentTags::CollisionDmg +
-        ComponentTags::Hostility;
+        ComponentTags::Hostility +
+        ComponentTags::DiesOnCollision;
 
     return createdEntities;
 };
+
+std::list<Entity> createTowerReticle() {
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::activity[e] = true;
+    GameData::pathStructs[e].currentNode = 0;
+    GameData::pathStructs[e].path = 0;
+    GameData::pathStructs[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::models[e].asciiRep = 'E';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
+    GameData::coldmg[e].damage = ENEMEY_GND_BASE_DMG;
+    GameData::hostilities[e].team = Teams::Martians;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::PathData +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::DiesOnCollision;
+
+    return createdEntities;
+};
+
+std::list<Entity> createTowerBasic() {
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::activity[e] = true;
+    GameData::pathStructs[e].currentNode = 0;
+    GameData::pathStructs[e].path = 0;
+    GameData::pathStructs[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::models[e].asciiRep = 'E';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
+    GameData::coldmg[e].damage = ENEMEY_GND_BASE_DMG;
+    GameData::hostilities[e].team = Teams::Martians;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::PathData +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::DiesOnCollision;
+
+    return createdEntities;
+};
+
 namespace Paths {
     int const pathCount = 4;
     glm::vec3 path[pathCount][PATH_LENGTH] =

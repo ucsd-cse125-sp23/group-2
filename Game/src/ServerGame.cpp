@@ -43,6 +43,13 @@ void ServerGame::initPlayers()
         GameData::pattackmodules[i].targetPos = glm::vec3(0, 0, 0);
         GameData::pattackmodules[i].cooldown = 0;
         GameData::states[i] = 0;
+        GameData::retplaces[i].buildingPrefab = Prefabs::EnemyGroundBasic;
+        GameData::retplaces[i].reticlePrefab = Prefabs::EnemyGroundBasic;
+        GameData::retplaces[i].reticle = INVALID_ENTITY;
+        GameData::retplaces[i].place = false;
+        GameData::retplaces[i].validTarget = false;
+
+
 
 
         GameData::tags[i] =
@@ -205,7 +212,8 @@ void ServerGame::handleInputs()
         {
             ClienttoServerData in = incomingDataLists[i].front();
             GameData::velocities[i] = glm::vec3(0,GameData::velocities[i].y,0);
-
+            camDirection = in.camDirectionVector;
+            camPosition = in.camPosition;
             if ( ((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
                 float camAngle = in.camAngleAroundPlayer;
                 glm::vec3 moveDirection = glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f));
@@ -215,9 +223,6 @@ void ServerGame::handleInputs()
 
             if (in.shoot) {
                 target = in.shoot;
-                camDirection = in.camDirectionVector;
-                camPosition = in.camPosition;
-
             }
             
             if (in.build) {
@@ -233,14 +238,22 @@ void ServerGame::handleInputs()
             incomingDataLists[i].pop();
         }
 
-
+        if (GameData::states[i] == PlayerState::Build) {
+            printf("Calling Player build\n");
+            playerBuild(i, camDirection, camPosition, 15);
+        }
 
         if (target) {
-            changeState(i, PlayerState::Attack);
-            playerAttack(i, camDirection, camPosition);
-            printf("ShootingInput\n");
+            if (GameData::states[i] == PlayerState::Build) {
+                GameData::retplaces[i].place = true;
+            }
+            else {
+                changeState(i, PlayerState::Attack);
+                playerAttack(i, camDirection, camPosition);
+            }
+            //printf("ShootingInput\n");
         }
-        else{
+        else if(GameData::states[i] == PlayerState::Attack){
             changeState(i, PlayerState::Default);
         }
         //in.print(msg);
@@ -321,4 +334,24 @@ void ServerGame::changeState(Entity e, State post)
     GameData::tags[e] ^= GameData::states[e];
     GameData::states[e] = post;
     GameData::tags[e] |= post;
+}
+
+void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, float range)
+{
+    if (camdir.y >= 0) {
+        printf("You're looking up\n");
+        GameData::retplaces[i].validTarget = false;
+        return;
+    }
+    glm::vec3 dirYNorm = camdir / (camdir.y*-1);
+    glm::vec3 targetpos = glm::vec3(campos.x + dirYNorm.x * campos.y, 0, campos.z + dirYNorm.z * campos.y);
+    if (glm::distance(targetpos, GameData::positions[i]) > range) {
+        printf("Out of range\n");
+
+        GameData::retplaces[i].validTarget = false;
+        return;
+    }
+    GameData::retplaces[i].targetPos = targetpos;
+    GameData::retplaces[i].validTarget = true;
+    printf("Valid Target\n");
 }

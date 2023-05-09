@@ -103,9 +103,10 @@ struct ProjectileAttackModule {
 
 struct ReticlePlacement {
     bool place;
-    bool targeting;
-    Prefab reticle;
-    Prefab building;
+    Prefab reticlePrefab;
+    Prefab buildingPrefab;
+    Entity reticle = INVALID_ENTITY;
+    bool validTarget;
     glm::vec3 targetPos;
 };
 
@@ -161,6 +162,7 @@ namespace GameData
     extern std::array<Creator, MAX_ENTITIES> creators;
     extern std::array<SpawnRate, MAX_ENTITIES> spawnrates;
     extern std::array<State, MAX_ENTITIES> states;
+    extern std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
 
     //Events
     extern std::queue<CollisionEvent> colevents;
@@ -204,6 +206,9 @@ namespace EntityComponentSystem
     //LifeSpan
     void sysLifeSpan();
 
+    //Building shit
+    void sysBuild();
+
     //Helper functions
     Entity createEntity();
 
@@ -212,4 +217,8 @@ namespace EntityComponentSystem
 
     //Deals damage
     void dealDamage(Entity source, Entity target, float damage);
+
+    //Check Collisions between two colliders and return pen
+    bool colCheck(Entity e, Entity o);
+  
 };

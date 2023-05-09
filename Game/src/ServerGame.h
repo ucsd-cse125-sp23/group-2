@@ -71,4 +71,6 @@ private:
     void playerAttack(Entity i, glm::vec3& camdir, glm::vec3& campos);
 
     void changeState(Entity e, State post);
+
+    void playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, float range);
 };

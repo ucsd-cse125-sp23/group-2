@@ -23,6 +23,7 @@ namespace GameData
   std::array<SpawnRate, MAX_ENTITIES> spawnrates;
   int logpos = 0;
   std::array<State, MAX_ENTITIES> states;
+  std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
 }
 
 //Call all systems each update
@@ -37,6 +38,7 @@ void EntityComponentSystem::update()
     sysTurretFire();
     sysDetectCollisions();
     resolveCollisions();
+    sysBuild();
     sysLifeSpan();
 }
 
@@ -188,11 +190,12 @@ void EntityComponentSystem::sysDetectCollisions()
                 //check if this entity has can collide
                 if ((GameData::tags[o] & collides) == collides)
                 {
+
                     glm::vec3 maxe = GameData::positions[e] + GameData::colliders[e].AABB;
                     glm::vec3 maxo = GameData::positions[o] + GameData::colliders[o].AABB;
                     glm::vec3 mine = GameData::positions[e] - GameData::colliders[e].AABB;
                     glm::vec3 mino = GameData::positions[o] - GameData::colliders[o].AABB;
-                    if (glm::all(glm::lessThan(mine, maxo)) && glm::all(glm::lessThan(mino, maxe))) {
+                    if (colCheck(e, o)) {
                         glm::vec3 pen = glm::vec3(0);
                         glm::vec3 diff1 = maxo - mine;
                         glm::vec3 diff2 = maxe - mino;
@@ -374,6 +377,82 @@ void EntityComponentSystem::sysLifeSpan()
     }
 }
 
+void EntityComponentSystem::sysBuild()
+{
+    for (Entity e = 0; e < MAX_ENTITIES; e++)
+    {
+        //Continue to next entity if this one is not active
+        if (!GameData::activity[e]) { continue; }
+
+        //check if this entity has a health component
+        if ((GameData::tags[e] & ComponentTags::Builder) == ComponentTags::Builder)
+        {
+
+            if (!GameData::retplaces[e].validTarget) {
+                
+                if (GameData::retplaces[e].reticle != INVALID_ENTITY) {
+                    printf("Deleting reticle entity %d\n", GameData::retplaces[e].reticle);
+                    GameData::activity[GameData::retplaces[e].reticle] = false;
+                    GameData::retplaces[e].reticle = INVALID_ENTITY;
+                }
+                
+                
+                continue; 
+            }
+            glm::vec3 targetVec = GameData::retplaces[e].targetPos - GameData::positions[e];
+            glm::vec3 normXZ = glm::normalize(glm::vec3(targetVec.x, 0, targetVec.z));
+            float angleXZ = glm::acos(-normXZ.z);
+            glm::vec3 normTarget = glm::normalize(targetVec);
+            glm::mat4 transform = glm::translate(GameData::retplaces[e].targetPos) * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
+
+            if (GameData::retplaces[e].place) {
+                if ( (GameData::retplaces[e].reticle !=INVALID_ENTITY) && (GameData::activity[GameData::retplaces[e].reticle])) {
+                    
+                    Entity b = prefabMap[GameData::retplaces[e].buildingPrefab]().front();
+
+                    if (b == INVALID_ENTITY) { printf("Too many entities, trying to place building\n"); }
+                    else {
+                        //Transform positions and velocity relative to attacker
+                        GameData::positions[b] = transform * glm::vec4(GameData::positions[b], 1);
+                        GameData::velocities[b] = transform * glm::vec4(GameData::velocities[b], 0);
+                        //Set creator
+                        GameData::tags[b] += ComponentTags::Created;
+                        GameData::creators[b] = e;
+                    }
+
+                }
+                else {
+                    printf("Attempted to place but reticle is invaid\n");
+                }
+                GameData::retplaces[e].place = false;
+            }
+            
+            
+            Entity r;
+            if ((GameData::retplaces[e].reticle == INVALID_ENTITY) || (!GameData::activity[GameData::retplaces[e].reticle])) {
+                printf("Generating new reticle\n");
+                r = prefabMap[GameData::retplaces[e].reticlePrefab]().front();
+            }
+            else {
+                r = GameData::retplaces[e].reticle;
+            }
+
+            if (r == INVALID_ENTITY) { printf("Too many entities, trying to place reticle\n"); }
+            else {
+                //Transform positions and velocity relative to attacker
+                GameData::positions[r] = glm::vec3(0, 0, 0);
+                GameData::positions[r] = transform * glm::vec4(GameData::positions[r], 1);
+                GameData::velocities[r] = transform * glm::vec4(GameData::velocities[r], 0);
+                GameData::tags[r] ^= ComponentTags::Velocity;
+                //Set creator
+                GameData::tags[r] += ComponentTags::Created;
+                GameData::creators[r] = e;
+                GameData::retplaces[e].reticle = r;
+            }
+        }
+    }
+}
+
 //Create an empty projectile 
 Entity EntityComponentSystem::createEntity()
 {
@@ -392,6 +471,7 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
 {
     float tfirst = 1024;
     glm::vec3 dirNorm = glm::normalize(dir);
+
     float tmin = tminog;
     float tmax = tmaxog;
     for (Entity e = 0; e < MAX_ENTITIES; ++e) {
@@ -445,5 +525,14 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     GameData::combatLogs[GameData::logpos].damage = damage;
     GameData::combatLogs[GameData::logpos].killed = (GameData::healths[target].curHealth <= 0);
     GameData::logpos++;
+}
+
+bool EntityComponentSystem::colCheck(Entity e, Entity o)
+{
+    glm::vec3 maxe = GameData::positions[e] + GameData::colliders[e].AABB;
+    glm::vec3 maxo = GameData::positions[o] + GameData::colliders[o].AABB;
+    glm::vec3 mine = GameData::positions[e] - GameData::colliders[e].AABB;
+    glm::vec3 mino = GameData::positions[o] - GameData::colliders[o].AABB;
+    return glm::all(glm::lessThan(mine, maxo)) && glm::all(glm::lessThan(mino, maxe));
 }
 
