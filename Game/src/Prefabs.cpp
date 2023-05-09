@@ -3,7 +3,7 @@
 using namespace EntityComponentSystem;
 std::list<Entity> createProjectileBasic() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity();
+    Entity e = createEntity(PROJECTILE_START, PROJECTILE_END);
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -31,7 +31,7 @@ std::list<Entity> createProjectileBasic() {
 std::list<Entity> createProjectileSpread5() {
     std::list<Entity> createdEntities;
     for (int i = 0; i < 5; ++i) {
-        Entity e = createEntity();
+        Entity e = createEntity(PROJECTILE_START, PROJECTILE_END);
         createdEntities.push_back(e);
         if (e == INVALID_ENTITY) {
             return createdEntities;
@@ -60,7 +60,7 @@ std::list<Entity> createProjectileSpread5() {
 };
 std::list<Entity> createProjectileChaos() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity();
+    Entity e = createEntity(PROJECTILE_START, PROJECTILE_END);
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -91,7 +91,7 @@ std::list<Entity> createProjectileChaos() {
 }
 std::list<Entity> createProjectileRandom() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity();
+    Entity e = createEntity(PROJECTILE_START, PROJECTILE_END);
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -120,7 +120,7 @@ std::list<Entity> createProjectileRandom() {
 }
 std::list<Entity> createEnemyGroundBasic() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity();
+    Entity e = createEntity(ENEMY_START, ENEMY_END);
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -154,7 +154,7 @@ std::list<Entity> createEnemyGroundBasic() {
 
 std::list<Entity> createTowerReticle() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity();
+    Entity e = createEntity(TOWER_START, TOWER_END);
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -184,11 +184,11 @@ std::list<Entity> createTowerReticle() {
         ComponentTags::DiesOnCollision;
 
     return createdEntities;
-};
+}
 
 std::list<Entity> createTowerBasic() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity();
+    Entity e = createEntity(TOWER_START, TOWER_END);
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;

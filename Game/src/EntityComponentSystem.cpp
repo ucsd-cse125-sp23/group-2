@@ -454,10 +454,10 @@ void EntityComponentSystem::sysBuild()
 }
 
 //Create an empty projectile 
-Entity EntityComponentSystem::createEntity()
+Entity EntityComponentSystem::createEntity(int begin, int end)
 {
     //Once we get instancing and modelID rendering setup,
-    for (int i = ENEMY_START; i < ENEMY_END; ++i) {
+    for (int i = begin; i < end; ++i) {
         if (!GameData::activity[i]) {
             GameData::activity[i] = true;
             return i;
