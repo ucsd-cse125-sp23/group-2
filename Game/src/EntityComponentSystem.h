@@ -143,7 +143,6 @@ namespace ComponentTags
     constexpr Tag LifeSpan = 0x1 << 12;
     constexpr Tag Created = 0x1 << 13;
     constexpr Tag Builder = 0x1 << 14;
-    constexpr Tag Base = 0x1 << 15;
 }
 
 

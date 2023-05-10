@@ -220,9 +220,9 @@ std::list<Entity> createTowerBasic() {
 };
 
 
-std::list<Entity> createBase() {
+std::list<Entity> createHome() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    Entity e = createEntity(BASE_START, BASE_END);
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -232,6 +232,7 @@ std::list<Entity> createBase() {
     GameData::models[e].asciiRep = 'B';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = HOME_BASE_HEALTH;
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
     GameData::rigidbodies[e].fixed = true;
     GameData::tags[e] =
@@ -240,8 +241,8 @@ std::list<Entity> createBase() {
         ComponentTags::Turret +
         ComponentTags::Hostility +
         ComponentTags::RigidBody +
-        ComponentTags::Collidable +
-        ComponentTags::Base;
+        ComponentTags::Health +
+        ComponentTags::Collidable;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 

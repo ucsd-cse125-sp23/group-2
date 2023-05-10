@@ -2,7 +2,7 @@
 
 ServerGame::ServerGame(void)
 {
-
+    currentStatus = init;
     // set up the server network to listen
     network = new ServerNetwork();
 
@@ -12,6 +12,7 @@ ServerGame::ServerGame(void)
 
     curTick = 0;
 
+    currentStatus = game;
 }
 
 //Populate Component Arrays
@@ -85,9 +86,10 @@ void ServerGame::initWaves()
         }
     }
 }
+
 void ServerGame::initBase()
 {
-    Entity base = prefabMap[Prefabs::Base]().front();
+    home = prefabMap[Prefabs::Home]().front();
 }
 
 void ServerGame::waveSpawner() 
@@ -140,27 +142,41 @@ void ServerGame::update()
     {
         printf("New client has been connected to the server\n");
     }
-
     //Receve Input
     receiveFromClients();
 
-    handleInputs();
+    switch (currentStatus){
+    case init:
+        break;
+    case game:
+        handleInputs();
 
-    EntityComponentSystem::update();
+        EntityComponentSystem::update();
 
-    waveSpawner();
+        waveSpawner();
+
+        checkLoss();
+
+        if (curTick % 4 == 0) {
+            //asciiView();
+        }
+        curTick++;
+        break;
+    case end:
+        break;
+    default:
+        printf("Invalid server state!");
+    }
+
+
+    
 
     //Print debug message buffer
     printf(debug);
     debug[0] = '\0';
 
-    if (curTick % 4 == 0) {
-        //asciiView();
-    }
-    curTick++;
+
 }
-
-
 
 void ServerGame::handleInputs()
 {
@@ -323,4 +339,10 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
     GameData::retplaces[i].targetPos = targetpos;
     GameData::retplaces[i].validTarget = true;
     //printf("Valid Target\n");
+}
+
+void ServerGame::checkLoss() {
+    if (!GameData::activity[home]) {
+        currentStatus = end;
+    }
 }

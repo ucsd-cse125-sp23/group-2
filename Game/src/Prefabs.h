@@ -23,7 +23,7 @@ std::list<Entity> createProjectileRandom();
 std::list<Entity> createEnemyGroundBasic();
 std::list<Entity> createTowerReticle();
 std::list<Entity> createTowerBasic();
-std::list<Entity> createBase();
+std::list<Entity> createHome();
 
 const int NUM_PREFABS = 32;
 using Prefab = uint32_t;
@@ -36,7 +36,7 @@ const PrefabFunction prefabMap[NUM_PREFABS] = {
 	&createEnemyGroundBasic,
 	&createTowerReticle,
 	&createTowerBasic,
-	&createBase
+	&createHome
 };
 
 namespace Prefabs {
@@ -47,7 +47,7 @@ namespace Prefabs {
 	constexpr Prefab EnemyGroundBasic = 4;
 	constexpr Prefab TowerReticle = 5;
 	constexpr Prefab TowerBasic = 6;
-	constexpr Prefab Base = 7;
+	constexpr Prefab Home = 7;
 };
 
 namespace Paths {

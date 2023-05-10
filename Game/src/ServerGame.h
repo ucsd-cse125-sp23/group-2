@@ -64,4 +64,16 @@ private:
     void initResources();
 
     void initBase();
+
+    void checkLoss();
+
+    Entity home;
+
+    enum ServerStatus {
+        init,
+        game,
+        end
+    };
+
+    ServerStatus currentStatus;
 };
