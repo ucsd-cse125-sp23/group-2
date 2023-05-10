@@ -30,12 +30,20 @@ using Position = glm::vec3; //Entity Position in 3D Space
 using Velocity = glm::vec3; //Entity Velocity in 3D Space
 using TeamID = uint32_t;
 using State = Tag;
+using Points = int;
+
 namespace Teams {
     constexpr TeamID Players = 0x1;
     constexpr TeamID Martians = 0x1 << 1;
     constexpr TeamID Towers = 0x1 << 2;
     constexpr TeamID Environment = 0x1 << 3;
 }
+
+namespace Resource {
+    const int Money = 0;
+    const int Stone = 1;
+    const int Wood = 2;
+};
 
 namespace CollisionLayer {
     constexpr TeamID WorldObj = 0x1;
@@ -125,9 +133,22 @@ struct CombatLog {
     bool killed;
 };
 
-struct Score {
-
+struct ScoreCard {
+    int towersBuilt;
+    int enemiesKilled;
+    std::array<int, NUM_RESOURCE_TYPES> resourcesGathered;
+    Points points;
 };
+
+struct AllPlayerData {
+    std::array<ScoreCard, NUM_PLAYERS> scores;
+    std::array<int, NUM_RESOURCE_TYPES> resources;
+};
+
+struct ResourceContainer {
+    std::array<int, NUM_RESOURCE_TYPES> resources;
+};
+
 
 
 namespace ComponentTags
@@ -148,7 +169,8 @@ namespace ComponentTags
     constexpr Tag Created = 0x1 << 13;
     constexpr Tag Builder = 0x1 << 14;
     constexpr Tag Dead = 0x1 << 15;
-
+    constexpr Tag ResourceContainer = 0x1 << 16;
+    constexpr Tag WorthPoints = 0x1 << 17;
 }
 
 
@@ -176,6 +198,8 @@ namespace GameData
     extern std::array<SpawnRate, MAX_ENTITIES> spawnrates;
     extern std::array<State, MAX_ENTITIES> states;
     extern std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
+    extern std::array<ResourceContainer, MAX_ENTITIES> resources;
+    extern std::array<Points, MAX_ENTITIES> pointvalues;
 
     //Events
     extern std::queue<CollisionEvent> colevents;
@@ -183,7 +207,7 @@ namespace GameData
     //Logs for Client
     extern int logpos;
     extern std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
-    extern Score score;
+    extern AllPlayerData playerdata;
 }
 
 namespace EntityComponentSystem

@@ -37,6 +37,9 @@ const float GRAVITY_SEC = -120;
 
 #define WAVE_COUNT 5
 
+#define NUM_RESOURCE_TYPES 3
+
+
 //TOwer placement range
 const float TOWER_PLACEMENT_RANGE = 15;
 

@@ -251,6 +251,7 @@ void ServerGame::packageData(ServertoClientData& data)
     data.logsize = GameData::logpos;
     data.currentWave = WaveData::currentWave + 1;
     data.numWaves = WAVE_COUNT;
+    data.playerData = GameData::playerdata;
 }
 
 const int GRID_X = 32;

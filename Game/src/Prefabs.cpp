@@ -147,6 +147,8 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::pointvalues[e] = 20;
+    GameData::resources[e].resources[Resource::Money] = 20;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -158,7 +160,8 @@ std::list<Entity> createEnemyGroundBasic() {
         ComponentTags::Health +
         ComponentTags::CollisionDmg +
         ComponentTags::Hostility +
-        ComponentTags::DiesOnCollision;
+        ComponentTags::WorthPoints +
+        ComponentTags::ResourceContainer;
 
     return createdEntities;
 };

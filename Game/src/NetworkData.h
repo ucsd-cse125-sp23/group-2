@@ -40,6 +40,7 @@ struct ServertoClientData {
     std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
     int currentWave;
     int numWaves;
+    AllPlayerData playerData;
 };
 
 //Struct for intializing the client id
