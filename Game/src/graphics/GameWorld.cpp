@@ -98,6 +98,24 @@ void GameWorld::draw(Shader* shader, Shader* skyboxShader) {
 		}
 	}
 
+	for (Tower* t : towers) {
+		if (t->getActive()) {
+			t->draw(viewProjMtx);
+		}
+	}
+
+	for (Resource* r : resources) {
+		if (r->getActive()) {
+			r->draw(viewProjMtx);
+		}
+	}
+
+	for (Projectile* p : projectiles) {
+		if (p->getActive()) {
+			p->draw(viewProjMtx);
+		}
+	}
+
 }
 
 void GameWorld::cursor_callback(GLFWwindow* window, double cX, double cY) {

@@ -30,7 +30,7 @@ Projectile::~Projectile() {
 
 }
 
-void Projectile::draw(const glm::mat4& viewProjMtx, Shader* shader) {
+void Projectile::draw(const glm::mat4& viewProjMtx) {
     // actiavte the shader program
     ourShader->use();
 
