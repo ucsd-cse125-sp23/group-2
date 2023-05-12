@@ -26,6 +26,7 @@ const float TURRET_BASE_DPS = 200;
 //ground enemy base movespeed in units/sec
 const float ENEMY_GND_MVSPD_PERSEC = 10;
 
+//How many seconds until first wave spawns
 const float ENEMY_SPAWNDELAY_SEC = 1;
 
 //ground enemy base attack damage
@@ -41,9 +42,6 @@ const float GRAVITY_SEC = -120;
 
 //TOwer placement range
 const float TOWER_PLACEMENT_RANGE = 15;
-
-//Amount of time until game is won in seconds
-const float WIN_TIME_SEC = 300;
 
 //Model ID's (For Cory/Will to decide)
 #define MODEL_ID_ROVER 0
@@ -61,7 +59,6 @@ const float PLAYER_MVSPD = (PLAYER_MVSPD_PERSEC / TICK_RATE);
 const float PLAYER_JPSPD = (PLAYER_JPSPD_PERSEC / TICK_RATE);
 const float ENEMY_SPAWNDELAY_TICKS = (ENEMY_SPAWNDELAY_SEC * TICK_RATE);
 const float GRAVITY = (GRAVITY_SEC / (TICK_RATE * TICK_RATE));
-const float WIN_TIME = WIN_TIME_SEC * TICK_RATE;
 
 //The Start and End indices of the entity array for each entity type
 #define ENEMY_START         (NUM_PLAYERS)
