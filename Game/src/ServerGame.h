@@ -65,14 +65,15 @@ private:
 
     void initBase();
 
-    void checkLoss();
+    void checkStatus();
 
     Entity home;
 
     enum ServerStatus {
         init,
         game,
-        end
+        win,
+        loss
     };
 
     ServerStatus currentStatus;

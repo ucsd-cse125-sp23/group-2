@@ -155,14 +155,16 @@ void ServerGame::update()
 
         waveSpawner();
 
-        checkLoss();
+        checkStatus();
 
         if (curTick % 4 == 0) {
             //asciiView();
         }
         curTick++;
         break;
-    case end:
+    case loss:
+        break;
+    case win:
         break;
     default:
         printf("Invalid server state!");
@@ -341,8 +343,13 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
     //printf("Valid Target\n");
 }
 
-void ServerGame::checkLoss() {
+void ServerGame::checkStatus() {
+    if (curTick >= WIN_TIME) {
+        printf("WIN! :D");
+        currentStatus = win;
+    }
     if (!GameData::activity[home]) {
-        currentStatus = end;
+        printf("LOSE! :(");
+        currentStatus = loss;
     }
 }
