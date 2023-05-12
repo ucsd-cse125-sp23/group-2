@@ -22,7 +22,7 @@ public:
     Projectile(int i);
     ~Projectile();
 
-    void draw(const glm::mat4& viewProjMtx, Shader* shader);
+    void draw(const glm::mat4& viewProjMtx);
   
     void update(glm::vec3& translation, float degrees);
 
