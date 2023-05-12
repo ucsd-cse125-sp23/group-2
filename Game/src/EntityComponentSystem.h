@@ -27,7 +27,12 @@ using Tag = uint32_t;
 
 using Active = bool; //Is Entity active in the scene?
 using Position = glm::vec3; //Entity Position in 3D Space
-using Velocity = glm::vec3; //Entity Velocity in 3D Space
+struct VelocityData 
+{
+    glm::vec3 velocity; //vector that is added to current position each tick
+    float moveSpeed; //scalar multiplied by velocity vector to modify speed
+    bool flying; //modify the height of the target positions to hover above them
+};
 using TeamID = uint32_t;
 using State = Tag;
 namespace Teams {
@@ -51,7 +56,11 @@ struct PathData //Data for entity pathing
 {
     int path; //The chosen path of the entity ( Paths::path[path#][node#] )
     int currentNode; //Index of current node that entity is pathing towards
-    float moveSpeed; //distance enemy covers in 1 server tick
+};
+
+struct HomingData //Data for tracking another entity
+{
+    Entity trackedEntity; //The entity to follow (player, tower, enemy, etc...)
 };
 
 struct Model //3D Model to render for the entity
@@ -143,6 +152,7 @@ namespace ComponentTags
     constexpr Tag LifeSpan = 0x1 << 12;
     constexpr Tag Created = 0x1 << 13;
     constexpr Tag Builder = 0x1 << 14;
+    constexpr Tag HomingData = 0x1 << 15;
 
 }
 
@@ -156,7 +166,7 @@ namespace GameData
 
     extern std::array<Active, MAX_ENTITIES> activity;   
     extern std::array<Position, MAX_ENTITIES> positions;
-    extern std::array<Velocity, MAX_ENTITIES> velocities;
+    extern std::array<VelocityData, MAX_ENTITIES> velocities;
     extern std::array<PathData, MAX_ENTITIES> pathStructs;
     extern std::array<Model, MAX_ENTITIES> models;
     extern std::array<Turret, MAX_ENTITIES> turrets;
@@ -171,6 +181,7 @@ namespace GameData
     extern std::array<SpawnRate, MAX_ENTITIES> spawnrates;
     extern std::array<State, MAX_ENTITIES> states;
     extern std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
+    extern std::array<HomingData, MAX_ENTITIES> homingStructs;
 
     //Events
     extern std::queue<CollisionEvent> colevents;
@@ -216,6 +227,9 @@ namespace EntityComponentSystem
 
     //Building shit
     void sysBuild();
+
+    //tracking entities
+    void sysHoming();
 
     //Helper functions
     Entity createEntity(int begin, int end);

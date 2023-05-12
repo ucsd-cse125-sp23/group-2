@@ -23,8 +23,10 @@ std::list<Entity> createProjectileRandom();
 std::list<Entity> createEnemyGroundBasic();
 std::list<Entity> createTowerReticle();
 std::list<Entity> createTowerBasic();
+std::list<Entity> createEnemyGroundTank();
+std::list<Entity> createEnemyFlyingBasic();
 
-const int NUM_PREFABS = 7;
+const int NUM_PREFABS = 9;
 using Prefab = uint32_t;
 typedef std::list<Entity>(*PrefabFunction)(); // function pointer type
 const PrefabFunction prefabMap[NUM_PREFABS] = {
@@ -34,7 +36,9 @@ const PrefabFunction prefabMap[NUM_PREFABS] = {
 	&createProjectileRandom,
 	&createEnemyGroundBasic,
 	&createTowerReticle,
-	&createTowerBasic
+	&createTowerBasic,
+	&createEnemyGroundTank,
+	&createEnemyFlyingBasic
 };
 
 namespace Prefabs {
@@ -45,6 +49,8 @@ namespace Prefabs {
 	constexpr Prefab EnemyGroundBasic = 4;
 	constexpr Prefab TowerReticle = 5;
 	constexpr Prefab TowerBasic = 6;
+	constexpr Prefab EnemyGroundTank = 7;
+	constexpr Prefab EnemyFlyingBasic = 8;
 };
 
 namespace Paths {
@@ -65,6 +71,8 @@ namespace WaveData {
 	extern int waveTimers[WAVE_COUNT]; //Time before starting wave
 
 	extern int waveTick; //countdown timer for waves
+
+	extern int enemyTypes[NUM_ENEMY_TYPES]; //For random enemy selection
 	
 	extern std::queue<enemy> waves[WAVE_COUNT];
 }

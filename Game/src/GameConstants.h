@@ -27,15 +27,20 @@ const float ENEMY_GND_MVSPD_PERSEC = 10;
 const float ENEMY_SPAWNDELAY_SEC = 1;
 
 //ground enemy base attack damage
-const float ENEMEY_GND_BASE_DMG = 30;
+const float ENEMY_GND_BASE_DMG = 30;
 
 //gravitational acceleration in units per second squared
 const float GRAVITY_SEC = -120;
+
+//How high above the ground flying enemies will hover
+const float FLYING_HEIGHT = 10;
 
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 8
 
 #define WAVE_COUNT 5
+
+#define NUM_ENEMY_TYPES 3
 
 //TOwer placement range
 const float TOWER_PLACEMENT_RANGE = 15;
