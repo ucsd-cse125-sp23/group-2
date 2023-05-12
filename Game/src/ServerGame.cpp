@@ -17,6 +17,7 @@ ServerGame::ServerGame(void)
 //Populate Component Arrays
 void ServerGame::initializeGame()
 {
+    initPrefabs();
     initPlayers();
     initWaves();
     //initResources();
@@ -232,6 +233,13 @@ void ServerGame::sendPackets()
     ServertoClientData newPackage;
     packageData(newPackage);
     network->sendActionPackets(newPackage);
+}
+
+void ServerGame::initPrefabs()
+{
+    for (int i = 0; i < NUM_TOWER_PREFAB; ++i) {
+        buildcosts[i] = { 20, 0, 0 };
+    }
 }
 
 void ServerGame::receiveFromClients()

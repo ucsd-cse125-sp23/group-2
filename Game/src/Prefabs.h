@@ -24,28 +24,51 @@ std::list<Entity> createEnemyGroundBasic();
 std::list<Entity> createTowerReticle();
 std::list<Entity> createTowerBasic();
 
-const int NUM_PREFABS = 7;
-using Prefab = uint32_t;
+
+
+namespace Prefabs {
+	enum Prefab : uint32_t{
+		TowerBasic,
+		NUM_TOWER_PREFAB,
+
+
+		ProjectileBasic = NUM_TOWER_PREFAB,
+		ProjectileSpread5,
+		ProjectileChaos,
+		ProjectileRandom,
+		TowerReticle,
+		NUM_PROJECTILETOWER_PREFAB,
+
+
+
+		EnemyGroundBasic = NUM_PROJECTILETOWER_PREFAB,
+		NUM_PREFAB, 
+
+
+
+		NUM_PROJECTILE_PREFAB = NUM_PROJECTILETOWER_PREFAB - NUM_TOWER_PREFAB,
+		NUM_ENEMY_PREFAB = NUM_PREFAB - NUM_PROJECTILETOWER_PREFAB
+
+	};
+}
+
+
+using namespace Prefabs;
+
 typedef std::list<Entity>(*PrefabFunction)(); // function pointer type
-const PrefabFunction prefabMap[NUM_PREFABS] = {
+
+//Add functions in same order as prefabs above
+const PrefabFunction prefabMap[Prefabs::NUM_PREFAB] = {
+	&createTowerBasic,
 	&createProjectileBasic,
 	&createProjectileSpread5,
 	&createProjectileChaos,
 	&createProjectileRandom,
-	&createEnemyGroundBasic,
 	&createTowerReticle,
-	&createTowerBasic
+	&createEnemyGroundBasic,
 };
 
-namespace Prefabs {
-	constexpr Prefab ProjectileBasic = 0;
-	constexpr Prefab ProjectileSpread5 = 1;
-	constexpr Prefab ProjectileChaos = 2;
-	constexpr Prefab ProjectileRandom = 3;
-	constexpr Prefab EnemyGroundBasic = 4;
-	constexpr Prefab TowerReticle = 5;
-	constexpr Prefab TowerBasic = 6;
-};
+
 
 namespace Paths {
 	extern int const pathCount;
@@ -68,3 +91,6 @@ namespace WaveData {
 	
 	extern std::queue<enemy> waves[WAVE_COUNT];
 }
+
+//Define buildcosts
+extern std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;

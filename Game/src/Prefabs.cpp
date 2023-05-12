@@ -1,6 +1,8 @@
 #include "Prefabs.h"
 #include "EntityComponentSystem.h"
 using namespace EntityComponentSystem;
+std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;
+
 std::list<Entity> createProjectileBasic() {
     std::list<Entity> createdEntities;
     Entity e = createEntity(ENEMY_START, ENEMY_END);
@@ -175,8 +177,6 @@ std::list<Entity> createTowerReticle() {
     }
     GameData::activity[e] = true;
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::turrets[e].damage = TURRET_BASE_DMG;
-    GameData::turrets[e].range = 5;
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
@@ -184,7 +184,6 @@ std::list<Entity> createTowerReticle() {
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
-        ComponentTags::Turret +
         ComponentTags::Hostility +
         ComponentTags::Collidable +
         ComponentTags::DiesOnCollision;

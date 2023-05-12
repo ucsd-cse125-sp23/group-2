@@ -2,31 +2,31 @@
 
 namespace GameData
 {
-  std::array<Tag, MAX_ENTITIES> tags;
+    std::array<Tag, MAX_ENTITIES> tags;
 
-  std::array<Active, MAX_ENTITIES> activity;
-  std::array<Position, MAX_ENTITIES> positions;
-  std::array<Velocity, MAX_ENTITIES> velocities;
-  std::array<PathData, MAX_ENTITIES> pathStructs;
-  std::array<Model, MAX_ENTITIES> models;
-  std::array<Turret, MAX_ENTITIES> turrets;
-  std::array<Collider, MAX_ENTITIES> colliders;
-  std::queue<CollisionEvent> colevents;
-  std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
-  std::array<Health, MAX_ENTITIES> healths;
-  std::array<CollisionDmg, MAX_ENTITIES> coldmg;
-  std::array<Hostility, MAX_ENTITIES> hostilities;
-  std::array<LifeSpan, MAX_ENTITIES> lifespans;
-  std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
-  std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
-  std::array<Creator, MAX_ENTITIES> creators;
-  std::array<SpawnRate, MAX_ENTITIES> spawnrates;
-  int logpos = 0;
-  std::array<State, MAX_ENTITIES> states;
-  std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
-  std::array<ResourceContainer, MAX_ENTITIES> resources;
-  std::array<Points, MAX_ENTITIES> pointvalues;
-  AllPlayerData playerdata;
+    std::array<Active, MAX_ENTITIES> activity;
+    std::array<Position, MAX_ENTITIES> positions;
+    std::array<Velocity, MAX_ENTITIES> velocities;
+    std::array<PathData, MAX_ENTITIES> pathStructs;
+    std::array<Model, MAX_ENTITIES> models;
+    std::array<Turret, MAX_ENTITIES> turrets;
+    std::array<Collider, MAX_ENTITIES> colliders;
+    std::queue<CollisionEvent> colevents;
+    std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
+    std::array<Health, MAX_ENTITIES> healths;
+    std::array<CollisionDmg, MAX_ENTITIES> coldmg;
+    std::array<Hostility, MAX_ENTITIES> hostilities;
+    std::array<LifeSpan, MAX_ENTITIES> lifespans;
+    std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
+    std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
+    std::array<Creator, MAX_ENTITIES> creators;
+    std::array<SpawnRate, MAX_ENTITIES> spawnrates;
+    int logpos = 0;
+    std::array<State, MAX_ENTITIES> states;
+    std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
+    std::array<ResourceContainer, MAX_ENTITIES> resources;
+    std::array<Points, MAX_ENTITIES> pointvalues;
+    AllPlayerData playerdata;
 }
 
 //Call all systems each update
@@ -404,19 +404,33 @@ void EntityComponentSystem::sysBuild()
 
             if (GameData::retplaces[e].place) {
                 if ( (GameData::retplaces[e].reticle !=INVALID_ENTITY) && (GameData::activity[GameData::retplaces[e].reticle]) && ((GameData::tags[GameData::retplaces[e].reticle] & ComponentTags::Dead) != ComponentTags::Dead)) {
-                    
-                    Entity b = prefabMap[GameData::retplaces[e].buildingPrefab]().front();
+                    //Check build costs
+                    bool hasenough = true;
+                    for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+                        hasenough &= buildcosts[GameData::retplaces[e].buildingPrefab][i] <= GameData::playerdata.resources[i];
+                    }
 
-                    if (b == INVALID_ENTITY) { printf("Too many entities, trying to place building\n"); }
+                    if (!hasenough) {
+                        printf("Not enough resoruces\n");
+                    }
                     else {
-                        //Transform positions and velocity relative to attacker
-                        GameData::positions[b] = transform * glm::vec4(GameData::positions[b], 1);
-                        GameData::velocities[b] = transform * glm::vec4(GameData::velocities[b], 0);
-                        //Set creator
-                        GameData::tags[b] += ComponentTags::Created;
-                        GameData::creators[b] = e;
-                        //Add to score
-                        GameData::playerdata.scores[e].towersBuilt++;
+                        Entity b = prefabMap[GameData::retplaces[e].buildingPrefab]().front();
+
+                        if (b == INVALID_ENTITY) { printf("Too many entities, trying to place building\n"); }
+                        else {
+                            //Transform positions and velocity relative to attacker
+                            GameData::positions[b] = transform * glm::vec4(GameData::positions[b], 1);
+                            GameData::velocities[b] = transform * glm::vec4(GameData::velocities[b], 0);
+                            //Set creator
+                            GameData::tags[b] += ComponentTags::Created;
+                            GameData::creators[b] = e;
+                            //Add to score
+                            GameData::playerdata.scores[e].towersBuilt++;
+                            //Subtract resources
+                            for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+                                GameData::playerdata.resources[i] -= buildcosts[GameData::retplaces[e].buildingPrefab][i];
+                            }
+                        }
                     }
 
                 }
