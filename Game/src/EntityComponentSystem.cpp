@@ -411,12 +411,13 @@ void EntityComponentSystem::sysBuild()
                     }
 
                     if (!hasenough) {
-                        printf("Not enough resoruces\n");
+                        //printf("Not enough resoruces\n");
                     }
                     else {
                         Entity b = prefabMap[GameData::retplaces[e].buildingPrefab]().front();
 
-                        if (b == INVALID_ENTITY) { printf("Too many entities, trying to place building\n"); }
+                        if (b == INVALID_ENTITY) { //printf("Too many entities, trying to place building\n"); 
+                        }
                         else {
                             //Transform positions and velocity relative to attacker
                             GameData::positions[b] = transform * glm::vec4(GameData::positions[b], 1);
@@ -558,19 +559,19 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
     if (source < NUM_PLAYERS) {
         if ((GameData::tags[target] & ComponentTags::WorthPoints) == ComponentTags::WorthPoints) {
             GameData::playerdata.scores[source].points += GameData::pointvalues[target];
-            printf("Adding points\n");
+            //printf("Adding points\n");
         }
         if ((GameData::tags[target] & ComponentTags::ResourceContainer) == ComponentTags::ResourceContainer) {
             for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
                 GameData::playerdata.scores[source].resourcesGathered[i] += GameData::resources[target].resources[i];
                 GameData::playerdata.resources[i] += GameData::resources[target].resources[i];
-                printf("Gaining Resources %d\n", GameData::playerdata.resources[i]);
+                //printf("Gaining Resources %d\n", GameData::playerdata.resources[i]);
             }
         }
         if ((GameData::tags[target] & ComponentTags::Hostility) == ComponentTags::Hostility) {
             if (GameData::hostilities[target].team == Teams::Martians) {
                 GameData::playerdata.scores[source].enemiesKilled++;
-                printf("Enemy killed %d\n", GameData::playerdata.scores[source].enemiesKilled);
+                //printf("Enemy killed %d\n", GameData::playerdata.scores[source].enemiesKilled);
             }
         }
     }
