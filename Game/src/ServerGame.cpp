@@ -2,7 +2,7 @@
 
 ServerGame::ServerGame(void)
 {
-
+    currentStatus = init;
     // set up the server network to listen
     network = new ServerNetwork();
 
@@ -12,6 +12,7 @@ ServerGame::ServerGame(void)
 
     curTick = 0;
 
+    currentStatus = game;
 }
 
 //Populate Component Arrays
@@ -20,6 +21,7 @@ void ServerGame::initializeGame()
     initPrefabs();
     initPlayers();
     initWaves();
+    initBase();
     //initResources();
 }
 
@@ -73,7 +75,7 @@ void ServerGame::initPlayers()
 void ServerGame::initWaves() 
 {
     WaveData::currentWave = -1;
-    WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave+1];
+    WaveData::waveTick = ENEMY_SPAWNDELAY_TICKS;
 
     //Temp Nested for loop to populate wave vectors
     for (int i = 0; i < WAVE_COUNT; i++)
@@ -86,6 +88,11 @@ void ServerGame::initWaves()
     }
 }
 
+void ServerGame::initBase()
+{
+    home = prefabMap[Prefabs::Home]().front();
+}
+
 void ServerGame::waveSpawner() 
 {
     static int spawnCooldown = 0;
@@ -93,11 +100,14 @@ void ServerGame::waveSpawner()
     if (WaveData::waveTick <= 0) 
     {
         WaveData::currentWave++;
-        WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave];
-        spawnCooldown = WaveData::waves[WaveData::currentWave].front().cooldown;
+        if (WaveData::currentWave < WAVE_COUNT)
+        {
+            WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave];
+            spawnCooldown = WaveData::waves[WaveData::currentWave].front().cooldown;
+        }
     }
 
-    if (WaveData::currentWave >= 0) 
+    if (WaveData::currentWave >= 0 && WaveData::currentWave < WAVE_COUNT) 
     {
         if (!WaveData::waves[WaveData::currentWave].empty()) 
         {
@@ -136,27 +146,43 @@ void ServerGame::update()
     {
         printf("New client has been connected to the server\n");
     }
-
     //Receve Input
     receiveFromClients();
 
-    handleInputs();
+    switch (currentStatus){
+    case init:
+        break;
+    case game:
+        handleInputs();
 
-    EntityComponentSystem::update();
+        EntityComponentSystem::update();
 
-    waveSpawner();
+        waveSpawner();
+
+        checkStatus();
+
+        if (curTick % 4 == 0) {
+            //asciiView();
+        }
+        curTick++;
+        break;
+    case loss:
+        break;
+    case win:
+        break;
+    default:
+        printf("Invalid server state!");
+    }
+
+
+    
 
     //Print debug message buffer
     printf(debug);
     debug[0] = '\0';
 
-    if (curTick % 4 == 0) {
-        //asciiView();
-    }
-    curTick++;
+
 }
-
-
 
 void ServerGame::handleInputs()
 {
@@ -328,4 +354,15 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
     GameData::retplaces[i].targetPos = targetpos;
     GameData::retplaces[i].validTarget = true;
     //printf("Valid Target\n");
+}
+
+void ServerGame::checkStatus() {
+    if (WaveData::currentWave == WAVE_COUNT && WaveData::waveTick <= 0) {
+        printf("WIN! :D");
+        currentStatus = win;
+    }
+    if (!GameData::activity[home]) {
+        printf("LOSE! :(");
+        currentStatus = loss;
+    }
 }

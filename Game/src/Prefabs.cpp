@@ -212,9 +212,38 @@ std::list<Entity> createTowerBasic() {
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
+        ComponentTags::Hostility +
+        ComponentTags::RigidBody +
+        ComponentTags::Collidable;
+    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+
+    return createdEntities;
+};
+
+
+std::list<Entity> createHome() {
+    std::list<Entity> createdEntities;
+    Entity e = createEntity(BASE_START, BASE_END);
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::activity[e] = true;
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::models[e].asciiRep = 'B';
+    GameData::hostilities[e].team = Teams::Towers;
+    GameData::hostilities[e].hostileTo = Teams::Martians;
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = HOME_BASE_HEALTH;
+    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::rigidbodies[e].fixed = true;
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Model +
         ComponentTags::Turret +
         ComponentTags::Hostility +
         ComponentTags::RigidBody +
+        ComponentTags::Health +
         ComponentTags::Collidable;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
@@ -235,7 +264,8 @@ namespace Paths {
 namespace WaveData {
     int currentWave;
 
-    int waveTimers[WAVE_COUNT] = { 5 * TICK_RATE, 30 * TICK_RATE, 30 * TICK_RATE, 30 * TICK_RATE, 30 * TICK_RATE };
+    // How much time a wave lasts before the next wave starts spawning (timer for last wave will be time until win)
+    int waveTimers[WAVE_COUNT] = { 5 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE };
 
     int waveTick; //countdown timer for waves
 
