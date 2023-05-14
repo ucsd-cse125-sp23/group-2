@@ -287,6 +287,7 @@ void ServerGame::packageData(ServertoClientData& data)
     data.numWaves = WAVE_COUNT;
     data.playerData = GameData::playerdata;
     data.buildcosts = buildcosts;
+    data.serverStatus = currentStatus;
 }
 
 const int GRID_X = 32;
