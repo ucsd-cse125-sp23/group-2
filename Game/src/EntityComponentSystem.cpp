@@ -345,7 +345,7 @@ void EntityComponentSystem::sysAttacks()
                     GameData::hostilities[attack].team = GameData::hostilities[e].team;
                     GameData::hostilities[attack].hostileTo = GameData::hostilities[e].hostileTo;
                     //Set creator
-                    GameData::tags[attack] += ComponentTags::Created;
+                    GameData::tags[attack] |= ComponentTags::Created;
                     GameData::creators[attack] = e;
                     cooldown = cooldown < GameData::spawnrates[attack] ? GameData::spawnrates[attack] : cooldown;
                 }
@@ -423,7 +423,7 @@ void EntityComponentSystem::sysBuild()
                             GameData::positions[b] = transform * glm::vec4(GameData::positions[b], 1);
                             GameData::velocities[b] = transform * glm::vec4(GameData::velocities[b], 0);
                             //Set creator
-                            GameData::tags[b] += ComponentTags::Created;
+                            GameData::tags[b] |= ComponentTags::Created;
                             GameData::creators[b] = e;
                             //Add to score
                             GameData::playerdata.scores[e].towersBuilt++;
@@ -443,8 +443,18 @@ void EntityComponentSystem::sysBuild()
             
             
             Entity r;
-            if ((GameData::retplaces[e].reticle == INVALID_ENTITY) || (!GameData::activity[GameData::retplaces[e].reticle])) {
-                //printf("Generating new reticle\n");
+            if ((GameData::retplaces[e].reticle == INVALID_ENTITY) || (!GameData::activity[GameData::retplaces[e].reticle]) || ((GameData::tags[GameData::retplaces[e].reticle] & ComponentTags::Dead) == ComponentTags::Dead)) {
+                /*
+                printf("Generating new reticle, old was %d.\n", GameData::retplaces[e].reticle);
+                if ((GameData::retplaces[e].reticle != INVALID_ENTITY)) {
+                    if ((!GameData::activity[GameData::retplaces[e].reticle])) {
+                        printf("Not active\n");
+                    }
+                    if ((((GameData::tags[GameData::retplaces[e].reticle] & ComponentTags::Dead) == ComponentTags::Dead))) {
+                        printf("Dead\n");
+                    }
+                }
+                */
                 r = prefabMap[GameData::retplaces[e].reticlePrefab]().front();
             }
             else {
@@ -460,7 +470,7 @@ void EntityComponentSystem::sysBuild()
                 GameData::velocities[r] = transform * glm::vec4(GameData::velocities[r], 0);
                 GameData::tags[r] ^= ComponentTags::Velocity;
                 //Set creator
-                GameData::tags[r] += ComponentTags::Created;
+                GameData::tags[r] |= ComponentTags::Created;
                 GameData::creators[r] = e;
                 GameData::retplaces[e].reticle = r;
             }
@@ -549,6 +559,9 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
     if ((GameData::tags[target] & ComponentTags::Dead) == ComponentTags::Dead) {
         return;
     }
+
+    //printf("Ent %d is dead\n", target);
+
     GameData::tags[target] |= ComponentTags::Dead;
 
     if (source == target) { return; }
