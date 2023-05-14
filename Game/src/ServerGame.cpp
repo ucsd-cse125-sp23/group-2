@@ -73,7 +73,7 @@ void ServerGame::initPlayers()
 
 void ServerGame::initWaves() 
 {
-    WaveData::currentWave = 0;
+    WaveData::currentWave = -1;
     WaveData::waveTick = ENEMY_SPAWNDELAY_TICKS;
 
     //Temp Nested for loop to populate wave vectors
@@ -96,19 +96,17 @@ void ServerGame::waveSpawner()
 {
     static int spawnCooldown = 0;
 
-    if (WaveData::currentWave >= WAVE_COUNT) {
-        printf("Current wave out of bounds!");
-        return;
-    }
-
     if (WaveData::waveTick <= 0) 
     {
-        WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave];
-        spawnCooldown = WaveData::waves[WaveData::currentWave].front().cooldown;
         WaveData::currentWave++;
+        if (WaveData::currentWave < WAVE_COUNT)
+        {
+            WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave];
+            spawnCooldown = WaveData::waves[WaveData::currentWave].front().cooldown;
+        }
     }
 
-    if (WaveData::currentWave >= 0) 
+    if (WaveData::currentWave >= 0 && WaveData::currentWave < WAVE_COUNT) 
     {
         if (!WaveData::waves[WaveData::currentWave].empty()) 
         {
@@ -349,8 +347,9 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
 }
 
 void ServerGame::checkStatus() {
-    if (WaveData::currentWave == WAVE_COUNT) {
+    if (WaveData::currentWave == WAVE_COUNT && WaveData::waveTick <= 0) {
         printf("WIN! :D");
+        printf("Total ticks %u", curTick);
         currentStatus = win;
     }
     if (!GameData::activity[home]) {
