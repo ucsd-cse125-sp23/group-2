@@ -220,7 +220,68 @@ std::list<Entity> createTowerBasic() {
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 
     return createdEntities;
-};
+}
+std::list<Entity> createWoodResourceBasic()
+{
+    std::list<Entity> createdEntities;
+    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::activity[e] = true;
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::models[e].asciiRep = 'R';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
+    GameData::hostilities[e].team = Teams::Environment;
+    GameData::hostilities[e].hostileTo = 0;
+    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::resources[e].resources[Resource::Wood] = 20;
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::Hostility +
+        ComponentTags::ResourceContainer;
+
+    return createdEntities;
+}
+std::list<Entity> createStoneResourceBasic()
+{
+    std::list<Entity> createdEntities;
+    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::activity[e] = true;
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::models[e].asciiRep = 'R';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
+    GameData::hostilities[e].team = Teams::Environment;
+    GameData::hostilities[e].hostileTo = 0;
+    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::resources[e].resources[Resource::Stone] = 20;
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::Hostility +
+        ComponentTags::ResourceContainer;
+
+    return createdEntities;
+}
+;
 
 namespace Paths {
     int const pathCount = 4;

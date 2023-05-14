@@ -23,8 +23,8 @@ std::list<Entity> createProjectileRandom();
 std::list<Entity> createEnemyGroundBasic();
 std::list<Entity> createTowerReticle();
 std::list<Entity> createTowerBasic();
-
-
+std::list<Entity> createWoodResourceBasic();
+std::list<Entity> createStoneResourceBasic();
 
 namespace Prefabs {
 	enum Prefab : uint32_t{
@@ -54,7 +54,7 @@ const int NUM_PREFAB = Prefabs::RESOURCE_MARKER;
 const int NUM_TOWER_PREFAB = Prefabs::TOWER_MARKER;
 const int NUM_PROJECTILE_PREFAB = Prefabs::PROJECTILE_MARKER - Prefabs::TOWER_MARKER;
 const int NUM_ENEMY_PREFAB = Prefabs::ENEMY_MARKER - Prefabs::PROJECTILE_MARKER;
-
+const int NUM_RESOURCE_PREFAB = Prefabs::RESOURCE_MARKER - Prefabs::ENEMY_MARKER;
 using namespace Prefabs;
 
 typedef std::list<Entity>(*PrefabFunction)(); // function pointer type
@@ -68,6 +68,8 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createProjectileRandom,
 	&createTowerReticle,
 	&createEnemyGroundBasic,
+	&createWoodResourceBasic,
+	&createStoneResourceBasic
 };
 
 

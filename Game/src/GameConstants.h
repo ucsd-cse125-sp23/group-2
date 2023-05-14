@@ -17,6 +17,7 @@ const float PLAYER_JPSPD_PERSEC = 30;
 //Base health values of different game entities
 const float PLAYER_BASE_HEALTH = 119;
 const float ENEMY_BASE_HEALTH = 100;
+const float RESOURCE_BASE_HEALTH = 100;
 
 //Base damage per second dealt by towers
 const float TURRET_BASE_DPS = 200;
