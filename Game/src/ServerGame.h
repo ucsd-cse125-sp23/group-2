@@ -40,6 +40,8 @@ public:
 
     void sendPackets();
 
+    void initPrefabs();
+
 private:
     struct PlayerState {
         static constexpr State Default = 0;

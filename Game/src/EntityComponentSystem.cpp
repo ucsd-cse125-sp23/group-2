@@ -2,35 +2,38 @@
 
 namespace GameData
 {
-  std::array<Tag, MAX_ENTITIES> tags;
+    std::array<Tag, MAX_ENTITIES> tags;
 
-  std::array<Active, MAX_ENTITIES> activity;
-  std::array<Position, MAX_ENTITIES> positions;
-  std::array<Velocity, MAX_ENTITIES> velocities;
-  std::array<PathData, MAX_ENTITIES> pathStructs;
-  std::array<Model, MAX_ENTITIES> models;
-  std::array<Turret, MAX_ENTITIES> turrets;
-  std::array<Collider, MAX_ENTITIES> colliders;
-  std::queue<CollisionEvent> colevents;
-  std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
-  std::array<Health, MAX_ENTITIES> healths;
-  std::array<CollisionDmg, MAX_ENTITIES> coldmg;
-  std::array<Hostility, MAX_ENTITIES> hostilities;
-  std::array<LifeSpan, MAX_ENTITIES> lifespans;
-  std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
-  std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
-  std::array<Creator, MAX_ENTITIES> creators;
-  std::array<SpawnRate, MAX_ENTITIES> spawnrates;
-  int logpos = 0;
-  std::array<State, MAX_ENTITIES> states;
-  std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
+    std::array<Active, MAX_ENTITIES> activity;
+    std::array<Position, MAX_ENTITIES> positions;
+    std::array<Velocity, MAX_ENTITIES> velocities;
+    std::array<PathData, MAX_ENTITIES> pathStructs;
+    std::array<Model, MAX_ENTITIES> models;
+    std::array<Turret, MAX_ENTITIES> turrets;
+    std::array<Collider, MAX_ENTITIES> colliders;
+    std::queue<CollisionEvent> colevents;
+    std::array<RigidBodyInfo, MAX_ENTITIES> rigidbodies;
+    std::array<Health, MAX_ENTITIES> healths;
+    std::array<CollisionDmg, MAX_ENTITIES> coldmg;
+    std::array<Hostility, MAX_ENTITIES> hostilities;
+    std::array<LifeSpan, MAX_ENTITIES> lifespans;
+    std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
+    std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
+    std::array<Creator, MAX_ENTITIES> creators;
+    std::array<SpawnRate, MAX_ENTITIES> spawnrates;
+    int logpos = 0;
+    std::array<State, MAX_ENTITIES> states;
+    std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
+    std::array<ResourceContainer, MAX_ENTITIES> resources;
+    std::array<Points, MAX_ENTITIES> pointvalues;
+    AllPlayerData playerdata;
 }
 
 //Call all systems each update
 void EntityComponentSystem::update()
 {
     GameData::logpos = 0;
-    sysHealthStatus();
+    sysDeathStatus();
     sysAttacks();
     sysPathing();
     sysGravity();
@@ -265,7 +268,7 @@ void EntityComponentSystem::resolveCollisions()
 
         //Check if dies on Collision
         if ((GameData::tags[e] & (ComponentTags::DiesOnCollision)) == ComponentTags::DiesOnCollision) {
-            GameData::activity[e] = false;
+            causeDeath(e, e);
         }
 
         //Do on collision damage
@@ -284,30 +287,23 @@ void EntityComponentSystem::resolveCollisions()
     }
 }
 
-//Check entity health death conditions
-void EntityComponentSystem::sysHealthStatus()
+//Check entity death flag and set to zero (and do any on death effects
+void EntityComponentSystem::sysDeathStatus()
 {
     for (Entity e = 0; e < MAX_ENTITIES; e++)
     {
         //Continue to next entity if this one is not active
         if (!GameData::activity[e]) { continue; }
 
-        //check if this entity has a health component
-        if ((GameData::tags[e] & ComponentTags::Health) == ComponentTags::Health)
+        //set to inactive if dying flag
+        if ((GameData::tags[e] & ComponentTags::Dead) == ComponentTags::Dead)
         {
             //TEST OUTPUT FOR VISUALIZER
-            if (GameData::healths[e].curHealth <= 10)
-            {
-                GameData::models[e].asciiRep = 'X';
-            }
-
-            //set to inactive if health at or below 0
-            if (GameData::healths[e].curHealth <= 0)
-            {
-                GameData::activity[e] = false;
-                //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
-            }
+            GameData::models[e].asciiRep = 'X';
+            GameData::activity[e] = false;
+            //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
         }
+
     }
 }
 
@@ -385,7 +381,7 @@ void EntityComponentSystem::sysBuild()
         //Continue to next entity if this one is not active
         if (!GameData::activity[e]) { continue; }
 
-        //check if this entity has a health component
+        //check if this entity has a build component
         if ((GameData::tags[e] & ComponentTags::Builder) == ComponentTags::Builder)
         {
 
@@ -407,18 +403,34 @@ void EntityComponentSystem::sysBuild()
             glm::mat4 transform = glm::translate(GameData::retplaces[e].targetPos) * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
 
             if (GameData::retplaces[e].place) {
-                if ( (GameData::retplaces[e].reticle !=INVALID_ENTITY) && (GameData::activity[GameData::retplaces[e].reticle])) {
-                    
-                    Entity b = prefabMap[GameData::retplaces[e].buildingPrefab]().front();
+                if ( (GameData::retplaces[e].reticle !=INVALID_ENTITY) && (GameData::activity[GameData::retplaces[e].reticle]) && ((GameData::tags[GameData::retplaces[e].reticle] & ComponentTags::Dead) != ComponentTags::Dead)) {
+                    //Check build costs
+                    bool hasenough = true;
+                    for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+                        hasenough &= buildcosts[GameData::retplaces[e].buildingPrefab][i] <= GameData::playerdata.resources[i];
+                    }
 
-                    if (b == INVALID_ENTITY) { printf("Too many entities, trying to place building\n"); }
+                    if (!hasenough) {
+                        printf("Not enough resoruces\n");
+                    }
                     else {
-                        //Transform positions and velocity relative to attacker
-                        GameData::positions[b] = transform * glm::vec4(GameData::positions[b], 1);
-                        GameData::velocities[b] = transform * glm::vec4(GameData::velocities[b], 0);
-                        //Set creator
-                        GameData::tags[b] += ComponentTags::Created;
-                        GameData::creators[b] = e;
+                        Entity b = prefabMap[GameData::retplaces[e].buildingPrefab]().front();
+
+                        if (b == INVALID_ENTITY) { printf("Too many entities, trying to place building\n"); }
+                        else {
+                            //Transform positions and velocity relative to attacker
+                            GameData::positions[b] = transform * glm::vec4(GameData::positions[b], 1);
+                            GameData::velocities[b] = transform * glm::vec4(GameData::velocities[b], 0);
+                            //Set creator
+                            GameData::tags[b] += ComponentTags::Created;
+                            GameData::creators[b] = e;
+                            //Add to score
+                            GameData::playerdata.scores[e].towersBuilt++;
+                            //Subtract resources
+                            for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+                                GameData::playerdata.resources[i] -= buildcosts[GameData::retplaces[e].buildingPrefab][i];
+                            }
+                        }
                     }
 
                 }
@@ -525,8 +537,43 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     GameData::combatLogs[GameData::logpos].source = source;
     GameData::combatLogs[GameData::logpos].target = target;
     GameData::combatLogs[GameData::logpos].damage = damage;
-    GameData::combatLogs[GameData::logpos].killed = (GameData::healths[target].curHealth <= 0);
+    if (GameData::healths[target].curHealth <= 0) {
+        causeDeath(source, target);
+    }
     GameData::logpos++;
+}
+
+void EntityComponentSystem::causeDeath(Entity source, Entity target)
+{
+    if ((GameData::tags[target] & ComponentTags::Dead) == ComponentTags::Dead) {
+        return;
+    }
+    GameData::tags[target] |= ComponentTags::Dead;
+
+    if (source == target) { return; }
+    GameData::combatLogs[GameData::logpos].source = source;
+    GameData::combatLogs[GameData::logpos].target = target;
+    GameData::combatLogs[GameData::logpos].killed = true;
+    GameData::logpos++;
+    if (source < NUM_PLAYERS) {
+        if ((GameData::tags[target] & ComponentTags::WorthPoints) == ComponentTags::WorthPoints) {
+            GameData::playerdata.scores[source].points += GameData::pointvalues[target];
+            printf("Adding points\n");
+        }
+        if ((GameData::tags[target] & ComponentTags::ResourceContainer) == ComponentTags::ResourceContainer) {
+            for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+                GameData::playerdata.scores[source].resourcesGathered[i] += GameData::resources[target].resources[i];
+                GameData::playerdata.resources[i] += GameData::resources[target].resources[i];
+                printf("Gaining Resources %d\n", GameData::playerdata.resources[i]);
+            }
+        }
+        if ((GameData::tags[target] & ComponentTags::Hostility) == ComponentTags::Hostility) {
+            if (GameData::hostilities[target].team == Teams::Martians) {
+                GameData::playerdata.scores[source].enemiesKilled++;
+                printf("Enemy killed %d\n", GameData::playerdata.scores[source].enemiesKilled);
+            }
+        }
+    }
 }
 
 bool EntityComponentSystem::colCheck(Entity e, Entity o)

@@ -17,6 +17,7 @@ ServerGame::ServerGame(void)
 //Populate Component Arrays
 void ServerGame::initializeGame()
 {
+    initPrefabs();
     initPlayers();
     initWaves();
     //initResources();
@@ -234,6 +235,13 @@ void ServerGame::sendPackets()
     network->sendActionPackets(newPackage);
 }
 
+void ServerGame::initPrefabs()
+{
+    for (int i = 0; i < NUM_TOWER_PREFAB; ++i) {
+        buildcosts[i] = { 20, 0, 0 };
+    }
+}
+
 void ServerGame::receiveFromClients()
 {
 
@@ -251,6 +259,8 @@ void ServerGame::packageData(ServertoClientData& data)
     data.logsize = GameData::logpos;
     data.currentWave = WaveData::currentWave + 1;
     data.numWaves = WAVE_COUNT;
+    data.playerData = GameData::playerdata;
+    data.buildcosts = buildcosts;
 }
 
 const int GRID_X = 32;
