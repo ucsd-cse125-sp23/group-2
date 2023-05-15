@@ -39,7 +39,7 @@ namespace Teams {
     constexpr TeamID Environment = 0x1 << 3;
 }
 
-namespace Resource {
+namespace ResourceType {
     const int Money = 0;
     const int Stone = 1;
     const int Wood = 2;
