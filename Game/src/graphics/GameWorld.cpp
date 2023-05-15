@@ -68,7 +68,9 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 			resourceIndex++;
 			break;
 		default:
-			printf("UNKNOWN ENTITY ATTEMPTING TO BE RENDERED");
+			if (incomingData.activity[i]) {
+				printf("UNKNOWN ENTITY ATTEMPTING TO BE RENDERED, ID: %d\n", i);
+			}
 			break;
 		}
 	}
