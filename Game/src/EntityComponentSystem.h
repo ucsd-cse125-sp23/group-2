@@ -39,7 +39,7 @@ namespace Teams {
     constexpr TeamID Environment = 0x1 << 3;
 }
 
-namespace Resource {
+namespace ResourceType {
     const int Money = 0;
     const int Stone = 1;
     const int Wood = 2;
@@ -248,7 +248,7 @@ namespace EntityComponentSystem
     void sysBuild();
 
     //Helper functions
-    Entity createEntity(int begin, int end);
+    Entity createEntity(int begin = 0, int end = MAX_ENTITIES);
 
     //Find the position of inte rsection with first rigid body (uses Peter Shirley's method at http://psgraphics.blogspot.com/2016/02/new-simple-ray-box-test-from-andrew.html)
     glm::vec3 computeRaycast(glm::vec3& pos, glm::vec3& dir, float tmin, float tmax);
