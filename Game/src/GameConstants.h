@@ -29,6 +29,12 @@ const float ENEMY_SPAWNDELAY_SEC = 1;
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;
 
+//how close players must be to gain the attention of enemies
+const float AGRO_RANGE = 10;
+
+//how far players must be for enemies to lose interest in them
+const float DEAGRO_RANGE = 20;
+
 //gravitational acceleration in units per second squared
 const float GRAVITY_SEC = -120;
 

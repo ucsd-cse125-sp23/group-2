@@ -135,6 +135,7 @@ std::list<Entity> createEnemyGroundBasic() {
         return createdEntities;
     }
     GameData::activity[e] = true;
+    GameData::states[e] = enemyState::Pathing;
     GameData::pathStructs[e].currentNode = 0;
     GameData::pathStructs[e].path = 0;
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
@@ -171,6 +172,7 @@ std::list<Entity> createEnemyGroundTank() {
         return createdEntities;
     }
     GameData::activity[e] = true;
+    GameData::states[e] = enemyState::Pathing;
     GameData::pathStructs[e].currentNode = 0;
     GameData::pathStructs[e].path = 0;
     GameData::velocities[e].flying = false;
@@ -209,6 +211,7 @@ std::list<Entity> createEnemyFlyingBasic() {
         return createdEntities;
     }
     GameData::activity[e] = true;
+    GameData::states[e] = enemyState::Pathing;
     GameData::pathStructs[e].currentNode = 0;
     GameData::pathStructs[e].path = 0;
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;

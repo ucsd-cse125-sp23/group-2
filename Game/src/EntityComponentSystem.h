@@ -156,6 +156,11 @@ namespace ComponentTags
 
 }
 
+namespace enemyState {
+    constexpr State Pathing = ComponentTags::PathData;
+    constexpr State Homing = ComponentTags::HomingData;
+};
+
 
 
 namespace GameData
@@ -231,6 +236,8 @@ namespace EntityComponentSystem
     //tracking entities
     void sysHoming();
 
+    void sysStateMachine();
+
     //Helper functions
     Entity createEntity(int begin, int end);
 
@@ -242,5 +249,10 @@ namespace EntityComponentSystem
 
     //Check Collisions between two colliders and return pen
     bool colCheck(Entity e, Entity o);
+
+    //Finds the closest path node to an enemy to put them back on track
+    void rePath(Entity e);
+
+    void changeState(Entity e, State post);
   
 };

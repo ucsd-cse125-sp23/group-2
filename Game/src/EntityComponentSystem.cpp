@@ -30,10 +30,12 @@ namespace GameData
 //Call all systems each update
 void EntityComponentSystem::update()
 {
+    sysStateMachine();
     GameData::logpos = 0;
     sysHealthStatus();
     sysAttacks();
     sysPathing();
+    sysHoming();
     sysGravity();
     sysMovement();
     sysTurretFire();
@@ -41,6 +43,51 @@ void EntityComponentSystem::update()
     resolveCollisions();
     sysBuild();
     sysLifeSpan();
+}
+
+void EntityComponentSystem::sysStateMachine() 
+{
+    for (Entity e = 0; e < MAX_ENTITIES; e++) 
+    {
+        switch (GameData::states[e]) 
+        {
+
+
+        case enemyState::Pathing:
+            //check if players nearby
+            for (int p = 0; p < NUM_PLAYERS; p++) 
+            {
+                if (glm::distance(GameData::positions[p], GameData::positions[e]) <= AGRO_RANGE) 
+                {
+                    changeState(e, enemyState::Homing);
+                    GameData::homingStructs[e].trackedEntity = p;
+                }
+            }
+            break;
+
+
+        case enemyState::Homing:
+            Entity t = GameData::homingStructs[e].trackedEntity;
+            //If tracked entity is a player
+            if (t < NUM_PLAYERS) 
+            {
+                //check for DEAGRO
+                if (glm::distance(GameData::positions[e], GameData::positions[t]) >= DEAGRO_RANGE)
+                {
+                    changeState(e, enemyState::Pathing);
+                    rePath(e);
+                }
+            }
+            //If tracked entity is a tower
+            //USE HOSTILITIES INSTEAD OF CHECKING IF IT HAS A TURRET
+            if ((GameData::tags[t] & ComponentTags::Turret) == ComponentTags::Turret) 
+            {
+                //check for finding another target OR repathing
+                // --- if Turret state is disabled...
+            }
+            break;
+        }
+    }
 }
 
 //Move Entities that contain a Velocity Component
@@ -569,5 +616,35 @@ bool EntityComponentSystem::colCheck(Entity e, Entity o)
     glm::vec3 mine = GameData::positions[e] - GameData::colliders[e].AABB;
     glm::vec3 mino = GameData::positions[o] - GameData::colliders[o].AABB;
     return glm::all(glm::lessThan(mine, maxo)) && glm::all(glm::lessThan(mino, maxe));
+}
+
+void EntityComponentSystem::rePath(Entity e) 
+{
+    //init values (defaulted to path 0, node 0)
+    float closestDistance = glm::distance(GameData::positions[e], Paths::path[0][0]);
+    GameData::pathStructs[e].currentNode = 0;
+    GameData::pathStructs[e].path = 0;
+
+    //loop thru all pathNodes to find the closest one
+    for (int p = 0; p < Paths::pathCount; p++) 
+    {
+        for (int n = 0; n < PATH_LENGTH; n++) 
+        {
+            float distance = glm::distance(GameData::positions[e], Paths::path[p][n]);
+            if (distance < closestDistance) 
+            {
+                closestDistance = distance;
+                GameData::pathStructs[e].path = p;
+                GameData::pathStructs[e].currentNode = n;
+            }
+        }
+    }
+}
+
+void EntityComponentSystem::changeState(Entity e, State post)
+{
+    GameData::tags[e] ^= GameData::states[e];
+    GameData::states[e] = post;
+    GameData::tags[e] |= post;
 }
 

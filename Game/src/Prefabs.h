@@ -3,6 +3,7 @@
 #include <queue>
 #include "graphics/core.h"
 #include "GameConstants.h"
+//Do not include EntityComponentSystem.h
 
 /*
 * The default axis is negative z is the towards the target
@@ -73,6 +74,6 @@ namespace WaveData {
 	extern int waveTick; //countdown timer for waves
 
 	extern int enemyTypes[NUM_ENEMY_TYPES]; //For random enemy selection
-	
+
 	extern std::queue<enemy> waves[WAVE_COUNT];
-}
+};
