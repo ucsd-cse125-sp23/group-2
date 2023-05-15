@@ -5,7 +5,7 @@ std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;
 
 std::list<Entity> createProjectileBasic() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    Entity e = createEntity();
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -14,6 +14,7 @@ std::list<Entity> createProjectileBasic() {
     GameData::positions[e] = glm::vec3(0, 0, -4);
     GameData::velocities[e] = glm::vec3(0, 0, -0.5);
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 30.0f;
     GameData::lifespans[e] = 5;
@@ -36,7 +37,7 @@ std::list<Entity> createProjectileBasic() {
 std::list<Entity> createProjectileSpread5() {
     std::list<Entity> createdEntities;
     for (int i = 0; i < 5; ++i) {
-        Entity e = createEntity(ENEMY_START, ENEMY_END);
+        Entity e = createEntity();
         createdEntities.push_back(e);
         if (e == INVALID_ENTITY) {
             return createdEntities;
@@ -45,6 +46,7 @@ std::list<Entity> createProjectileSpread5() {
         GameData::positions[e] = glm::vec3(2 - i, 0, -4);
         GameData::velocities[e] = glm::vec3((2 - i), 0, -0.5);
         GameData::colliders[e] = { glm::vec3(.25, .25, .25) };
+        GameData::models[e].modelID = MODEL_ID_PROJECTILE;
         GameData::models[e].asciiRep = 'J';
         GameData::coldmg[e].damage = 30.0f;
         GameData::lifespans[e] = 1;
@@ -67,7 +69,7 @@ std::list<Entity> createProjectileSpread5() {
 };
 std::list<Entity> createProjectileChaos() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    Entity e = createEntity();
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -76,6 +78,7 @@ std::list<Entity> createProjectileChaos() {
     GameData::positions[e] = glm::vec3(0, 0, -4);
     GameData::velocities[e] = glm::vec3(0, 0, -0.1);
     GameData::colliders[e] = { glm::vec3(.25, .25, .25) };
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 30.0f;
     GameData::lifespans[e] = 10;
@@ -100,7 +103,7 @@ std::list<Entity> createProjectileChaos() {
 }
 std::list<Entity> createProjectileRandom() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    Entity e = createEntity();
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -110,6 +113,7 @@ std::list<Entity> createProjectileRandom() {
     GameData::positions[e] = randvec * 4.0f;
     GameData::velocities[e] = randvec * 0.5f;
     GameData::colliders[e] = { glm::vec3(.25, .25, .25) };
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 30.0f;
     GameData::lifespans[e] = 0.5;
@@ -131,7 +135,7 @@ std::list<Entity> createProjectileRandom() {
 }
 std::list<Entity> createEnemyGroundBasic() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    Entity e = createEntity();
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -142,6 +146,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::pathStructs[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::models[e].modelID = MODEL_ID_MOB;
     GameData::models[e].asciiRep = 'E';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
     GameData::coldmg[e].damage = ENEMEY_GND_BASE_DMG;
@@ -150,7 +155,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
     GameData::pointvalues[e] = 20;
-    GameData::resources[e].resources[Resource::Money] = 20;
+    GameData::resources[e].resources[ResourceType::Money] = 20;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -170,13 +175,14 @@ std::list<Entity> createEnemyGroundBasic() {
 
 std::list<Entity> createTowerReticle() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    Entity e = createEntity();
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
     GameData::activity[e] = true;
     GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::models[e].modelID = MODEL_ID_TOWER;
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
@@ -195,7 +201,7 @@ std::list<Entity> createTowerReticle() {
 
 std::list<Entity> createTowerBasic() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    Entity e = createEntity();
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -204,6 +210,7 @@ std::list<Entity> createTowerBasic() {
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::turrets[e].damage = TURRET_BASE_DMG;
     GameData::turrets[e].range = 5;
+    GameData::models[e].modelID = MODEL_ID_TOWER;
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;

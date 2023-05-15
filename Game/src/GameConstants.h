@@ -47,7 +47,11 @@ const float GRAVITY_SEC = -120;
 const float TOWER_PLACEMENT_RANGE = 15;
 
 //Model ID's (For Cory/Will to decide)
-#define MODEL_ID_ROVER 0
+#define MODEL_ID_ROVER 1
+#define MODEL_ID_MOB 2
+#define MODEL_ID_TOWER 3
+#define MODEL_ID_RESOURCE 4
+#define MODEL_ID_PROJECTILE 5
 //.... ADD MORE ...
 
 

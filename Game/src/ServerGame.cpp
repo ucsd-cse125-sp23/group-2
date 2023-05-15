@@ -288,6 +288,7 @@ void ServerGame::packageData(ServertoClientData& data)
     data.playerData = GameData::playerdata;
     data.buildcosts = buildcosts;
     data.serverStatus = currentStatus;
+    data.colliders = GameData::colliders;
 }
 
 const int GRID_X = 32;
@@ -359,11 +360,11 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
 
 void ServerGame::checkStatus() {
     if (WaveData::currentWave == WAVE_COUNT && WaveData::waveTick <= 0) {
-        printf("WIN! :D");
+        printf("WIN! :D\n");
         currentStatus = win;
     }
     if (!GameData::activity[home]) {
-        printf("LOSE! :(");
+        printf("LOSE! :(\n");
         currentStatus = loss;
     }
 }

@@ -40,6 +40,7 @@ struct ServertoClientData {
     std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
     int currentWave;
     int numWaves;
+    std::array<Collider, MAX_ENTITIES> colliders;
     AllPlayerData playerData;
     std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;
     int serverStatus;
