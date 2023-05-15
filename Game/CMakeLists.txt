@@ -14,6 +14,9 @@ set(
     src/EntityComponentSystem.cpp
     src/graphics/GameWorld.cpp
     src/graphics/Mob.cpp
+    src/graphics/Tower.cpp
+    src/graphics/Resource.cpp
+    src/graphics/Projectile.cpp
     src/graphics/Camera.cpp
     src/graphics/GameWindow.cpp
     src/graphics/Player.cpp
@@ -35,6 +38,9 @@ set(
     src/GameConstants.h
     src/graphics/GameWorld.h
     src/graphics/Mob.h
+    src/graphics/Tower.h
+    src/graphics/Resource.h
+    src/graphics/Projectile.h
     src/graphics/Camera.h
     src/graphics/core.h
     src/graphics/GameWindow.h

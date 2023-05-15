@@ -4,29 +4,74 @@ float GameWorld::prevX, GameWorld::prevY,GameWorld::currX, GameWorld::currY, Gam
 void GameWorld::init() {
 	currID = 0;
 	env = new Skybox();
+
 	for (int i = 0; i < NUM_PLAYERS; i++) {
-		players[i] = new Player(currID);
-		currID++;
+		players[i] = new Player(i);
 	}
-	for (int i = ENEMY_START; i < ENEMY_END; i++) {
-		mobs[i - ENEMY_START] = new Mob(currID);
-		currID++;
+	for (int i = 0; i < NUM_ENEMIES; i++) {
+		mobs[i] = new Mob(i);
+	}
+	for (int i = 0; i < NUM_TOWERS; i++) {
+		towers[i] = new Tower(i);
+	}
+	for (int i = 0; i < NUM_PROJECTILES; i++) {
+		projectiles[i] = new Projectile(i);
+	}
+	for (int i = 0; i < NUM_RESOURCES; i++) {
+		resources[i] = new Resource(i);
 	}
 	cam = new Camera();
 }
 
 void GameWorld::update(ServertoClientData& incomingData, int id) {
-	for (int i = 0; i < NUM_PLAYERS; i++) {
-		players[i]->setActive(incomingData.activity[i]);
-		if (incomingData.activity[i]) {
-			players[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
-		}
-	}
 
-	for (int i = ENEMY_START; i < ENEMY_END; i++) {
-		mobs[i - ENEMY_START]->setActive(incomingData.activity[i]);
-		if (incomingData.activity[i]) {
-			mobs[i - ENEMY_START]->update(incomingData.positions[i]);
+	unsigned int playerIndex = 0;
+	unsigned int mobIndex = 0;
+	unsigned int towerIndex = 0;
+	unsigned int projIndex = 0;
+	unsigned int resourceIndex = 0;
+	for (int i = 0; i < incomingData.activity.size(); i++) {
+		switch (incomingData.models[i].modelID) {
+		case MODEL_ID_ROVER:
+			players[i]->setActive(incomingData.activity[i]);
+			if (incomingData.activity[i]) {
+				players[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
+			}
+			playerIndex++;
+			break;
+		case MODEL_ID_MOB:
+			mobs[mobIndex]->setActive(incomingData.activity[i]);
+			if (incomingData.activity[i]) {
+				mobs[mobIndex]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
+			}
+			mobIndex++;
+			break;
+		case MODEL_ID_TOWER:
+			towers[towerIndex]->setActive(incomingData.activity[i]);
+			if (incomingData.activity[i]) {
+				towers[towerIndex]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
+			}
+			towerIndex++;
+			break;
+		case MODEL_ID_PROJECTILE:
+			projectiles[projIndex]->setActive(incomingData.activity[i]);
+			if (incomingData.activity[i]) {
+				projectiles[projIndex]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
+			}
+			projIndex++;
+			break;
+		case MODEL_ID_RESOURCE:
+			resources[resourceIndex]->setActive(incomingData.activity[i]);
+			if (incomingData.activity[i]) {
+				resources[resourceIndex]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
+			}
+			resourceIndex++;
+			break;
+		default:
+			if (incomingData.activity[i]) {
+				printf("UNKNOWN ENTITY ATTEMPTING TO BE RENDERED, ID: %d\n", i);
+			}
+			break;
 		}
 	}
 
@@ -55,10 +100,27 @@ void GameWorld::draw(Shader* shader, Shader* skyboxShader) {
 		}
 	}
 
+	for (Tower* t : towers) {
+		if (t->getActive()) {
+			t->draw(viewProjMtx);
+		}
+	}
+
+	for (Resource* r : resources) {
+		if (r->getActive()) {
+			r->draw(viewProjMtx);
+		}
+	}
+
+	for (Projectile* p : projectiles) {
+		if (p->getActive()) {
+			p->draw(viewProjMtx);
+		}
+	}
+
 }
 
 void GameWorld::cursor_callback(GLFWwindow* window, double cX, double cY) {
-
 	currX = cX;
 	currY = cY;
 }

@@ -23,6 +23,7 @@ std::list<Entity> createProjectileRandom();
 std::list<Entity> createEnemyGroundBasic();
 std::list<Entity> createTowerReticle();
 std::list<Entity> createTowerBasic();
+std::list<Entity> createHome();
 std::list<Entity> createWoodResourceBasic();
 std::list<Entity> createStoneResourceBasic();
 std::list<Entity> createPathColliders();
@@ -50,11 +51,12 @@ namespace Prefabs {
 		TowerReticle = RESOURCE_MARKER,
 		PathColliders,
 		UI_MARKER
+		Home = UI_MARKER,
+		NUM_PREFAB
 
 	};
 }
 
-const int NUM_PREFAB = Prefabs::UI_MARKER;
 const int NUM_TOWER_PREFAB = Prefabs::TOWER_MARKER;
 const int NUM_PROJECTILE_PREFAB = Prefabs::PROJECTILE_MARKER - Prefabs::TOWER_MARKER;
 const int NUM_ENEMY_PREFAB = Prefabs::ENEMY_MARKER - Prefabs::PROJECTILE_MARKER;
@@ -74,7 +76,9 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createWoodResourceBasic,
 	&createStoneResourceBasic,
 	&createTowerReticle,
-	&createPathColliders
+	&createEnemyGroundBasic,
+	&createPathColliders,
+	&createHome
 };
 
 
