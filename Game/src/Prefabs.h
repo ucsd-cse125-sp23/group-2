@@ -25,6 +25,7 @@ std::list<Entity> createTowerReticle();
 std::list<Entity> createTowerBasic();
 std::list<Entity> createWoodResourceBasic();
 std::list<Entity> createStoneResourceBasic();
+std::list<Entity> createPathColliders();
 
 namespace Prefabs {
 	enum Prefab : uint32_t{
@@ -36,7 +37,6 @@ namespace Prefabs {
 		ProjectileSpread5,
 		ProjectileChaos,
 		ProjectileRandom,
-		TowerReticle,
 
 		
 		PROJECTILE_MARKER,//Put Projectiles Above this marker
@@ -47,10 +47,14 @@ namespace Prefabs {
 		BASIC_STONE_RESOURCE,
 
 		RESOURCE_MARKER, //Put Resource above this marker
+		TowerReticle = RESOURCE_MARKER,
+		PathColliders,
+		UI_MARKER
+
 	};
 }
 
-const int NUM_PREFAB = Prefabs::RESOURCE_MARKER;
+const int NUM_PREFAB = Prefabs::UI_MARKER;
 const int NUM_TOWER_PREFAB = Prefabs::TOWER_MARKER;
 const int NUM_PROJECTILE_PREFAB = Prefabs::PROJECTILE_MARKER - Prefabs::TOWER_MARKER;
 const int NUM_ENEMY_PREFAB = Prefabs::ENEMY_MARKER - Prefabs::PROJECTILE_MARKER;
@@ -66,17 +70,18 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createProjectileSpread5,
 	&createProjectileChaos,
 	&createProjectileRandom,
-	&createTowerReticle,
 	&createEnemyGroundBasic,
 	&createWoodResourceBasic,
-	&createStoneResourceBasic
+	&createStoneResourceBasic,
+	&createTowerReticle,
+	&createPathColliders
 };
 
 
 
 namespace Paths {
 	extern int const pathCount;
-	extern glm::vec3 path[4][PATH_LENGTH];
+	extern const glm::vec3 path[4][PATH_LENGTH];
 };
 
 struct enemy {
@@ -97,4 +102,4 @@ namespace WaveData {
 }
 
 //Define buildcosts
-extern std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;
+extern const std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;

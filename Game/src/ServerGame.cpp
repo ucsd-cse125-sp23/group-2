@@ -122,7 +122,7 @@ void ServerGame::waveSpawner()
     WaveData::waveTick--;
 }
 
-//TODO
+//Spawn Initial assortment of resources
 void ServerGame::initResources()
 {
 
@@ -237,9 +237,15 @@ void ServerGame::sendPackets()
 
 void ServerGame::initPrefabs()
 {
-    for (int i = 0; i < NUM_TOWER_PREFAB; ++i) {
-        buildcosts[i] = { 20, 0, 0 };
+    list<Entity> pathlist = prefabMap[Prefabs::PathColliders]();
+    for (Entity e : pathlist) {
+        if (e != INVALID_ENTITY) {
+            printf("Collider for ent %d, is (%f, %f, %f)\n", e, GameData::colliders[e].AABB.x, GameData::colliders[e].AABB.y, GameData::colliders[e].AABB.z);
+            printf("Position for ent %d, is (%f, %f, %f)\n", e, GameData::positions[e].x, GameData::positions[e].y, GameData::positions[e].z);
+        }
     }
+    //Init Path Objects
+
 }
 
 void ServerGame::receiveFromClients()

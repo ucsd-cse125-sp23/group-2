@@ -444,8 +444,10 @@ void EntityComponentSystem::sysBuild()
             
             Entity r;
             if ((GameData::retplaces[e].reticle == INVALID_ENTITY) || (!GameData::activity[GameData::retplaces[e].reticle]) || ((GameData::tags[GameData::retplaces[e].reticle] & ComponentTags::Dead) == ComponentTags::Dead)) {
-                /*
+                
                 printf("Generating new reticle, old was %d.\n", GameData::retplaces[e].reticle);
+                
+                /*
                 if ((GameData::retplaces[e].reticle != INVALID_ENTITY)) {
                     if ((!GameData::activity[GameData::retplaces[e].reticle])) {
                         printf("Not active\n");

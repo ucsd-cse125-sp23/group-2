@@ -1,7 +1,7 @@
 #include "Prefabs.h"
 #include "EntityComponentSystem.h"
 using namespace EntityComponentSystem;
-std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;
+
 
 std::list<Entity> createProjectileBasic() {
     std::list<Entity> createdEntities;
@@ -150,7 +150,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
     GameData::pointvalues[e] = 20;
-    GameData::resources[e].resources[Resource::Money] = 20;
+    GameData::resources[e].resources[ResourceType::Money] = 20;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -188,7 +188,7 @@ std::list<Entity> createTowerReticle() {
         ComponentTags::Collidable +
         ComponentTags::DiesOnCollision;
     GameData::colliders[e].colteam = CollisionLayer::UIObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::UIObj;
 
     return createdEntities;
 }
@@ -238,7 +238,7 @@ std::list<Entity> createWoodResourceBasic()
     GameData::hostilities[e].hostileTo = 0;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
-    GameData::resources[e].resources[Resource::Wood] = 20;
+    GameData::resources[e].resources[ResourceType::Wood] = 20;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -268,7 +268,7 @@ std::list<Entity> createStoneResourceBasic()
     GameData::hostilities[e].hostileTo = 0;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
-    GameData::resources[e].resources[Resource::Stone] = 20;
+    GameData::resources[e].resources[ResourceType::Stone] = 20;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -281,11 +281,11 @@ std::list<Entity> createStoneResourceBasic()
 
     return createdEntities;
 }
-;
+
 
 namespace Paths {
     int const pathCount = 4;
-    glm::vec3 path[pathCount][PATH_LENGTH] =
+    const glm::vec3 path[pathCount][PATH_LENGTH] =
     {
         { glm::vec3(60,0,0), glm::vec3(40,0,0), glm::vec3(40,0,20), glm::vec3(20,0,20), glm::vec3(20,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) },
         { glm::vec3(-60,0,0), glm::vec3(-40,0,0), glm::vec3(-40,0,-20), glm::vec3(-20,0,-20), glm::vec3(-20,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) },
@@ -302,3 +302,41 @@ namespace WaveData {
 
     std::queue<enemy> waves[WAVE_COUNT];
 }
+
+//Define Tower Build costs
+const std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts =
+{
+    {0, 0, 0}
+};
+
+std::list<Entity> createPathColliders()
+{
+    std::list<Entity> createdEntities;
+    for (int p = 0; p < Paths::pathCount; ++p) {
+        for (int i = 0; (i < PATH_LENGTH - 1); i++) {
+            if (Paths::path[p][i] == Paths::path[p][i + 1]) {
+                continue;
+            }
+            Entity e = createEntity(RESOURCE_START, RESOURCE_END);
+            createdEntities.push_back(e);
+            if (e == INVALID_ENTITY) {
+                return createdEntities;
+            }
+
+            GameData::activity[e] = true;
+            GameData::positions[e] = (Paths::path[p][i] + Paths::path[p][i + 1]) / 2.0f + glm::vec3(0, 1,0);
+            glm::vec3 pathvec = Paths::path[p][i + 1] - Paths::path[p][i];
+            GameData::colliders[e] = { (pathvec)/2.0f + PATH_WIDTH*glm::normalize(pathvec) + PATH_WIDTH*glm::normalize(glm::vec3(pathvec.z, 0, -pathvec.x))+ glm::vec3(0, 1,0) };
+            GameData::models[e].asciiRep = 'P';
+            GameData::colliders[e].colteam = CollisionLayer::UIObj;
+            GameData::colliders[e].colwith = 0;
+
+            GameData::tags[e] =
+                ComponentTags::Position +
+                ComponentTags::Model +
+                ComponentTags::Collidable;
+        }
+    }
+
+    return createdEntities;
+};
