@@ -20,6 +20,10 @@ void GameWorld::init() {
 	for (int i = 0; i < NUM_RESOURCES; i++) {
 		resources[i] = new Resource(i);
 	}
+
+	for (int i = 0; i < MAX_ENTITIES; i++) {
+		AABBs[i] = new Cube();
+	}
 	cam = new Camera();
 }
 
@@ -31,12 +35,21 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 	unsigned int projIndex = 0;
 	unsigned int resourceIndex = 0;
 	for (int i = 0; i < incomingData.activity.size(); i++) {
+
+		if (incomingData.activity[i] && incomingData.models[i].renderCollider) {
+			AABBs[i]->setActive(true);
+			AABBs[i]->update(incomingData.positions[i], incomingData.colliders[i].AABB);
+		}
+		else {
+			AABBs[i]->setActive(false);
+		}
 		switch (incomingData.models[i].modelID) {
 		case MODEL_ID_ROVER:
 			players[i]->setActive(incomingData.activity[i]);
 			if (incomingData.activity[i]) {
 				players[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
 			}
+			
 			playerIndex++;
 			break;
 		case MODEL_ID_MOB:
@@ -115,6 +128,15 @@ void GameWorld::draw(Shader* shader, Shader* skyboxShader) {
 			p->draw(viewProjMtx);
 		}
 	}
+
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	for (Cube* c : AABBs) {
+		if (c->getActive()) {
+			c->draw(viewProjMtx);
+		}
+	}
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 }
 

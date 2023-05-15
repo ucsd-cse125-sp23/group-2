@@ -59,6 +59,7 @@ struct Model //3D Model to render for the entity
     int modelID;
     char asciiRep;
     glm::vec3 dirNorm;
+    bool renderCollider;
     //TODO: Other Model Data
 
     //degrees
@@ -74,7 +75,6 @@ struct Turret //Component of Towers
 struct Collider //Information for collisions
 {
     glm::vec3 AABB; //Axis Aligned Bound Box vector
-
     TeamID colteam;
     TeamID colwith;
 
@@ -91,7 +91,6 @@ struct CollisionEvent {
     Entity e;
     Entity o;
     glm::vec3 pen;
-
 };
 
 struct Health {
