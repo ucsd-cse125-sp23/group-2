@@ -50,7 +50,7 @@ namespace Prefabs {
 		RESOURCE_MARKER, //Put Resource above this marker
 		TowerReticle = RESOURCE_MARKER,
 		PathColliders,
-		UI_MARKER
+		UI_MARKER,
 		Home = UI_MARKER,
 		NUM_PREFAB
 
@@ -76,7 +76,6 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createWoodResourceBasic,
 	&createStoneResourceBasic,
 	&createTowerReticle,
-	&createEnemyGroundBasic,
 	&createPathColliders,
 	&createHome
 };

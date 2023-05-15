@@ -18,7 +18,7 @@ ServerGame::ServerGame(void)
 //Populate Component Arrays
 void ServerGame::initializeGame()
 {
-    initPrefabs();
+    //initPrefabs();
     initPlayers();
     initWaves();
     initBase();
