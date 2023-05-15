@@ -361,10 +361,16 @@ std::list<Entity> createPathColliders()
             }
 
             GameData::activity[e] = true;
-            GameData::positions[e] = (Paths::path[p][i] + Paths::path[p][i + 1]) / 2.0f + glm::vec3(0, 1,0);
+            GameData::positions[e] = (Paths::path[p][i] + Paths::path[p][i + 1]) / 2.0f + glm::vec3(0, 1, 0);
             glm::vec3 pathvec = Paths::path[p][i + 1] - Paths::path[p][i];
-            GameData::colliders[e] = { (pathvec)/2.0f + PATH_WIDTH*glm::normalize(pathvec) + PATH_WIDTH*glm::normalize(glm::vec3(pathvec.z, 0, -pathvec.x))+ glm::vec3(0, 1,0) };
+            GameData::colliders[e] = { (pathvec) / 2.0f + PATH_WIDTH * glm::normalize(pathvec) + PATH_WIDTH * glm::normalize(glm::vec3(pathvec.z, 0, -pathvec.x)) + glm::vec3(0, 1,0) };
+            
+            GameData::colliders[e].AABB.x = glm::abs(GameData::colliders[e].AABB.x);
+            GameData::colliders[e].AABB.y = glm::abs(GameData::colliders[e].AABB.y);
+            GameData::colliders[e].AABB.z = glm::abs(GameData::colliders[e].AABB.z);
+
             GameData::models[e].asciiRep = 'P';
+            //GameData::models[e].renderCollider = true;
             GameData::colliders[e].colteam = CollisionLayer::UIObj;
             GameData::colliders[e].colwith = 0;
 

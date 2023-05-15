@@ -18,7 +18,7 @@ ServerGame::ServerGame(void)
 //Populate Component Arrays
 void ServerGame::initializeGame()
 {
-    //initPrefabs();
+    initPrefabs();
     initPlayers();
     initWaves();
     initBase();
@@ -36,7 +36,7 @@ void ServerGame::initPlayers()
         GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].modelID = MODEL_ID_ROVER;
         GameData::models[i].asciiRep = 'P';
-        GameData::models[i].renderCollider = true;
+        //GameData::models[i].renderCollider = true;
         GameData::healths[i].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
         GameData::hostilities[i].team = Teams::Players;
         GameData::hostilities[i].hostileTo = Teams::Environment+Teams::Martians;
@@ -265,12 +265,20 @@ void ServerGame::sendPackets()
 void ServerGame::initPrefabs()
 {
     list<Entity> pathlist = prefabMap[Prefabs::PathColliders]();
+    /*
     for (Entity e : pathlist) {
         if (e != INVALID_ENTITY) {
             printf("Collider for ent %d, is (%f, %f, %f)\n", e, GameData::colliders[e].AABB.x, GameData::colliders[e].AABB.y, GameData::colliders[e].AABB.z);
             printf("Position for ent %d, is (%f, %f, %f)\n", e, GameData::positions[e].x, GameData::positions[e].y, GameData::positions[e].z);
+            if (ComponentTags::Collidable & GameData::tags[e]) {
+                printf("can Collide\n");
+            }
+            if (GameData::activity[e]) {
+                printf("is active\n");
+            }
         }
     }
+    */
     //Init Path Objects
 
 }

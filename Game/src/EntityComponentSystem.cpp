@@ -195,6 +195,13 @@ void EntityComponentSystem::sysDetectCollisions()
                 {
                     //If not on same  collision layer skip
                     if (!(GameData::colliders[e].colwith & GameData::colliders[o].colteam)) { continue; }
+                    /*
+                    if (o == 93) {
+                        printf("Checking collision between %d and %d\n", e, o);
+                        printf("Collider for ent %d, is (%f, %f, %f)\n", o, GameData::colliders[o].AABB.x, GameData::colliders[o].AABB.y, GameData::colliders[o].AABB.z);
+                        printf("Position for ent %d, is (%f, %f, %f)\n", o, GameData::positions[o].x, GameData::positions[o].y, GameData::positions[o].z);
+                    }
+                    */
                     glm::vec3 maxe = GameData::positions[e] + GameData::colliders[e].AABB;
                     glm::vec3 maxo = GameData::positions[o] + GameData::colliders[o].AABB;
                     glm::vec3 mine = GameData::positions[e] - GameData::colliders[e].AABB;
@@ -235,7 +242,7 @@ void EntityComponentSystem::sysDetectCollisions()
                         else {
                             pen[index-3] = -1*diff2[index-3];
                         }
-
+                        //printf("Creating collision between %d and %d\n", e, o);
                         //Create Collision Event objects in e
                         GameData::colevents.push(CollisionEvent{ e, o, pen });
 
@@ -265,10 +272,10 @@ void EntityComponentSystem::resolveCollisions()
         }
 
 
-
         //Check if dies on Collision
         if ((GameData::tags[e] & (ComponentTags::DiesOnCollision)) == ComponentTags::DiesOnCollision) {
             causeDeath(e, e);
+            GameData::tags[e] ^= ComponentTags::Collidable;
         }
 
         //Do on collision damage
@@ -445,7 +452,7 @@ void EntityComponentSystem::sysBuild()
             Entity r;
             if ((GameData::retplaces[e].reticle == INVALID_ENTITY) || (!GameData::activity[GameData::retplaces[e].reticle]) || ((GameData::tags[GameData::retplaces[e].reticle] & ComponentTags::Dead) == ComponentTags::Dead)) {
                 
-                printf("Generating new reticle, old was %d.\n", GameData::retplaces[e].reticle);
+                //printf("Generating new reticle, old was %d.\n", GameData::retplaces[e].reticle);
                 
                 /*
                 if ((GameData::retplaces[e].reticle != INVALID_ENTITY)) {
@@ -552,6 +559,7 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     GameData::combatLogs[GameData::logpos].damage = damage;
     if (GameData::healths[target].curHealth <= 0) {
         causeDeath(source, target);
+        GameData::tags[target] ^= ComponentTags::Collidable;
     }
     GameData::logpos++;
 }
