@@ -30,7 +30,7 @@ void ServerGame::initPlayers()
         GameData::activity[i] = true;
         GameData::positions[i] = glm::vec3(0, 0, 0);
         GameData::velocities[i] = glm::vec3(0, 0, 0);
-        GameData::colliders[i] = { glm::vec3(2, 3, 2) };
+        GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].modelID = MODEL_ID_ROVER;
         GameData::models[i].asciiRep = 'P';
         GameData::models[i].renderCollider = true;
