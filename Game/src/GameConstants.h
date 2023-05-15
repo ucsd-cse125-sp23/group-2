@@ -19,6 +19,7 @@ const float PLAYER_JPSPD_PERSEC = 30;
 const float PLAYER_BASE_HEALTH = 119;
 const float ENEMY_BASE_HEALTH = 100;
 const float HOME_BASE_HEALTH = 100;
+const float RESOURCE_BASE_HEALTH = 100;
 
 //Base damage per second dealt by towers
 const float TURRET_BASE_DPS = 200;
@@ -42,6 +43,7 @@ const float GRAVITY_SEC = -120;
 
 #define NUM_RESOURCE_TYPES 3
 
+const float PATH_WIDTH = 3;
 
 //TOwer placement range
 const float TOWER_PLACEMENT_RANGE = 15;

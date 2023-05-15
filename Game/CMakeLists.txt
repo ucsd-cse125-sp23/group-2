@@ -23,6 +23,7 @@ set(
     src/graphics/Shader.cpp
     src/graphics/stb_image.cpp
     src/graphics/Skybox.cpp
+    src/graphics/Cube.cpp
 )
 
 # Add header files
@@ -50,6 +51,7 @@ set(
     src/graphics/Skybox.h
     src/graphics/ObjectModel.h
     src/graphics/Mesh.h
+    src/graphics/Cube.h
 )
 
 # Require GL

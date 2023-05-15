@@ -1,7 +1,7 @@
 #include "Prefabs.h"
 #include "EntityComponentSystem.h"
 using namespace EntityComponentSystem;
-std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;
+
 
 std::list<Entity> createProjectileBasic() {
     std::list<Entity> createdEntities;
@@ -194,7 +194,7 @@ std::list<Entity> createTowerReticle() {
         ComponentTags::Collidable +
         ComponentTags::DiesOnCollision;
     GameData::colliders[e].colteam = CollisionLayer::UIObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::UIObj;
 
     return createdEntities;
 }
@@ -256,11 +256,72 @@ std::list<Entity> createHome() {
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 
     return createdEntities;
-};
+}
+std::list<Entity> createWoodResourceBasic()
+{
+    std::list<Entity> createdEntities;
+    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::activity[e] = true;
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::models[e].asciiRep = 'R';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
+    GameData::hostilities[e].team = Teams::Environment;
+    GameData::hostilities[e].hostileTo = 0;
+    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::resources[e].resources[ResourceType::Wood] = 20;
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::Hostility +
+        ComponentTags::ResourceContainer;
+
+    return createdEntities;
+}
+std::list<Entity> createStoneResourceBasic()
+{
+    std::list<Entity> createdEntities;
+    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::activity[e] = true;
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::models[e].asciiRep = 'R';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
+    GameData::hostilities[e].team = Teams::Environment;
+    GameData::hostilities[e].hostileTo = 0;
+    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::resources[e].resources[ResourceType::Stone] = 20;
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::Hostility +
+        ComponentTags::ResourceContainer;
+
+    return createdEntities;
+}
+
 
 namespace Paths {
     int const pathCount = 4;
-    glm::vec3 path[pathCount][PATH_LENGTH] =
+    const glm::vec3 path[pathCount][PATH_LENGTH] =
     {
         { glm::vec3(60,0,0), glm::vec3(40,0,0), glm::vec3(40,0,20), glm::vec3(20,0,20), glm::vec3(20,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) },
         { glm::vec3(-60,0,0), glm::vec3(-40,0,0), glm::vec3(-40,0,-20), glm::vec3(-20,0,-20), glm::vec3(-20,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) },
@@ -278,3 +339,47 @@ namespace WaveData {
 
     std::queue<enemy> waves[WAVE_COUNT];
 }
+
+//Define Tower Build costs
+const std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts =
+{
+    {0, 0, 0}
+};
+
+std::list<Entity> createPathColliders()
+{
+    std::list<Entity> createdEntities;
+    for (int p = 0; p < Paths::pathCount; ++p) {
+        for (int i = 0; (i < PATH_LENGTH - 1); i++) {
+            if (Paths::path[p][i] == Paths::path[p][i + 1]) {
+                continue;
+            }
+            Entity e = createEntity(RESOURCE_START, RESOURCE_END);
+            createdEntities.push_back(e);
+            if (e == INVALID_ENTITY) {
+                return createdEntities;
+            }
+
+            GameData::activity[e] = true;
+            GameData::positions[e] = (Paths::path[p][i] + Paths::path[p][i + 1]) / 2.0f + glm::vec3(0, 1, 0);
+            glm::vec3 pathvec = Paths::path[p][i + 1] - Paths::path[p][i];
+            GameData::colliders[e] = { (pathvec) / 2.0f + PATH_WIDTH * glm::normalize(pathvec) + PATH_WIDTH * glm::normalize(glm::vec3(pathvec.z, 0, -pathvec.x)) + glm::vec3(0, 1,0) };
+            
+            GameData::colliders[e].AABB.x = glm::abs(GameData::colliders[e].AABB.x);
+            GameData::colliders[e].AABB.y = glm::abs(GameData::colliders[e].AABB.y);
+            GameData::colliders[e].AABB.z = glm::abs(GameData::colliders[e].AABB.z);
+
+            GameData::models[e].asciiRep = 'P';
+            //GameData::models[e].renderCollider = true;
+            GameData::colliders[e].colteam = CollisionLayer::UIObj;
+            GameData::colliders[e].colwith = 0;
+
+            GameData::tags[e] =
+                ComponentTags::Position +
+                ComponentTags::Model +
+                ComponentTags::Collidable;
+        }
+    }
+
+    return createdEntities;
+};

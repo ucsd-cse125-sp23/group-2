@@ -197,6 +197,13 @@ void EntityComponentSystem::sysDetectCollisions()
                 {
                     //If not on same  collision layer skip
                     if (!(GameData::colliders[e].colwith & GameData::colliders[o].colteam)) { continue; }
+                    /*
+                    if (o == 93) {
+                        printf("Checking collision between %d and %d\n", e, o);
+                        printf("Collider for ent %d, is (%f, %f, %f)\n", o, GameData::colliders[o].AABB.x, GameData::colliders[o].AABB.y, GameData::colliders[o].AABB.z);
+                        printf("Position for ent %d, is (%f, %f, %f)\n", o, GameData::positions[o].x, GameData::positions[o].y, GameData::positions[o].z);
+                    }
+                    */
                     glm::vec3 maxe = GameData::positions[e] + GameData::colliders[e].AABB;
                     glm::vec3 maxo = GameData::positions[o] + GameData::colliders[o].AABB;
                     glm::vec3 mine = GameData::positions[e] - GameData::colliders[e].AABB;
@@ -237,7 +244,7 @@ void EntityComponentSystem::sysDetectCollisions()
                         else {
                             pen[index-3] = -1*diff2[index-3];
                         }
-
+                        //printf("Creating collision between %d and %d\n", e, o);
                         //Create Collision Event objects in e
                         GameData::colevents.push(CollisionEvent{ e, o, pen });
 
@@ -275,10 +282,10 @@ void EntityComponentSystem::resolveCollisions()
         }
 
 
-
         //Check if dies on Collision
         if ((GameData::tags[e] & (ComponentTags::DiesOnCollision)) == ComponentTags::DiesOnCollision) {
             causeDeath(e, e);
+            GameData::tags[e] ^= ComponentTags::Collidable;
         }
 
         //Do on collision damage
@@ -355,7 +362,7 @@ void EntityComponentSystem::sysAttacks()
                     GameData::hostilities[attack].team = GameData::hostilities[e].team;
                     GameData::hostilities[attack].hostileTo = GameData::hostilities[e].hostileTo;
                     //Set creator
-                    GameData::tags[attack] += ComponentTags::Created;
+                    GameData::tags[attack] |= ComponentTags::Created;
                     GameData::creators[attack] = e;
                     cooldown = cooldown < GameData::spawnrates[attack] ? GameData::spawnrates[attack] : cooldown;
                 }
@@ -433,7 +440,7 @@ void EntityComponentSystem::sysBuild()
                             GameData::positions[b] = transform * glm::vec4(GameData::positions[b], 1);
                             GameData::velocities[b] = transform * glm::vec4(GameData::velocities[b], 0);
                             //Set creator
-                            GameData::tags[b] += ComponentTags::Created;
+                            GameData::tags[b] |= ComponentTags::Created;
                             GameData::creators[b] = e;
                             //Add to score
                             GameData::playerdata.scores[e].towersBuilt++;
@@ -453,8 +460,20 @@ void EntityComponentSystem::sysBuild()
             
             
             Entity r;
-            if ((GameData::retplaces[e].reticle == INVALID_ENTITY) || (!GameData::activity[GameData::retplaces[e].reticle])) {
-                //printf("Generating new reticle\n");
+            if ((GameData::retplaces[e].reticle == INVALID_ENTITY) || (!GameData::activity[GameData::retplaces[e].reticle]) || ((GameData::tags[GameData::retplaces[e].reticle] & ComponentTags::Dead) == ComponentTags::Dead)) {
+                
+                //printf("Generating new reticle, old was %d.\n", GameData::retplaces[e].reticle);
+                
+                /*
+                if ((GameData::retplaces[e].reticle != INVALID_ENTITY)) {
+                    if ((!GameData::activity[GameData::retplaces[e].reticle])) {
+                        printf("Not active\n");
+                    }
+                    if ((((GameData::tags[GameData::retplaces[e].reticle] & ComponentTags::Dead) == ComponentTags::Dead))) {
+                        printf("Dead\n");
+                    }
+                }
+                */
                 r = prefabMap[GameData::retplaces[e].reticlePrefab]().front();
             }
             else {
@@ -470,7 +489,7 @@ void EntityComponentSystem::sysBuild()
                 GameData::velocities[r] = transform * glm::vec4(GameData::velocities[r], 0);
                 GameData::tags[r] ^= ComponentTags::Velocity;
                 //Set creator
-                GameData::tags[r] += ComponentTags::Created;
+                GameData::tags[r] |= ComponentTags::Created;
                 GameData::creators[r] = e;
                 GameData::retplaces[e].reticle = r;
             }
@@ -550,6 +569,7 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     GameData::combatLogs[GameData::logpos].damage = damage;
     if (GameData::healths[target].curHealth <= 0) {
         causeDeath(source, target);
+        GameData::tags[target] ^= ComponentTags::Collidable;
     }
     GameData::logpos++;
 }
@@ -559,6 +579,9 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
     if ((GameData::tags[target] & ComponentTags::Dead) == ComponentTags::Dead) {
         return;
     }
+
+    //printf("Ent %d is dead\n", target);
+
     GameData::tags[target] |= ComponentTags::Dead;
 
     if (source == target) { return; }

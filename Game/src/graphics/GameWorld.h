@@ -18,6 +18,7 @@ private:
     std::array <Tower*, NUM_TOWERS> towers;
     std::array <Resource*, NUM_RESOURCES> resources;
     std::array <Projectile*, NUM_PROJECTILES> projectiles;
+    std::array <Cube*, MAX_ENTITIES> AABBs;
 
     Skybox* env;
 
