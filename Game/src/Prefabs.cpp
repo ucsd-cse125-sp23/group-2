@@ -260,7 +260,7 @@ std::list<Entity> createHome() {
 std::list<Entity> createWoodResourceBasic()
 {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    Entity e = createEntity();
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -290,7 +290,7 @@ std::list<Entity> createWoodResourceBasic()
 std::list<Entity> createStoneResourceBasic()
 {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    Entity e = createEntity();
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
@@ -354,7 +354,7 @@ std::list<Entity> createPathColliders()
             if (Paths::path[p][i] == Paths::path[p][i + 1]) {
                 continue;
             }
-            Entity e = createEntity(RESOURCE_START, RESOURCE_END);
+            Entity e = createEntity();
             createdEntities.push_back(e);
             if (e == INVALID_ENTITY) {
                 return createdEntities;
