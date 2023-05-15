@@ -271,6 +271,7 @@ std::list<Entity> createWoodResourceBasic()
     GameData::models[e].asciiRep = 'R';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
     GameData::hostilities[e].team = Teams::Environment;
+    GameData::models[e].modelID = MODEL_ID_RESOURCE;
     GameData::hostilities[e].hostileTo = 0;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
@@ -302,6 +303,7 @@ std::list<Entity> createStoneResourceBasic()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
     GameData::hostilities[e].team = Teams::Environment;
     GameData::hostilities[e].hostileTo = 0;
+    GameData::models[e].modelID = MODEL_ID_RESOURCE;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
     GameData::resources[e].resources[ResourceType::Stone] = 20;
