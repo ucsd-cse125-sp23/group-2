@@ -288,6 +288,7 @@ void ServerGame::packageData(ServertoClientData& data)
     data.playerData = GameData::playerdata;
     data.buildcosts = buildcosts;
     data.serverStatus = currentStatus;
+    data.colliders = GameData::colliders;
 }
 
 const int GRID_X = 32;
