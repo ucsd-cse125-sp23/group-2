@@ -74,12 +74,14 @@ void EntityComponentSystem::sysGravity()
         {
             if (GameData::positions[e].y > 0) {
                 GameData::velocities[e].y += GRAVITY;
+                GameData::rigidbodies[e].grounded = false;
             }
             else {
                 GameData::positions[e].y = 0;
                 if (GameData::velocities[e].y < 0) {
                     GameData::velocities[e].y = 0;
                 }
+                GameData::rigidbodies[e].grounded = true;
             }
         }
     }
@@ -211,7 +213,7 @@ void EntityComponentSystem::sysDetectCollisions()
                         }
                         if (diff1.y < min) {
                             min = diff1.y;
-                            index =1;
+                            index = 1;
                         }
                         if (diff1.z < min) {
                             min = diff1.z;
@@ -259,7 +261,15 @@ void EntityComponentSystem::resolveCollisions()
         if (((GameData::tags[e] & (ComponentTags::RigidBody)) == ComponentTags::RigidBody)&& (GameData::tags[o] & (ComponentTags::RigidBody)) == ComponentTags::RigidBody)
         {
             if (!GameData::rigidbodies[e].fixed) {
-                GameData::positions[e] += ce.pen;
+                if (GameData::rigidbodies[o].fixed) {
+                    GameData::positions[e] += ce.pen;
+                }
+                else {
+                    GameData::positions[e] += ce.pen/2.0f;
+                }
+                if (glm::abs(ce.pen.x) < glm::abs(ce.pen.y) && glm::abs(ce.pen.z) < glm::abs(ce.pen.y)) {
+                    GameData::rigidbodies[e].grounded = true;
+                }
             }
 
         }

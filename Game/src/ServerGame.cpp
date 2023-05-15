@@ -223,7 +223,7 @@ void ServerGame::handleInputs()
                 }
             }
 
-            if (in.jump && GameData::positions[i].y <= 0) {
+            if (in.jump && GameData::rigidbodies[i].grounded) {
                 GameData::velocities[i].y = PLAYER_JPSPD;
             }
             incomingDataLists[i].pop();

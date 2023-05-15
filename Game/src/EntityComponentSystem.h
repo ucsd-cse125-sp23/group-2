@@ -89,10 +89,10 @@ struct Collider //Information for collisions
     //TODO: Pointer to a mesh for narrow phase
 };
 
-struct RigidBodyInfo //Information for collisions
+struct RigidBodyInfo //Information for physical objects;
 {
     bool fixed;
-    int mass;
+    bool grounded; //If object can be treated as being on groun (used for player jumping for now)
 };
 
 struct CollisionEvent {
