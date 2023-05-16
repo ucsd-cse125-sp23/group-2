@@ -38,6 +38,12 @@ public:
     // data buffer
     char network_data[MAX_PACKET_SIZE];
 
+    //Outgoing Gamstate Packet
+    Packet<ServertoClientData> gameStatePacket;
+
+    //Outgoing data buff
+    char packet_data[sizeof(Packet<ServertoClientData>)];
+
     // accept new connections
     bool acceptNewClient();
 
