@@ -44,7 +44,7 @@ std::vector<glm::vec3> PoissonDisk::genPoints()
 
 bool PoissonDisk::validPoint(glm::vec3& point, std::vector<glm::vec3> & final)
 {
-	if (point.x > WORLD_X || point.z > WORLD_Z || point.x <= 0 || point.z <= 0) {
+	if (point.x >= WORLD_X || point.z >= WORLD_Z || point.x <= 0 || point.z <= 0) {
 		return false;
 	}
 	int xpos = (int)(point.x / side);
@@ -54,6 +54,10 @@ bool PoissonDisk::validPoint(glm::vec3& point, std::vector<glm::vec3> & final)
 			if (pgrid[i][j] != -1) {
 
 				if (glm::distance(final.at(pgrid[i][j]), point) <= radius) {
+					return false;
+				}
+				if (i == xpos && j == zpos) {
+					printf("This shouldn;'t happen\n");
 					return false;
 				}
 				//printf("%f > %f\n", glm::distance(final.at(pgrid[i][j]), point), radius);

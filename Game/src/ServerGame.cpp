@@ -142,7 +142,11 @@ void ServerGame::initResources()
     printf("Number of resources %d", positions.size());
     
     for (glm::vec3 pos : positions) {
-        Entity e = prefabMap[Prefabs::BASIC_STONE_RESOURCE]().front();
+        Entity e;
+        if(std::rand() > RAND_MAX/2)
+            e = prefabMap[Prefabs::BASIC_STONE_RESOURCE]().front();
+        else
+            e = prefabMap[Prefabs::BASIC_WOOD_RESOURCE]().front();
         if (e != INVALID_ENTITY) {
             GameData::positions[e] = pos - glm::vec3(WORLD_X/2, 0, WORLD_Z/2);
         }
