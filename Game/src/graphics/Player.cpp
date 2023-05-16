@@ -9,7 +9,7 @@ Player::Player(int i) {
     color = glm::vec3(0.0f, 0.2f, 0.8f);
     
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-    stbi_set_flip_vertically_on_load(true);
+    stbi_set_flip_vertically_on_load(false);
 
     // configure global opengl state
     // -----------------------------
