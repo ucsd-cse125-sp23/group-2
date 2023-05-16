@@ -2,6 +2,7 @@
 
 ServerGame::ServerGame(void)
 {
+    std::srand(std::time(nullptr));
     currentStatus = init;
     // set up the server network to listen
     network = new ServerNetwork();
@@ -22,7 +23,7 @@ void ServerGame::initializeGame()
     initPlayers();
     initWaves();
     initBase();
-    //initResources();
+    initResources();
 }
 
 void ServerGame::initPlayers()
@@ -136,7 +137,8 @@ void ServerGame::waveSpawner()
 //Spawn Initial assortment of resources
 void ServerGame::initResources()
 {
-
+    //std::vector<glm::vec3> positions = PoissonDisk::genPoints();
+    //printf("Servertoclient data is beeg %d\n", sizeof(ServertoClientData));
 }
 
 // Update function called every tick
