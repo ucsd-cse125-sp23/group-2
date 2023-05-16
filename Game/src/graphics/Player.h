@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "core.h"
+#include "Cube.h"
 #include "Shader.h"
 #include "ObjectModel.h"
 class Player {
@@ -10,7 +11,6 @@ private:
     int id;
     glm::vec3 position;
     float orientation;
-
 
     glm::mat4 model;
     glm::vec3 color;

@@ -5,8 +5,13 @@
 #define NUM_TOWERS 40
 #define NUM_RESOURCES 100
 #define NUM_PROJECTILES 100
+#define NUM_BASES 1
 #define CLOG_MAXSIZE 50
 const float TICK_RATE = 128;
+
+//World Length and Width
+constexpr float WORLD_X = 164;
+constexpr float WORLD_Z = 164;
 
 //Speed of movement in units per second
 const float PLAYER_MVSPD_PERSEC = 20;
@@ -17,6 +22,8 @@ const float PLAYER_JPSPD_PERSEC = 30;
 //Base health values of different game entities
 const float PLAYER_BASE_HEALTH = 119;
 const float ENEMY_BASE_HEALTH = 100;
+const float HOME_BASE_HEALTH = 100;
+const float RESOURCE_BASE_HEALTH = 100;
 
 //Base damage per second dealt by towers
 const float TURRET_BASE_DPS = 200;
@@ -24,6 +31,7 @@ const float TURRET_BASE_DPS = 200;
 //ground enemy base movespeed in units/sec
 const float ENEMY_GND_MVSPD_PERSEC = 10;
 
+//How many seconds until first wave spawns
 const float ENEMY_SPAWNDELAY_SEC = 1;
 
 //ground enemy base attack damage
@@ -48,11 +56,19 @@ const float FLYING_HEIGHT = 10;
 
 #define NUM_ENEMY_TYPES 3
 
+#define NUM_RESOURCE_TYPES 3
+
+const float PATH_WIDTH = 3;
+
 //TOwer placement range
 const float TOWER_PLACEMENT_RANGE = 15;
 
 //Model ID's (For Cory/Will to decide)
-#define MODEL_ID_ROVER 0
+#define MODEL_ID_ROVER 1
+#define MODEL_ID_MOB 2
+#define MODEL_ID_TOWER 3
+#define MODEL_ID_RESOURCE 4
+#define MODEL_ID_PROJECTILE 5
 //.... ADD MORE ...
 
 
@@ -77,6 +93,8 @@ const float GRAVITY = (GRAVITY_SEC / (TICK_RATE * TICK_RATE));
 #define RESOURCE_END        (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES)
 #define PROJECTILE_START    (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES)
 #define PROJECTILE_END      (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES + NUM_PROJECTILES)
+#define BASE_START			(NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES + NUM_PROJECTILES)
+#define BASE_END			(NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES + NUM_PROJECTILES + NUM_BASES)
 
 //Total number of entities
-#define MAX_ENTITIES (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES + NUM_PROJECTILES)
+#define MAX_ENTITIES (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES + NUM_PROJECTILES + NUM_BASES)

@@ -2,7 +2,8 @@
 
 ServerGame::ServerGame(void)
 {
-
+    std::srand(std::time(nullptr));
+    currentStatus = init;
     // set up the server network to listen
     network = new ServerNetwork();
 
@@ -12,14 +13,17 @@ ServerGame::ServerGame(void)
 
     curTick = 0;
 
+    currentStatus = game;
 }
 
 //Populate Component Arrays
 void ServerGame::initializeGame()
 {
     initPlayers();
+    initPrefabs();
+    initBase();
+    initResources();
     initWaves();
-    //initResources();
 }
 
 void ServerGame::initPlayers()
@@ -33,6 +37,7 @@ void ServerGame::initPlayers()
         GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].modelID = MODEL_ID_ROVER;
         GameData::models[i].asciiRep = 'P';
+        //GameData::models[i].renderCollider = true;
         GameData::healths[i].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
         GameData::hostilities[i].team = Teams::Players;
         GameData::hostilities[i].hostileTo = Teams::Environment+Teams::Martians;
@@ -69,10 +74,10 @@ void ServerGame::initPlayers()
 
 }
 
-void ServerGame::initWaves() 
+void ServerGame::initWaves()
 {
     WaveData::currentWave = -1;
-    WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave+1];
+    WaveData::waveTick = ENEMY_SPAWNDELAY_TICKS;
 
     //Temp Nested for loop to populate wave vectors
     for (int i = 0; i < WAVE_COUNT; i++)
@@ -85,30 +90,38 @@ void ServerGame::initWaves()
     }
 }
 
-void ServerGame::waveSpawner() 
+void ServerGame::initBase()
+{
+    home = prefabMap[Prefabs::Home]().front();
+}
+
+void ServerGame::waveSpawner()
 {
     static int spawnCooldown = 0;
 
-    if (WaveData::waveTick <= 0) 
+    if (WaveData::waveTick <= 0)
     {
         WaveData::currentWave++;
-        WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave];
-        spawnCooldown = WaveData::waves[WaveData::currentWave].front().cooldown;
+        if (WaveData::currentWave < WAVE_COUNT)
+        {
+            WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave];
+            spawnCooldown = WaveData::waves[WaveData::currentWave].front().cooldown;
+        }
     }
 
-    if (WaveData::currentWave >= 0) 
+    if (WaveData::currentWave >= 0 && WaveData::currentWave < WAVE_COUNT)
     {
-        if (!WaveData::waves[WaveData::currentWave].empty()) 
+        if (!WaveData::waves[WaveData::currentWave].empty())
         {
-            if (spawnCooldown <= 0) 
+            if (spawnCooldown <= 0)
             {
                 list<Entity> e = prefabMap[WaveData::waves[WaveData::currentWave].front().id]();
-                if (e.front() != INVALID_ENTITY) 
+                if (e.front() != INVALID_ENTITY)
                 {
                     GameData::pathStructs[e.front()].path = WaveData::waves[WaveData::currentWave].front().path;
                     GameData::positions[e.front()] = Paths::path[GameData::pathStructs[e.front()].path][0];
                     WaveData::waves[WaveData::currentWave].pop();
-                    if (!WaveData::waves[WaveData::currentWave].empty()) 
+                    if (!WaveData::waves[WaveData::currentWave].empty())
                     {
                         spawnCooldown = WaveData::waves[WaveData::currentWave].front().cooldown;
                     }
@@ -121,9 +134,35 @@ void ServerGame::waveSpawner()
     WaveData::waveTick--;
 }
 
-//TODO
+//Spawn Initial assortment of resources
 void ServerGame::initResources()
 {
+    std::vector<glm::vec3> positions = PoissonDisk::genPoints();
+
+    printf("Number of resources %d", positions.size());
+
+    std::vector<Entity> resources = std::vector<Entity>();
+
+    for (glm::vec3 pos : positions) {
+        Entity e;
+        if(std::rand() > RAND_MAX/2)
+            e = prefabMap[Prefabs::BASIC_STONE_RESOURCE]().front();
+        else
+            e = prefabMap[Prefabs::BASIC_WOOD_RESOURCE]().front();
+        if (e != INVALID_ENTITY) {
+            GameData::positions[e] = pos - glm::vec3(WORLD_X/2, 0, WORLD_Z/2);
+            GameData::tags[e] |= ComponentTags::DiesOnCollision;
+            GameData::colliders[e].colwith |= CollisionLayer::UIObj;
+            resources.push_back(e);
+        }
+        //printf("Pos is %f, %f, %f\n", pos.x, pos.y, pos.z);
+    }
+    EntityComponentSystem::sysDetectCollisions();
+    EntityComponentSystem::resolveCollisions();
+    for (Entity e : resources) {
+        GameData::tags[e] ^= ComponentTags::DiesOnCollision;
+        GameData::colliders[e].colwith ^= CollisionLayer::UIObj;
+    }
 
 }
 
@@ -135,27 +174,43 @@ void ServerGame::update()
     {
         printf("New client has been connected to the server\n");
     }
-
     //Receve Input
     receiveFromClients();
 
-    handleInputs();
+    switch (currentStatus){
+    case init:
+        break;
+    case game:
+        handleInputs();
 
-    EntityComponentSystem::update();
+        EntityComponentSystem::update();
 
-    waveSpawner();
+        waveSpawner();
+
+        checkStatus();
+
+        if (curTick % 4 == 0) {
+            //asciiView();
+        }
+        curTick++;
+        break;
+    case loss:
+        break;
+    case win:
+        break;
+    default:
+        printf("Invalid server state!");
+    }
+
+
+
 
     //Print debug message buffer
     printf(debug);
     debug[0] = '\0';
 
-    if (curTick % 4 == 0) {
-        //asciiView();
-    }
-    curTick++;
+
 }
-
-
 
 void ServerGame::handleInputs()
 {
@@ -184,7 +239,7 @@ void ServerGame::handleInputs()
             if (in.shoot) {
                 target = in.shoot;
             }
-            
+
             if (in.build) {
                 changeState(i, PlayerState::Build);
             }
@@ -196,8 +251,8 @@ void ServerGame::handleInputs()
                 }
             }
 
-            if (in.jump && GameData::positions[i].y <= 0) {
-                GameData::velocities[i].velocity.y = PLAYER_JPSPD;
+            if (in.jump && GameData::rigidbodies[i].grounded) {
+                GameData::velocities[i].y = PLAYER_JPSPD;
             }
             incomingDataLists[i].pop();
         }
@@ -234,6 +289,27 @@ void ServerGame::sendPackets()
     network->sendActionPackets(newPackage);
 }
 
+void ServerGame::initPrefabs()
+{
+    list<Entity> pathlist = prefabMap[Prefabs::PathColliders]();
+    /*
+    for (Entity e : pathlist) {
+        if (e != INVALID_ENTITY) {
+            printf("Collider for ent %d, is (%f, %f, %f)\n", e, GameData::colliders[e].AABB.x, GameData::colliders[e].AABB.y, GameData::colliders[e].AABB.z);
+            printf("Position for ent %d, is (%f, %f, %f)\n", e, GameData::positions[e].x, GameData::positions[e].y, GameData::positions[e].z);
+            if (ComponentTags::Collidable & GameData::tags[e]) {
+                printf("can Collide\n");
+            }
+            if (GameData::activity[e]) {
+                printf("is active\n");
+            }
+        }
+    }
+    */
+    //Init Path Objects
+
+}
+
 void ServerGame::receiveFromClients()
 {
 
@@ -251,6 +327,9 @@ void ServerGame::packageData(ServertoClientData& data)
     data.logsize = GameData::logpos;
     data.currentWave = WaveData::currentWave + 1;
     data.numWaves = WAVE_COUNT;
+    data.playerData = GameData::playerdata;
+    data.buildcosts = buildcosts;
+    data.serverStatus = currentStatus;
     data.colliders = GameData::colliders;
 }
 
@@ -319,4 +398,15 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
     GameData::retplaces[i].targetPos = targetpos;
     GameData::retplaces[i].validTarget = true;
     //printf("Valid Target\n");
+}
+
+void ServerGame::checkStatus() {
+    if (WaveData::currentWave == WAVE_COUNT && WaveData::waveTick <= 0) {
+        printf("WIN! :D\n");
+        currentStatus = win;
+    }
+    if (!GameData::activity[home]) {
+        printf("LOSE! :(\n");
+        currentStatus = loss;
+    }
 }
