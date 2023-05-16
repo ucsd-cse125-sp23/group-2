@@ -1,4 +1,7 @@
 #include "PoissonDisk.h"
+namespace PoissonDisk {
+	int pgrid[gridx][gridz];
+}
 
 std::vector<glm::vec3> PoissonDisk::genPoints()
 {

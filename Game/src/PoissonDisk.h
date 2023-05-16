@@ -11,7 +11,7 @@ namespace PoissonDisk {
 	constexpr float side = (radius / 1.41421356237);
 	static constexpr size_t gridx = WORLD_X / side;
 	static constexpr size_t gridz = WORLD_Z / side;
-	int pgrid[gridx][gridz];
+	extern int pgrid[gridx][gridz];
 	std::vector<glm::vec3> genPoints();
 	bool validPoint(glm::vec3 & point, std::vector<glm::vec3> & final);
 }
