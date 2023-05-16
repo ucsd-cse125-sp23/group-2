@@ -31,9 +31,6 @@ std::list<Entity> createWoodResourceBasic();
 std::list<Entity> createStoneResourceBasic();
 std::list<Entity> createPathColliders();
 
-const int NUM_PREFABS = 9;
-using Prefab = uint32_t;
-
 namespace Prefabs {
 	enum Prefab : uint32_t{
 		TowerBasic,
@@ -48,6 +45,8 @@ namespace Prefabs {
 
 		PROJECTILE_MARKER,//Put Projectiles Above this marker
 		EnemyGroundBasic = PROJECTILE_MARKER,
+		EnemyGroundTank,
+		EnemyFlyingBasic,
 
 		ENEMY_MARKER,//Put Enemies Above this marker
 		BASIC_WOOD_RESOURCE = ENEMY_MARKER,
@@ -78,30 +77,18 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createProjectileChaos,
 	&createProjectileRandom,
 	&createEnemyGroundBasic,
+	&createEnemyGroundTank,
+	&createEnemyFlyingBasic,
 	&createWoodResourceBasic,
 	&createStoneResourceBasic,
 	&createTowerReticle,
-	&createTowerBasic,
-	&createEnemyGroundTank,
-	&createEnemyFlyingBasic,
 	&createPathColliders,
 	&createHome
 };
 
-namespace Prefabs {
-	constexpr Prefab ProjectileBasic = 0;
-	constexpr Prefab ProjectileSpread5 = 1;
-	constexpr Prefab ProjectileChaos = 2;
-	constexpr Prefab ProjectileRandom = 3;
-	constexpr Prefab EnemyGroundBasic = 4;
-	constexpr Prefab TowerReticle = 5;
-	constexpr Prefab TowerBasic = 6;
-	constexpr Prefab EnemyGroundTank = 7;
-	constexpr Prefab EnemyFlyingBasic = 8;
-};
 
 namespace Paths {
-	extern constexpr int pathCount = 5;
+	extern constexpr int pathCount = 4;
 	extern const glm::vec3 path[pathCount][PATH_LENGTH];
 };
 

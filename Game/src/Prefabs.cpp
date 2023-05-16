@@ -10,6 +10,8 @@ std::list<Entity> createProjectileBasic() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
+    GameData::tags[e] = 0;
+    GameData::states[e] = 0;
     GameData::activity[e] = true;
     GameData::positions[e] = glm::vec3(0, 0, -4);
     GameData::velocities[e].velocity = glm::vec3(0, 0, -0.5);

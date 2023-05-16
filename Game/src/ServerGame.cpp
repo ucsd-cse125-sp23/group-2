@@ -252,7 +252,7 @@ void ServerGame::handleInputs()
             }
 
             if (in.jump && GameData::rigidbodies[i].grounded) {
-                GameData::velocities[i].y = PLAYER_JPSPD;
+                GameData::velocities[i].velocity.y = PLAYER_JPSPD;
             }
             incomingDataLists[i].pop();
         }

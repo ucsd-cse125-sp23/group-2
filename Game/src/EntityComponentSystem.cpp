@@ -121,7 +121,7 @@ void EntityComponentSystem::sysGravity()
         if ((GameData::tags[e] & ComponentTags::RigidBody) == ComponentTags::RigidBody)
         {
             if (GameData::positions[e].y > 0) {
-                GameData::velocities[e].y += GRAVITY;
+                GameData::velocities[e].velocity.y += GRAVITY;
                 GameData::rigidbodies[e].grounded = false;
             }
             else {
@@ -518,7 +518,7 @@ void EntityComponentSystem::sysBuild()
                         else {
                             //Transform positions and velocity relative to attacker
                             GameData::positions[b] = transform * glm::vec4(GameData::positions[b], 1);
-                            GameData::velocities[b] = transform * glm::vec4(GameData::velocities[b], 0);
+                            GameData::velocities[b].velocity = transform * glm::vec4(GameData::velocities[b].velocity, 0);
                             //Set creator
                             GameData::tags[b] |= ComponentTags::Created;
                             GameData::creators[b] = e;

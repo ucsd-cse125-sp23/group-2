@@ -29,7 +29,7 @@ const float RESOURCE_BASE_HEALTH = 100;
 const float TURRET_BASE_DPS = 200;
 
 //ground enemy base movespeed in units/sec
-const float ENEMY_GND_MVSPD_PERSEC = 10;
+const float ENEMY_GND_MVSPD_PERSEC = 5;
 
 //How many seconds until first wave spawns
 const float ENEMY_SPAWNDELAY_SEC = 1;
