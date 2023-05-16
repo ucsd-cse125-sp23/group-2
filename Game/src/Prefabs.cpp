@@ -324,7 +324,6 @@ std::list<Entity> createStoneResourceBasic()
 
 
 namespace Paths {
-    int const pathCount = 4;
     const glm::vec3 path[pathCount][PATH_LENGTH] =
     {
         { glm::vec3(60,0,0), glm::vec3(40,0,0), glm::vec3(40,0,20), glm::vec3(20,0,20), glm::vec3(20,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) },

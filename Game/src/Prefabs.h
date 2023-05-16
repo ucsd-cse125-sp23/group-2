@@ -83,8 +83,8 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 
 
 namespace Paths {
-	extern int const pathCount;
-	extern const glm::vec3 path[4][PATH_LENGTH];
+	extern constexpr int pathCount = 5;
+	extern const glm::vec3 path[pathCount][PATH_LENGTH];
 };
 
 struct enemy {
