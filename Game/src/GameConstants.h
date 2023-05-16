@@ -40,6 +40,9 @@ const float ENEMEY_GND_BASE_DMG = 30;
 //gravitational acceleration in units per second squared
 const float GRAVITY_SEC = -120;
 
+//Default player spawn timer in seconds
+const float SPAWN_TIMER = 5.0;
+
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 8
 
