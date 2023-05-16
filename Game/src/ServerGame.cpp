@@ -141,6 +141,8 @@ void ServerGame::initResources()
 
     printf("Number of resources %d", positions.size());
     
+    std::vector<Entity> resources = std::vector<Entity>();
+
     for (glm::vec3 pos : positions) {
         Entity e;
         if(std::rand() > RAND_MAX/2)
@@ -149,9 +151,17 @@ void ServerGame::initResources()
             e = prefabMap[Prefabs::BASIC_WOOD_RESOURCE]().front();
         if (e != INVALID_ENTITY) {
             GameData::positions[e] = pos - glm::vec3(WORLD_X/2, 0, WORLD_Z/2);
-        }
-        
+            GameData::tags[e] |= ComponentTags::DiesOnCollision;
+            GameData::colliders[e].colwith |= CollisionLayer::UIObj;
+            resources.push_back(e);
+        }      
         //printf("Pos is %f, %f, %f\n", pos.x, pos.y, pos.z);
+    }
+    EntityComponentSystem::sysDetectCollisions();
+    EntityComponentSystem::resolveCollisions();
+    for (Entity e : resources) {
+        GameData::tags[e] ^= ComponentTags::DiesOnCollision;
+        GameData::colliders[e].colwith ^= CollisionLayer::UIObj;
     }
     
 }
