@@ -151,6 +151,7 @@ struct ScoreCard {
 struct AllPlayerData {
     std::array<ScoreCard, NUM_PLAYERS> scores;
     std::array<int, NUM_RESOURCE_TYPES> resources;
+    std::array<float, NUM_PLAYERS> spawntimers;
 };
 
 struct ResourceContainer {
