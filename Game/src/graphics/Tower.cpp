@@ -1,11 +1,12 @@
-#include "Mob.h"
+#include "Tower.h"
 
-Mob::Mob(int i) {
+Tower::Tower(int i) {
     // Model matrix.
     active = false;
     id = i;
+    orientation = 0;
     model = glm::mat4(1.0f);
-    color = glm::vec3(0.0f, 0.0f, 1.0f);
+    color = glm::vec3(0.0f, 0.2f, 0.8f);
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     stbi_set_flip_vertically_on_load(true);
@@ -22,27 +23,41 @@ Mob::Mob(int i) {
     // -----------
     ourModel = new ObjectModel("../assets/cube.obj");
 
-}
-
-Mob::~Mob() {
-    // Delete the VBOs and the VAO.
 
 }
 
-void Mob::draw(const glm::mat4& viewProjMtx, Shader* shader) {
+Tower::~Tower() {
+
+}
+
+void Tower::draw(const glm::mat4& viewProjMtx) {
     // actiavte the shader program
-    shader->use();
+    ourShader->use();
 
     // get the locations and send the uniforms to the shader
-    shader->setMat4("viewProj", viewProjMtx);
-    shader->setMat4("model", model);
+    ourShader->setMat4("viewProj", viewProjMtx);
+    ourShader->setMat4("model", model);
 
     ourModel->Draw(*ourShader);
 
     glUseProgram(0);
+
 }
 
+void Tower::update(glm::vec3& position, float deg) {
+    this->position = position;
+    float orientationDiff = orientation - deg;
+    orientation = deg;
+    /*
+    float angle = orientation;
+    if (v.x != 0) {
+       angle = glm::atan(v.z / v.x);
+    }
+    float deltaAngle = angle - orientation;
 
-void Mob::update(glm::vec3& position, float deg) {
+    orientation = angle;
+    model = model * glm::rotate(deltaAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+    */
+    model *= glm::rotate(glm::radians(orientationDiff), glm::vec3(0.0f, 1.0f, 0.0f));
     model[3] = glm::vec4(position, 1.0f);
 }

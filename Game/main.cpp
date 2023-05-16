@@ -53,7 +53,7 @@ void serverLoop(void* arg)
         }
         else {
             printf("server update took too long!\n");
-        }
+        } 
         server->sendPackets();
     }
 }

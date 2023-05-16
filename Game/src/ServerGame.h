@@ -6,6 +6,9 @@
 #include "EntityComponentSystem.h"
 #include "GameConstants.h"
 #include "Prefabs.h"
+#include <ctime>
+#include "PoissonDisk.h"
+
 #define DEBUG_BUFFER 100000
 namespace ECS = EntityComponentSystem;
 class ServerGame
@@ -26,12 +29,6 @@ public:
 
     void initializeGame();
 
-    void initPlayers();
-
-    void initWaves();
-
-    void initResources();
-
     void handleInputs();
 
     void update();
@@ -39,6 +36,8 @@ public:
     void waveSpawner();
 
     void sendPackets();
+
+    void initPrefabs();
 
 private:
     struct PlayerState {
@@ -57,9 +56,30 @@ private:
 
     unsigned int curTick;
 
-    void playerAttack(Entity i, glm::vec3& camdir, glm::vec3& campos);
-
     void changeState(Entity e, State post);
 
+    void playerAttack(Entity i, glm::vec3& camdir, glm::vec3& campos);
+
     void playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, float range);
+
+    void initPlayers();
+
+    void initWaves();
+
+    void initResources();
+
+    void initBase();
+
+    void checkStatus();
+
+    Entity home;
+
+    enum ServerStatus {
+        init,
+        game,
+        win,
+        loss
+    };
+
+    ServerStatus currentStatus;
 };
