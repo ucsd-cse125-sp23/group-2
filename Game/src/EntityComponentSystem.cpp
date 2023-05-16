@@ -395,10 +395,15 @@ void EntityComponentSystem::sysDeathStatus()
         //set to inactive if dying flag
         if ((GameData::tags[e] & ComponentTags::Dead) == ComponentTags::Dead)
         {
-            //TEST OUTPUT FOR VISUALIZER
-            GameData::models[e].asciiRep = 'X';
-            GameData::activity[e] = false;
-            //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
+            if (e < NUM_PLAYERS) {
+
+            }
+            else {
+                //TEST OUTPUT FOR VISUALIZER
+                GameData::models[e].asciiRep = 'X';
+                GameData::activity[e] = false;
+                //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
+            }
         }
 
     }
@@ -669,6 +674,7 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
     GameData::combatLogs[GameData::logpos].target = target;
     GameData::combatLogs[GameData::logpos].killed = true;
     GameData::logpos++;
+
     if (source < NUM_PLAYERS) {
         if ((GameData::tags[target] & ComponentTags::WorthPoints) == ComponentTags::WorthPoints) {
             GameData::playerdata.scores[source].points += GameData::pointvalues[target];
