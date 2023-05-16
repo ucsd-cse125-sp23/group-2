@@ -68,7 +68,7 @@ link_directories(
 )
 
 # Add executable
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS}  "src/Prefabs.h" "src/Prefabs.cpp")
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS}  "src/Prefabs.h" "src/Prefabs.cpp" "src/PoissonDisk.h" "src/PoissonDisk.cpp")
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3.lib assimp-vc143-mt.lib)

@@ -2,6 +2,7 @@
 
 ServerGame::ServerGame(void)
 {
+    std::srand(std::time(nullptr));
     currentStatus = init;
     // set up the server network to listen
     network = new ServerNetwork();
@@ -18,11 +19,11 @@ ServerGame::ServerGame(void)
 //Populate Component Arrays
 void ServerGame::initializeGame()
 {
-    initPrefabs();
     initPlayers();
-    initWaves();
+    initPrefabs();
     initBase();
-    //initResources();
+    initResources();
+    initWaves();
 }
 
 void ServerGame::initPlayers()
@@ -136,7 +137,33 @@ void ServerGame::waveSpawner()
 //Spawn Initial assortment of resources
 void ServerGame::initResources()
 {
+    std::vector<glm::vec3> positions = PoissonDisk::genPoints();
 
+    printf("Number of resources %d", positions.size());
+    
+    std::vector<Entity> resources = std::vector<Entity>();
+
+    for (glm::vec3 pos : positions) {
+        Entity e;
+        if(std::rand() > RAND_MAX/2)
+            e = prefabMap[Prefabs::BASIC_STONE_RESOURCE]().front();
+        else
+            e = prefabMap[Prefabs::BASIC_WOOD_RESOURCE]().front();
+        if (e != INVALID_ENTITY) {
+            GameData::positions[e] = pos - glm::vec3(WORLD_X/2, 0, WORLD_Z/2);
+            GameData::tags[e] |= ComponentTags::DiesOnCollision;
+            GameData::colliders[e].colwith |= CollisionLayer::UIObj;
+            resources.push_back(e);
+        }      
+        //printf("Pos is %f, %f, %f\n", pos.x, pos.y, pos.z);
+    }
+    EntityComponentSystem::sysDetectCollisions();
+    EntityComponentSystem::resolveCollisions();
+    for (Entity e : resources) {
+        GameData::tags[e] ^= ComponentTags::DiesOnCollision;
+        GameData::colliders[e].colwith ^= CollisionLayer::UIObj;
+    }
+    
 }
 
 // Update function called every tick

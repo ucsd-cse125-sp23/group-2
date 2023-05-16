@@ -271,10 +271,12 @@ std::list<Entity> createWoodResourceBasic()
     GameData::models[e].asciiRep = 'R';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
     GameData::hostilities[e].team = Teams::Environment;
+    GameData::models[e].modelID = MODEL_ID_RESOURCE;
     GameData::hostilities[e].hostileTo = 0;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
     GameData::resources[e].resources[ResourceType::Wood] = 20;
+    GameData::rigidbodies[e].fixed = true;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -302,9 +304,11 @@ std::list<Entity> createStoneResourceBasic()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
     GameData::hostilities[e].team = Teams::Environment;
     GameData::hostilities[e].hostileTo = 0;
+    GameData::models[e].modelID = MODEL_ID_RESOURCE;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
     GameData::resources[e].resources[ResourceType::Stone] = 20;
+    GameData::rigidbodies[e].fixed = true;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -320,7 +324,6 @@ std::list<Entity> createStoneResourceBasic()
 
 
 namespace Paths {
-    int const pathCount = 4;
     const glm::vec3 path[pathCount][PATH_LENGTH] =
     {
         { glm::vec3(60,0,0), glm::vec3(40,0,0), glm::vec3(40,0,20), glm::vec3(20,0,20), glm::vec3(20,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) },
@@ -343,7 +346,7 @@ namespace WaveData {
 //Define Tower Build costs
 const std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts =
 {
-    {0, 0, 0}
+    {20, 20, 20}
 };
 
 std::list<Entity> createPathColliders()
