@@ -33,7 +33,7 @@ void ServerGame::initPlayers()
     {
         GameData::activity[i] = true;
         GameData::positions[i] = glm::vec3(0, 0, 0);
-        GameData::velocities[i] = glm::vec3(0, 0, 0);
+        GameData::velocities[i].velocity = glm::vec3(0, 0, 0);
         GameData::colliders[i] = { glm::vec3(1, 1, 1) };
         GameData::models[i].modelID = MODEL_ID_ROVER;
         GameData::models[i].asciiRep = 'P';
@@ -74,7 +74,7 @@ void ServerGame::initPlayers()
 
 }
 
-void ServerGame::initWaves() 
+void ServerGame::initWaves()
 {
     WaveData::currentWave = -1;
     WaveData::waveTick = ENEMY_SPAWNDELAY_TICKS;
@@ -84,7 +84,7 @@ void ServerGame::initWaves()
     {
         for (int j = 0; j < 15; j++)
         {
-            enemy e = { Prefabs::EnemyGroundBasic, rand() % Paths::pathCount, 1 * TICK_RATE };
+            enemy e = { WaveData::enemyTypes[rand() % NUM_ENEMY_TYPES], rand() % Paths::pathCount, 1 * TICK_RATE };
             WaveData::waves[i].push(e);
         }
     }
@@ -95,11 +95,11 @@ void ServerGame::initBase()
     home = prefabMap[Prefabs::Home]().front();
 }
 
-void ServerGame::waveSpawner() 
+void ServerGame::waveSpawner()
 {
     static int spawnCooldown = 0;
 
-    if (WaveData::waveTick <= 0) 
+    if (WaveData::waveTick <= 0)
     {
         WaveData::currentWave++;
         if (WaveData::currentWave < WAVE_COUNT)
@@ -109,19 +109,19 @@ void ServerGame::waveSpawner()
         }
     }
 
-    if (WaveData::currentWave >= 0 && WaveData::currentWave < WAVE_COUNT) 
+    if (WaveData::currentWave >= 0 && WaveData::currentWave < WAVE_COUNT)
     {
-        if (!WaveData::waves[WaveData::currentWave].empty()) 
+        if (!WaveData::waves[WaveData::currentWave].empty())
         {
-            if (spawnCooldown <= 0) 
+            if (spawnCooldown <= 0)
             {
                 list<Entity> e = prefabMap[WaveData::waves[WaveData::currentWave].front().id]();
-                if (e.front() != INVALID_ENTITY) 
+                if (e.front() != INVALID_ENTITY)
                 {
                     GameData::pathStructs[e.front()].path = WaveData::waves[WaveData::currentWave].front().path;
                     GameData::positions[e.front()] = Paths::path[GameData::pathStructs[e.front()].path][0];
                     WaveData::waves[WaveData::currentWave].pop();
-                    if (!WaveData::waves[WaveData::currentWave].empty()) 
+                    if (!WaveData::waves[WaveData::currentWave].empty())
                     {
                         spawnCooldown = WaveData::waves[WaveData::currentWave].front().cooldown;
                     }
@@ -140,7 +140,7 @@ void ServerGame::initResources()
     std::vector<glm::vec3> positions = PoissonDisk::genPoints();
 
     printf("Number of resources %d", positions.size());
-    
+
     std::vector<Entity> resources = std::vector<Entity>();
 
     for (glm::vec3 pos : positions) {
@@ -154,7 +154,7 @@ void ServerGame::initResources()
             GameData::tags[e] |= ComponentTags::DiesOnCollision;
             GameData::colliders[e].colwith |= CollisionLayer::UIObj;
             resources.push_back(e);
-        }      
+        }
         //printf("Pos is %f, %f, %f\n", pos.x, pos.y, pos.z);
     }
     EntityComponentSystem::sysDetectCollisions();
@@ -163,7 +163,7 @@ void ServerGame::initResources()
         GameData::tags[e] ^= ComponentTags::DiesOnCollision;
         GameData::colliders[e].colwith ^= CollisionLayer::UIObj;
     }
-    
+
 }
 
 // Update function called every tick
@@ -203,7 +203,7 @@ void ServerGame::update()
     }
 
 
-    
+
 
     //Print debug message buffer
     printf(debug);
@@ -226,20 +226,20 @@ void ServerGame::handleInputs()
         while (!incomingDataLists[i].empty())
         {
             ClienttoServerData in = incomingDataLists[i].front();
-            GameData::velocities[i] = glm::vec3(0,GameData::velocities[i].y,0);
+            GameData::velocities[i].velocity = glm::vec3(0,GameData::velocities[i].velocity.y,0);
             camDirection = in.camDirectionVector;
             camPosition = in.camPosition;
             if ( ((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
                 float camAngle = in.camAngleAroundPlayer;
                 glm::vec3 moveDirection = glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f));
                 GameData::models[i].modelOrientation = -camAngle + glm::degrees(glm::acos(moveDirection.y));
-                GameData::velocities[i] += PLAYER_MVSPD * moveDirection;
+                GameData::velocities[i].velocity += PLAYER_MVSPD * moveDirection;
             }
 
             if (in.shoot) {
                 target = in.shoot;
             }
-            
+
             if (in.build) {
                 changeState(i, PlayerState::Build);
             }
@@ -252,7 +252,7 @@ void ServerGame::handleInputs()
             }
 
             if (in.jump && GameData::rigidbodies[i].grounded) {
-                GameData::velocities[i].y = PLAYER_JPSPD;
+                GameData::velocities[i].velocity.y = PLAYER_JPSPD;
             }
             incomingDataLists[i].pop();
         }

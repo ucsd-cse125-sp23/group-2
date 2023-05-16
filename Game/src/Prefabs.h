@@ -3,6 +3,7 @@
 #include <queue>
 #include "graphics/core.h"
 #include "GameConstants.h"
+//Do not include EntityComponentSystem.h
 
 /*
 * The default axis is negative z is the towards the target
@@ -23,6 +24,8 @@ std::list<Entity> createProjectileRandom();
 std::list<Entity> createEnemyGroundBasic();
 std::list<Entity> createTowerReticle();
 std::list<Entity> createTowerBasic();
+std::list<Entity> createEnemyGroundTank();
+std::list<Entity> createEnemyFlyingBasic();
 std::list<Entity> createHome();
 std::list<Entity> createWoodResourceBasic();
 std::list<Entity> createStoneResourceBasic();
@@ -32,17 +35,19 @@ namespace Prefabs {
 	enum Prefab : uint32_t{
 		TowerBasic,
 
-		
+
 		TOWER_MARKER,//Put Towers Above this marker
 		ProjectileBasic = TOWER_MARKER,
 		ProjectileSpread5,
 		ProjectileChaos,
 		ProjectileRandom,
 
-		
+
 		PROJECTILE_MARKER,//Put Projectiles Above this marker
 		EnemyGroundBasic = PROJECTILE_MARKER,
-	
+		EnemyGroundTank,
+		EnemyFlyingBasic,
+
 		ENEMY_MARKER,//Put Enemies Above this marker
 		BASIC_WOOD_RESOURCE = ENEMY_MARKER,
 		BASIC_STONE_RESOURCE,
@@ -62,7 +67,6 @@ const int NUM_PROJECTILE_PREFAB = Prefabs::PROJECTILE_MARKER - Prefabs::TOWER_MA
 const int NUM_ENEMY_PREFAB = Prefabs::ENEMY_MARKER - Prefabs::PROJECTILE_MARKER;
 const int NUM_RESOURCE_PREFAB = Prefabs::RESOURCE_MARKER - Prefabs::ENEMY_MARKER;
 using namespace Prefabs;
-
 typedef std::list<Entity>(*PrefabFunction)(); // function pointer type
 
 //Add functions in same order as prefabs above
@@ -73,6 +77,8 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createProjectileChaos,
 	&createProjectileRandom,
 	&createEnemyGroundBasic,
+	&createEnemyGroundTank,
+	&createEnemyFlyingBasic,
 	&createWoodResourceBasic,
 	&createStoneResourceBasic,
 	&createTowerReticle,
@@ -81,9 +87,8 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 };
 
 
-
 namespace Paths {
-	extern constexpr int pathCount = 5;
+	extern constexpr int pathCount = 4;
 	extern const glm::vec3 path[pathCount][PATH_LENGTH];
 };
 
@@ -100,9 +105,11 @@ namespace WaveData {
 	extern int waveTimers[WAVE_COUNT]; //Time before starting wave
 
 	extern int waveTick; //countdown timer for waves
-	
+
+	extern int enemyTypes[NUM_ENEMY_TYPES]; //For random enemy selection
+
 	extern std::queue<enemy> waves[WAVE_COUNT];
-}
+};
 
 //Define buildcosts
 extern const std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;

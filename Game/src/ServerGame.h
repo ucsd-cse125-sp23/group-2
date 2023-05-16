@@ -56,9 +56,9 @@ private:
 
     unsigned int curTick;
 
-    void playerAttack(Entity i, glm::vec3& camdir, glm::vec3& campos);
-
     void changeState(Entity e, State post);
+
+    void playerAttack(Entity i, glm::vec3& camdir, glm::vec3& campos);
 
     void playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, float range);
 

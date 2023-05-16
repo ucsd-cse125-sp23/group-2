@@ -27,7 +27,12 @@ using Tag = uint32_t;
 
 using Active = bool; //Is Entity active in the scene?
 using Position = glm::vec3; //Entity Position in 3D Space
-using Velocity = glm::vec3; //Entity Velocity in 3D Space
+struct VelocityData
+{
+    glm::vec3 velocity; //vector that is added to current position each tick
+    float moveSpeed; //scalar multiplied by velocity vector to modify speed
+    bool flying; //modify the height of the target positions to hover above them
+};
 using TeamID = uint32_t;
 using State = Tag;
 using Points = int;
@@ -59,7 +64,11 @@ struct PathData //Data for entity pathing
 {
     int path; //The chosen path of the entity ( Paths::path[path#][node#] )
     int currentNode; //Index of current node that entity is pathing towards
-    float moveSpeed; //distance enemy covers in 1 server tick
+};
+
+struct HomingData //Data for tracking another entity
+{
+    Entity trackedEntity; //The entity to follow (player, tower, enemy, etc...)
 };
 
 struct Model //3D Model to render for the entity
@@ -167,10 +176,16 @@ namespace ComponentTags
     constexpr Tag LifeSpan = 0x1 << 12;
     constexpr Tag Created = 0x1 << 13;
     constexpr Tag Builder = 0x1 << 14;
-    constexpr Tag Dead = 0x1 << 15;
-    constexpr Tag ResourceContainer = 0x1 << 16;
-    constexpr Tag WorthPoints = 0x1 << 17;
+    constexpr Tag HomingData = 0x1 << 15;
+    constexpr Tag Dead = 0x1 << 16;
+    constexpr Tag ResourceContainer = 0x1 << 17;
+    constexpr Tag WorthPoints = 0x1 << 18;
 }
+
+namespace enemyState {
+    constexpr State Pathing = ComponentTags::PathData;
+    constexpr State Homing = ComponentTags::HomingData;
+};
 
 
 
@@ -180,9 +195,9 @@ namespace GameData
     //Entity Tag is a 32 bit int that denotes the components attached to the enitity
     extern std::array<Tag, MAX_ENTITIES> tags;
 
-    extern std::array<Active, MAX_ENTITIES> activity;   
+    extern std::array<Active, MAX_ENTITIES> activity;
     extern std::array<Position, MAX_ENTITIES> positions;
-    extern std::array<Velocity, MAX_ENTITIES> velocities;
+    extern std::array<VelocityData, MAX_ENTITIES> velocities;
     extern std::array<PathData, MAX_ENTITIES> pathStructs;
     extern std::array<Model, MAX_ENTITIES> models;
     extern std::array<Turret, MAX_ENTITIES> turrets;
@@ -197,6 +212,7 @@ namespace GameData
     extern std::array<SpawnRate, MAX_ENTITIES> spawnrates;
     extern std::array<State, MAX_ENTITIES> states;
     extern std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
+    extern std::array<HomingData, MAX_ENTITIES> homingStructs;
     extern std::array<ResourceContainer, MAX_ENTITIES> resources;
     extern std::array<Points, MAX_ENTITIES> pointvalues;
 
@@ -246,6 +262,11 @@ namespace EntityComponentSystem
     //Building shit
     void sysBuild();
 
+    //tracking entities
+    void sysHoming();
+
+    void sysStateMachine();
+
     //Helper functions
     Entity createEntity(int begin = 0, int end = MAX_ENTITIES);
 
@@ -259,5 +280,10 @@ namespace EntityComponentSystem
 
     //Check Collisions between two colliders and return pen
     bool colCheck(Entity e, Entity o);
-  
+
+    //Finds the closest path node to an enemy to put them back on track
+    void rePath(Entity e);
+
+    void changeState(Entity e, State post);
+
 };
