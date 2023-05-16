@@ -44,6 +44,7 @@ struct ServertoClientData {
     AllPlayerData playerData;
     std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;
     int serverStatus;
+    float waveTimer;
 };
 
 //Struct for intializing the client id

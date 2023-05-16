@@ -331,6 +331,7 @@ void ServerGame::packageData(ServertoClientData& data)
     data.buildcosts = buildcosts;
     data.serverStatus = currentStatus;
     data.colliders = GameData::colliders;
+    data.waveTimer = WaveData::waveTick / TICK_RATE;
 }
 
 const int GRID_X = 32;
