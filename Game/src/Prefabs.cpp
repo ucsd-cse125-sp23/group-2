@@ -276,6 +276,7 @@ std::list<Entity> createWoodResourceBasic()
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
     GameData::resources[e].resources[ResourceType::Wood] = 20;
+    GameData::rigidbodies[e].fixed = true;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -307,6 +308,7 @@ std::list<Entity> createStoneResourceBasic()
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
     GameData::resources[e].resources[ResourceType::Stone] = 20;
+    GameData::rigidbodies[e].fixed = true;
 
     GameData::tags[e] =
         ComponentTags::Position +

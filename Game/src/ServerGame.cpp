@@ -137,8 +137,19 @@ void ServerGame::waveSpawner()
 //Spawn Initial assortment of resources
 void ServerGame::initResources()
 {
-    //std::vector<glm::vec3> positions = PoissonDisk::genPoints();
-    //printf("Servertoclient data is beeg %d\n", sizeof(ServertoClientData));
+    std::vector<glm::vec3> positions = PoissonDisk::genPoints();
+
+    printf("Number of resources %d", positions.size());
+    
+    for (glm::vec3 pos : positions) {
+        Entity e = prefabMap[Prefabs::BASIC_STONE_RESOURCE]().front();
+        if (e != INVALID_ENTITY) {
+            GameData::positions[e] = pos - glm::vec3(WORLD_X/2, 0, WORLD_Z/2);
+        }
+        
+        //printf("Pos is %f, %f, %f\n", pos.x, pos.y, pos.z);
+    }
+    
 }
 
 // Update function called every tick
