@@ -5,23 +5,24 @@ void GameWorld::init() {
 	currID = 0;
 	env = new Skybox();
 
-	for (int i = 0; i < NUM_PLAYERS; i++) {
-		players[i] = new Player(i);
-	}
-	for (int i = 0; i < NUM_ENEMIES; i++) {
-		mobs[i] = new Mob(i);
-	}
-	for (int i = 0; i < NUM_TOWERS; i++) {
-		towers[i] = new Tower(i);
-	}
-	for (int i = 0; i < NUM_PROJECTILES; i++) {
-		projectiles[i] = new Projectile(i);
-	}
-	for (int i = 0; i < NUM_RESOURCES; i++) {
-		resources[i] = new Resource(i);
-	}
+	models[MODEL_ID_CUBE] = new ObjectModel("../assets/cube/cube.obj");
+	models[MODEL_ID_ROVER] = new ObjectModel("../assets/rover/rover.obj");
+	models[MODEL_ID_MOB] = new ObjectModel("../assets/martian/martian.obj");
+	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/tower.obj");
+	//replace once models are done
+	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/cube/cube.obj");
+	models[MODEL_ID_PROJECTILE] = new ObjectModel("../assets/cube/cube.obj");
+
+	shaders[MODEL_ID_CUBE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_ROVER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_MOB] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_TOWER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	//replace once models are done
+	shaders[MODEL_ID_RESOURCE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PROJECTILE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
 	for (int i = 0; i < MAX_ENTITIES; i++) {
+		entities[i] = new RenderEntity(i);
 		AABBs[i] = new Cube();
 	}
 	cam = new Camera();
@@ -29,13 +30,7 @@ void GameWorld::init() {
 
 void GameWorld::update(ServertoClientData& incomingData, int id) {
 
-	unsigned int playerIndex = 0;
-	unsigned int mobIndex = 0;
-	unsigned int towerIndex = 0;
-	unsigned int projIndex = 0;
-	unsigned int resourceIndex = 0;
 	for (int i = 0; i < incomingData.activity.size(); i++) {
-
 		if (incomingData.activity[i] && incomingData.models[i].renderCollider) {
 			AABBs[i]->setActive(true);
 			AABBs[i]->update(incomingData.positions[i], incomingData.colliders[i].AABB);
@@ -43,48 +38,12 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		else {
 			AABBs[i]->setActive(false);
 		}
-		switch (incomingData.models[i].modelID) {
-		case MODEL_ID_ROVER:
-			players[i]->setActive(incomingData.activity[i]);
-			if (incomingData.activity[i]) {
-				players[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
-			}
-			
-			playerIndex++;
-			break;
-		case MODEL_ID_MOB:
-			mobs[mobIndex]->setActive(incomingData.activity[i]);
-			if (incomingData.activity[i]) {
-				mobs[mobIndex]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
-			}
-			mobIndex++;
-			break;
-		case MODEL_ID_TOWER:
-			towers[towerIndex]->setActive(incomingData.activity[i]);
-			if (incomingData.activity[i]) {
-				towers[towerIndex]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
-			}
-			towerIndex++;
-			break;
-		case MODEL_ID_PROJECTILE:
-			projectiles[projIndex]->setActive(incomingData.activity[i]);
-			if (incomingData.activity[i]) {
-				projectiles[projIndex]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
-			}
-			projIndex++;
-			break;
-		case MODEL_ID_RESOURCE:
-			resources[resourceIndex]->setActive(incomingData.activity[i]);
-			if (incomingData.activity[i]) {
-				resources[resourceIndex]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
-			}
-			resourceIndex++;
-			break;
-		default:
-			if (incomingData.activity[i]) {
-				//printf("UNKNOWN ENTITY ATTEMPTING TO BE RENDERED, ID: %d\n", i);
-			}
-			break;
+
+		entities[i]->setActive(incomingData.activity[i]);
+		if (incomingData.activity[i]) {
+			entities[i]->setModel(models[incomingData.models[i].modelID]);
+			entities[i]->setShader(shaders[incomingData.models[i].modelID]);
+			entities[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
 		}
 	}
 
@@ -93,7 +52,7 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 	int dy = glm::clamp(-((int)(currY - prevY)), -maxDelta, maxDelta);
 	prevX = (int)currX;
 	prevY = (int)currY;
-	cam->update(players[id]->getPosition(), dx, dy, scrollY);
+	cam->update(entities[id]->getPosition(), dx, dy, scrollY);
 }
 
 //render all active entities
@@ -101,36 +60,12 @@ void GameWorld::draw(Shader* shader, Shader* skyboxShader) {
 	const glm::mat4& viewProjMtx = cam->GetViewProjectMtx();
 	env->draw(viewProjMtx, skyboxShader);
 
-	for (Player* p : players) {
-		if (p->getActive()) {
-			p->draw(viewProjMtx, shader);
+	for (RenderEntity* e : entities) {
+
+		if (e->getActive()) {
+			e->draw(viewProjMtx);
 		}
 	}
-
-	for (Mob* m : mobs) {
-		if (m->getActive()) {
-			m->draw(viewProjMtx, shader);
-		}
-	}
-
-	for (Tower* t : towers) {
-		if (t->getActive()) {
-			t->draw(viewProjMtx);
-		}
-	}
-
-	for (Resource* r : resources) {
-		if (r->getActive()) {
-			r->draw(viewProjMtx);
-		}
-	}
-
-	for (Projectile* p : projectiles) {
-		if (p->getActive()) {
-			p->draw(viewProjMtx);
-		}
-	}
-
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	for (Cube* c : AABBs) {
