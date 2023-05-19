@@ -18,7 +18,7 @@ Cube::Cube(glm::vec3 cubeMin, glm::vec3 cubeMax) {
 
     // load models
     // -----------
-    ourModel = new ObjectModel("../assets/cube.obj");
+    ourModel = new ObjectModel("../assets/cube/cube.obj");
 }
 
 Cube::~Cube() {
