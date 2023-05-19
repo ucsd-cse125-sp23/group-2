@@ -1,5 +1,5 @@
+#pragma once
 #include <vector>
-
 #include "core.h"
 #include "Shader.h"
 #include "ObjectModel.h"

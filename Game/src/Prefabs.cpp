@@ -507,8 +507,9 @@ std::list<Entity> createPathColliders()
             GameData::colliders[e].AABB.y = glm::abs(GameData::colliders[e].AABB.y);
             GameData::colliders[e].AABB.z = glm::abs(GameData::colliders[e].AABB.z);
 
+            GameData::models[e].modelID = MODEL_ID_NO_MODEL;
             GameData::models[e].asciiRep = 'P';
-            //GameData::models[e].renderCollider = true;
+            GameData::models[e].renderCollider = true;
             GameData::colliders[e].colteam = CollisionLayer::UIObj;
             GameData::colliders[e].colwith = 0;
 

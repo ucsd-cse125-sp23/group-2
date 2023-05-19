@@ -1,9 +1,5 @@
 #pragma once
-#include "Player.h"
-#include "Mob.h"
-#include "Tower.h"
-#include "Resource.h"
-#include "Projectile.h"
+#include "RenderEntity.h"
 #include "Skybox.h"
 #include "Shader.h"
 #include "Camera.h"
@@ -12,13 +8,12 @@
 class GameWorld {
 
 private:
+    std::array <Shader*, NUM_MODELS> shaders;
+    std::array <ObjectModel*, NUM_MODELS> models;
+
     int currID;
-    std::array <Player*, NUM_CLIENTS> players;
-    std::array <Mob*, NUM_ENEMIES> mobs;
-    std::array <Tower*, NUM_TOWERS> towers;
-    std::array <Resource*, NUM_RESOURCES> resources;
-    std::array <Projectile*, NUM_PROJECTILES> projectiles;
     std::array <Cube*, MAX_ENTITIES> AABBs;
+    std::array <RenderEntity*, MAX_ENTITIES> entities;
 
     Skybox* env;
 

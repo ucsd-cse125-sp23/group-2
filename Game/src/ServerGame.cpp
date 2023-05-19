@@ -242,9 +242,8 @@ void ServerGame::handleInputs()
 void ServerGame::sendPackets()
 {
     //Send Data to Clients
-    ServertoClientData newPackage;
-    packageData(newPackage);
-    network->sendActionPackets(newPackage);
+    packageData(gameState);
+    network->sendActionPackets(gameState);
 }
 
 void ServerGame::initPrefabs()
