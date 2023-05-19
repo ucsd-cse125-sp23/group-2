@@ -337,6 +337,59 @@ std::list<Entity> createHome() {
 
     return createdEntities;
 }
+
+std::list<Entity> createPlayers() {
+    std::list<Entity> createdEntities;
+
+    //Initialize Players
+    for (int i = 0; i < NUM_PLAYERS; i++)
+    {
+        Entity e = createEntity(0, NUM_PLAYERS);
+        createdEntities.push_back(e);
+        if (e == INVALID_ENTITY) {
+            return createdEntities;
+        }
+        GameData::activity[e] = true;
+        GameData::positions[e] = glm::vec3(0, 0, 0);
+        GameData::velocities[e].velocity = glm::vec3(0, 0, 0);
+        GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+        GameData::models[e].modelID = MODEL_ID_ROVER;
+        GameData::models[e].asciiRep = 'P';
+        //GameData::models[i].renderCollider = true;
+        GameData::healths[e].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
+        GameData::hostilities[e].team = Teams::Players;
+        GameData::hostilities[e].hostileTo = Teams::Environment + Teams::Martians;
+        GameData::pattackmodules[e].attack = Prefabs::ProjectileBasic;
+        GameData::pattackmodules[e].targetPos = glm::vec3(0, 0, 0);
+        GameData::pattackmodules[e].cooldown = 0;
+        GameData::states[e] = 0;
+        GameData::retplaces[e].buildingPrefab = Prefabs::TowerBasic;
+        GameData::retplaces[e].reticlePrefab = Prefabs::TowerReticle;
+        GameData::retplaces[e].reticle = INVALID_ENTITY;
+        GameData::retplaces[e].place = false;
+        GameData::retplaces[e].validTarget = false;
+        GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+        GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+
+        GameData::tags[e] =
+            ComponentTags::Position +
+            ComponentTags::Velocity +
+            ComponentTags::Model +
+            ComponentTags::Collidable +
+            ComponentTags::RigidBody +
+            ComponentTags::Health +
+            ComponentTags::Hostility;
+        //TODO: Other Model Data
+    }
+    //TODO: Change
+    //Manually set spawn positions
+    GameData::positions[0] = glm::vec3(0, 0, 0);
+    GameData::positions[1] = glm::vec3(0, 0, 3);
+    GameData::positions[2] = glm::vec3(3, 0, 0);
+    GameData::positions[3] = glm::vec3(3, 0, 3);
+    return createdEntities;
+}
+
 std::list<Entity> createWoodResourceBasic()
 {
     std::list<Entity> createdEntities;

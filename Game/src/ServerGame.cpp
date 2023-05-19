@@ -28,49 +28,7 @@ void ServerGame::initializeGame()
 
 void ServerGame::initPlayers()
 {
-    //Initialize Players
-    for (int i = 0; i < NUM_PLAYERS; i++)
-    {
-        GameData::activity[i] = true;
-        GameData::positions[i] = glm::vec3(0, 0, 0);
-        GameData::velocities[i].velocity = glm::vec3(0, 0, 0);
-        GameData::colliders[i] = { glm::vec3(1, 1, 1) };
-        GameData::models[i].modelID = MODEL_ID_ROVER;
-        GameData::models[i].asciiRep = 'P';
-        //GameData::models[i].renderCollider = true;
-        GameData::healths[i].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
-        GameData::hostilities[i].team = Teams::Players;
-        GameData::hostilities[i].hostileTo = Teams::Environment+Teams::Martians;
-        GameData::pattackmodules[i].attack = Prefabs::ProjectileBasic;
-        GameData::pattackmodules[i].targetPos = glm::vec3(0, 0, 0);
-        GameData::pattackmodules[i].cooldown = 0;
-        GameData::states[i] = 0;
-        GameData::retplaces[i].buildingPrefab = Prefabs::TowerBasic;
-        GameData::retplaces[i].reticlePrefab = Prefabs::TowerReticle;
-        GameData::retplaces[i].reticle = INVALID_ENTITY;
-        GameData::retplaces[i].place = false;
-        GameData::retplaces[i].validTarget = false;
-        GameData::colliders[i].colteam = CollisionLayer::WorldObj;
-        GameData::colliders[i].colwith = CollisionLayer::WorldObj;
-
-
-
-        GameData::tags[i] =
-            ComponentTags::Position +
-            ComponentTags::Velocity +
-            ComponentTags::Model +
-            ComponentTags::Collidable +
-            ComponentTags::RigidBody +
-            ComponentTags::Health +
-            ComponentTags::Hostility;
-        //TODO: Other Model Data
-    }
-    //TODO: Change
-    //Manually set spawn positions
-    GameData::positions[0] = glm::vec3(0, 0, 0);
-    GameData::positions[1] = glm::vec3(0, 0, 3);
-    GameData::positions[2] = glm::vec3(3, 0, 0);
-    GameData::positions[3] = glm::vec3(3, 0, 3);
+    prefabMap[Prefab::Players]();
 
 }
 
