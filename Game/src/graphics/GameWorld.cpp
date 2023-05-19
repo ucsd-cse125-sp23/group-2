@@ -39,11 +39,15 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 			AABBs[i]->setActive(false);
 		}
 
-		entities[i]->setActive(incomingData.activity[i]);
-		if (incomingData.activity[i]) {
+		
+		if (incomingData.activity[i] && incomingData.models[i].modelID != MODEL_ID_NO_MODEL) {
+			entities[i]->setActive(true);
 			entities[i]->setModel(models[incomingData.models[i].modelID]);
 			entities[i]->setShader(shaders[incomingData.models[i].modelID]);
 			entities[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
+		}
+		else {
+			entities[i]->setActive(false);
 		}
 	}
 
