@@ -12,8 +12,7 @@ ServerGame::ServerGame(void)
     debug[0] = '\0';
 
     curTick = 0;
-
-    currentStatus = game;
+    clientsConnected = 0;
 }
 
 //Populate Component Arrays
@@ -130,13 +129,18 @@ void ServerGame::update()
     // get new clients
     if (network->acceptNewClient())
     {
-        printf("New client has been connected to the server\n");
+        clientsConnected++;
+        printf("Client %u connected\n", clientsConnected);
     }
     //Receve Input
     receiveFromClients();
 
     switch (currentStatus){
     case init:
+        if (clientsConnected >= NUM_PLAYERS) {
+            currentStatus = game;
+            printf("All players connected, starting main update loop!\n");
+        }
         break;
     case game:
         handleInputs();
@@ -241,9 +245,11 @@ void ServerGame::handleInputs()
 
 void ServerGame::sendPackets()
 {
-    //Send Data to Clients
-    packageData(gameState);
-    network->sendActionPackets(gameState);
+    if (currentStatus == game) {
+        //Send Data to Clients
+        packageData(gameState);
+        network->sendActionPackets(gameState);
+    }
 }
 
 void ServerGame::initPrefabs()

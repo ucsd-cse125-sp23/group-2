@@ -74,6 +74,8 @@ private:
 
     Entity home;
 
+    uint16_t clientsConnected;
+
     enum ServerStatus {
         init,
         game,
