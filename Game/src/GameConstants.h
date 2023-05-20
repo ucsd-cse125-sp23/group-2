@@ -64,6 +64,7 @@ const float PATH_WIDTH = 3;
 const float TOWER_PLACEMENT_RANGE = 15;
 
 //Model ID's (For Cory/Will to decide)
+#define MODEL_ID_NO_MODEL -1
 #define MODEL_ID_CUBE 0
 #define MODEL_ID_ROVER 1
 #define MODEL_ID_MOB 2
