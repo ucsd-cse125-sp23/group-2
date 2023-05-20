@@ -11,7 +11,7 @@ void GameWorld::init() {
 	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/tower.obj");
 	//replace once models are done
 	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/cube/cube.obj");
-	models[MODEL_ID_PROJECTILE] = new ObjectModel("../assets/cube/cube.obj");
+	models[MODEL_ID_PROJECTILE] = new ObjectModel("../assets/laser_projectile/laser_projectile.obj");
 
 	shaders[MODEL_ID_CUBE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_ROVER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
@@ -19,7 +19,7 @@ void GameWorld::init() {
 	shaders[MODEL_ID_TOWER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	//replace once models are done
 	shaders[MODEL_ID_RESOURCE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
-	shaders[MODEL_ID_PROJECTILE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PROJECTILE] = new Shader("../shaders/shader.vert", "../shaders/shader.frag");
 
 	for (int i = 0; i < MAX_ENTITIES; i++) {
 		entities[i] = new RenderEntity(i);
