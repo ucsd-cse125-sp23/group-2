@@ -170,7 +170,7 @@ std::list<Entity> createEnemyGroundBasic() {
         ComponentTags::RigidBody +
         ComponentTags::Health +
         ComponentTags::CollisionDmg +
-        ComponentTags::Hostility + 
+        ComponentTags::Hostility +
         ComponentTags::WorthPoints +
         ComponentTags::ResourceContainer;
 
