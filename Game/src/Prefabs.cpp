@@ -158,6 +158,8 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::resources[e].resources[ResourceType::Money] = 20;
+    GameData::pointvalues[e] = 20;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -168,87 +170,34 @@ std::list<Entity> createEnemyGroundBasic() {
         ComponentTags::RigidBody +
         ComponentTags::Health +
         ComponentTags::CollisionDmg +
-        ComponentTags::Hostility +
-        ComponentTags::DiesOnCollision;
+        ComponentTags::Hostility + 
+        ComponentTags::WorthPoints +
+        ComponentTags::ResourceContainer;
 
     return createdEntities;
 };
 std::list<Entity> createEnemyGroundTank() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    Entity e = createEnemyGroundBasic().front();
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::activity[e] = true;
-    GameData::states[e] = enemyState::Pathing;
-    GameData::pathStructs[e].currentNode = 0;
-    GameData::pathStructs[e].path = 0;
-    GameData::velocities[e].flying = false;
-    GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
-    GameData::models[e].asciiRep = 'E';
-    GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
-    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
-
     //distinguishing factors
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD / 2;
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 4;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG * 2;
-
-    GameData::tags[e] =
-        ComponentTags::Position +
-        ComponentTags::Velocity +
-        ComponentTags::PathData +
-        ComponentTags::Model +
-        ComponentTags::Collidable +
-        ComponentTags::RigidBody +
-        ComponentTags::Health +
-        ComponentTags::CollisionDmg +
-        ComponentTags::Hostility +
-        ComponentTags::DiesOnCollision;
-
     return createdEntities;
 };
 std::list<Entity> createEnemyFlyingBasic() {
     std::list<Entity> createdEntities;
-    Entity e = createEntity(ENEMY_START, ENEMY_END);
+    Entity e = createEnemyGroundBasic().front();
     createdEntities.push_back(e);
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::activity[e] = true;
-    GameData::states[e] = enemyState::Pathing;
-    GameData::pathStructs[e].currentNode = 0;
-    GameData::pathStructs[e].path = 0;
-    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
+    //distinguishing factors
     GameData::velocities[e].flying = true;
-    GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
-    GameData::models[e].asciiRep = 'E';
-    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
-    GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
-    GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
-    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
-    GameData::pointvalues[e] = 20;
-    GameData::resources[e].resources[ResourceType::Money] = 20;
-
-    GameData::tags[e] =
-        ComponentTags::Position +
-        ComponentTags::Velocity +
-        ComponentTags::PathData +
-        ComponentTags::Model +
-        ComponentTags::Collidable +
-        ComponentTags::RigidBody +
-        ComponentTags::Health +
-        ComponentTags::CollisionDmg +
-        ComponentTags::Hostility +
-        ComponentTags::WorthPoints +
-        ComponentTags::ResourceContainer;
 
     return createdEntities;
 };
