@@ -158,6 +158,8 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::pointvalues[e] = 20;
+    GameData::resources[e].resources[ResourceType::Money] = 20;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -169,7 +171,8 @@ std::list<Entity> createEnemyGroundBasic() {
         ComponentTags::Health +
         ComponentTags::CollisionDmg +
         ComponentTags::Hostility +
-        ComponentTags::DiesOnCollision;
+        ComponentTags::WorthPoints +
+        ComponentTags::ResourceContainer;
 
     return createdEntities;
 };
@@ -192,7 +195,8 @@ std::list<Entity> createEnemyGroundTank() {
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
-
+    GameData::pointvalues[e] = 20;
+    GameData::resources[e].resources[ResourceType::Money] = 20;
     //distinguishing factors
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD / 2;
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 4;
@@ -208,7 +212,8 @@ std::list<Entity> createEnemyGroundTank() {
         ComponentTags::Health +
         ComponentTags::CollisionDmg +
         ComponentTags::Hostility +
-        ComponentTags::DiesOnCollision;
+        ComponentTags::WorthPoints +
+        ComponentTags::ResourceContainer;
 
     return createdEntities;
 };
