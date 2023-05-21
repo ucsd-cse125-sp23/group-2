@@ -89,6 +89,10 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createPlayers
 };
 
+namespace PlayerSpawns {
+	extern constexpr int numSpawns = 4; //Should always be >= NUM_PLAYERS
+	extern const glm::vec3 spawnpoint[numSpawns];
+};
 
 namespace Paths {
 	extern constexpr int pathCount = 4;

@@ -287,6 +287,12 @@ std::list<Entity> createHome() {
     return createdEntities;
 }
 
+namespace PlayerSpawns {
+    const glm::vec3 spawnpoint[numSpawns] = {
+        glm::vec3(0, 0, 0), glm::vec3(0, 0, 3), glm::vec3(3, 0, 0), glm::vec3(3, 0, 3)
+    };
+}
+
 std::list<Entity> createPlayers() {
     std::list<Entity> createdEntities;
 
@@ -299,7 +305,7 @@ std::list<Entity> createPlayers() {
             return createdEntities;
         }
         GameData::activity[e] = true;
-        GameData::positions[e] = glm::vec3(0, 0, 0);
+        GameData::positions[e] = PlayerSpawns::spawnpoint[i];
         GameData::velocities[e].velocity = glm::vec3(0, 0, 0);
         GameData::colliders[e] = { glm::vec3(1, 1, 1) };
         GameData::models[e].modelID = MODEL_ID_ROVER;
@@ -330,12 +336,6 @@ std::list<Entity> createPlayers() {
             ComponentTags::Hostility;
         //TODO: Other Model Data
     }
-    //TODO: Change
-    //Manually set spawn positions
-    GameData::positions[0] = glm::vec3(0, 0, 0);
-    GameData::positions[1] = glm::vec3(0, 0, 3);
-    GameData::positions[2] = glm::vec3(3, 0, 0);
-    GameData::positions[3] = glm::vec3(3, 0, 3);
     return createdEntities;
 }
 
