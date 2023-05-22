@@ -398,12 +398,14 @@ void EntityComponentSystem::sysDeathStatus()
                 //printf("%d should be player\n", e);
                 if (GameData::playerdata.spawntimers[e] < -1) {
                     GameData::playerdata.spawntimers[e] = RESPAWN_TIMER;
+                    GameData::rigidbodies[e].fixed = true;
                 }
                 else if (GameData::playerdata.spawntimers[e] <= 0) {
                     GameData::playerdata.spawntimers[e] = -2;
                     GameData::positions[e] = PlayerSpawns::spawnpoint[e];
                     GameData::healths[e].curHealth = GameData::healths[e].maxHealth;
                     GameData::tags[e] ^= ComponentTags::Dead;
+                    GameData::rigidbodies[e].fixed = false;;
                 }
                 else {
                     GameData::playerdata.spawntimers[e] = GameData::playerdata.spawntimers[e] - 1.0f/TICK_RATE;
