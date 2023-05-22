@@ -657,6 +657,9 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
 
 void EntityComponentSystem::dealDamage(Entity source, Entity target, float damage)
 {
+    if ((GameData::tags[target] & ComponentTags::Dead) == ComponentTags::Dead) {
+        return;
+    }
     GameData::healths[target].curHealth -= damage;
     if (GameData::tags[source] & ComponentTags::Created) {
         source = GameData::creators[source];
