@@ -161,6 +161,9 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
+    GameData::rigidbodies[e].fixed = false;
+    GameData::rigidbodies[e].grounded = false;
+
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -247,6 +250,7 @@ std::list<Entity> createTowerBasic() {
     GameData::hostilities[e].hostileTo = Teams::Martians;
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
     GameData::rigidbodies[e].fixed = true;
+    GameData::rigidbodies[e].grounded = false;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
@@ -277,6 +281,7 @@ std::list<Entity> createHome() {
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = HOME_BASE_HEALTH;
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
     GameData::rigidbodies[e].fixed = true;
+    GameData::rigidbodies[e].grounded = false;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
