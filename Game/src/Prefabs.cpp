@@ -250,7 +250,8 @@ std::list<Entity> createTowerBasic() {
         ComponentTags::Model +
         ComponentTags::Hostility +
         ComponentTags::RigidBody +
-        ComponentTags::Collidable;
+        ComponentTags::Collidable +
+        ComponentTags::Turret;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 
