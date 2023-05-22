@@ -15,20 +15,40 @@ private:
     std::array <Mob*, NUM_ENEMIES> mobs;
     std::array <GUIElement*, NUM_GUI> guis;
     Skybox* env;
-
     Camera* cam;
     static float prevX, prevY, currX, currY, scrollY;
+
+
+
     //static int mouseDX, mouseDY;
 
 public:
     void init();
 
+    int width;
+    int height;
+    //Buttons
+    GUIElement* continue_Btn;
+    GUIElement* options_Btn;
+    GUIElement* quit_Btn;
+    GUIElement* back_Btn;
+
+    //Volume
+    GUIElement* volume_Sldr;
+    GUIElement* volume_Sldr_Back;
+    GUIElement* volume_Sldr_Front;
+
+    //Health
+    GUIElement* health_Bar;
+    GUIElement* health_Bar_Back;
+    GUIElement* health_Bar_Front;
     //
+    void GUI_Init();
     void update(ServertoClientData& incomingData, int id);
 
     //render all active entities
-    void draw(Shader* shader, Shader* skyboxShader, Shader* guiShader);
-    
+    void draw(Shader* shader, Shader* skyboxShader, Shader* guiShader, float width, float height);
+
     float getCamAngle() { return cam->getAngleAroundPlayer(); };
     glm::vec3 getCamDirectionVector() { return cam->getDirectionVector(); };
     glm::vec3 getCamPosition() { return cam->getCameraPosition(); };

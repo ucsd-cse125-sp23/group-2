@@ -33,7 +33,7 @@ GameWindow::GameWindow(int width, int height) {
         //return NULL;
     }
 
-   // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // Make the context of the window.
     glfwMakeContextCurrent(window);
@@ -67,7 +67,7 @@ void GameWindow::cleanUp() {
     shaderProgram->cleanup();
 }
 void GameWindow::setup() {
-   
+
     // Enable depth buffering.
     glEnable(GL_DEPTH_TEST);
     // Related to shaders and z value comparisons for the depth buffer.
@@ -115,11 +115,11 @@ void GameWindow::displayCallback() {
     glfwMakeContextCurrent(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //player->draw(cam->GetViewProjectMtx(), shaderProgram);
-    gameWorld->draw(shaderProgram, skyboxProgram, guiProgram);
+    gameWorld->draw(shaderProgram, skyboxProgram, guiProgram,width, height);
     glfwPollEvents();
     glfwSwapBuffers(window);
 }
-void GameWindow::update(ServertoClientData & incomingData, int id) {
+void GameWindow::update(ServertoClientData& incomingData, int id) {
     displayCallback();
     idleCallback(incomingData, id);
 }
