@@ -6,8 +6,7 @@
 class GameWindow {
 private:
 	//Window Properties
-	int width;
-	int height;
+	
 	const char* windowTitle;
 
 	//objects to render
@@ -24,7 +23,8 @@ private:
 	//static int mouseDX, mouseDY;
 public:
 	GLFWwindow* window;
-
+	int width;
+	int height;
 	GameWindow(int width, int height);
 	~GameWindow();
 	void setup();
