@@ -42,6 +42,7 @@ namespace Teams {
     constexpr TeamID Martians = 0x1 << 1;
     constexpr TeamID Towers = 0x1 << 2;
     constexpr TeamID Environment = 0x1 << 3;
+    constexpr TeamID Projectile = 0x1 << 4;
 }
 
 namespace ResourceType {

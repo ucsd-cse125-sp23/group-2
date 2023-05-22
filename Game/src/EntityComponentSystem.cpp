@@ -383,7 +383,6 @@ void EntityComponentSystem::resolveCollisions()
 
     }
 }
-
 //Check entity death flag and set to zero (and do any on death effects
 void EntityComponentSystem::sysDeathStatus()
 {
@@ -395,8 +394,20 @@ void EntityComponentSystem::sysDeathStatus()
         //set to inactive if dying flag
         if ((GameData::tags[e] & ComponentTags::Dead) == ComponentTags::Dead)
         {
-            if (e < NUM_PLAYERS) {
-
+            if (GameData::hostilities[e].team == Teams::Players) {
+                //printf("%d should be player\n", e);
+                if (GameData::playerdata.spawntimers[e] < -1) {
+                    GameData::playerdata.spawntimers[e] = RESPAWN_TIMER;
+                }
+                else if (GameData::playerdata.spawntimers[e] <= 0) {
+                    GameData::playerdata.spawntimers[e] = -2;
+                    GameData::positions[e] = PlayerSpawns::spawnpoint[e];
+                    GameData::healths[e].curHealth = GameData::healths[e].maxHealth;
+                    GameData::tags[e] ^= ComponentTags::Dead;
+                }
+                else {
+                    GameData::playerdata.spawntimers[e] = GameData::playerdata.spawntimers[e] - 1.0f/TICK_RATE;
+                }
             }
             else {
                 //TEST OUTPUT FOR VISUALIZER
@@ -444,7 +455,6 @@ void EntityComponentSystem::sysAttacks()
                     GameData::positions[attack] = transform * glm::vec4(GameData::positions[attack], 1);
                     GameData::velocities[attack].velocity = transform * glm::vec4(GameData::velocities[attack].velocity, 0);
                     //Set Hostility
-                    GameData::hostilities[attack].team = GameData::hostilities[e].team;
                     GameData::hostilities[attack].hostileTo = GameData::hostilities[e].hostileTo;
                     //Set creator
                     GameData::tags[attack] |= ComponentTags::Created;
@@ -656,7 +666,6 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     GameData::combatLogs[GameData::logpos].damage = damage;
     if (GameData::healths[target].curHealth <= 0) {
         causeDeath(source, target);
-        GameData::tags[target] ^= ComponentTags::Collidable;
     }
     GameData::logpos++;
 }
@@ -670,6 +679,8 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
     //printf("Ent %d is dead\n", target);
 
     GameData::tags[target] |= ComponentTags::Dead;
+
+    GameData::velocities[target].velocity = glm::vec3(0);
 
     if (source == target) { return; }
     GameData::combatLogs[GameData::logpos].source = source;

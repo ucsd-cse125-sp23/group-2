@@ -50,7 +50,7 @@ const float GRAVITY_SEC = -120;
 const float FLYING_HEIGHT = 10;
 
 //Default player spawn timer in seconds
-const float SPAWN_TIMER = 5.0;
+const float RESPAWN_TIMER = 5.0;
 
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 8
