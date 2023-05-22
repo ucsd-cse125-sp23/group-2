@@ -31,6 +31,7 @@ void GameWorld::init() {
 void GameWorld::GUI_Init() {
 
 	//continue
+	continue_Btn = new GUIElement();
 	continue_Btn->SetHidden(false);
 	continue_Btn->SetName("continue");
 	continue_Btn->SetPosition(glm::vec2(0.0f, 130.0f));
@@ -39,6 +40,7 @@ void GameWorld::GUI_Init() {
 	continue_Btn->SetTransparency(0.0);
 	guis[0] = continue_Btn;
 	//options
+	options_Btn = new GUIElement();
 	options_Btn->SetHidden(false);
 	options_Btn->SetName("options");
 	options_Btn->SetPosition(glm::vec2(0.0f, 0.0f));
@@ -47,6 +49,7 @@ void GameWorld::GUI_Init() {
 	options_Btn->SetTransparency(0.0);
 	guis[1] = options_Btn;
 	//quit
+	quit_Btn = new GUIElement();
 	quit_Btn->SetHidden(false);
 	quit_Btn->SetName("quit");
 	quit_Btn->SetPosition(glm::vec2(0.0f, -130.0f));
@@ -56,6 +59,7 @@ void GameWorld::GUI_Init() {
 	guis[2] = quit_Btn;
 
 	//back
+	back_Btn = new GUIElement();
 	back_Btn->SetHidden(false	);
 	back_Btn->SetName("back");
 	back_Btn->SetPosition(glm::vec2(-width/2 + 50.0f, height/2 - 50.0f));
@@ -65,6 +69,7 @@ void GameWorld::GUI_Init() {
 	guis[3] = back_Btn;
 
 	//Volume
+	volume_Sldr = new GUIElement();
 	volume_Sldr->SetHidden(true);
 	volume_Sldr->SetName("volume");
 	volume_Sldr->SetPosition(glm::vec2(0.0f, 0.0f));
@@ -72,6 +77,7 @@ void GameWorld::GUI_Init() {
 	volume_Sldr->SetTexture("..assets/gui/Buttons/volume");
 	volume_Sldr->SetTransparency(0.0);
 	guis[4] = volume_Sldr;
+	volume_Sldr_Back = new GUIElement();
 	volume_Sldr_Back->SetHidden(true);
 	volume_Sldr_Back->SetName("volume_Sldr_Back");
 	volume_Sldr_Back->SetPosition(glm::vec2(0.0f, 0.0f));
@@ -79,6 +85,7 @@ void GameWorld::GUI_Init() {
 	volume_Sldr_Back->SetTexture("..assets/gui/Buttons/volume_Sldr_Back");
 	volume_Sldr_Back->SetTransparency(0.0);
 	guis[5] = volume_Sldr_Back;
+	volume_Sldr_Front = new GUIElement();
 	volume_Sldr_Front->SetHidden(true);
 	volume_Sldr_Front->SetName("volume_Sldr_Front");
 	volume_Sldr_Front->SetPosition(glm::vec2(0.0f, 0.0f));
@@ -88,6 +95,7 @@ void GameWorld::GUI_Init() {
 	guis[6] = volume_Sldr_Front;
 
 	//Health
+	health_Bar = new GUIElement();
 	health_Bar->SetHidden(true);
 	health_Bar->SetName("health");
 	health_Bar->SetPosition(glm::vec2(0.0f, 0.0f));
@@ -95,6 +103,7 @@ void GameWorld::GUI_Init() {
 	health_Bar->SetTexture("..assets/gui/Buttons/health");
 	health_Bar->SetTransparency(0.0);
 	guis[7] = health_Bar;
+	health_Bar_Back = new GUIElement();
 	health_Bar_Back->SetHidden(true);
 	health_Bar_Back->SetName("health_back");
 	health_Bar_Back->SetPosition(glm::vec2(0.0f, 0.0f));
@@ -102,6 +111,7 @@ void GameWorld::GUI_Init() {
 	health_Bar_Back->SetTexture("..assets/gui/Buttons/health_back");
 	health_Bar_Back->SetTransparency(0.0);
 	guis[8] = health_Bar_Back;
+	health_Bar_Front = new GUIElement();
 	health_Bar_Front->SetHidden(true);
 	health_Bar_Front->SetName("health_front");
 	health_Bar_Front->SetPosition(glm::vec2(0.0f, 0.0f));
