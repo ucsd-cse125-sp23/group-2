@@ -243,8 +243,8 @@ void EntityComponentSystem::sysTurretFire()
             //If a valid target was found, fire at them
             if (closestEnemy != e)
             {
-                dealDamage(e, closestEnemy, (GameData::turrets[e].damage));
-                //std::cout << "Test Tower Fired at Enemey: " << closestEnemy - ENEMY_START << "\n";
+               dealDamage(e, closestEnemy, (GameData::turrets[e].damage));
+               //std::cout << "Test Tower Fired at Enemy: " << closestEnemy - ENEMY_START << "\n";
             }
         }
     }

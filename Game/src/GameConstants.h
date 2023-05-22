@@ -20,7 +20,7 @@ const float PLAYER_MVSPD_PERSEC = 20;
 const float PLAYER_JPSPD_PERSEC = 30;
 
 //Base health values of different game entities
-const float PLAYER_BASE_HEALTH = 119;
+const float PLAYER_BASE_HEALTH = 100;
 const float ENEMY_BASE_HEALTH = 100;
 const float HOME_BASE_HEALTH = 100;
 const float RESOURCE_BASE_HEALTH = 100;
@@ -32,7 +32,7 @@ const float TURRET_BASE_DPS = 200;
 const float ENEMY_GND_MVSPD_PERSEC = 5;
 
 //How many seconds until first wave spawns
-const float ENEMY_SPAWNDELAY_SEC = 1;
+const float ENEMY_SPAWNDELAY_SEC = 15;
 
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;

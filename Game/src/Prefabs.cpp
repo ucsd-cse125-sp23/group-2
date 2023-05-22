@@ -160,6 +160,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
+    GameData::models[e].renderCollider;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -250,7 +251,8 @@ std::list<Entity> createTowerBasic() {
         ComponentTags::Model +
         ComponentTags::Hostility +
         ComponentTags::RigidBody +
-        ComponentTags::Collidable;
+        ComponentTags::Collidable +
+        ComponentTags::Turret;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 
@@ -418,7 +420,7 @@ namespace WaveData {
     int currentWave;
 
     // How much time a wave lasts before the next wave starts spawning (timer for last wave will be time until win)
-    int waveTimers[WAVE_COUNT] = { 5 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE };
+    int waveTimers[WAVE_COUNT] = { 15 * TICK_RATE, 15 * TICK_RATE, 15 * TICK_RATE, 15 * TICK_RATE, 60  * TICK_RATE };
 
     int waveTick; //countdown timer for waves
 
