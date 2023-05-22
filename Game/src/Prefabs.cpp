@@ -149,7 +149,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::velocities[e].flying = false;
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::colliders[e] = { glm::vec3(1.3, 1.7, 1.3) };
     GameData::models[e].modelID = MODEL_ID_MOB;
     GameData::models[e].asciiRep = 'E';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
@@ -160,7 +160,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
-    GameData::models[e].renderCollider;
+    GameData::models[e].renderCollider = true;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -216,13 +216,14 @@ std::list<Entity> createTowerReticle() {
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::colliders[e] = { glm::vec3(1.2, 1, 1.2) };
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Hostility +
         ComponentTags::Collidable +
         ComponentTags::DiesOnCollision;
+    GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::UIObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::UIObj;
 
@@ -253,6 +254,7 @@ std::list<Entity> createTowerBasic() {
         ComponentTags::RigidBody +
         ComponentTags::Collidable +
         ComponentTags::Turret;
+    GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 
@@ -450,7 +452,7 @@ std::list<Entity> createPathColliders()
             }
 
             GameData::activity[e] = true;
-            GameData::positions[e] = (Paths::path[p][i] + Paths::path[p][i + 1]) / 2.0f + glm::vec3(0, 1, 0);
+            GameData::positions[e] = (Paths::path[p][i] + Paths::path[p][i + 1]) / 2.0f;
             glm::vec3 pathvec = Paths::path[p][i + 1] - Paths::path[p][i];
             GameData::colliders[e] = { (pathvec) / 2.0f + PATH_WIDTH * glm::normalize(pathvec) + PATH_WIDTH * glm::normalize(glm::vec3(pathvec.z, 0, -pathvec.x)) + glm::vec3(0, 1,0) };
             
