@@ -23,7 +23,7 @@ std::list<Entity> createProjectileBasic() {
     GameData::spawnrates[e] = 0.25;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
-
+    GameData::hostilities[e].team = Teams::Projectile;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -55,7 +55,7 @@ std::list<Entity> createProjectileSpread5() {
         GameData::spawnrates[e] = 0.25;
         GameData::colliders[e].colteam = CollisionLayer::WorldObj;
         GameData::colliders[e].colwith = CollisionLayer::WorldObj;
-
+        GameData::hostilities[e].team = Teams::Projectile;
 
         GameData::tags[e] =
             ComponentTags::Position +
@@ -89,6 +89,7 @@ std::list<Entity> createProjectileChaos() {
     GameData::pattackmodules[e].attack = Prefabs::ProjectileRandom;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::hostilities[e].team = Teams::Projectile;
 
 
     GameData::tags[e] =
@@ -122,6 +123,7 @@ std::list<Entity> createProjectileRandom() {
     GameData::spawnrates[e] = 0.1;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::hostilities[e].team = Teams::Projectile;
 
 
     GameData::tags[e] =
@@ -334,6 +336,7 @@ std::list<Entity> createPlayers() {
         GameData::retplaces[e].validTarget = false;
         GameData::colliders[e].colteam = CollisionLayer::WorldObj;
         GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+        GameData::playerdata.spawntimers[e] = -2;
 
         GameData::tags[e] =
             ComponentTags::Position +

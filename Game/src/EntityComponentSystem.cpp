@@ -383,7 +383,6 @@ void EntityComponentSystem::resolveCollisions()
 
     }
 }
-
 //Check entity death flag and set to zero (and do any on death effects
 void EntityComponentSystem::sysDeathStatus()
 {
@@ -395,10 +394,29 @@ void EntityComponentSystem::sysDeathStatus()
         //set to inactive if dying flag
         if ((GameData::tags[e] & ComponentTags::Dead) == ComponentTags::Dead)
         {
-            //TEST OUTPUT FOR VISUALIZER
-            GameData::models[e].asciiRep = 'X';
-            GameData::activity[e] = false;
-            //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
+            if (GameData::hostilities[e].team == Teams::Players) {
+                //printf("%d should be player\n", e);
+                if (GameData::playerdata.spawntimers[e] < -1) {
+                    GameData::playerdata.spawntimers[e] = RESPAWN_TIMER;
+                    GameData::rigidbodies[e].fixed = true;
+                }
+                else if (GameData::playerdata.spawntimers[e] <= 0) {
+                    GameData::playerdata.spawntimers[e] = -2;
+                    GameData::positions[e] = PlayerSpawns::spawnpoint[e];
+                    GameData::healths[e].curHealth = GameData::healths[e].maxHealth;
+                    GameData::tags[e] ^= ComponentTags::Dead;
+                    GameData::rigidbodies[e].fixed = false;;
+                }
+                else {
+                    GameData::playerdata.spawntimers[e] = GameData::playerdata.spawntimers[e] - 1.0f/TICK_RATE;
+                }
+            }
+            else {
+                //TEST OUTPUT FOR VISUALIZER
+                GameData::models[e].asciiRep = 'X';
+                GameData::activity[e] = false;
+                //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
+            }
         }
 
     }
@@ -439,7 +457,6 @@ void EntityComponentSystem::sysAttacks()
                     GameData::positions[attack] = transform * glm::vec4(GameData::positions[attack], 1);
                     GameData::velocities[attack].velocity = transform * glm::vec4(GameData::velocities[attack].velocity, 0);
                     //Set Hostility
-                    GameData::hostilities[attack].team = GameData::hostilities[e].team;
                     GameData::hostilities[attack].hostileTo = GameData::hostilities[e].hostileTo;
                     //Set creator
                     GameData::tags[attack] |= ComponentTags::Created;
@@ -640,16 +657,20 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
 
 void EntityComponentSystem::dealDamage(Entity source, Entity target, float damage)
 {
+    if ((GameData::tags[target] & ComponentTags::Dead) == ComponentTags::Dead) {
+        return;
+    }
     GameData::healths[target].curHealth -= damage;
     if (GameData::tags[source] & ComponentTags::Created) {
         source = GameData::creators[source];
     }
+    printf("Ent %d dealing %f dmg to %d\n", source, damage, target);
+
     GameData::combatLogs[GameData::logpos].source = source;
     GameData::combatLogs[GameData::logpos].target = target;
     GameData::combatLogs[GameData::logpos].damage = damage;
     if (GameData::healths[target].curHealth <= 0) {
         causeDeath(source, target);
-        GameData::tags[target] ^= ComponentTags::Collidable;
     }
     GameData::logpos++;
 }
@@ -664,11 +685,14 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
 
     GameData::tags[target] |= ComponentTags::Dead;
 
+    GameData::velocities[target].velocity = glm::vec3(0);
+
     if (source == target) { return; }
     GameData::combatLogs[GameData::logpos].source = source;
     GameData::combatLogs[GameData::logpos].target = target;
     GameData::combatLogs[GameData::logpos].killed = true;
     GameData::logpos++;
+
     if (source < NUM_PLAYERS) {
         if ((GameData::tags[target] & ComponentTags::WorthPoints) == ComponentTags::WorthPoints) {
             GameData::playerdata.scores[source].points += GameData::pointvalues[target];

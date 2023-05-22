@@ -187,6 +187,11 @@ void ServerGame::handleInputs()
         bool target = false;
         while (!incomingDataLists[i].empty())
         {
+            if ((GameData::tags[i] & ComponentTags::Dead) == ComponentTags::Dead) {
+                std::queue<ClienttoServerData> empty;
+                std::swap(incomingDataLists[i], empty);
+                continue;
+            }
             ClienttoServerData in = incomingDataLists[i].front();
             GameData::velocities[i].velocity = glm::vec3(0,GameData::velocities[i].velocity.y,0);
             camDirection = in.camDirectionVector;
@@ -294,6 +299,7 @@ void ServerGame::packageData(ServertoClientData& data)
     data.buildcosts = buildcosts;
     data.serverStatus = currentStatus;
     data.colliders = GameData::colliders;
+    data.waveTimer = WaveData::waveTick / TICK_RATE;
 }
 
 const int GRID_X = 32;
