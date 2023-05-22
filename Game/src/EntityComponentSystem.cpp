@@ -649,6 +649,8 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     if (GameData::tags[source] & ComponentTags::Created) {
         source = GameData::creators[source];
     }
+    printf("Ent %d dealing %f dmg to %d\n", source, damage, target);
+
     GameData::combatLogs[GameData::logpos].source = source;
     GameData::combatLogs[GameData::logpos].target = target;
     GameData::combatLogs[GameData::logpos].damage = damage;
