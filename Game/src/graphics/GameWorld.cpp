@@ -1,16 +1,10 @@
 #include "GameWorld.h"
 float GameWorld::prevX, GameWorld::prevY, GameWorld::currX, GameWorld::currY, GameWorld::scrollY = 0;
-
+std::array <GUIElement*, NUM_GUI> guis;
 void GameWorld::init() {
 
 	//UI
 	//Buttons
-
-
-
-
-
-	
 	currID = 0;
 	env = new Skybox();
 
@@ -175,7 +169,16 @@ void GameWorld::draw(Shader* shader, Shader* skyboxShader, Shader* guiShader, fl
 }
 
 void GameWorld::cursor_callback(GLFWwindow* window, double cX, double cY) {
-
-	currX = cX;
-	currY = cY;
+	if (glfwGetInputMode(window, GLFW_CURSOR) != GLFW_CURSOR_NORMAL) {
+		for (int i = 0; i < NUM_GUI; i++) {
+			guis[i]->SetHidden(true);
+		}
+		currX = cX;
+		currY = cY;
+	}
+	else {
+		for (int i = 0; i < NUM_GUI; i++) {
+			guis[i]->SetHidden(false);
+		}
+	}
 }

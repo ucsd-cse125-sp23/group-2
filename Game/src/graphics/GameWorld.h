@@ -13,7 +13,7 @@ private:
     int currID;
     std::array <Player*, NUM_CLIENTS> players;
     std::array <Mob*, NUM_ENEMIES> mobs;
-    std::array <GUIElement*, NUM_GUI> guis;
+   
     Skybox* env;
     Camera* cam;
     static float prevX, prevY, currX, currY, scrollY;
@@ -24,7 +24,7 @@ private:
 
 public:
     void init();
-
+    
     int width;
     int height;
     //Buttons

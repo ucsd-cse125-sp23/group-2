@@ -79,6 +79,13 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
         case GLFW_KEY_D:
             moveRight = true;
             break;
+        case GLFW_KEY_ESCAPE:
+            if (glfwGetInputMode(window, GLFW_CURSOR) != GLFW_CURSOR_NORMAL) {
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            }
+            else {
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            }
         default: break;
         }
     }
