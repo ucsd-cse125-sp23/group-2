@@ -10,34 +10,27 @@ int ClientGame::build = 0;
 
 ClientGame::ClientGame(void)
 {
-
-
-    //Network Initializatio
-    network = new ClientNetwork();
-    network->initConnection();
-
     //TODO Game Initialization
     gameWindow = new GameWindow(800, 600);
     setup_callbacks();
+    
+    initData.id = INVALID_CLIENT_ID;
+    incomingData.serverStatus = UNKNOWN_SERVER_STATUS;
 
+    //Network Initialization
+    network = new ClientNetwork();
+    network->initConnection();
 }
 
 
 //Converts from network's data to gamedata
 int ClientGame::recieveData()
 {
-    network->recieveDeserialize(incomingData, initData);
-    return 0;
+    return network->recieveDeserialize(incomingData, initData);
 }
 
 void ClientGame::update()
 {
-    static int count = 0;
-    count++;
-    //TODO Render
-
-    // Draw nothing, see you in tutorial 2 !
-
     //Recieve Data
     //Recieve incoming server data into gamestate
     recieveData();
@@ -53,14 +46,12 @@ void ClientGame::update()
     //Send Data to Server
     ClienttoServerData newPackage;
     packageData(newPackage);
-    //std::cout << newPackage.moveForward << "\n";
     network->sendActionPackets(newPackage);
 
-    //pass through ServertoClientData
-    //Check init connection
-    gameWindow->update(incomingData, initData.id);
-    
-    
+    //Render
+    if (initData.id != INVALID_CLIENT_ID && incomingData.serverStatus != UNKNOWN_SERVER_STATUS) {
+        gameWindow->update(incomingData, initData.id);
+    }
 }
 
 void ClientGame::packageData(ClienttoServerData& data) {
