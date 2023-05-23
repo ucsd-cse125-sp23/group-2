@@ -17,7 +17,7 @@ ClientGame::ClientGame(void)
     network->initConnection();
 
     //TODO Game Initialization
-    gameWindow = new GameWindow(800, 600);
+    gameWindow = new GameWindow(RES_WIDTH, RES_HEIGHT);
     setup_callbacks();
 
 }
@@ -156,4 +156,6 @@ void ClientGame::setup_callbacks() {
     // Set the window resize callback.
     glfwSetWindowSizeCallback(gameWindow->window, GameWindow::resizeCallback);
     glfwSetMouseButtonCallback(gameWindow->window, ClientGame::mouse_button_callback);
+    //glfwSetMouseButtonCallback(gameWindow->window, GameWorld::mouse_button_callback);
+
 }

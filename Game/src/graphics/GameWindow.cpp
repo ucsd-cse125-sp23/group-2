@@ -24,7 +24,7 @@ GameWindow::GameWindow(int width, int height) {
     glfwWindowHint(GLFW_SAMPLES, 4);
 
     // Create the GLFW window.
-    window = glfwCreateWindow(width, height, windowTitle, NULL, NULL);
+    window = glfwCreateWindow(width, height, windowTitle, glfwGetPrimaryMonitor(), NULL);
 
     // Check if the window could not be created.
     if (!window) {
@@ -106,8 +106,6 @@ bool GameWindow::initializeObjects() {
 
 void GameWindow::idleCallback(ServertoClientData& incomingData, int id) {
     gameWorld->update(incomingData, id);
-    //cam->update(mouseDX, mouseDY, scrollY);
-    //player->update(incomingData.positions[id]);
 }
 
 void GameWindow::displayCallback() {

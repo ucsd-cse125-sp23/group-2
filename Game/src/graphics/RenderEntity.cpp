@@ -20,13 +20,14 @@ RenderEntity::~RenderEntity() {
 
 }
 
-void RenderEntity::draw(const glm::mat4& viewProjMtx) {
+void RenderEntity::draw(const glm::mat4& viewProjMtx, float time) {
     // actiavte the shader program
     shader->use();
 
     // get the locations and send the uniforms to the shader
     shader->setMat4("viewProj", viewProjMtx);
     shader->setMat4("model", model);
+    shader->setFloat("time", time);
 
     ourModel->Draw(*shader);
 
