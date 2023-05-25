@@ -20,7 +20,9 @@ AudioManager::AudioManager() {
     AudioManager::loadSound3D("../assets/sounds/oof.mp3", "death");
     AudioManager::loadSound3D("../assets/sounds/sentry.wav", "tower");
     AudioManager::loadSound3D("../assets/sounds/minecrafthit.mp3", "damage");
-    AudioManager::playSound("bgm");
+    music = nullptr;
+    AudioManager::errorCheck(audioSystem->playSound(soundMap.find("bgm")->second, nullptr, false, &music));
+    music->setVolume(0.5);
 }
 
 // Loads a sound into the sound map

@@ -11,6 +11,7 @@ private:
 	FMOD::System* audioSystem;
 	int errorCheck(FMOD_RESULT result);
 	std::unordered_map<std::string, FMOD::Sound *> soundMap;
+	FMOD::Channel* music;
 public:
 	AudioManager();
 	void loadSound(const char* path, std::string name);
