@@ -19,7 +19,7 @@ ClientGame::ClientGame(void)
     //TODO Game Initialization
     gameWindow = new GameWindow(800, 600);
     setup_callbacks();
-
+    audioManager = new AudioManager();
 }
 
 
