@@ -21,8 +21,8 @@ AudioManager::AudioManager() {
     AudioManager::loadSound3D("../assets/sounds/sentry.wav", "tower");
     AudioManager::loadSound3D("../assets/sounds/minecrafthit.mp3", "damage");
     music = nullptr;
-    AudioManager::errorCheck(audioSystem->playSound(soundMap.find("bgm")->second, nullptr, false, &music));
-    music->setVolume(0.5);
+    AudioManager::playMusic("bgm");
+    AudioManager::setMusicVolume(0.25);
 }
 
 // Loads a sound into the sound map
@@ -36,6 +36,14 @@ void AudioManager::loadSound(const char* path, std::string name) {
 void AudioManager::playSound(std::string name) {
     FMOD::Channel* newChannel = nullptr;
     AudioManager::errorCheck(audioSystem->playSound(soundMap.find(name)->second, nullptr, false, &newChannel));
+}
+
+void AudioManager::playMusic(std::string name) {
+    AudioManager::errorCheck(audioSystem->playSound(soundMap.find(name)->second, nullptr, false, &music));
+}
+
+void AudioManager::setMusicVolume(float vol) {
+    music->setVolume(vol);
 }
 
 // Play a 3D sound at the position

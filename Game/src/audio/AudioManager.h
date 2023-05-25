@@ -11,6 +11,7 @@ private:
 	FMOD::System* audioSystem;
 	int errorCheck(FMOD_RESULT result);
 	std::unordered_map<std::string, FMOD::Sound *> soundMap;
+	FMOD::ChannelGroup* sfx;
 	FMOD::Channel* music;
 public:
 	AudioManager();
@@ -19,4 +20,6 @@ public:
 	void playSound(std::string name);
 	void playSound3D(std::string name, glm::vec3 pos);
 	void update(glm::vec3 camPos, glm::vec3 camForward, glm::vec3 camUp);
+	void playMusic(std::string name);
+	void setMusicVolume(float vol);
 };
