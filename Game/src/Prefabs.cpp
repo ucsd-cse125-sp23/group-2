@@ -23,7 +23,7 @@ std::list<Entity> createProjectileBasic() {
     GameData::spawnrates[e] = 0.25;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
-
+    GameData::hostilities[e].team = Teams::Projectile;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -55,7 +55,7 @@ std::list<Entity> createProjectileSpread5() {
         GameData::spawnrates[e] = 0.25;
         GameData::colliders[e].colteam = CollisionLayer::WorldObj;
         GameData::colliders[e].colwith = CollisionLayer::WorldObj;
-
+        GameData::hostilities[e].team = Teams::Projectile;
 
         GameData::tags[e] =
             ComponentTags::Position +
@@ -89,6 +89,7 @@ std::list<Entity> createProjectileChaos() {
     GameData::pattackmodules[e].attack = Prefabs::ProjectileRandom;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::hostilities[e].team = Teams::Projectile;
 
 
     GameData::tags[e] =
@@ -122,6 +123,7 @@ std::list<Entity> createProjectileRandom() {
     GameData::spawnrates[e] = 0.1;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::hostilities[e].team = Teams::Projectile;
 
 
     GameData::tags[e] =
@@ -149,7 +151,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::velocities[e].flying = false;
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::colliders[e] = { glm::vec3(1.3, 1.7, 1.3) };
     GameData::models[e].modelID = MODEL_ID_MOB;
     GameData::models[e].asciiRep = 'E';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
@@ -158,84 +160,12 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
-
-    GameData::tags[e] =
-        ComponentTags::Position +
-        ComponentTags::Velocity +
-        ComponentTags::PathData +
-        ComponentTags::Model +
-        ComponentTags::Collidable +
-        ComponentTags::RigidBody +
-        ComponentTags::Health +
-        ComponentTags::CollisionDmg +
-        ComponentTags::Hostility +
-        ComponentTags::DiesOnCollision;
-
-    return createdEntities;
-};
-std::list<Entity> createEnemyGroundTank() {
-    std::list<Entity> createdEntities;
-    Entity e = createEntity(ENEMY_START, ENEMY_END);
-    createdEntities.push_back(e);
-    if (e == INVALID_ENTITY) {
-        return createdEntities;
-    }
-    GameData::activity[e] = true;
-    GameData::states[e] = enemyState::Pathing;
-    GameData::pathStructs[e].currentNode = 0;
-    GameData::pathStructs[e].path = 0;
-    GameData::velocities[e].flying = false;
-    GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
-    GameData::models[e].asciiRep = 'E';
-    GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
-    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
-
-    //distinguishing factors
-    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD / 2;
-    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 4;
-    GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG * 2;
-
-    GameData::tags[e] =
-        ComponentTags::Position +
-        ComponentTags::Velocity +
-        ComponentTags::PathData +
-        ComponentTags::Model +
-        ComponentTags::Collidable +
-        ComponentTags::RigidBody +
-        ComponentTags::Health +
-        ComponentTags::CollisionDmg +
-        ComponentTags::Hostility +
-        ComponentTags::DiesOnCollision;
-
-    return createdEntities;
-};
-std::list<Entity> createEnemyFlyingBasic() {
-    std::list<Entity> createdEntities;
-    Entity e = createEntity(ENEMY_START, ENEMY_END);
-    createdEntities.push_back(e);
-    if (e == INVALID_ENTITY) {
-        return createdEntities;
-    }
-    GameData::activity[e] = true;
-    GameData::states[e] = enemyState::Pathing;
-    GameData::pathStructs[e].currentNode = 0;
-    GameData::pathStructs[e].path = 0;
-    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
-    GameData::velocities[e].flying = true;
-    GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
-    GameData::models[e].asciiRep = 'E';
-    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
-    GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
-    GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
-    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
-    GameData::pointvalues[e] = 20;
     GameData::resources[e].resources[ResourceType::Money] = 20;
+    GameData::pointvalues[e] = 20;
+    GameData::models[e].renderCollider = true;
+    GameData::rigidbodies[e].fixed = false;
+    GameData::rigidbodies[e].grounded = false;
+
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -249,6 +179,31 @@ std::list<Entity> createEnemyFlyingBasic() {
         ComponentTags::Hostility +
         ComponentTags::WorthPoints +
         ComponentTags::ResourceContainer;
+
+    return createdEntities;
+};
+std::list<Entity> createEnemyGroundTank() {
+    std::list<Entity> createdEntities;
+    Entity e = createEnemyGroundBasic().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    //distinguishing factors
+    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD / 2;
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 4;
+    GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG * 2;
+    return createdEntities;
+};
+std::list<Entity> createEnemyFlyingBasic() {
+    std::list<Entity> createdEntities;
+    Entity e = createEnemyGroundBasic().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    //distinguishing factors
+    GameData::velocities[e].flying = true;
 
     return createdEntities;
 };
@@ -266,13 +221,14 @@ std::list<Entity> createTowerReticle() {
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::colliders[e] = { glm::vec3(1.2, 1, 1.2) };
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Hostility +
         ComponentTags::Collidable +
         ComponentTags::DiesOnCollision;
+    GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::UIObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::UIObj;
 
@@ -296,12 +252,15 @@ std::list<Entity> createTowerBasic() {
     GameData::hostilities[e].hostileTo = Teams::Martians;
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
     GameData::rigidbodies[e].fixed = true;
+    GameData::rigidbodies[e].grounded = false;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Hostility +
         ComponentTags::RigidBody +
-        ComponentTags::Collidable;
+        ComponentTags::Collidable +
+        ComponentTags::Turret;
+    GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 
@@ -324,6 +283,7 @@ std::list<Entity> createHome() {
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = HOME_BASE_HEALTH;
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
     GameData::rigidbodies[e].fixed = true;
+    GameData::rigidbodies[e].grounded = false;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
@@ -337,6 +297,60 @@ std::list<Entity> createHome() {
 
     return createdEntities;
 }
+
+namespace PlayerSpawns {
+    const glm::vec3 spawnpoint[numSpawns] = {
+        glm::vec3(0, 0, 0), glm::vec3(0, 0, 3), glm::vec3(3, 0, 0), glm::vec3(3, 0, 3)
+    };
+}
+
+std::list<Entity> createPlayers() {
+    std::list<Entity> createdEntities;
+
+    //Initialize Players
+    for (int i = 0; i < NUM_PLAYERS; i++)
+    {
+        Entity e = createEntity(0, NUM_PLAYERS);
+        createdEntities.push_back(e);
+        if (e == INVALID_ENTITY) {
+            return createdEntities;
+        }
+        GameData::activity[e] = true;
+        GameData::positions[e] = PlayerSpawns::spawnpoint[i];
+        GameData::velocities[e].velocity = glm::vec3(0, 0, 0);
+        GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+        GameData::models[e].modelID = MODEL_ID_ROVER;
+        GameData::models[e].asciiRep = 'P';
+        //GameData::models[i].renderCollider = true;
+        GameData::healths[e].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
+        GameData::hostilities[e].team = Teams::Players;
+        GameData::hostilities[e].hostileTo = Teams::Environment + Teams::Martians;
+        GameData::pattackmodules[e].attack = Prefabs::ProjectileBasic;
+        GameData::pattackmodules[e].targetPos = glm::vec3(0, 0, 0);
+        GameData::pattackmodules[e].cooldown = 0;
+        GameData::states[e] = 0;
+        GameData::retplaces[e].buildingPrefab = Prefabs::TowerBasic;
+        GameData::retplaces[e].reticlePrefab = Prefabs::TowerReticle;
+        GameData::retplaces[e].reticle = INVALID_ENTITY;
+        GameData::retplaces[e].place = false;
+        GameData::retplaces[e].validTarget = false;
+        GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+        GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+        GameData::playerdata.spawntimers[e] = -2;
+
+        GameData::tags[e] =
+            ComponentTags::Position +
+            ComponentTags::Velocity +
+            ComponentTags::Model +
+            ComponentTags::Collidable +
+            ComponentTags::RigidBody +
+            ComponentTags::Health +
+            ComponentTags::Hostility;
+        //TODO: Other Model Data
+    }
+    return createdEntities;
+}
+
 std::list<Entity> createWoodResourceBasic()
 {
     std::list<Entity> createdEntities;
@@ -416,7 +430,7 @@ namespace WaveData {
     int currentWave;
 
     // How much time a wave lasts before the next wave starts spawning (timer for last wave will be time until win)
-    int waveTimers[WAVE_COUNT] = { 5 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE };
+    int waveTimers[WAVE_COUNT] = { 15 * TICK_RATE, 15 * TICK_RATE, 15 * TICK_RATE, 15 * TICK_RATE, 60  * TICK_RATE };
 
     int waveTick; //countdown timer for waves
 
@@ -446,7 +460,7 @@ std::list<Entity> createPathColliders()
             }
 
             GameData::activity[e] = true;
-            GameData::positions[e] = (Paths::path[p][i] + Paths::path[p][i + 1]) / 2.0f + glm::vec3(0, 1, 0);
+            GameData::positions[e] = (Paths::path[p][i] + Paths::path[p][i + 1]) / 2.0f;
             glm::vec3 pathvec = Paths::path[p][i + 1] - Paths::path[p][i];
             GameData::colliders[e] = { (pathvec) / 2.0f + PATH_WIDTH * glm::normalize(pathvec) + PATH_WIDTH * glm::normalize(glm::vec3(pathvec.z, 0, -pathvec.x)) + glm::vec3(0, 1,0) };
             
@@ -454,8 +468,9 @@ std::list<Entity> createPathColliders()
             GameData::colliders[e].AABB.y = glm::abs(GameData::colliders[e].AABB.y);
             GameData::colliders[e].AABB.z = glm::abs(GameData::colliders[e].AABB.z);
 
+            GameData::models[e].modelID = MODEL_ID_NO_MODEL;
             GameData::models[e].asciiRep = 'P';
-            //GameData::models[e].renderCollider = true;
+            GameData::models[e].renderCollider = true;
             GameData::colliders[e].colteam = CollisionLayer::UIObj;
             GameData::colliders[e].colwith = 0;
 

@@ -1,6 +1,6 @@
 //The max number of each entity type (CAN BE MODIFIED - Currently Arbitrary)
 #pragma once
-#define NUM_PLAYERS 4
+#define NUM_PLAYERS 1
 #define NUM_ENEMIES 40
 #define NUM_TOWERS 40
 #define NUM_RESOURCES 100
@@ -20,7 +20,7 @@ const float PLAYER_MVSPD_PERSEC = 20;
 const float PLAYER_JPSPD_PERSEC = 30;
 
 //Base health values of different game entities
-const float PLAYER_BASE_HEALTH = 119;
+const float PLAYER_BASE_HEALTH = 100;
 const float ENEMY_BASE_HEALTH = 100;
 const float HOME_BASE_HEALTH = 100;
 const float RESOURCE_BASE_HEALTH = 100;
@@ -32,7 +32,7 @@ const float TURRET_BASE_DPS = 200;
 const float ENEMY_GND_MVSPD_PERSEC = 5;
 
 //How many seconds until first wave spawns
-const float ENEMY_SPAWNDELAY_SEC = 1;
+const float ENEMY_SPAWNDELAY_SEC = 15;
 
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;
@@ -49,6 +49,9 @@ const float GRAVITY_SEC = -120;
 //How high above the ground flying enemies will hover
 const float FLYING_HEIGHT = 10;
 
+//Default player spawn timer in seconds
+const float RESPAWN_TIMER = 5.0;
+
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 8
 
@@ -64,11 +67,15 @@ const float PATH_WIDTH = 3;
 const float TOWER_PLACEMENT_RANGE = 15;
 
 //Model ID's (For Cory/Will to decide)
+#define MODEL_ID_NO_MODEL -1
+#define MODEL_ID_CUBE 0
 #define MODEL_ID_ROVER 1
 #define MODEL_ID_MOB 2
 #define MODEL_ID_TOWER 3
 #define MODEL_ID_RESOURCE 4
 #define MODEL_ID_PROJECTILE 5
+
+#define NUM_MODELS 6
 //.... ADD MORE ...
 
 
