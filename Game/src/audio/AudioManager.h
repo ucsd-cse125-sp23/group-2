@@ -14,6 +14,8 @@ private:
 public:
 	AudioManager();
 	void loadSound(const char* path, std::string name);
+	void loadSound3D(const char* path, std::string name);
 	void playSound(std::string name);
-	void update(ClienttoServerData&, ServertoClientData&);
+	void playSound3D(std::string name, glm::vec3 pos);
+	void update(glm::vec3 camPos, glm::vec3 camForward, glm::vec3 camUp);
 };

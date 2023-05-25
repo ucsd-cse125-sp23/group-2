@@ -669,6 +669,7 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     GameData::combatLogs[GameData::logpos].source = source;
     GameData::combatLogs[GameData::logpos].target = target;
     GameData::combatLogs[GameData::logpos].damage = damage;
+    GameData::combatLogs[GameData::logpos].killed = false;
     if (GameData::healths[target].curHealth <= 0) {
         causeDeath(source, target);
     }

@@ -81,6 +81,14 @@ glm::vec3 Camera::getDirectionVector() {
     //std::cout << "vector: " << directionVector.x << " " << directionVector.y << " " << directionVector.z << "\n ";
     return directionVector;
 }
+
+glm::vec3 Camera::getUpVector() {
+    glm::vec3 upVector = glm::vec3(glm::sin(glm::radians(pitch)) * glm::sin(glm::radians(angleAroundPlayer)),
+        glm::cos(glm::radians(pitch)),
+        glm::sin(glm::radians(pitch)) * glm::cos(glm::radians(angleAroundPlayer)));
+    //std::cout << "vector: " << upVector.x << " " << upVector.y << " " << upVector.z << "\n ";
+    return upVector;
+}
 void Camera::Reset() {
     position = glm::vec3(0, 0, 0);
     distanceFromPlayer = 5;
