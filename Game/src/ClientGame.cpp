@@ -42,14 +42,6 @@ void ClientGame::update()
     //Recieve incoming server data into gamestate
     recieveData();
 
-    /*
-    for (int i = 0; i < incomingData.logsize; ++i) {
-        printf("Recieved %d combat logs: Ent %d, attacked Ent %d, for dmg %f\n", incomingData.logsize, incomingData.combatLogs[i].source, incomingData.combatLogs[i].target, incomingData.combatLogs[i].damage);
-        if (incomingData.combatLogs[i].killed) {
-            printf("And killed it\n");
-        }
-    }
-    */
     //Send Data to Server
     ClienttoServerData newPackage;
     packageData(newPackage);
@@ -59,8 +51,18 @@ void ClientGame::update()
     //pass through ServertoClientData
     //Check init connection
     gameWindow->update(incomingData, initData.id);
+    audioManager->update(newPackage, incomingData);
     
-    
+    for (int i = 0; i < incomingData.logsize; ++i) {
+        audioManager->playSound("damage");
+        //printf("Recieved %d combat logs: Ent %d, attacked Ent %d, for dmg %f\n", incomingData.logsize, incomingData.combatLogs[i].source, incomingData.combatLogs[i].target, incomingData.combatLogs[i].damage);
+        if (incomingData.combatLogs[i].killed) {
+            audioManager->playSound("death");
+            //printf("And killed it\n");
+        }
+    }
+    incomingData.logsize = 0;
+
 }
 
 void ClientGame::packageData(ClienttoServerData& data) {

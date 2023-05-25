@@ -18,6 +18,7 @@ private:
 public:
 
     ServertoClientData incomingData;
+    std::array<Active, MAX_ENTITIES> currentEntities;
     ServertoClientInit initData;
     ClientGame();
     ~ClientGame(void);
