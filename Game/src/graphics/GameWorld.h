@@ -28,7 +28,7 @@ public:
     void update(ServertoClientData& incomingData, int id);
 
     //render all active entities
-    void draw(Shader* shader, Shader* skyboxShader);
+    void draw();
     
     float getCamAngle() { return cam->getAngleAroundPlayer(); };
     glm::vec3 getCamDirectionVector() { return cam->getDirectionVector(); };

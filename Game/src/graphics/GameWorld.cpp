@@ -4,6 +4,8 @@ float GameWorld::prevX, GameWorld::prevY,GameWorld::currX, GameWorld::currY, Gam
 void GameWorld::init() {
 	currID = 0;
 	env = new Skybox();
+	env->setSkyShader(new Shader("../shaders/skybox.vert", "../shaders/skybox.frag"));
+	env->setEnvShader(new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag"));
 
 	models[MODEL_ID_CUBE] = new ObjectModel("../assets/cube/cube.obj");
 	models[MODEL_ID_ROVER] = new ObjectModel("../assets/rover/rover.obj");
@@ -64,10 +66,10 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 }
 
 //render all active entities
-void GameWorld::draw(Shader* shader, Shader* skyboxShader) {
+void GameWorld::draw() {
 	float currTime = float(glfwGetTime());
 	const glm::mat4& viewProjMtx = cam->GetViewProjectMtx();
-	env->draw(viewProjMtx, skyboxShader);
+	env->draw(viewProjMtx);
 
 	for (RenderEntity* e : entities) {
 
