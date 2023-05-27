@@ -204,6 +204,7 @@ std::list<Entity> createEnemyFlyingBasic() {
     }
     //distinguishing factors
     GameData::velocities[e].flying = true;
+    GameData::models[e].modelID = MODEL_ID_MOB_FLYING;
 
     return createdEntities;
 };
