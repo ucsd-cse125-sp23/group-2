@@ -28,7 +28,7 @@ public:
     void update(ServertoClientData& incomingData, int id);
 
     //render all active entities
-    void draw(Shader* shader, Shader* skyboxShader);
+    void draw();
     
     float getCamAngle() { return cam->getAngleAroundPlayer(); };
     glm::vec3 getCamDirectionVector() { return cam->getDirectionVector(); };
@@ -36,5 +36,6 @@ public:
     //callbacks - for interaction
     static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
     static void mouse_callback(GLFWwindow* window, int button, int action, int mods);
+    static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
     static void cursor_callback(GLFWwindow* window, double currX, double currY);
 };

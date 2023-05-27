@@ -20,13 +20,22 @@ RenderEntity::~RenderEntity() {
 
 }
 
-void RenderEntity::draw(const glm::mat4& viewProjMtx) {
+void RenderEntity::draw(const glm::mat4& viewProjMtx, float time) {
     // actiavte the shader program
     shader->use();
 
     // get the locations and send the uniforms to the shader
     shader->setMat4("viewProj", viewProjMtx);
     shader->setMat4("model", model);
+    shader->setFloat("time", time);
+    shader->setVec3("color", color);
+
+    if (ourModel->textures_loaded.size() == 0) {
+        shader->setBool("hasTexture", false);
+    }
+    else {
+        shader->setBool("hasTexture", true);
+    }
 
     ourModel->Draw(*shader);
 

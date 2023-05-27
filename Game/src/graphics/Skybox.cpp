@@ -4,57 +4,57 @@ Skybox::Skybox() {
 
 	float vertices[] = {
 		// positions          
-		-100.0f,  100.0f, -100.0f,
-		-100.0f, -100.0f, -100.0f,
-		 100.0f, -100.0f, -100.0f,
-		 100.0f, -100.0f, -100.0f,
-		 100.0f,  100.0f, -100.0f,
-		-100.0f,  100.0f, -100.0f,
+		-1000.0f,  1000.0f, -1000.0f,
+		-1000.0f, -1000.0f, -1000.0f,
+		 1000.0f, -1000.0f, -1000.0f,
+		 1000.0f, -1000.0f, -1000.0f,
+		 1000.0f,  1000.0f, -1000.0f,
+		-1000.0f,  1000.0f, -1000.0f,
 
-		-100.0f, -100.0f,  100.0f,
-		-100.0f, -100.0f, -100.0f,
-		-100.0f,  100.0f, -100.0f,
-		-100.0f,  100.0f, -100.0f,
-		-100.0f,  100.0f,  100.0f,
-		-100.0f, -100.0f,  100.0f,
+		-1000.0f, -1000.0f,  1000.0f,
+		-1000.0f, -1000.0f, -1000.0f,
+		-1000.0f,  1000.0f, -1000.0f,
+		-1000.0f,  1000.0f, -1000.0f,
+		-1000.0f,  1000.0f,  1000.0f,
+		-1000.0f, -1000.0f,  1000.0f,
 
-		 100.0f, -100.0f, -100.0f,
-		 100.0f, -100.0f,  100.0f,
-		 100.0f,  100.0f,  100.0f,
-		 100.0f,  100.0f,  100.0f,
-		 100.0f,  100.0f, -100.0f,
-		 100.0f, -100.0f, -100.0f,
+		 1000.0f, -1000.0f, -1000.0f,
+		 1000.0f, -1000.0f,  1000.0f,
+		 1000.0f,  1000.0f,  1000.0f,
+		 1000.0f,  1000.0f,  1000.0f,
+		 1000.0f,  1000.0f, -1000.0f,
+		 1000.0f, -1000.0f, -1000.0f,
 
-		-100.0f, -100.0f,  100.0f,
-		-100.0f,  100.0f,  100.0f,
-		 100.0f,  100.0f,  100.0f,
-		 100.0f,  100.0f,  100.0f,
-		 100.0f, -100.0f,  100.0f,
-		-100.0f, -100.0f,  100.0f,
+		-1000.0f, -1000.0f,  1000.0f,
+		-1000.0f,  1000.0f,  1000.0f,
+		 1000.0f,  1000.0f,  1000.0f,
+		 1000.0f,  1000.0f,  1000.0f,
+		 1000.0f, -1000.0f,  1000.0f,
+		-1000.0f, -1000.0f,  1000.0f,
 
-		-100.0f,  100.0f, -100.0f,
-		 100.0f,  100.0f, -100.0f,
-		 100.0f,  100.0f,  100.0f,
-		 100.0f,  100.0f,  100.0f,
-		-100.0f,  100.0f,  100.0f,
-		-100.0f,  100.0f, -100.0f,
+		-1000.0f,  1000.0f, -1000.0f,
+		 1000.0f,  1000.0f, -1000.0f,
+		 1000.0f,  1000.0f,  1000.0f,
+		 1000.0f,  1000.0f,  1000.0f,
+		-1000.0f,  1000.0f,  1000.0f,
+		-1000.0f,  1000.0f, -1000.0f,
 
-		-100.0f, -100.0f, -100.0f,
-		-100.0f, -100.0f,  100.0f,
-		 100.0f, -100.0f, -100.0f,
-		 100.0f, -100.0f, -100.0f,
-		-100.0f, -100.0f,  100.0f,
-		 100.0f, -100.0f,  100.0f
+		-1000.0f, -1000.0f, -1000.0f,
+		-1000.0f, -1000.0f,  1000.0f,
+		 1000.0f, -1000.0f, -1000.0f,
+		 1000.0f, -1000.0f, -1000.0f,
+		-1000.0f, -1000.0f,  1000.0f,
+		 1000.0f, -1000.0f,  1000.0f
 	};
 
 	std::vector<std::string> faces =
 	{
-		"../assets/skybox/right.jpg",
-		"../assets/skybox/left.jpg",
-		"../assets/skybox/top.jpg",
-		"../assets/skybox/bottom.jpg",
-		"../assets/skybox/front.jpg",
-		"../assets/skybox/back.jpg"
+		"../assets/skybox/right.png",
+		"../assets/skybox/left.png",
+		"../assets/skybox/top.png",
+		"../assets/skybox/bottom.png",
+		"../assets/skybox/front.png",
+		"../assets/skybox/back.png"
 	};
 
 	texture = loadCubemap(faces);
@@ -73,16 +73,45 @@ Skybox::Skybox() {
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+
+
+	model = glm::mat4(1.0f);
+	model[3] = glm::vec4(0.0f, 39.0f, 0.0f, 1.0f);
+	color = glm::vec3(0.61f, 0.18f, 0.21f);
+
+	// tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
+	stbi_set_flip_vertically_on_load(false);
+
+	// configure global opengl state
+	// -----------------------------
+	glEnable(GL_DEPTH_TEST);
+	ourModel = new ObjectModel("../assets/environment/environment.obj");
 }
 
-void Skybox::draw(const glm::mat4& viewProjMtx, Shader* shader) {
+void Skybox::draw(const glm::mat4& viewProjMtx) {
 	glDepthMask(GL_FALSE);
-	shader->use();
-	shader->setMat4("viewProjMtx", viewProjMtx);
+	skyShader->use();
+	skyShader->setMat4("viewProjMtx", viewProjMtx);
 	glBindVertexArray(VAO);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glDepthMask(GL_TRUE);
+
+
+	envShader->use();
+	// get the locations and send the uniforms to the shader
+	envShader->setMat4("viewProj", viewProjMtx);
+	envShader->setMat4("model", model);
+	envShader->setVec3("color", color);
+	if (ourModel->textures_loaded.size() == 0) {
+		envShader->setBool("hasTexture", false);
+	}
+	else {
+		envShader->setBool("hasTexture", true);
+	}
+	ourModel->Draw(*envShader);
+	glUseProgram(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 // loads a cubemap texture from 6 individual texture faces

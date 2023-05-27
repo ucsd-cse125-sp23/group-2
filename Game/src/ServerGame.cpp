@@ -202,7 +202,6 @@ void ServerGame::handleInputs()
                 GameData::models[i].modelOrientation = -camAngle + glm::degrees(glm::acos(moveDirection.y));
                 GameData::velocities[i].velocity += PLAYER_MVSPD * moveDirection;
             }
-
             if (in.shoot) {
                 target = in.shoot;
             }
