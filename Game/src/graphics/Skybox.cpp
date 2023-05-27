@@ -77,7 +77,6 @@ Skybox::Skybox() {
 
 	model = glm::mat4(1.0f);
 	model[3] = glm::vec4(0.0f, 39.0f, 0.0f, 1.0f);
-	color = glm::vec3(0.61f, 0.18f, 0.21f);
 
 	// tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
 	stbi_set_flip_vertically_on_load(false);
@@ -102,13 +101,6 @@ void Skybox::draw(const glm::mat4& viewProjMtx) {
 	// get the locations and send the uniforms to the shader
 	envShader->setMat4("viewProj", viewProjMtx);
 	envShader->setMat4("model", model);
-	envShader->setVec3("color", color);
-	if (ourModel->textures_loaded.size() == 0) {
-		envShader->setBool("hasTexture", false);
-	}
-	else {
-		envShader->setBool("hasTexture", true);
-	}
 	ourModel->Draw(*envShader);
 	glUseProgram(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
