@@ -1,13 +1,13 @@
 //The max number of each entity type (CAN BE MODIFIED - Currently Arbitrary)
 #pragma once
 #define NUM_PLAYERS 1
-#define NUM_ENEMIES 40
-#define NUM_TOWERS 40
-#define NUM_RESOURCES 100
+#define NUM_ENEMIES 50
+#define NUM_TOWERS 50
+#define NUM_RESOURCES 300
 #define NUM_PROJECTILES 100
 #define NUM_BASES 1
 #define CLOG_MAXSIZE 50
-const float TICK_RATE = 128;
+const float TICK_RATE = 64;
 
 //World Length and Width
 constexpr float WORLD_X = 150;
