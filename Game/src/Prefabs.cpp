@@ -14,7 +14,7 @@ std::list<Entity> createProjectileBasic() {
     GameData::states[e] = 0;
     GameData::activity[e] = true;
     GameData::positions[e] = glm::vec3(0, 0, -4);
-    GameData::velocities[e].velocity = glm::vec3(0, 0, -0.5);
+    GameData::velocities[e].velocity = glm::vec3(0, 0, -1)*PROJ_MVSPD;
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
     GameData::models[e].modelID = MODEL_ID_PROJECTILE;
     GameData::models[e].asciiRep = 'J';

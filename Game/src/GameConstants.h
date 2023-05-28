@@ -19,6 +19,9 @@ const float PLAYER_MVSPD_PERSEC = 20;
 //Initial jump speed
 const float PLAYER_JPSPD_PERSEC = 30;
 
+//Projectile Speed
+const float PROJ_MVSPD_PERSEC = 64;
+
 //Ground Height
 const float GROUND_HEIGHT = -1.0;
 
@@ -101,6 +104,7 @@ const float PLAYER_MVSPD = (PLAYER_MVSPD_PERSEC / TICK_RATE);
 const float PLAYER_JPSPD = (PLAYER_JPSPD_PERSEC / TICK_RATE);
 const float ENEMY_SPAWNDELAY_TICKS = (ENEMY_SPAWNDELAY_SEC * TICK_RATE);
 const float GRAVITY = (GRAVITY_SEC / (TICK_RATE * TICK_RATE));
+const float PROJ_MVSPD = PROJ_MVSPD_PERSEC/TICK_RATE;
 
 //The Start and End indices of the entity array for each entity type
 #define ENEMY_START         (NUM_PLAYERS)
