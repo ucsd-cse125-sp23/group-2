@@ -39,7 +39,8 @@ int main()
 
 void serverLoop(void* arg)
 {
-    std::chrono::duration<double> ticklength = 1s / TICK_RATE;
+    double spertick = 1.0 / TICK_RATE;
+    std::chrono::duration<double> ticklength = std::chrono::duration<double>(spertick);
     auto start = std::chrono::system_clock::now();
     while (true)
     {
