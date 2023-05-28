@@ -36,8 +36,10 @@ struct ServertoClientData {
     std::array<Position, MAX_ENTITIES> positions;
     std::array<Model, MAX_ENTITIES> models;
     std::array<Health, MAX_ENTITIES> healths;
-    int logsize;
+    int clogsize;
     std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
+    int slogsize;
+    std::array<SoundLog, SLOG_MAXSIZE> soundLogs;
     int currentWave;
     int numWaves;
     std::array<Collider, MAX_ENTITIES> colliders;

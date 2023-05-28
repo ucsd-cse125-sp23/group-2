@@ -49,7 +49,7 @@ void ClientGame::update()
     }
     
     //Process combat logs
-    for (int i = 0; i < incomingData.logsize; ++i) {
+    for (int i = 0; i < incomingData.clogsize; ++i) {
         Entity target = incomingData.combatLogs[i].target;
         audioManager->playSound3D("damage", incomingData.positions[target]);
         //printf("Recieved %d combat logs: Ent %d, attacked Ent %d, for dmg %f\n", incomingData.logsize, incomingData.combatLogs[i].source, incomingData.combatLogs[i].target, incomingData.combatLogs[i].damage);
@@ -58,7 +58,7 @@ void ClientGame::update()
             //printf("And killed it\n");
         }
     }
-    incomingData.logsize = 0;
+    incomingData.clogsize = 0;
 
 }
 

@@ -2,8 +2,7 @@
 
 namespace GameData
 {
-    std::array<Tag, MAX_ENTITIES> tags;
-
+  std::array<Tag, MAX_ENTITIES> tags;
   std::array<Active, MAX_ENTITIES> activity;
   std::array<Position, MAX_ENTITIES> positions;
   std::array<VelocityData, MAX_ENTITIES> velocities;
@@ -19,9 +18,11 @@ namespace GameData
   std::array<LifeSpan, MAX_ENTITIES> lifespans;
   std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
   std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
+  std::array<SoundLog, SLOG_MAXSIZE> soundLogs;
   std::array<Creator, MAX_ENTITIES> creators;
   std::array<SpawnRate, MAX_ENTITIES> spawnrates;
-  int logpos = 0;
+  int clogpos = 0;
+  int slogpos = 0;
   std::array<State, MAX_ENTITIES> states;
   std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
   std::array<HomingData, MAX_ENTITIES> homingStructs;
@@ -34,7 +35,8 @@ namespace GameData
 void EntityComponentSystem::update()
 {
     sysStateMachine();
-    GameData::logpos = 0;
+    GameData::clogpos = 0;
+    GameData::slogpos = 0;
     sysDeathStatus();
     sysAttacks();
     sysPathing();
@@ -666,14 +668,14 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     }
     printf("Ent %d dealing %f dmg to %d\n", source, damage, target);
 
-    GameData::combatLogs[GameData::logpos].source = source;
-    GameData::combatLogs[GameData::logpos].target = target;
-    GameData::combatLogs[GameData::logpos].damage = damage;
-    GameData::combatLogs[GameData::logpos].killed = false;
+    GameData::combatLogs[GameData::clogpos].source = source;
+    GameData::combatLogs[GameData::clogpos].target = target;
+    GameData::combatLogs[GameData::clogpos].damage = damage;
+    GameData::combatLogs[GameData::clogpos].killed = false;
     if (GameData::healths[target].curHealth <= 0) {
         causeDeath(source, target);
     }
-    GameData::logpos++;
+    GameData::clogpos++;
 }
 
 void EntityComponentSystem::causeDeath(Entity source, Entity target)
@@ -689,10 +691,10 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
     GameData::velocities[target].velocity = glm::vec3(0);
 
     if (source == target) { return; }
-    GameData::combatLogs[GameData::logpos].source = source;
-    GameData::combatLogs[GameData::logpos].target = target;
-    GameData::combatLogs[GameData::logpos].killed = true;
-    GameData::logpos++;
+    GameData::combatLogs[GameData::clogpos].source = source;
+    GameData::combatLogs[GameData::clogpos].target = target;
+    GameData::combatLogs[GameData::clogpos].killed = true;
+    GameData::clogpos++;
 
     if (source < NUM_PLAYERS) {
         if ((GameData::tags[target] & ComponentTags::WorthPoints) == ComponentTags::WorthPoints) {

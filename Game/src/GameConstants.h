@@ -7,6 +7,7 @@
 #define NUM_PROJECTILES 100
 #define NUM_BASES 1
 #define CLOG_MAXSIZE 50
+#define SLOG_MAXSIZE 100
 const float TICK_RATE = 128;
 
 //World Length and Width
@@ -76,6 +77,15 @@ const float TOWER_PLACEMENT_RANGE = 15;
 #define MODEL_ID_PROJECTILE 5
 
 #define NUM_MODELS 6
+
+//Sound IDs
+#define SOUND_ID_IDLE 0
+#define SOUND_ID_ATTACK 1
+#define SOUND_ID_DAMAGE 2
+#define SOUND_ID_DEATH 3
+#define SOUND_ID_LANDING 4
+
+#define NUM_SOUND_TYPES 5 
 
 #define INVALID_CLIENT_ID NUM_PLAYERS
 #define UNKNOWN_SERVER_STATUS -1
