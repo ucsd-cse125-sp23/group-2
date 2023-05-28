@@ -106,6 +106,22 @@ void EntityComponentSystem::sysMovement()
         {
             GameData::positions[e] = GameData::positions[e] + GameData::velocities[e].velocity;
         }
+        if (e < NUM_PLAYERS) {
+            //Keep Entity within World dimensionsc if player
+            if (GameData::positions[e].x > WORLD_X / 2) {
+                GameData::positions[e].x = WORLD_X / 2;
+            }
+            if (GameData::positions[e].z > WORLD_Z / 2) {
+                GameData::positions[e].z = WORLD_Z / 2;
+
+            }
+            if (GameData::positions[e].x < -1.0 * WORLD_X / 2.0) {
+                GameData::positions[e].x = -1.0 * WORLD_X / 2.0;
+            }
+            if (GameData::positions[e].z < -1.0 * WORLD_Z / 2.0) {
+                GameData::positions[e].z = -1.0 * WORLD_Z / 2.0;
+            }
+        }
     }
 }
 
