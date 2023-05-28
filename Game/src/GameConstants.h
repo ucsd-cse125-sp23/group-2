@@ -19,6 +19,9 @@ const float PLAYER_MVSPD_PERSEC = 20;
 //Initial jump speed
 const float PLAYER_JPSPD_PERSEC = 30;
 
+//Ground Height
+const float GROUND_HEIGHT = -1.0;
+
 //Base health values of different game entities
 const float PLAYER_BASE_HEALTH = 100;
 const float ENEMY_BASE_HEALTH = 100;

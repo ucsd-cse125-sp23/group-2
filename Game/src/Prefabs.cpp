@@ -285,6 +285,7 @@ std::list<Entity> createHome() {
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = HOME_BASE_HEALTH;
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
     GameData::rigidbodies[e].fixed = true;
+    GameData::models[e].renderCollider = true;
     GameData::rigidbodies[e].grounded = false;
     GameData::tags[e] =
         ComponentTags::Position +
@@ -320,10 +321,10 @@ std::list<Entity> createPlayers() {
         GameData::activity[e] = true;
         GameData::positions[e] = PlayerSpawns::spawnpoint[i];
         GameData::velocities[e].velocity = glm::vec3(0, 0, 0);
-        GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+        GameData::colliders[e] = { glm::vec3(1, 0.7, 1) };
         GameData::models[e].modelID = MODEL_ID_ROVER;
         GameData::models[e].asciiRep = 'P';
-        //GameData::models[i].renderCollider = true;
+        GameData::models[i].renderCollider = true;
         GameData::healths[e].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
         GameData::hostilities[e].team = Teams::Players;
         GameData::hostilities[e].hostileTo = Teams::Environment + Teams::Martians;
@@ -373,6 +374,7 @@ std::list<Entity> createWoodResourceBasic()
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
     GameData::resources[e].resources[ResourceType::Wood] = 20;
     GameData::rigidbodies[e].fixed = true;
+    GameData::models[e].renderCollider = true;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -405,6 +407,7 @@ std::list<Entity> createStoneResourceBasic()
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
     GameData::resources[e].resources[ResourceType::Stone] = 20;
     GameData::rigidbodies[e].fixed = true;
+    GameData::models[e].renderCollider = true;
 
     GameData::tags[e] =
         ComponentTags::Position +

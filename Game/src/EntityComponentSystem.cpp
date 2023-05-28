@@ -120,12 +120,12 @@ void EntityComponentSystem::sysGravity()
         //check if this entity has a is a rigid body
         if ((GameData::tags[e] & ComponentTags::RigidBody) == ComponentTags::RigidBody)
         {
-            if (GameData::positions[e].y > 0) {
+            if (GameData::positions[e].y > (GROUND_HEIGHT+GameData::colliders[e].AABB.y)) {
                 GameData::velocities[e].velocity.y += GRAVITY;
                 GameData::rigidbodies[e].grounded = false;
             }
             else {
-                GameData::positions[e].y = 0;
+                GameData::positions[e].y = (GROUND_HEIGHT+GameData::colliders[e].AABB.y);
                 if (GameData::velocities[e].velocity.y < 0) {
                     GameData::velocities[e].velocity.y = 0;
                 }
