@@ -277,13 +277,13 @@ std::list<Entity> createHome() {
         return createdEntities;
     }
     GameData::activity[e] = true;
-    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::positions[e] = baseLoc;
     GameData::models[e].asciiRep = 'B';
     GameData::models[e].modelID = MODEL_ID_BASE;
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = HOME_BASE_HEALTH;
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::colliders[e] = { glm::vec3(60, 40, 20) };
     GameData::rigidbodies[e].fixed = true;
     GameData::models[e].renderCollider = true;
     GameData::rigidbodies[e].grounded = false;
@@ -425,10 +425,10 @@ std::list<Entity> createStoneResourceBasic()
 namespace Paths {
     const glm::vec3 path[pathCount][PATH_LENGTH] =
     {
-        { glm::vec3(60,0,0), glm::vec3(40,0,0), glm::vec3(40,0,20), glm::vec3(20,0,20), glm::vec3(20,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) },
-        { glm::vec3(-60,0,0), glm::vec3(-40,0,0), glm::vec3(-40,0,-20), glm::vec3(-20,0,-20), glm::vec3(-20,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) },
-        { glm::vec3(0,0,60), glm::vec3(0,0,40), glm::vec3(-20,0,40), glm::vec3(-20,0,20), glm::vec3(0,0,20), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) },
-        { glm::vec3(0,0,-60), glm::vec3(0,0,-40), glm::vec3(20,0,-40), glm::vec3(20,0,-20), glm::vec3(0,0,-20), glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0,0,0) }
+        { glm::vec3(-60,0,-105), glm::vec3(-60,0,105), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc },
+        { glm::vec3(-20,0,-105), glm::vec3(-20,0,105), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
+        { glm::vec3(20,0,-105), glm::vec3(20,0,105), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc},
+        { glm::vec3(60,0,-105), glm::vec3(60,0,105), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  }
     };
 }
 namespace WaveData {
