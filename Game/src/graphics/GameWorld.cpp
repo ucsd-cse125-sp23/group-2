@@ -14,7 +14,7 @@ void GameWorld::init() {
 	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/tower.obj");
 	models[MODEL_ID_BASE] = new ObjectModel("../assets/cube/cube.obj");
 	//replace once models are done
-	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/cube/cube.obj");
+	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/tree/tree.obj");
 	models[MODEL_ID_PROJECTILE] = new ObjectModel("../assets/laser_projectile/laser_projectile.obj");
 
 	shaders[MODEL_ID_CUBE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
