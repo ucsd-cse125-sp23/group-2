@@ -97,7 +97,7 @@ void GameWorld::mouse_button_callback(GLFWwindow* window, int button, int action
 	if (action == GLFW_PRESS) {
 		switch (button) {
 		case GLFW_MOUSE_BUTTON_LEFT:
-			printf("HELLO");
+
 			break;
 		default: break;
 		}
