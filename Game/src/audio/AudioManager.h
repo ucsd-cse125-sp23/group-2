@@ -10,16 +10,15 @@ class AudioManager {
 private:
 	FMOD::System* audioSystem;
 	int errorCheck(FMOD_RESULT result);
-	std::unordered_map<std::string, FMOD::Sound *> soundMap;
-	FMOD::ChannelGroup* sfx;
-	FMOD::Channel* music;
+	FMOD::Sound* soundArray[NUM_MODELS][NUM_SOUND_TYPES]{};
+	FMOD::Sound* music;
+	FMOD::Channel* musicChannel;
 public:
 	AudioManager();
-	void loadSound(const char* path, std::string name);
-	void loadSound3D(const char* path, std::string name);
-	void playSound(std::string name);
-	void playSound3D(std::string name, glm::vec3 pos);
+	void loadSound(const char* path, int model, int soundType);
+	void playSound(int model, int soundType, glm::vec3 pos);
 	void update(glm::vec3 camPos, glm::vec3 camForward, glm::vec3 camUp);
-	void playMusic(std::string name);
+	void loadMusic(const char* path);
+	void playMusic();
 	void setMusicVolume(float vol);
 };

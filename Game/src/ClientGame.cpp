@@ -51,10 +51,8 @@ void ClientGame::update()
     //Process combat logs
     for (int i = 0; i < incomingData.clogsize; ++i) {
         Entity target = incomingData.combatLogs[i].target;
-        audioManager->playSound3D("damage", incomingData.positions[target]);
         //printf("Recieved %d combat logs: Ent %d, attacked Ent %d, for dmg %f\n", incomingData.logsize, incomingData.combatLogs[i].source, incomingData.combatLogs[i].target, incomingData.combatLogs[i].damage);
         if (incomingData.combatLogs[i].killed) {
-            audioManager->playSound3D("death", incomingData.positions[target]);
             //printf("And killed it\n");
         }
     }
@@ -62,21 +60,9 @@ void ClientGame::update()
 
     //Process sound logs
     for (int i = 0; i < incomingData.slogsize; ++i) {
-        glm::vec3 position = incomingData.positions[incomingData.soundLogs[i].source];
-        switch (incomingData.soundLogs[i].sound) {
-        case SOUND_ID_DAMAGE:
-            audioManager->playSound3D("damage", position);
-            break;
-        case SOUND_ID_DEATH:
-            audioManager->playSound3D("death", position);
-            break;
-        case SOUND_ID_BUILD:
-            audioManager->playSound3D("building", position);
-            break;
-        case SOUND_ID_ATTACK:
-            audioManager->playSound3D("laser", position);
-            break;
-        }
+        Entity source = incomingData.soundLogs[i].source;
+        glm::vec3 position = incomingData.positions[source];
+        audioManager->playSound(incomingData.models[source].modelID, incomingData.soundLogs[i].sound, position);
     }
     incomingData.slogsize = 0;
 

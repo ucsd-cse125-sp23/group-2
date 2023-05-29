@@ -14,50 +14,45 @@ AudioManager::AudioManager() {
     // Initialize FMOD.
     AudioManager::errorCheck(audioSystem->init(512, FMOD_INIT_3D_RIGHTHANDED, 0));
     //AudioManager::errorCheck(audioSystem->setDSPBufferSize(512, 2));
-
-    AudioManager::loadSound("../assets/sounds/sports.mp3", "bgm");
-    AudioManager::loadSound3D("../assets/sounds/pew.mp3", "laser");
-    AudioManager::loadSound3D("../assets/sounds/oof.mp3", "death");
-    AudioManager::loadSound3D("../assets/sounds/sentry.wav", "building");
-    AudioManager::loadSound3D("../assets/sounds/minecrafthit.mp3", "damage");
     music = nullptr;
-    AudioManager::playMusic("bgm");
+    musicChannel = nullptr;
+    AudioManager::loadMusic("../assets/sounds/sports.mp3");
+    AudioManager::loadSound("../assets/sounds/pew.mp3", MODEL_ID_ROVER, SOUND_ID_ATTACK);
+    AudioManager::loadSound("../assets/sounds/oof.mp3", MODEL_ID_MOB, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/sentry.wav", MODEL_ID_ROVER, SOUND_ID_BUILD);
+    AudioManager::loadSound("../assets/sounds/minecrafthit.mp3", MODEL_ID_MOB, SOUND_ID_DAMAGE);
+    AudioManager::playMusic();
     AudioManager::setMusicVolume(0.25);
 }
 
 // Loads a sound into the sound map
-void AudioManager::loadSound(const char* path, std::string name) {
-    FMOD::Sound* newSound = nullptr;
-    AudioManager::errorCheck(audioSystem->createSound(path, FMOD_DEFAULT, nullptr, &newSound));
-    soundMap.insert(std::pair<std::string, FMOD::Sound*>(name, newSound));
+void AudioManager::loadSound(const char* path, int model, int soundType) {
+    AudioManager::errorCheck(audioSystem->createSound(path, FMOD_3D, nullptr, &soundArray[model][soundType]));
 }
 
 // Play a sound from the given sound map
-void AudioManager::playSound(std::string name) {
+void AudioManager::playSound(int model, int soundType, glm::vec3 pos) {
+    if (soundArray[model][soundType] == nullptr) {
+        printf("Invalid play sound call!");
+        return;
+    }
     FMOD::Channel* newChannel = nullptr;
-    AudioManager::errorCheck(audioSystem->playSound(soundMap.find(name)->second, nullptr, false, &newChannel));
-}
-
-void AudioManager::playMusic(std::string name) {
-    AudioManager::errorCheck(audioSystem->playSound(soundMap.find(name)->second, nullptr, false, &music));
-}
-
-void AudioManager::setMusicVolume(float vol) {
-    music->setVolume(vol);
-}
-
-// Play a 3D sound at the position
-void AudioManager::playSound3D(std::string name, glm::vec3 pos) {
-    FMOD::Channel* newChannel = nullptr;
-    AudioManager::errorCheck(audioSystem->playSound(soundMap.find(name)->second, nullptr, true, &newChannel));
+    AudioManager::errorCheck(audioSystem->playSound(soundArray[model][soundType], nullptr, false, &newChannel));
     AudioManager::errorCheck(newChannel->set3DAttributes(&vecConvert(pos), &zeroVec));
     AudioManager::errorCheck(newChannel->setPaused(false));
 }
 
-void AudioManager::loadSound3D(const char* path, std::string name) {
-    FMOD::Sound* newSound = nullptr;
-    AudioManager::errorCheck(audioSystem->createSound(path, FMOD_3D, nullptr, &newSound));
-    soundMap.insert(std::pair<std::string, FMOD::Sound*>(name, newSound));
+// Load music track
+void AudioManager::loadMusic(const char* path) {
+    AudioManager::errorCheck(audioSystem->createSound(path, FMOD_DEFAULT, nullptr, &music));
+}
+
+void AudioManager::playMusic() {
+    AudioManager::errorCheck(audioSystem->playSound(music, nullptr, false, &musicChannel));
+}
+
+void AudioManager::setMusicVolume(float vol) {
+    musicChannel->setVolume(vol);
 }
 
 // Helper function to check for FMOD errors
