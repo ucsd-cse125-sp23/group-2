@@ -130,8 +130,6 @@ int ClientNetwork::initConnection()
 
 int ClientNetwork::recieveDeserialize(ServertoClientData& incomingData, ServertoClientInit & initData)
 {
-    Packet<ServertoClientData> datapacket;
-    Packet<ServertoClientInit> initpacket;
 
     int data_length = receivePackets(&(network_data[ndloc]));
     if (data_length <= 0)
