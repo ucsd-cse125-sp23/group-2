@@ -54,6 +54,7 @@ namespace ResourceType {
 namespace CollisionLayer {
     constexpr TeamID WorldObj = 0x1;
     constexpr TeamID UIObj = 0x1 << 1;
+    constexpr TeamID StaticObj = 0x1 << 2;
 }
 
 struct Hostility {

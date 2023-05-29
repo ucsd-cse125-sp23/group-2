@@ -22,7 +22,7 @@ std::list<Entity> createProjectileBasic() {
     GameData::lifespans[e] = 5;
     GameData::spawnrates[e] = 0.25;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::hostilities[e].team = Teams::Projectile;
 
     GameData::tags[e] =
@@ -54,7 +54,7 @@ std::list<Entity> createProjectileSpread5() {
         GameData::lifespans[e] = 1;
         GameData::spawnrates[e] = 0.25;
         GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-        GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+        GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
         GameData::hostilities[e].team = Teams::Projectile;
 
         GameData::tags[e] =
@@ -88,7 +88,7 @@ std::list<Entity> createProjectileChaos() {
     GameData::pattackmodules[e].cooldown = 0.1;
     GameData::pattackmodules[e].attack = Prefabs::ProjectileRandom;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::hostilities[e].team = Teams::Projectile;
 
 
@@ -122,7 +122,7 @@ std::list<Entity> createProjectileRandom() {
     GameData::lifespans[e] = 0.5;
     GameData::spawnrates[e] = 0.1;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::hostilities[e].team = Teams::Projectile;
 
 
@@ -159,7 +159,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::hostilities[e].team = Teams::Martians;
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
@@ -231,7 +231,7 @@ std::list<Entity> createTowerReticle() {
         ComponentTags::DiesOnCollision;
     GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::UIObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::UIObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::UIObj;
 
     return createdEntities;
 }
@@ -262,7 +262,7 @@ std::list<Entity> createTowerBasic() {
         ComponentTags::Collidable +
         ComponentTags::Turret;
     GameData::models[e].renderCollider = true;
-    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 
     return createdEntities;
@@ -295,7 +295,7 @@ std::list<Entity> createHome() {
         ComponentTags::RigidBody +
         ComponentTags::Health +
         ComponentTags::Collidable;
-    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
 
     return createdEntities;
@@ -338,7 +338,7 @@ std::list<Entity> createPlayers() {
         GameData::retplaces[e].place = false;
         GameData::retplaces[e].validTarget = false;
         GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-        GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+        GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
         GameData::playerdata.spawntimers[e] = -2;
 
         GameData::tags[e] =
@@ -370,7 +370,7 @@ std::list<Entity> createWoodResourceBasic()
     GameData::hostilities[e].team = Teams::Environment;
     GameData::models[e].modelID = MODEL_ID_RESOURCE;
     GameData::hostilities[e].hostileTo = 0;
-    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
     GameData::resources[e].resources[ResourceType::Wood] = 20;
     GameData::rigidbodies[e].fixed = true;
@@ -403,7 +403,7 @@ std::list<Entity> createStoneResourceBasic()
     GameData::hostilities[e].team = Teams::Environment;
     GameData::hostilities[e].hostileTo = 0;
     GameData::models[e].modelID = MODEL_ID_RESOURCE;
-    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj;
     GameData::resources[e].resources[ResourceType::Stone] = 20;
     GameData::rigidbodies[e].fixed = true;

@@ -39,8 +39,8 @@ void EntityComponentSystem::update()
     sysAttacks();
     sysPathing();
     sysHoming();
-    sysGravity();
     sysMovement();
+    sysGravity();
     sysTurretFire();
     sysDetectCollisions();
     resolveCollisions();
@@ -287,7 +287,6 @@ void EntityComponentSystem::sysDetectCollisions()
                 //Continue to next entity if this one is itself
                 if (o == e) { continue; }
 
-                Tag collides = ComponentTags::Position + ComponentTags::Collidable;
                 //check if this entity has can collide
                 if ((GameData::tags[o] & collides) == collides)
                 {
@@ -372,6 +371,7 @@ void EntityComponentSystem::resolveCollisions()
                 }
                 if (glm::abs(ce.pen.x) < glm::abs(ce.pen.y) && glm::abs(ce.pen.z) < glm::abs(ce.pen.y)) {
                     GameData::rigidbodies[e].grounded = true;
+                    GameData::velocities[e].velocity.y = 0;
                 }
             }
 

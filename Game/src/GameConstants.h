@@ -3,7 +3,7 @@
 #define NUM_PLAYERS 1
 #define NUM_ENEMIES 50
 #define NUM_TOWERS 50
-#define NUM_RESOURCES 300
+#define NUM_RESOURCES 700
 #define NUM_PROJECTILES 100
 #define NUM_BASES 1
 #define CLOG_MAXSIZE 50
