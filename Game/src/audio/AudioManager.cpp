@@ -18,7 +18,7 @@ AudioManager::AudioManager() {
     AudioManager::loadSound("../assets/sounds/sports.mp3", "bgm");
     AudioManager::loadSound3D("../assets/sounds/pew.mp3", "laser");
     AudioManager::loadSound3D("../assets/sounds/oof.mp3", "death");
-    AudioManager::loadSound3D("../assets/sounds/sentry.wav", "tower");
+    AudioManager::loadSound3D("../assets/sounds/sentry.wav", "building");
     AudioManager::loadSound3D("../assets/sounds/minecrafthit.mp3", "damage");
     music = nullptr;
     AudioManager::playMusic("bgm");

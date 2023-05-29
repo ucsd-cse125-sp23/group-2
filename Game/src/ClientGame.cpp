@@ -60,6 +60,26 @@ void ClientGame::update()
     }
     incomingData.clogsize = 0;
 
+    //Process sound logs
+    for (int i = 0; i < incomingData.slogsize; ++i) {
+        glm::vec3 position = incomingData.positions[incomingData.soundLogs[i].source];
+        switch (incomingData.soundLogs[i].sound) {
+        case SOUND_ID_DAMAGE:
+            audioManager->playSound3D("damage", position);
+            break;
+        case SOUND_ID_DEATH:
+            audioManager->playSound3D("death", position);
+            break;
+        case SOUND_ID_BUILD:
+            audioManager->playSound3D("building", position);
+            break;
+        case SOUND_ID_ATTACK:
+            audioManager->playSound3D("laser", position);
+            break;
+        }
+    }
+    incomingData.slogsize = 0;
+
 }
 
 void ClientGame::packageData(ClienttoServerData& data) {
