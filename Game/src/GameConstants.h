@@ -11,7 +11,7 @@ const float TICK_RATE = 64;
 
 //World Length and Width
 constexpr float WORLD_X = 150;
-constexpr float WORLD_Z = 150;
+constexpr float WORLD_Z = 165;
 
 //Speed of movement in units per second
 const float PLAYER_MVSPD_PERSEC = 20;
