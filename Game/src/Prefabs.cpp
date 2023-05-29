@@ -263,7 +263,7 @@ std::list<Entity> createTowerBasic() {
         ComponentTags::Turret;
     GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = 0;
 
     return createdEntities;
 };
@@ -296,7 +296,7 @@ std::list<Entity> createHome() {
         ComponentTags::Health +
         ComponentTags::Collidable;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = 0;
 
     return createdEntities;
 }
@@ -371,7 +371,7 @@ std::list<Entity> createWoodResourceBasic()
     GameData::models[e].modelID = MODEL_ID_RESOURCE;
     GameData::hostilities[e].hostileTo = 0;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = 0;
     GameData::resources[e].resources[ResourceType::Wood] = 20;
     GameData::rigidbodies[e].fixed = true;
     GameData::models[e].renderCollider = true;
@@ -404,7 +404,7 @@ std::list<Entity> createStoneResourceBasic()
     GameData::hostilities[e].hostileTo = 0;
     GameData::models[e].modelID = MODEL_ID_RESOURCE;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = 0;
     GameData::resources[e].resources[ResourceType::Stone] = 20;
     GameData::rigidbodies[e].fixed = true;
     GameData::models[e].renderCollider = true;
@@ -425,10 +425,10 @@ std::list<Entity> createStoneResourceBasic()
 namespace Paths {
     const glm::vec3 path[pathCount][PATH_LENGTH] =
     {
-        { glm::vec3(-60,0,-105), glm::vec3(-60,0,105), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc },
-        { glm::vec3(-20,0,-105), glm::vec3(-20,0,105), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
-        { glm::vec3(20,0,-105), glm::vec3(20,0,105), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc},
-        { glm::vec3(60,0,-105), glm::vec3(60,0,105), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  }
+        { glm::vec3(-60,0,-85), glm::vec3(-60,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc },
+        { glm::vec3(-20,0,-85), glm::vec3(-20,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
+        { glm::vec3(20,0,-85), glm::vec3(20,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc},
+        { glm::vec3(60,0,-85), glm::vec3(60,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  }
     };
 }
 namespace WaveData {
