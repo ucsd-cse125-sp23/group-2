@@ -16,13 +16,19 @@ AudioManager::AudioManager() {
     //AudioManager::errorCheck(audioSystem->setDSPBufferSize(512, 2));
     music = nullptr;
     musicChannel = nullptr;
-    AudioManager::loadMusic("../assets/sounds/sports.mp3");
-    AudioManager::loadSound("../assets/sounds/pew.mp3", MODEL_ID_ROVER, SOUND_ID_ATTACK);
-    AudioManager::loadSound("../assets/sounds/oof.mp3", MODEL_ID_MOB, SOUND_ID_DEATH);
-    AudioManager::loadSound("../assets/sounds/sentry.wav", MODEL_ID_ROVER, SOUND_ID_BUILD);
-    AudioManager::loadSound("../assets/sounds/minecrafthit.mp3", MODEL_ID_MOB, SOUND_ID_DAMAGE);
-    AudioManager::playMusic();
+
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0254_wood_falling_log_002_006.wav", MODEL_ID_RESOURCE, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_RESOURCE, SOUND_ID_DAMAGE);
+    AudioManager::loadSound("../assets/sounds/Big Blast 4.wav", MODEL_ID_ROVER, SOUND_ID_ATTACK);
+    AudioManager::loadSound("../assets/sounds/PM_SFG_VOL1_WEAPON_4_4_GUN_GUNSHOT_FUTURISTIC.wav", MODEL_ID_TOWER, SOUND_ID_ATTACK);
+    AudioManager::loadSound("../assets/sounds/MINE Placing 01.wav", MODEL_ID_ROVER, SOUND_ID_BUILD);
+    AudioManager::loadSound("../assets/sounds/Screeching Monster 2-1.wav", MODEL_ID_MOB, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/Melee_Deep_Wound_05.wav", MODEL_ID_MOB, SOUND_ID_DAMAGE);
+    
+    //AudioManager::playMusic();
     AudioManager::setMusicVolume(0.25);
+
+    AudioManager::errorCheck(audioSystem->set3DSettings(1, 1, 0.5));
 }
 
 // Loads a sound into the sound map
@@ -33,7 +39,7 @@ void AudioManager::loadSound(const char* path, int model, int soundType) {
 // Play a sound from the given sound map
 void AudioManager::playSound(int model, int soundType, glm::vec3 pos) {
     if (soundArray[model][soundType] == nullptr) {
-        printf("Invalid play sound call!");
+        printf("Invalid play sound call!\n");
         return;
     }
     FMOD::Channel* newChannel = nullptr;
