@@ -688,7 +688,7 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     GameData::combatLogs[GameData::clogpos].killed = false;
     GameData::clogpos++;
     // Add damage sound to sound log
-    GameData::soundLogs[GameData::slogpos].source = source;
+    GameData::soundLogs[GameData::slogpos].source = target;
     GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_DAMAGE;
     GameData::slogpos++;
     if (GameData::healths[target].curHealth <= 0) {
@@ -715,7 +715,7 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
     GameData::combatLogs[GameData::clogpos].killed = true;
     GameData::clogpos++;
     // Add death sound to sound log
-    GameData::soundLogs[GameData::slogpos].source = source;
+    GameData::soundLogs[GameData::slogpos].source = target;
     GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_DEATH;
     GameData::slogpos++;
 
