@@ -77,6 +77,7 @@ void ServerGame::waveSpawner()
                 {
                     GameData::pathStructs[e.front()].path = WaveData::waves[WaveData::currentWave].front().path;
                     GameData::positions[e.front()] = Paths::path[GameData::pathStructs[e.front()].path][0];
+                    Collision::updateColTable(e.front());
                     WaveData::waves[WaveData::currentWave].pop();
                     if (!WaveData::waves[WaveData::currentWave].empty())
                     {
@@ -109,17 +110,22 @@ void ServerGame::initResources()
         if (e != INVALID_ENTITY) {
             GameData::positions[e] = pos - glm::vec3(WORLD_X/2, 0, WORLD_Z/2);
             GameData::tags[e] |= ComponentTags::DiesOnCollision;
-            GameData::colliders[e].colwith |= CollisionLayer::UIObj;
+            GameData::colliders[e].colwith |= CollisionLayer::UIObj + CollisionLayer::StaticObj;
+            Collision::updateColTable(e);
             resources.push_back(e);
         }
         //printf("Pos is %f, %f, %f\n", pos.x, pos.y, pos.z);
     }
-    EntityComponentSystem::sysDetectCollisions();
-    EntityComponentSystem::resolveCollisions();
     for (Entity e : resources) {
+        for (Entity p : Paths::pathlist) {
+            ECS::colCheck(e, p);
+        }
+        ECS::colCheck(e, MAX_ENTITIES_NOBASE);
+        ECS::resolveCollisions();
         GameData::tags[e] ^= ComponentTags::DiesOnCollision;
-        GameData::colliders[e].colwith ^= CollisionLayer::UIObj;
+        GameData::colliders[e].colwith ^= CollisionLayer::UIObj + CollisionLayer::StaticObj;
     }
+
 
 }
 
@@ -134,7 +140,9 @@ void ServerGame::update()
     }
     //Receve Input
     receiveFromClients();
-
+    //auto startTime = std::chrono::steady_clock::now();
+    //auto endTime = std::chrono::steady_clock::now();
+    //auto duration = std::chrono::duration<double, std::milli>(endTime - startTime);
     switch (currentStatus){
     case init:
         if (clientsConnected >= NUM_PLAYERS) {
@@ -144,8 +152,11 @@ void ServerGame::update()
         break;
     case game:
         handleInputs();
-
+        //startTime = std::chrono::steady_clock::now();
         EntityComponentSystem::update();
+        //endTime = std::chrono::steady_clock::now();
+        //duration = std::chrono::duration<double, std::milli>(endTime - startTime);
+        //std::cout << "ECS took " << duration.count() << " milliseconds.\n";
 
         waveSpawner();
 
@@ -198,11 +209,10 @@ void ServerGame::handleInputs()
             camPosition = in.camPosition;
             if ( ((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
                 float camAngle = in.camAngleAroundPlayer;
-                glm::vec3 moveDirection = glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f));
+                glm::vec3 moveDirection = glm::normalize(glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f)));
                 GameData::models[i].modelOrientation = -camAngle + glm::degrees(glm::acos(moveDirection.y));
                 GameData::velocities[i].velocity += PLAYER_MVSPD * moveDirection;
             }
-
             if (in.shoot) {
                 target = in.shoot;
             }
@@ -213,7 +223,7 @@ void ServerGame::handleInputs()
             else {
                 changeState(i, PlayerState::Default); //May be slow
                 if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
-                    GameData::activity[GameData::retplaces[i].reticle] = false;
+                    ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
                     GameData::retplaces[i].reticle = INVALID_ENTITY;
                 }
             }
@@ -259,7 +269,7 @@ void ServerGame::sendPackets()
 
 void ServerGame::initPrefabs()
 {
-    list<Entity> pathlist = prefabMap[Prefabs::PathColliders]();
+    Paths::pathlist = prefabMap[Prefabs::PathColliders]();
     /*
     for (Entity e : pathlist) {
         if (e != INVALID_ENTITY) {

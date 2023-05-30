@@ -13,14 +13,13 @@ private:
 
     glm::mat4 model;
     glm::vec3 color;
-
     Shader* shader;
     ObjectModel* ourModel;
 public:
     RenderEntity(int i);
     ~RenderEntity();
 
-    void draw(const glm::mat4& viewProjMtx);
+    void draw(const glm::mat4& viewProjMtx, float time);
     void update(glm::vec3& translation, float degrees);
 
     void setActive(bool a) { active = a; };

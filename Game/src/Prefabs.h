@@ -97,6 +97,7 @@ namespace PlayerSpawns {
 namespace Paths {
 	extern constexpr int pathCount = 4;
 	extern const glm::vec3 path[pathCount][PATH_LENGTH];
+	extern std::list<Entity> pathlist;
 };
 
 struct enemy {
@@ -120,3 +121,6 @@ namespace WaveData {
 
 //Define buildcosts
 extern const std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;
+
+//Define Base Location
+const glm::vec3 baseLoc = glm::vec3(0, 0, 90);
