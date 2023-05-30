@@ -4,11 +4,13 @@
 #include "ClientNetwork.h"
 #include "NetworkData.h"
 #include "graphics/GameWindow.h"
+#include "audio/AudioManager.h"
 
 class ClientGame
 {
 private:
     GameWindow* gameWindow;
+    AudioManager* audioManager;
     static bool moveForward, moveBack, moveLeft, moveRight;
     static bool playerattacking;
     static bool jumping;

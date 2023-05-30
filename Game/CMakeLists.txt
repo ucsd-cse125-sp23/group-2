@@ -21,6 +21,9 @@ set(
     src/graphics/Skybox.cpp
     src/graphics/Cube.cpp
     src/graphics/Health.cpp
+    src/Prefabs.cpp
+    src/PoissonDisk.cpp
+    src/audio/AudioManager.cpp
 )
 
 # Add header files
@@ -45,6 +48,9 @@ set(
     src/graphics/ObjectModel.h
     src/graphics/Mesh.h
     src/graphics/Cube.h
+    src/Prefabs.h
+    src/PoissonDisk.h
+    src/audio/AudioManager.h
     src/graphics/Health.h
 )
 
@@ -62,10 +68,10 @@ link_directories(
 )
 
 # Add executable
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS}  "src/Prefabs.h" "src/Prefabs.cpp" "src/PoissonDisk.h" "src/PoissonDisk.cpp")
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3.lib assimp-vc143-mt.lib)
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3.lib assimp-vc143-mt.lib fmod_vc.lib)
 
 # Move assets to .exe
 add_custom_command(TARGET mars-rover-client POST_BUILD

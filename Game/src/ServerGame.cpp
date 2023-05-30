@@ -151,6 +151,8 @@ void ServerGame::update()
         }
         break;
     case game:
+        GameData::slogpos = 0;
+
         handleInputs();
         //startTime = std::chrono::steady_clock::now();
         EntityComponentSystem::update();
@@ -230,6 +232,10 @@ void ServerGame::handleInputs()
 
             if (in.jump && GameData::rigidbodies[i].grounded) {
                 GameData::velocities[i].velocity.y = PLAYER_JPSPD;
+                // Add jumping sound to sound log
+                GameData::soundLogs[GameData::slogpos].source = i;
+                GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_JUMP;
+                GameData::slogpos++;
             }
             incomingDataLists[i].pop();
         }
@@ -302,7 +308,9 @@ void ServerGame::packageData(ServertoClientData& data)
     data.activity = GameData::activity;
     data.healths = GameData::healths;
     data.combatLogs = GameData::combatLogs;
-    data.logsize = GameData::logpos;
+    data.clogsize = GameData::clogpos;
+    data.soundLogs = GameData::soundLogs;
+    data.slogsize = GameData::slogpos;
     data.currentWave = WaveData::currentWave + 1;
     data.numWaves = WAVE_COUNT;
     data.playerData = GameData::playerdata;

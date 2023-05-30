@@ -156,6 +156,11 @@ struct CombatLog {
     bool killed;
 };
 
+struct SoundLog {
+    Entity source;
+    int sound;
+};
+
 struct ScoreCard {
     int towersBuilt;
     int enemiesKilled;
@@ -236,8 +241,10 @@ namespace GameData
     extern std::queue<CollisionEvent> colevents;
 
     //Logs for Client
-    extern int logpos;
+    extern int clogpos;
     extern std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
+    extern int slogpos;
+    extern std::array<SoundLog, SLOG_MAXSIZE> soundLogs;
     extern AllPlayerData playerdata;
 }
 

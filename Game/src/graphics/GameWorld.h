@@ -34,6 +34,7 @@ public:
     
     float getCamAngle() { return cam->getAngleAroundPlayer(); };
     glm::vec3 getCamDirectionVector() { return cam->getDirectionVector(); };
+    glm::vec3 getCamUpVector() { return cam->getUpVector(); };
     glm::vec3 getCamPosition() { return cam->getCameraPosition(); };
     //callbacks - for interaction
     static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);

@@ -67,6 +67,7 @@ public:
 
     float getAngleAroundPlayer() { return angleAroundPlayer; };
     glm::vec3 getDirectionVector();
+    glm::vec3 getUpVector();
     glm::vec3 getCameraPosition() { return position; };
     void setCamPosition(glm::vec3 pos) { position = pos; };
 

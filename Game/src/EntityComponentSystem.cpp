@@ -2,8 +2,7 @@
 
 namespace GameData
 {
-    std::array<Tag, MAX_ENTITIES> tags;
-
+  std::array<Tag, MAX_ENTITIES> tags;
   std::array<Active, MAX_ENTITIES> activity;
   std::array<Position, MAX_ENTITIES> positions;
   std::array<VelocityData, MAX_ENTITIES> velocities;
@@ -19,9 +18,11 @@ namespace GameData
   std::array<LifeSpan, MAX_ENTITIES> lifespans;
   std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
   std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
+  std::array<SoundLog, SLOG_MAXSIZE> soundLogs;
   std::array<Creator, MAX_ENTITIES> creators;
   std::array<SpawnRate, MAX_ENTITIES> spawnrates;
-  int logpos = 0;
+  int clogpos = 0;
+  int slogpos = 0;
   std::array<State, MAX_ENTITIES> states;
   std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
   std::array<HomingData, MAX_ENTITIES> homingStructs;
@@ -34,7 +35,7 @@ namespace GameData
 void EntityComponentSystem::update()
 {
     sysStateMachine();
-    GameData::logpos = 0;
+    GameData::clogpos = 0;
     sysDeathStatus();
     sysAttacks();
     sysPathing();
@@ -177,6 +178,10 @@ void EntityComponentSystem::sysGravity()
             else {
                 GameData::positions[e].y = (GROUND_HEIGHT+GameData::colliders[e].AABB.y);
                 if (GameData::velocities[e].velocity.y < 0) {
+                    // Add landing sound to sound log
+                    GameData::soundLogs[GameData::slogpos].source = e;
+                    GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_LAND;
+                    GameData::slogpos++;
                     GameData::velocities[e].velocity.y = 0;
                 }
                 GameData::rigidbodies[e].grounded = true;
@@ -295,6 +300,11 @@ void EntityComponentSystem::sysTurretFire()
             {
                dealDamage(e, closestEnemy, (GameData::turrets[e].damage));
                //std::cout << "Test Tower Fired at Enemy: " << closestEnemy - ENEMY_START << "\n";
+
+               // Add attack sound to sound log
+               GameData::soundLogs[GameData::slogpos].source = e;
+               GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_ATTACK;
+               GameData::slogpos++;
             }
         }
     }
@@ -477,8 +487,12 @@ void EntityComponentSystem::sysAttacks()
                     cooldown = cooldown < GameData::spawnrates[attack] ? GameData::spawnrates[attack] : cooldown;
                     Collision::updateColTable(attack);
                 }
-                //Set cooldown TODO, should be its own component in an attack
                 GameData::pattackmodules[e].cooldown = cooldown;
+
+                // Add attack sound to sound log
+                GameData::soundLogs[GameData::slogpos].source = e;
+                GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_ATTACK;
+                GameData::slogpos++;
             }
         }
     }
@@ -559,6 +573,10 @@ void EntityComponentSystem::sysBuild()
                             for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
                                 GameData::playerdata.resources[i] -= buildcosts[GameData::retplaces[e].buildingPrefab][i];
                             }
+                            // Add sound to sound log
+                            GameData::soundLogs[GameData::slogpos].source = e;
+                            GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_BUILD;
+                            GameData::slogpos++;
                             Collision::updateColTable(b);
                         }
                     }
@@ -682,13 +700,19 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     }
     printf("Ent %d dealing %f dmg to %d\n", source, damage, target);
 
-    GameData::combatLogs[GameData::logpos].source = source;
-    GameData::combatLogs[GameData::logpos].target = target;
-    GameData::combatLogs[GameData::logpos].damage = damage;
+    // Add damage to combat log
+    GameData::combatLogs[GameData::clogpos].source = source;
+    GameData::combatLogs[GameData::clogpos].target = target;
+    GameData::combatLogs[GameData::clogpos].damage = damage;
+    GameData::combatLogs[GameData::clogpos].killed = false;
+    GameData::clogpos++;
+    // Add damage sound to sound log
+    GameData::soundLogs[GameData::slogpos].source = target;
+    GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_DAMAGE;
+    GameData::slogpos++;
     if (GameData::healths[target].curHealth <= 0) {
         causeDeath(source, target);
     }
-    GameData::logpos++;
 }
 
 void EntityComponentSystem::causeDeath(Entity source, Entity target)
@@ -711,10 +735,15 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
 
     
     if (source == target) { return; }
-    GameData::combatLogs[GameData::logpos].source = source;
-    GameData::combatLogs[GameData::logpos].target = target;
-    GameData::combatLogs[GameData::logpos].killed = true;
-    GameData::logpos++;
+    // Add death to combat log
+    GameData::combatLogs[GameData::clogpos].source = source;
+    GameData::combatLogs[GameData::clogpos].target = target;
+    GameData::combatLogs[GameData::clogpos].killed = true;
+    GameData::clogpos++;
+    // Add death sound to sound log
+    GameData::soundLogs[GameData::slogpos].source = target;
+    GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_DEATH;
+    GameData::slogpos++;
 
     if (source < NUM_PLAYERS) {
         if ((GameData::tags[target] & ComponentTags::WorthPoints) == ComponentTags::WorthPoints) {

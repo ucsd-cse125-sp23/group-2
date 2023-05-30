@@ -13,13 +13,15 @@ ClientGame::ClientGame(void)
     //TODO Game Initialization
     gameWindow = new GameWindow(RES_WIDTH, RES_HEIGHT);
     setup_callbacks();
-    
+    audioManager = new AudioManager();
+
     initData.id = INVALID_CLIENT_ID;
     incomingData.serverStatus = UNKNOWN_SERVER_STATUS;
 
     //Network Initialization
     network = new ClientNetwork();
     network->initConnection();
+    
 }
 
 
@@ -35,14 +37,6 @@ void ClientGame::update()
     //Recieve incoming server data into gamestate
     recieveData();
 
-    /*
-    for (int i = 0; i < incomingData.logsize; ++i) {
-        printf("Recieved %d combat logs: Ent %d, attacked Ent %d, for dmg %f\n", incomingData.logsize, incomingData.combatLogs[i].source, incomingData.combatLogs[i].target, incomingData.combatLogs[i].damage);
-        if (incomingData.combatLogs[i].killed) {
-            printf("And killed it\n");
-        }
-    }
-    */
     //Send Data to Server
     ClienttoServerData newPackage;
     packageData(newPackage);
@@ -51,7 +45,27 @@ void ClientGame::update()
     //Render
     if (initData.id != INVALID_CLIENT_ID && incomingData.serverStatus != UNKNOWN_SERVER_STATUS) {
         gameWindow->update(incomingData, initData.id);
+        audioManager->update(gameWindow->getCamPosition(), glm::normalize(gameWindow->getCamDirectionVector()), glm::normalize(gameWindow->getCamUpVector()));
     }
+    
+    //Process combat logs
+    for (int i = 0; i < incomingData.clogsize; ++i) {
+        Entity target = incomingData.combatLogs[i].target;
+        //printf("Recieved %d combat logs: Ent %d, attacked Ent %d, for dmg %f\n", incomingData.logsize, incomingData.combatLogs[i].source, incomingData.combatLogs[i].target, incomingData.combatLogs[i].damage);
+        if (incomingData.combatLogs[i].killed) {
+            //printf("And killed it\n");
+        }
+    }
+    incomingData.clogsize = 0;
+
+    //Process sound logs
+    for (int i = 0; i < incomingData.slogsize; ++i) {
+        Entity source = incomingData.soundLogs[i].source;
+        glm::vec3 position = incomingData.positions[source];
+        audioManager->playSound(incomingData.models[source].modelID, incomingData.soundLogs[i].sound, position);
+    }
+    incomingData.slogsize = 0;
+
 }
 
 void ClientGame::packageData(ClienttoServerData& data) {
