@@ -13,37 +13,34 @@ int health;
 int master_Volume;
 int sfx_Volume;
 int music_Volume;
+bool ClientGame::jumping = 0;
+int ClientGame::build = 0;
 
 ClientGame::ClientGame(void)
 {
+    //TODO Game Initialization
+    gameWindow = new GameWindow(RES_WIDTH, RES_HEIGHT);
+    setup_callbacks();
+    audioManager = new AudioManager();
 
+    initData.id = INVALID_CLIENT_ID;
+    incomingData.serverStatus = UNKNOWN_SERVER_STATUS;
 
-    //Network Initializatio
+    //Network Initialization
     network = new ClientNetwork();
     network->initConnection();
-
-    //TODO Game Initialization
-    gameWindow = new GameWindow(800, 600);
-    setup_callbacks();
-
+    
 }
 
 
 //Converts from network's data to gamedata
 int ClientGame::recieveData()
 {
-    network->recieveDeserialize(incomingData, initData);
-    return 0;
+    return network->recieveDeserialize(incomingData, initData);
 }
 
 void ClientGame::update()
 {
-    static int count = 0;
-    count++;
-    //TODO Render
-
-    // Draw nothing, see you in tutorial 2 !
-
     //Recieve Data
     //Recieve incoming server data into gamestate
     recieveData();
@@ -51,14 +48,32 @@ void ClientGame::update()
     //Send Data to Server
     ClienttoServerData newPackage;
     packageData(newPackage);
-    //std::cout << newPackage.moveForward << "\n";
     network->sendActionPackets(newPackage);
 
-    //pass through ServertoClientData
-    //Check init connection
-    gameWindow->update(incomingData, initData.id);
+    //Render
+    if (initData.id != INVALID_CLIENT_ID && incomingData.serverStatus != UNKNOWN_SERVER_STATUS) {
+        gameWindow->update(incomingData, initData.id);
+        audioManager->update(gameWindow->getCamPosition(), glm::normalize(gameWindow->getCamDirectionVector()), glm::normalize(gameWindow->getCamUpVector()));
+    }
     
-    
+    //Process combat logs
+    for (int i = 0; i < incomingData.clogsize; ++i) {
+        Entity target = incomingData.combatLogs[i].target;
+        //printf("Recieved %d combat logs: Ent %d, attacked Ent %d, for dmg %f\n", incomingData.logsize, incomingData.combatLogs[i].source, incomingData.combatLogs[i].target, incomingData.combatLogs[i].damage);
+        if (incomingData.combatLogs[i].killed) {
+            //printf("And killed it\n");
+        }
+    }
+    incomingData.clogsize = 0;
+
+    //Process sound logs
+    for (int i = 0; i < incomingData.slogsize; ++i) {
+        Entity source = incomingData.soundLogs[i].source;
+        glm::vec3 position = incomingData.positions[source];
+        audioManager->playSound(incomingData.models[source].modelID, incomingData.soundLogs[i].sound, position);
+    }
+    incomingData.slogsize = 0;
+
 }
 
 void ClientGame::packageData(ClienttoServerData& data) {
@@ -67,6 +82,8 @@ void ClientGame::packageData(ClienttoServerData& data) {
     data.moveLeft = moveLeft;
     data.moveRight = moveRight;
     data.shoot = playerattacking;
+    data.jump = jumping;
+    data.build = build;
     data.camAngleAroundPlayer = gameWindow->getCamAngle();
     data.camDirectionVector = gameWindow->getCamDirectionVector();
     data.camPosition = gameWindow->getCamPosition();
@@ -202,7 +219,7 @@ void show_options() {
         guis[i]->SetHidden(false);
     }
     guis[10]->SetHidden(false);
-    guis[10]->SetPosition(glm::vec2(0.5f, 0.0f));
+    guis[10]->SetPosition(glm::vec3(0.5f, 0.0f, 0.0f));
     guis[3]->SetTexture("../assets/gui/Buttons/back.jpg");
     guis[4]->SetTexture("../assets/gui/Buttons/volumeH.jpg");
 
@@ -322,6 +339,17 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
         case GLFW_KEY_ESCAPE:
             handle_escp(window);
             break;
+        case GLFW_KEY_SPACE:
+            jumping = true;
+            break;
+        case GLFW_KEY_E:
+            if (build != 0) {
+                build = 0;
+            }
+            else {
+                build = 1;
+            }
+            break;
         case GLFW_KEY_ENTER:
             handle_enter(window);
                 break;
@@ -341,6 +369,9 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
             break;
         case GLFW_KEY_D:
             moveRight = false;
+            break;
+        case GLFW_KEY_SPACE:
+            jumping = false;
             break;
         default: break;
         }
@@ -377,4 +408,6 @@ void ClientGame::setup_callbacks() {
     // Set the window resize callback.
     glfwSetWindowSizeCallback(gameWindow->window, GameWindow::resizeCallback);
     glfwSetMouseButtonCallback(gameWindow->window, ClientGame::mouse_button_callback);
+    //glfwSetMouseButtonCallback(gameWindow->window, GameWorld::mouse_button_callback);
+
 }

@@ -1,7 +1,8 @@
 #include "src/ServerGame.h"
 #include "src/ClientGame.h"
 #include <chrono>
-#include <ctime>    
+#include <ctime>   
+#include <iostream>
 // used for multi-threading
 #include <process.h>
 #include <thread>
@@ -38,21 +39,23 @@ int main()
 
 void serverLoop(void* arg)
 {
-    std::chrono::duration<double> ticklength = 1s / TICK_RATE;
+    double spertick = 1.0 / TICK_RATE;
+    std::chrono::duration<double> ticklength = std::chrono::duration<double>(spertick);
+    auto start = std::chrono::system_clock::now();
     while (true)
     {
-        auto start = std::chrono::system_clock::now();
         // Some computation here
         server->update();
         auto end = std::chrono::system_clock::now();
         std::chrono::duration<double> elapsed = end - start;
-        std::chrono::duration<double> sleeptime = ticklength - (start - end);
+        std::chrono::duration<double> sleeptime = ticklength - elapsed;
         if (sleeptime > 0s) {
             std::this_thread::sleep_for(sleeptime);
         }
         else {
             printf("server update took too long!\n");
         }
+        start = std::chrono::system_clock::now();
         server->sendPackets();
     }
 }

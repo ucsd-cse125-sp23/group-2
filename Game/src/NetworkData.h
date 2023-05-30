@@ -5,7 +5,7 @@
 #include "EntityComponentSystem.h"
 #include "GameConstants.h"
 
-#define MAX_PACKET_SIZE 1000000
+#define MAX_PACKET_SIZE 10000000
 #define NUM_CLIENTS 4
 
 enum PacketTypes {
@@ -22,6 +22,8 @@ struct ClienttoServerData {
     glm::vec3 camDirectionVector, camPosition;
     bool moveForward, moveBack, moveLeft, moveRight;
     bool shoot;
+    bool jump;
+    int build;
 
     void print(char * buf) {
         sprintf(buf, "Moveforward: %d, Moveback: %d, MoveLeft: %d, MoveRight: %d\n", moveForward, moveBack, moveLeft, moveRight);
@@ -34,6 +36,17 @@ struct ServertoClientData {
     std::array<Position, MAX_ENTITIES> positions;
     std::array<Model, MAX_ENTITIES> models;
     std::array<Health, MAX_ENTITIES> healths;
+    int clogsize;
+    std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
+    int slogsize;
+    std::array<SoundLog, SLOG_MAXSIZE> soundLogs;
+    int currentWave;
+    int numWaves;
+    std::array<Collider, MAX_ENTITIES> colliders;
+    AllPlayerData playerData;
+    std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;
+    int serverStatus;
+    float waveTimer;
 };
 
 //Struct for intializing the client id

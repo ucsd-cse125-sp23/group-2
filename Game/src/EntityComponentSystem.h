@@ -1,10 +1,13 @@
 #pragma once
 #include <vector>
 #include <queue>
-
+#include "PoissonDisk.h"
+#include <chrono>
+#include <unordered_set>
 #include <array>
 #include "graphics/core.h"
 #include "GameConstants.h"
+#include "Prefabs.h"
 #include <math.h>
 
 //Entity type
@@ -12,18 +15,48 @@ using Entity = uint32_t;
 const Entity INVALID_ENTITY = MAX_ENTITIES;
 
 //Define Component Tpyes (Max Components = 32)
+
+
+using LifeSpan = float;
+
+using Creator = Entity;
+
+using SpawnRate = float;
+
+//Define Component Tags
+using Tag = uint32_t;
+
+
 using Active = bool; //Is Entity active in the scene?
 using Position = glm::vec3; //Entity Position in 3D Space
-using Velocity = glm::vec3; //Entity Velocity in 3D Space
-
-using AttackID = uint32_t;
-
+struct VelocityData
+{
+    glm::vec3 velocity; //vector that is added to current position each tick
+    float moveSpeed; //scalar multiplied by velocity vector to modify speed
+    bool flying; //modify the height of the target positions to hover above them
+};
 using TeamID = uint32_t;
+using State = Tag;
+using Points = int;
+
 namespace Teams {
     constexpr TeamID Players = 0x1;
     constexpr TeamID Martians = 0x1 << 1;
     constexpr TeamID Towers = 0x1 << 2;
     constexpr TeamID Environment = 0x1 << 3;
+    constexpr TeamID Projectile = 0x1 << 4;
+}
+
+namespace ResourceType {
+    const int Money = 0;
+    const int Stone = 1;
+    const int Wood = 2;
+};
+
+namespace CollisionLayer {
+    constexpr TeamID WorldObj = 0x1;
+    constexpr TeamID UIObj = 0x1 << 1;
+    constexpr TeamID StaticObj = 0x1 << 2;
 }
 
 struct Hostility {
@@ -33,9 +66,13 @@ struct Hostility {
 
 struct PathData //Data for entity pathing
 {
-    glm::vec3 pathNodes[PATH_LENGTH]; //3D positions in which entity will need to change direction
+    int path; //The chosen path of the entity ( Paths::path[path#][node#] )
     int currentNode; //Index of current node that entity is pathing towards
-    float moveSpeed; //distance enemy covers in 1 server tick
+};
+
+struct HomingData //Data for tracking another entity
+{
+    Entity trackedEntity; //The entity to follow (player, tower, enemy, etc...)
 };
 
 struct Model //3D Model to render for the entity
@@ -43,6 +80,7 @@ struct Model //3D Model to render for the entity
     int modelID;
     char asciiRep;
     glm::vec3 dirNorm;
+    bool renderCollider;
     //TODO: Other Model Data
 
     //degrees
@@ -55,24 +93,36 @@ struct Turret //Component of Towers
     float damage; //The damage that the turret deals per second
 };
 
+namespace Collision {
+    //Side should be bigger than the greatest sidelength of any AABB in the game
+    constexpr float side = 3.0;
+    static constexpr size_t gridx = (WORLD_X / side) + 1l;
+    static constexpr size_t gridz = (WORLD_Z / side) + 1l;
+    extern std::unordered_set<Entity> cgrid[gridx][gridz];
+    void updateColTable(Entity e);
+}
+
 struct Collider //Information for collisions
 {
     glm::vec3 AABB; //Axis Aligned Bound Box vector
+    TeamID colteam;
+    TeamID colwith;
+    int xpos;
+    int zpos;
 
     //TODO: Pointer to a mesh for narrow phase
 };
 
-struct RigidBodyInfo //Information for collisions
+struct RigidBodyInfo //Information for physical objects;
 {
     bool fixed;
-    int mass;
+    bool grounded; //If object can be treated as being on groun (used for player jumping for now)
 };
 
 struct CollisionEvent {
     Entity e;
     Entity o;
     glm::vec3 pen;
-
 };
 
 struct Health {
@@ -84,35 +134,79 @@ struct CollisionDmg {
     float damage;
 };
 
-struct AttackModule {
-    bool isAttacking;
-    AttackID attack;
-    int cooldown; //Remaining coooldown in ticks
+struct ProjectileAttackModule {
+    Prefab attack;
+    float cooldown; //Remaining coooldown in seconds
     glm::vec3 targetPos;
 };
 
-using LifeSpan = float;
+struct ReticlePlacement {
+    bool place;
+    Prefab reticlePrefab;
+    Prefab buildingPrefab;
+    Entity reticle = INVALID_ENTITY;
+    bool validTarget;
+    glm::vec3 targetPos;
+};
 
-//Define Component Tags
-using Tag = uint32_t;
+struct CombatLog {
+    Entity source;
+    Entity target;
+    float damage;
+    bool killed;
+};
+
+struct SoundLog {
+    Entity source;
+    int sound;
+};
+
+struct ScoreCard {
+    int towersBuilt;
+    int enemiesKilled;
+    std::array<int, NUM_RESOURCE_TYPES> resourcesGathered;
+    Points points;
+};
+
+struct AllPlayerData {
+    std::array<ScoreCard, NUM_PLAYERS> scores;
+    std::array<int, NUM_RESOURCE_TYPES> resources;
+    std::array<float, NUM_PLAYERS> spawntimers;
+};
+
+struct ResourceContainer {
+    std::array<int, NUM_RESOURCE_TYPES> resources;
+};
+
+
+
 namespace ComponentTags
 {
-    constexpr Tag Active    = 0x1;
-    constexpr Tag Position  = 0x1 << 1;
-    constexpr Tag Velocity  = 0x1 << 2;
-    constexpr Tag PathData  = 0x1 << 3;
-    constexpr Tag Model = 0x1 << 4;
-    constexpr Tag Collidable = 0x1 << 5;
-    constexpr Tag DiesOnCollision = 0x1 << 6;
-    constexpr Tag RigidBody = 0x1 << 7;
-    constexpr Tag Health = 0x1 << 8;
-    constexpr Tag CollisionDmg = 0x1 << 9;
-    constexpr Tag Turret = 0x1 << 10;
-    constexpr Tag Hostility = 0x1 << 11;
-    constexpr Tag Attacker = 0x1 << 12;
-    constexpr Tag LifeSpan = 0x1 << 13;
-
+    constexpr Tag Position  = 0x1 << 0;
+    constexpr Tag Velocity  = 0x1 << 1;
+    constexpr Tag PathData  = 0x1 << 2;
+    constexpr Tag Model = 0x1 << 3;
+    constexpr Tag Collidable = 0x1 << 4;
+    constexpr Tag DiesOnCollision = 0x1 << 5;
+    constexpr Tag RigidBody = 0x1 << 6;
+    constexpr Tag Health = 0x1 << 7;
+    constexpr Tag CollisionDmg = 0x1 << 8;
+    constexpr Tag Turret = 0x1 << 9;
+    constexpr Tag Hostility = 0x1 << 10;
+    constexpr Tag Attacker = 0x1 << 11;
+    constexpr Tag LifeSpan = 0x1 << 12;
+    constexpr Tag Created = 0x1 << 13;
+    constexpr Tag Builder = 0x1 << 14;
+    constexpr Tag HomingData = 0x1 << 15;
+    constexpr Tag Dead = 0x1 << 16;
+    constexpr Tag ResourceContainer = 0x1 << 17;
+    constexpr Tag WorthPoints = 0x1 << 18;
 }
+
+namespace enemyState {
+    constexpr State Pathing = ComponentTags::PathData;
+    constexpr State Homing = ComponentTags::HomingData;
+};
 
 
 
@@ -122,9 +216,9 @@ namespace GameData
     //Entity Tag is a 32 bit int that denotes the components attached to the enitity
     extern std::array<Tag, MAX_ENTITIES> tags;
 
-    extern std::array<Active, MAX_ENTITIES> activity;   
+    extern std::array<Active, MAX_ENTITIES> activity;
     extern std::array<Position, MAX_ENTITIES> positions;
-    extern std::array<Velocity, MAX_ENTITIES> velocities;
+    extern std::array<VelocityData, MAX_ENTITIES> velocities;
     extern std::array<PathData, MAX_ENTITIES> pathStructs;
     extern std::array<Model, MAX_ENTITIES> models;
     extern std::array<Turret, MAX_ENTITIES> turrets;
@@ -133,11 +227,25 @@ namespace GameData
     extern std::array<Health, MAX_ENTITIES> healths;
     extern std::array<CollisionDmg, MAX_ENTITIES> coldmg;
     extern std::array<Hostility, MAX_ENTITIES> hostilities;
-    extern std::array<AttackModule, MAX_ENTITIES> attackmodules;
+    extern std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
     extern std::array<LifeSpan, MAX_ENTITIES> lifespans;
+    extern std::array<Creator, MAX_ENTITIES> creators;
+    extern std::array<SpawnRate, MAX_ENTITIES> spawnrates;
+    extern std::array<State, MAX_ENTITIES> states;
+    extern std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
+    extern std::array<HomingData, MAX_ENTITIES> homingStructs;
+    extern std::array<ResourceContainer, MAX_ENTITIES> resources;
+    extern std::array<Points, MAX_ENTITIES> pointvalues;
 
     //Events
     extern std::queue<CollisionEvent> colevents;
+
+    //Logs for Client
+    extern int clogpos;
+    extern std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
+    extern int slogpos;
+    extern std::array<SoundLog, SLOG_MAXSIZE> soundLogs;
+    extern AllPlayerData playerdata;
 }
 
 namespace EntityComponentSystem
@@ -148,6 +256,9 @@ namespace EntityComponentSystem
 
     //Move entities that have a velocity component
     void sysMovement();
+
+    //Apply gravity to all rigid bodies
+    void sysGravity();
 
     //Do pathfinding for entities that have a path component
     void sysPathing();
@@ -163,7 +274,7 @@ namespace EntityComponentSystem
     void sysTurretFire();
 
     //Check the status of entity's HP
-    void sysHealthStatus();
+    void sysDeathStatus();
 
     //Attacks!
     void sysAttacks();
@@ -171,15 +282,30 @@ namespace EntityComponentSystem
     //LifeSpan
     void sysLifeSpan();
 
+    //Building shit
+    void sysBuild();
+
+    //tracking entities
+    void sysHoming();
+
+    void sysStateMachine();
+
     //Helper functions
-    Entity createEntity();
+    Entity createEntity(int begin = 0, int end = MAX_ENTITIES);
 
-    //Temp function (to be repalced withload from prefab)
-    Entity createProjectile();
-    
-    //TODO: Implement Prefabs
-    Entity loadPrefab();
-
-    //Find the position of intersection with first rigid body (uses Peter Shirley's method at http://psgraphics.blogspot.com/2016/02/new-simple-ray-box-test-from-andrew.html)
+    //Find the position of inte rsection with first rigid body (uses Peter Shirley's method at http://psgraphics.blogspot.com/2016/02/new-simple-ray-box-test-from-andrew.html)
     glm::vec3 computeRaycast(glm::vec3& pos, glm::vec3& dir, float tmin, float tmax);
+
+    //Deals damage (And will eventuall call death functions)
+    void dealDamage(Entity source, Entity target, float damage);
+
+    void causeDeath(Entity source, Entity target);
+
+    //Creates collisions between two objects if they collide
+    bool colCheck(Entity e, Entity o);
+
+    //Finds the closest path node to an enemy to put them back on track
+    void rePath(Entity e);
+
+    void changeState(Entity e, State post);
 };

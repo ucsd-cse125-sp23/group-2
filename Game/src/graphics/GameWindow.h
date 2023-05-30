@@ -17,6 +17,7 @@ private:
 	Shader* skyboxProgram;
 	Shader* guiProgram;
 
+	
 	//camera
 	//Camera* cam;
 	//static float prevX, prevY, scrollY;
@@ -43,6 +44,7 @@ public:
 
 	float getCamAngle() { return gameWorld->getCamAngle(); };
 	glm::vec3 getCamDirectionVector() { return gameWorld->getCamDirectionVector(); };
+	glm::vec3 getCamUpVector() { return gameWorld->getCamUpVector(); };
 	glm::vec3 getCamPosition() { return gameWorld->getCamPosition(); };
 
 	//callbacks - for interaction

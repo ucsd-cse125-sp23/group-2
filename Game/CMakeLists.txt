@@ -13,13 +13,17 @@ set(
     src/ServerNetwork.cpp
     src/EntityComponentSystem.cpp
     src/graphics/GameWorld.cpp
-    src/graphics/Mob.cpp
+    src/graphics/RenderEntity.cpp
     src/graphics/Camera.cpp
     src/graphics/GameWindow.cpp
-    src/graphics/Player.cpp
     src/graphics/Shader.cpp
     src/graphics/stb_image.cpp
     src/graphics/Skybox.cpp
+    src/graphics/Cube.cpp
+    src/graphics/Health.cpp
+    src/Prefabs.cpp
+    src/PoissonDisk.cpp
+    src/audio/AudioManager.cpp
     src/graphics/gui/GUIElement.cpp
 )
 
@@ -35,16 +39,20 @@ set(
     src/EntityComponentSystem.h
     src/GameConstants.h
     src/graphics/GameWorld.h
-    src/graphics/Mob.h
+    src/graphics/RenderEntity.h
     src/graphics/Camera.h
     src/graphics/core.h
     src/graphics/GameWindow.h
-    src/graphics/Player.h
     src/graphics/Shader.h
     src/graphics/stb_image.h
     src/graphics/Skybox.h
     src/graphics/ObjectModel.h
     src/graphics/Mesh.h
+    src/graphics/Cube.h
+    src/Prefabs.h
+    src/PoissonDisk.h
+    src/audio/AudioManager.h
+    src/graphics/Health.h
     src/graphics/gui/GUIElement.h
 )
 
@@ -62,10 +70,10 @@ link_directories(
 )
 
 # Add executable
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS}  "src/Prefabs.h" "src/Prefabs.cpp")
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3.lib assimp-vc143-mt.lib)
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3.lib assimp-vc143-mt.lib fmod_vc.lib)
 
 # Move assets to .exe
 add_custom_command(TARGET mars-rover-client POST_BUILD

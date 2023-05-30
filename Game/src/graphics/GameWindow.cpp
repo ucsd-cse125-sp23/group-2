@@ -84,10 +84,8 @@ void GameWindow::setup() {
 }
 bool GameWindow::initializeProgram() {
     // Create a shader program with a vertex shader and a fragment shader.
-    shaderProgram = new Shader("shaders/shader.vert", "shaders/shader.frag");
-    skyboxProgram = new Shader("shaders/skybox.vert", "shaders/skybox.frag");
-    guiProgram = new Shader("shaders/gui.vert", "shaders/gui.frag");
     //cubeShader = LoadShaders("shaders/shader.vert", "shaders/shader.frag");
+    guiProgram = new Shader("shaders/gui.vert", "shaders/gui.frag");
 
     return true;
 }
@@ -107,15 +105,13 @@ bool GameWindow::initializeObjects() {
 
 void GameWindow::idleCallback(ServertoClientData& incomingData, int id) {
     gameWorld->update(incomingData, id);
-    //cam->update(mouseDX, mouseDY, scrollY);
-    //player->update(incomingData.positions[id]);
 }
 
 void GameWindow::displayCallback() {
     glfwMakeContextCurrent(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //player->draw(cam->GetViewProjectMtx(), shaderProgram);
-    gameWorld->draw(shaderProgram, skyboxProgram, guiProgram,width, height);
+    gameWorld->draw(guiProgram,width, height);
     glfwPollEvents();
     glfwSwapBuffers(window);
 }

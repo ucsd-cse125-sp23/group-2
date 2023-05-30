@@ -4,19 +4,20 @@
 
 #include "Camera.h"
 
+
 float VerticalCamOffset = 3.0f;
 
 Camera::Camera() {
     Reset();
 }
-void Camera::update(glm::vec3 & playerPos, float dx, float dy, float sy) {
+void Camera::update(glm::vec3 & playerPos, float dx, float dy, float sy, bool screenShake, float time) {
     // Compute camera world matrix
     playerPosition = playerPos;
     calcPitch(dy);
     calcAngle(dx);
     float horizontalDist = calcHorizontalDist();
     float verticalDist = calcVeticalDist();
-    calcCameraPosition(horizontalDist, verticalDist);
+    calcCameraPosition(horizontalDist, verticalDist, screenShake, time);
     yaw = 180 - angleAroundPlayer;
     calcViewProjectMtx();
     //std::cout << "angle: " << angleAroundPlayer << "\n";
@@ -56,14 +57,23 @@ float Camera::calcHorizontalDist() {
 float Camera::calcVeticalDist() {
     return distanceFromPlayer * glm::sin(glm::radians(pitch));
 }
-void Camera::calcCameraPosition(float hDist, float vDist) {
+
+void Camera::calcCameraPosition(float hDist, float vDist, bool screenShake, float time) {
     float theta = angleAroundPlayer;
     float offsetX = hDist * glm::sin(glm::radians(theta));
     float offsetZ = hDist * glm::cos(glm::radians(theta));
     position.x = playerPosition.x - offsetX;
     position.y = playerPosition.y + vDist + VerticalCamOffset;
     position.z = playerPosition.z - offsetZ;
+
+    if (screenShake) {
+        srand(time);
+        position.x += glm::sin(time * 20 + 1) * (rand() % 100 + 1) / 75.0f;
+        position.y += glm::sin(time * 20 + 2) * (rand() % 100 + 1) / 75.0f;
+        position.z += glm::sin(time * 20 + 3) * (rand() % 100 + 1) / 75.0f;
+    }
 }
+
 void Camera::calcViewProjectMtx() {
     glm::mat4 vm(1);
     vm *= glm::rotate(glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f)) *
@@ -81,6 +91,14 @@ glm::vec3 Camera::getDirectionVector() {
     //std::cout << "vector: " << directionVector.x << " " << directionVector.y << " " << directionVector.z << "\n ";
     return directionVector;
 }
+
+glm::vec3 Camera::getUpVector() {
+    glm::vec3 upVector = glm::vec3(glm::sin(glm::radians(pitch)) * glm::sin(glm::radians(angleAroundPlayer)),
+        glm::cos(glm::radians(pitch)),
+        glm::sin(glm::radians(pitch)) * glm::cos(glm::radians(angleAroundPlayer)));
+    //std::cout << "vector: " << upVector.x << " " << upVector.y << " " << upVector.z << "\n ";
+    return upVector;
+}
 void Camera::Reset() {
     position = glm::vec3(0, 0, 0);
     distanceFromPlayer = 5;
@@ -88,9 +106,9 @@ void Camera::Reset() {
     pitch = 25;
     yaw = 0;
 
-    FOV = 90.0f;
-    Aspect = 1.33f;
+    FOV = 100.0f;
+    Aspect = float(RES_WIDTH) / float(RES_HEIGHT);
     NearClip = 0.1f;
-    FarClip = 1000.0f;
+    FarClip = 10000.0f;
 
 }

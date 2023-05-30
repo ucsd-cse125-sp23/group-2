@@ -197,18 +197,14 @@ int ServerNetwork::receivePackets(unsigned int client_id, char* recvbuf)
 // sends data to all clients
 void ServerNetwork::sendActionPackets(ServertoClientData & outgoingData)
 {
-    // send action packet
-    const unsigned int packet_size = sizeof(Packet<ServertoClientData>);
-    char packet_data[packet_size];
 
-    Packet<ServertoClientData> packet;
-    packet.packet_type = ACTION_EVENT;
+    gameStatePacket.packet_type = ACTION_EVENT;
 
-    packet.data = ServertoClientData{ outgoingData };
+    gameStatePacket.data = outgoingData;
 
-    packet.serialize(packet_data);
+    gameStatePacket.serialize(packet_data);
 
-    sendToAll(packet_data, packet_size);
+    sendToAll(packet_data, sizeof(Packet<ServertoClientData>));
 }
 
 // send packets to all clients
