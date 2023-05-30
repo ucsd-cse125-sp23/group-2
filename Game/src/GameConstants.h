@@ -26,6 +26,9 @@ const float PROJ_MVSPD_PERSEC = 64;
 //How often projectiles spawn (seconds between spawns)
 const float PROJ_SPAWN_RATE = 0.25;
 
+//How often projectiles damage on collision (seconds between damages)
+const float PROJ_DAMAGE_RATE = 0.25;
+
 //Ground Height
 const float GROUND_HEIGHT = -1.0;
 

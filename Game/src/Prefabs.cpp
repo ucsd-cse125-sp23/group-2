@@ -24,6 +24,8 @@ std::list<Entity> createProjectileBasic() {
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::hostilities[e].team = Teams::Projectile;
+    GameData::coldmg[e].cooldown = 0;
+    GameData::coldmg[e].damageRate = PROJ_DAMAGE_RATE;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -56,6 +58,8 @@ std::list<Entity> createProjectileSpread5() {
         GameData::colliders[e].colteam = CollisionLayer::WorldObj;
         GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
         GameData::hostilities[e].team = Teams::Projectile;
+        GameData::coldmg[e].cooldown = 0;
+        GameData::coldmg[e].damageRate = PROJ_DAMAGE_RATE;
 
         GameData::tags[e] =
             ComponentTags::Position +
@@ -90,7 +94,8 @@ std::list<Entity> createProjectileChaos() {
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::hostilities[e].team = Teams::Projectile;
-
+    GameData::coldmg[e].cooldown = 0;
+    GameData::coldmg[e].damageRate = PROJ_DAMAGE_RATE;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -124,7 +129,8 @@ std::list<Entity> createProjectileRandom() {
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::hostilities[e].team = Teams::Projectile;
-
+    GameData::coldmg[e].cooldown = 0;
+    GameData::coldmg[e].damageRate = PROJ_DAMAGE_RATE;
 
     GameData::tags[e] =
         ComponentTags::Position +
