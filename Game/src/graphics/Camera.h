@@ -45,7 +45,8 @@ private:
 public:
     Camera();
 
-    void update(glm::vec3 & playerPos, float dx, float dy, float sy);
+    void update(glm::vec3 & playerPos, float dx, float dy, float sy, bool screenShake, float time);
+    void screenShake(float time);
     void Reset();
 
     void calcZoom();
@@ -54,7 +55,7 @@ public:
 
     float calcHorizontalDist();
     float calcVeticalDist();
-    void calcCameraPosition(float hDist, float vDist);
+    void calcCameraPosition(float hDist, float vDist, bool screenShake, float time);
 
     void calcViewProjectMtx();
     // Access functions
@@ -67,6 +68,7 @@ public:
     float getAngleAroundPlayer() { return angleAroundPlayer; };
     glm::vec3 getDirectionVector();
     glm::vec3 getCameraPosition() { return position; };
+    void setCamPosition(glm::vec3 pos) { position = pos; };
 
     const glm::mat4 &GetViewProjectMtx() { return ViewProjectMtx; }
 

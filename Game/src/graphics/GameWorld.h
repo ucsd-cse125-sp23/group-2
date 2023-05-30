@@ -3,6 +3,7 @@
 #include "Skybox.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "Health.h"
 #include "../GameConstants.h"
 #include "../NetworkData.h"
 class GameWorld {
@@ -10,10 +11,11 @@ class GameWorld {
 private:
     std::array <Shader*, NUM_MODELS> shaders;
     std::array <ObjectModel*, NUM_MODELS> models;
-
+    Shader* healthShader;
     int currID;
     std::array <Cube*, MAX_ENTITIES> AABBs;
     std::array <RenderEntity*, MAX_ENTITIES> entities;
+    std::array <HealthBar*, MAX_ENTITIES> healths;
 
     Skybox* env;
 
