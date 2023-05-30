@@ -36,7 +36,6 @@ void EntityComponentSystem::update()
 {
     sysStateMachine();
     GameData::clogpos = 0;
-    GameData::slogpos = 0;
     sysDeathStatus();
     sysAttacks();
     sysPathing();

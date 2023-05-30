@@ -143,6 +143,8 @@ void ServerGame::update()
         }
         break;
     case game:
+        GameData::slogpos = 0;
+
         handleInputs();
 
         EntityComponentSystem::update();
@@ -220,6 +222,10 @@ void ServerGame::handleInputs()
 
             if (in.jump && GameData::rigidbodies[i].grounded) {
                 GameData::velocities[i].velocity.y = PLAYER_JPSPD;
+                // Add jumping sound to sound log
+                GameData::soundLogs[GameData::slogpos].source = i;
+                GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_JUMP;
+                GameData::slogpos++;
             }
             incomingDataLists[i].pop();
         }
