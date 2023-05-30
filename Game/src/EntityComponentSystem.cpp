@@ -39,13 +39,42 @@ void EntityComponentSystem::update()
     sysAttacks();
     sysPathing();
     sysHoming();
-    sysGravity();
     sysMovement();
+    sysGravity();
     sysTurretFire();
+    //auto startTime = std::chrono::steady_clock::now();
     sysDetectCollisions();
+    //auto endTime = std::chrono::steady_clock::now();
+    //auto duration = std::chrono::duration<double, std::milli>(endTime - startTime);
+    //std::cout << "Detect took " << duration.count() << " milliseconds.\n";
+
+    //startTime = std::chrono::steady_clock::now();
     resolveCollisions();
+    //endTime = std::chrono::steady_clock::now();
+    //duration = std::chrono::duration<double, std::milli>(endTime - startTime);
+    //::cout << "Resolve took " << duration.count() << " milliseconds.\n";
     sysBuild();
     sysLifeSpan();
+}
+
+namespace Collision {
+    std::unordered_set<Entity> cgrid[gridx][gridz];
+    void updateColTable(Entity e)
+    {
+        int numerase = Collision::cgrid[GameData::colliders[e].xpos][GameData::colliders[e].zpos].erase(e);
+        if (numerase != 1) {
+            //("New Element being added to table/ Collision tabl\n");
+        }
+        int xpos = (int)((GameData::positions[e].x + WORLD_X / 2) / side);
+        int zpos = (int)((GameData::positions[e].z + WORLD_Z / 2) / side);
+        if (xpos < 0 || xpos >= gridx || zpos < 0 || zpos >= gridz) {
+            //printf("Entity %d has left bounds (will not collide)\n", e);
+            return;
+        }
+        Collision::cgrid[xpos][zpos].insert(e);
+        GameData::colliders[e].xpos = xpos;
+        GameData::colliders[e].zpos = zpos;
+    }
 }
 
 void EntityComponentSystem::sysStateMachine()
@@ -105,6 +134,27 @@ void EntityComponentSystem::sysMovement()
         if ((GameData::tags[e] & ComponentTags::Velocity) == ComponentTags::Velocity)
         {
             GameData::positions[e] = GameData::positions[e] + GameData::velocities[e].velocity;
+            
+            //Update Collision Table
+            if ((GameData::tags[e] & ComponentTags::Collidable) == ComponentTags::Collidable) {
+                Collision::updateColTable(e);
+            }
+        }
+        if (e < NUM_PLAYERS) {
+            //Keep Entity within World dimensionsc if player
+            if (GameData::positions[e].x > WORLD_X / 2) {
+                GameData::positions[e].x = WORLD_X / 2;
+            }
+            if (GameData::positions[e].z > WORLD_Z / 2) {
+                GameData::positions[e].z = WORLD_Z / 2;
+
+            }
+            if (GameData::positions[e].x < -1.0 * WORLD_X / 2.0) {
+                GameData::positions[e].x = -1.0 * WORLD_X / 2.0;
+            }
+            if (GameData::positions[e].z < -1.0 * WORLD_Z / 2.0) {
+                GameData::positions[e].z = -1.0 * WORLD_Z / 2.0;
+            }
         }
     }
 }
@@ -120,12 +170,12 @@ void EntityComponentSystem::sysGravity()
         //check if this entity has a is a rigid body
         if ((GameData::tags[e] & ComponentTags::RigidBody) == ComponentTags::RigidBody)
         {
-            if (GameData::positions[e].y > 0) {
+            if (GameData::positions[e].y > (GROUND_HEIGHT+GameData::colliders[e].AABB.y)) {
                 GameData::velocities[e].velocity.y += GRAVITY;
                 GameData::rigidbodies[e].grounded = false;
             }
             else {
-                GameData::positions[e].y = 0;
+                GameData::positions[e].y = (GROUND_HEIGHT+GameData::colliders[e].AABB.y);
                 if (GameData::velocities[e].velocity.y < 0) {
                     GameData::velocities[e].velocity.y = 0;
                 }
@@ -166,7 +216,7 @@ void EntityComponentSystem::sysPathing()
             if (GameData::pathStructs[e].currentNode >= PATH_LENGTH)
             {
                 //TODO: (Temporarily Set Enemy to inactive once it reaches the end of the path)
-                GameData::activity[e] = false;
+                causeDeath(e, e);
                 //std::cout << "Entity " << e << " Reached the end of its path! (Despawning...)\n";
                 continue;
             }
@@ -243,8 +293,8 @@ void EntityComponentSystem::sysTurretFire()
             //If a valid target was found, fire at them
             if (closestEnemy != e)
             {
-                dealDamage(e, closestEnemy, (GameData::turrets[e].damage));
-                //std::cout << "Test Tower Fired at Enemey: " << closestEnemy - ENEMY_START << "\n";
+               dealDamage(e, closestEnemy, (GameData::turrets[e].damage));
+               //std::cout << "Test Tower Fired at Enemy: " << closestEnemy - ENEMY_START << "\n";
             }
         }
     }
@@ -252,7 +302,8 @@ void EntityComponentSystem::sysTurretFire()
 
 void EntityComponentSystem::sysDetectCollisions()
 {
-    for (Entity e = 0; e < MAX_ENTITIES; e++)
+    std::unordered_set<Entity> neighbors = std::unordered_set<Entity>();
+    for (Entity e = 0; e < MAX_ENTITIES_NOBASE; e++)
     {
         //Continue to next entity if this one is not active
         if (!GameData::activity[e]) { continue; }
@@ -261,78 +312,37 @@ void EntityComponentSystem::sysDetectCollisions()
         if ((GameData::tags[e] & collides) == collides)
         {
 
-            //Check collisions with everything else
-            for (Entity o = 0; o < MAX_ENTITIES; o++)
-            {
-                //Continue to next entity if this one is not active
-                if (!GameData::activity[o]) { continue; }
-
-
-                //Continue to next entity if this one is itself
-                if (o == e) { continue; }
-
-                Tag collides = ComponentTags::Position + ComponentTags::Collidable;
-                //check if this entity has can collide
-                if ((GameData::tags[o] & collides) == collides)
-                {
-                    //If not on same  collision layer skip
-                    if (!(GameData::colliders[e].colwith & GameData::colliders[o].colteam)) { continue; }
-                    /*
-                    if (o == 93) {
-                        printf("Checking collision between %d and %d\n", e, o);
-                        printf("Collider for ent %d, is (%f, %f, %f)\n", o, GameData::colliders[o].AABB.x, GameData::colliders[o].AABB.y, GameData::colliders[o].AABB.z);
-                        printf("Position for ent %d, is (%f, %f, %f)\n", o, GameData::positions[o].x, GameData::positions[o].y, GameData::positions[o].z);
-                    }
-                    */
-                    glm::vec3 maxe = GameData::positions[e] + GameData::colliders[e].AABB;
-                    glm::vec3 maxo = GameData::positions[o] + GameData::colliders[o].AABB;
-                    glm::vec3 mine = GameData::positions[e] - GameData::colliders[e].AABB;
-                    glm::vec3 mino = GameData::positions[o] - GameData::colliders[o].AABB;
-                    if (colCheck(e, o)) {
-                        glm::vec3 pen = glm::vec3(0);
-                        glm::vec3 diff1 = maxo - mine;
-                        glm::vec3 diff2 = maxe - mino;
-                        float min = 10000;
-                        int index = 0;
-                        if (diff1.x < min) {
-                            min = diff1.x;
-                            index = 0;
-                        }
-                        if (diff1.y < min) {
-                            min = diff1.y;
-                            index = 1;
-                        }
-                        if (diff1.z < min) {
-                            min = diff1.z;
-                            index = 2;
-                        }
-                        if (diff2.x < min) {
-                            min = diff2.x;
-                            index = 3;
-                        }
-                        if (diff2.y < min) {
-                            min = diff2.y;
-                            index = 4;
-                        }
-                        if (diff2.z < min) {
-                            min = diff2.z;
-                            index = 5;
-                        }
-                        if (index < 3) {
-                            pen[index] = diff1[index];
-                        }
-                        else {
-                            pen[index-3] = -1*diff2[index-3];
-                        }
-                        //printf("Creating collision between %d and %d\n", e, o);
-                        //Create Collision Event objects in e
-                        GameData::colevents.push(CollisionEvent{ e, o, pen });
-
-                        //printf("Diff1: %f, %f, %f,  Diff2: %f, %f, %f\n Index: %d, Minn: %f\n", diff1.x, diff1.y, diff1.z, diff2.x, diff2.y, diff2.z, index, min);
-                    }
+            int xpos = GameData::colliders[e].xpos;
+            int zpos = GameData::colliders[e].zpos;
+            neighbors.clear();
+            
+            
+            //Construct all neigbors
+            for (int j = glm::max(zpos - 1, 0); j <= glm::min(zpos + 1, (int)Collision::gridz - 1); ++j) {
+                for (int i = glm::max(xpos - 1, 0); i <= glm::min(xpos + 1, (int)Collision::gridx - 1); ++i) {
+                    neighbors.insert(Collision::cgrid[i][j].begin(), Collision::cgrid[i][j].end());
                 }
             }
+            
+            
+
+
+            //Check collisions with everything else
+            for (Entity o : neighbors)
+            {
+                colCheck(e, o);
+                
+            }
+
+            //Check base and path collision seperatley
+            for (Entity p : Paths::pathlist) {
+                colCheck(e, p);
+            }
+            colCheck(e, MAX_ENTITIES_NOBASE);
+            colCheck(MAX_ENTITIES_NOBASE, e);
         }
+
+
     }
 }
 
@@ -356,6 +366,7 @@ void EntityComponentSystem::resolveCollisions()
                 }
                 if (glm::abs(ce.pen.x) < glm::abs(ce.pen.y) && glm::abs(ce.pen.z) < glm::abs(ce.pen.y)) {
                     GameData::rigidbodies[e].grounded = true;
+                    GameData::velocities[e].velocity.y = 0;
                 }
             }
 
@@ -383,7 +394,6 @@ void EntityComponentSystem::resolveCollisions()
 
     }
 }
-
 //Check entity death flag and set to zero (and do any on death effects
 void EntityComponentSystem::sysDeathStatus()
 {
@@ -395,10 +405,31 @@ void EntityComponentSystem::sysDeathStatus()
         //set to inactive if dying flag
         if ((GameData::tags[e] & ComponentTags::Dead) == ComponentTags::Dead)
         {
-            //TEST OUTPUT FOR VISUALIZER
-            GameData::models[e].asciiRep = 'X';
-            GameData::activity[e] = false;
-            //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
+            if (GameData::hostilities[e].team == Teams::Players) {
+                //printf("%d should be player\n", e);
+                if (GameData::playerdata.spawntimers[e] < -1) {
+                    GameData::playerdata.spawntimers[e] = RESPAWN_TIMER;
+                    GameData::rigidbodies[e].fixed = true;
+                }
+                else if (GameData::playerdata.spawntimers[e] <= 0) {
+                    GameData::playerdata.spawntimers[e] = -2;
+                    GameData::positions[e] = PlayerSpawns::spawnpoint[e];
+                    GameData::healths[e].curHealth = GameData::healths[e].maxHealth;
+                    GameData::tags[e] ^= ComponentTags::Dead;
+                    GameData::rigidbodies[e].fixed = false;;
+                    Collision::updateColTable(e);
+                }
+                else {
+                    GameData::playerdata.spawntimers[e] = GameData::playerdata.spawntimers[e] - 1.0f/TICK_RATE;
+                }
+            }
+            else {
+                //TEST OUTPUT FOR VISUALIZER
+                GameData::models[e].asciiRep = 'X';
+                GameData::activity[e] = false;
+
+                //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
+            }
         }
 
     }
@@ -439,12 +470,12 @@ void EntityComponentSystem::sysAttacks()
                     GameData::positions[attack] = transform * glm::vec4(GameData::positions[attack], 1);
                     GameData::velocities[attack].velocity = transform * glm::vec4(GameData::velocities[attack].velocity, 0);
                     //Set Hostility
-                    GameData::hostilities[attack].team = GameData::hostilities[e].team;
                     GameData::hostilities[attack].hostileTo = GameData::hostilities[e].hostileTo;
                     //Set creator
                     GameData::tags[attack] |= ComponentTags::Created;
                     GameData::creators[attack] = e;
                     cooldown = cooldown < GameData::spawnrates[attack] ? GameData::spawnrates[attack] : cooldown;
+                    Collision::updateColTable(attack);
                 }
                 //Set cooldown TODO, should be its own component in an attack
                 GameData::pattackmodules[e].cooldown = cooldown;
@@ -465,7 +496,7 @@ void EntityComponentSystem::sysLifeSpan()
         {
             GameData::lifespans[e] -= 1.0f / TICK_RATE;
             if (GameData::lifespans[e] <= 0) {
-                GameData::activity[e] = false;
+                causeDeath(e, e);
             }
         }
     }
@@ -486,7 +517,7 @@ void EntityComponentSystem::sysBuild()
 
                 if (GameData::retplaces[e].reticle != INVALID_ENTITY) {
                     //printf("Deleting reticle entity %d\n", GameData::retplaces[e].reticle);
-                    GameData::activity[GameData::retplaces[e].reticle] = false;
+                    causeDeath(GameData::retplaces[e].reticle, GameData::retplaces[e].reticle);
                     GameData::retplaces[e].reticle = INVALID_ENTITY;
                 }
 
@@ -528,6 +559,7 @@ void EntityComponentSystem::sysBuild()
                             for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
                                 GameData::playerdata.resources[i] -= buildcosts[GameData::retplaces[e].buildingPrefab][i];
                             }
+                            Collision::updateColTable(b);
                         }
                     }
 
@@ -572,6 +604,7 @@ void EntityComponentSystem::sysBuild()
                 GameData::tags[r] |= ComponentTags::Created;
                 GameData::creators[r] = e;
                 GameData::retplaces[e].reticle = r;
+                Collision::updateColTable(r);
             }
         }
     }
@@ -640,35 +673,49 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
 
 void EntityComponentSystem::dealDamage(Entity source, Entity target, float damage)
 {
+    if ((GameData::tags[target] & ComponentTags::Dead) == ComponentTags::Dead) {
+        return;
+    }
     GameData::healths[target].curHealth -= damage;
     if (GameData::tags[source] & ComponentTags::Created) {
         source = GameData::creators[source];
     }
+    printf("Ent %d dealing %f dmg to %d\n", source, damage, target);
+
     GameData::combatLogs[GameData::logpos].source = source;
     GameData::combatLogs[GameData::logpos].target = target;
     GameData::combatLogs[GameData::logpos].damage = damage;
     if (GameData::healths[target].curHealth <= 0) {
         causeDeath(source, target);
-        GameData::tags[target] ^= ComponentTags::Collidable;
     }
     GameData::logpos++;
 }
 
 void EntityComponentSystem::causeDeath(Entity source, Entity target)
 {
+
+    //Remove  from collision grid
+    if ((GameData::tags[target] & ComponentTags::Collidable) == ComponentTags::Collidable) {
+        Collision::cgrid[GameData::colliders[target].xpos][GameData::colliders[target].zpos].erase(target);
+    }
+
     if ((GameData::tags[target] & ComponentTags::Dead) == ComponentTags::Dead) {
         return;
     }
-
     //printf("Ent %d is dead\n", target);
+
 
     GameData::tags[target] |= ComponentTags::Dead;
 
+    GameData::velocities[target].velocity = glm::vec3(0);
+
+    
     if (source == target) { return; }
     GameData::combatLogs[GameData::logpos].source = source;
     GameData::combatLogs[GameData::logpos].target = target;
     GameData::combatLogs[GameData::logpos].killed = true;
     GameData::logpos++;
+
     if (source < NUM_PLAYERS) {
         if ((GameData::tags[target] & ComponentTags::WorthPoints) == ComponentTags::WorthPoints) {
             GameData::playerdata.scores[source].points += GameData::pointvalues[target];
@@ -692,11 +739,71 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
 
 bool EntityComponentSystem::colCheck(Entity e, Entity o)
 {
+    //Continue to next entity if this one is not active
+    if (!GameData::activity[o] || !GameData::activity[e]) { return false; }
+
+
+
+    //Continue to next entity if this one is itself
+    if (o == e) { return false; }
+
+    Tag collides = ComponentTags::Collidable + ComponentTags::Position;
+
+    if (((GameData::tags[o] & collides) != collides) || ((GameData::tags[e] & collides) != collides)) {
+        return false;
+    }
+   
+    //If not on same  collision layer skip
+    if (!(GameData::colliders[e].colwith & GameData::colliders[o].colteam)) { return false; }
+
     glm::vec3 maxe = GameData::positions[e] + GameData::colliders[e].AABB;
     glm::vec3 maxo = GameData::positions[o] + GameData::colliders[o].AABB;
     glm::vec3 mine = GameData::positions[e] - GameData::colliders[e].AABB;
     glm::vec3 mino = GameData::positions[o] - GameData::colliders[o].AABB;
-    return glm::all(glm::lessThan(mine, maxo)) && glm::all(glm::lessThan(mino, maxe));
+    if (glm::all(glm::lessThan(mine, maxo)) && glm::all(glm::lessThan(mino, maxe))) {
+        glm::vec3 pen = glm::vec3(0);
+        glm::vec3 diff1 = maxo - mine;
+        glm::vec3 diff2 = maxe - mino;
+        float min = 10000;
+        int index = 0;
+        if (diff1.x < min) {
+            min = diff1.x;
+            index = 0;
+        }
+        if (diff1.y < min) {
+            min = diff1.y;
+            index = 1;
+        }
+        if (diff1.z < min) {
+            min = diff1.z;
+            index = 2;
+        }
+        if (diff2.x < min) {
+            min = diff2.x;
+            index = 3;
+        }
+        if (diff2.y < min) {
+            min = diff2.y;
+            index = 4;
+        }
+        if (diff2.z < min) {
+            min = diff2.z;
+            index = 5;
+        }
+        if (index < 3) {
+            pen[index] = diff1[index];
+        }
+        else {
+            pen[index - 3] = -1 * diff2[index - 3];
+        }
+        //printf("Creating collision between %d and %d\n", e, o);
+        //Create Collision Event objects in e
+        GameData::colevents.push(CollisionEvent{ e, o, pen });
+        
+        return true;
+        //printf("Diff1: %f, %f, %f,  Diff2: %f, %f, %f\n Index: %d, Minn: %f\n", diff1.x, diff1.y, diff1.z, diff2.x, diff2.y, diff2.z, index, min);
+    }
+    return false;
 }
 
 void EntityComponentSystem::rePath(Entity e)

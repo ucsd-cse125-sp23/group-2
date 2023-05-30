@@ -39,10 +39,11 @@ int main()
 
 void serverLoop(void* arg)
 {
-    std::chrono::duration<double> ticklength = 1s / TICK_RATE;
+    double spertick = 1.0 / TICK_RATE;
+    std::chrono::duration<double> ticklength = std::chrono::duration<double>(spertick);
+    auto start = std::chrono::system_clock::now();
     while (true)
     {
-        auto start = std::chrono::system_clock::now();
         // Some computation here
         server->update();
         auto end = std::chrono::system_clock::now();
@@ -53,7 +54,8 @@ void serverLoop(void* arg)
         }
         else {
             printf("server update took too long!\n");
-        } 
+        }
+        start = std::chrono::system_clock::now();
         server->sendPackets();
     }
 }

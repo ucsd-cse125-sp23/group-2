@@ -12,8 +12,7 @@ ServerGame::ServerGame(void)
     debug[0] = '\0';
 
     curTick = 0;
-
-    currentStatus = game;
+    clientsConnected = 0;
 }
 
 //Populate Component Arrays
@@ -28,49 +27,7 @@ void ServerGame::initializeGame()
 
 void ServerGame::initPlayers()
 {
-    //Initialize Players
-    for (int i = 0; i < NUM_PLAYERS; i++)
-    {
-        GameData::activity[i] = true;
-        GameData::positions[i] = glm::vec3(0, 0, 0);
-        GameData::velocities[i].velocity = glm::vec3(0, 0, 0);
-        GameData::colliders[i] = { glm::vec3(1, 1, 1) };
-        GameData::models[i].modelID = MODEL_ID_ROVER;
-        GameData::models[i].asciiRep = 'P';
-        //GameData::models[i].renderCollider = true;
-        GameData::healths[i].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
-        GameData::hostilities[i].team = Teams::Players;
-        GameData::hostilities[i].hostileTo = Teams::Environment+Teams::Martians;
-        GameData::pattackmodules[i].attack = Prefabs::ProjectileBasic;
-        GameData::pattackmodules[i].targetPos = glm::vec3(0, 0, 0);
-        GameData::pattackmodules[i].cooldown = 0;
-        GameData::states[i] = 0;
-        GameData::retplaces[i].buildingPrefab = Prefabs::TowerBasic;
-        GameData::retplaces[i].reticlePrefab = Prefabs::TowerReticle;
-        GameData::retplaces[i].reticle = INVALID_ENTITY;
-        GameData::retplaces[i].place = false;
-        GameData::retplaces[i].validTarget = false;
-        GameData::colliders[i].colteam = CollisionLayer::WorldObj;
-        GameData::colliders[i].colwith = CollisionLayer::WorldObj;
-
-
-
-        GameData::tags[i] =
-            ComponentTags::Position +
-            ComponentTags::Velocity +
-            ComponentTags::Model +
-            ComponentTags::Collidable +
-            ComponentTags::RigidBody +
-            ComponentTags::Health +
-            ComponentTags::Hostility;
-        //TODO: Other Model Data
-    }
-    //TODO: Change
-    //Manually set spawn positions
-    GameData::positions[0] = glm::vec3(0, 0, 0);
-    GameData::positions[1] = glm::vec3(0, 0, 3);
-    GameData::positions[2] = glm::vec3(3, 0, 0);
-    GameData::positions[3] = glm::vec3(3, 0, 3);
+    prefabMap[Prefab::Players]();
 
 }
 
@@ -120,6 +77,7 @@ void ServerGame::waveSpawner()
                 {
                     GameData::pathStructs[e.front()].path = WaveData::waves[WaveData::currentWave].front().path;
                     GameData::positions[e.front()] = Paths::path[GameData::pathStructs[e.front()].path][0];
+                    Collision::updateColTable(e.front());
                     WaveData::waves[WaveData::currentWave].pop();
                     if (!WaveData::waves[WaveData::currentWave].empty())
                     {
@@ -152,17 +110,22 @@ void ServerGame::initResources()
         if (e != INVALID_ENTITY) {
             GameData::positions[e] = pos - glm::vec3(WORLD_X/2, 0, WORLD_Z/2);
             GameData::tags[e] |= ComponentTags::DiesOnCollision;
-            GameData::colliders[e].colwith |= CollisionLayer::UIObj;
+            GameData::colliders[e].colwith |= CollisionLayer::UIObj + CollisionLayer::StaticObj;
+            Collision::updateColTable(e);
             resources.push_back(e);
         }
         //printf("Pos is %f, %f, %f\n", pos.x, pos.y, pos.z);
     }
-    EntityComponentSystem::sysDetectCollisions();
-    EntityComponentSystem::resolveCollisions();
     for (Entity e : resources) {
+        for (Entity p : Paths::pathlist) {
+            ECS::colCheck(e, p);
+        }
+        ECS::colCheck(e, MAX_ENTITIES_NOBASE);
+        ECS::resolveCollisions();
         GameData::tags[e] ^= ComponentTags::DiesOnCollision;
-        GameData::colliders[e].colwith ^= CollisionLayer::UIObj;
+        GameData::colliders[e].colwith ^= CollisionLayer::UIObj + CollisionLayer::StaticObj;
     }
+
 
 }
 
@@ -172,18 +135,28 @@ void ServerGame::update()
     // get new clients
     if (network->acceptNewClient())
     {
-        printf("New client has been connected to the server\n");
+        clientsConnected++;
+        printf("Client %u connected\n", clientsConnected);
     }
     //Receve Input
     receiveFromClients();
-
+    //auto startTime = std::chrono::steady_clock::now();
+    //auto endTime = std::chrono::steady_clock::now();
+    //auto duration = std::chrono::duration<double, std::milli>(endTime - startTime);
     switch (currentStatus){
     case init:
+        if (clientsConnected >= NUM_PLAYERS) {
+            currentStatus = game;
+            printf("All players connected, starting main update loop!\n");
+        }
         break;
     case game:
         handleInputs();
-
+        //startTime = std::chrono::steady_clock::now();
         EntityComponentSystem::update();
+        //endTime = std::chrono::steady_clock::now();
+        //duration = std::chrono::duration<double, std::milli>(endTime - startTime);
+        //std::cout << "ECS took " << duration.count() << " milliseconds.\n";
 
         waveSpawner();
 
@@ -225,13 +198,18 @@ void ServerGame::handleInputs()
         bool target = false;
         while (!incomingDataLists[i].empty())
         {
+            if ((GameData::tags[i] & ComponentTags::Dead) == ComponentTags::Dead) {
+                std::queue<ClienttoServerData> empty;
+                std::swap(incomingDataLists[i], empty);
+                continue;
+            }
             ClienttoServerData in = incomingDataLists[i].front();
             GameData::velocities[i].velocity = glm::vec3(0,GameData::velocities[i].velocity.y,0);
             camDirection = in.camDirectionVector;
             camPosition = in.camPosition;
             if ( ((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
                 float camAngle = in.camAngleAroundPlayer;
-                glm::vec3 moveDirection = glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f));
+                glm::vec3 moveDirection = glm::normalize(glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f)));
                 GameData::models[i].modelOrientation = -camAngle + glm::degrees(glm::acos(moveDirection.y));
                 GameData::velocities[i].velocity += PLAYER_MVSPD * moveDirection;
             }
@@ -245,7 +223,7 @@ void ServerGame::handleInputs()
             else {
                 changeState(i, PlayerState::Default); //May be slow
                 if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
-                    GameData::activity[GameData::retplaces[i].reticle] = false;
+                    ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
                     GameData::retplaces[i].reticle = INVALID_ENTITY;
                 }
             }
@@ -282,14 +260,16 @@ void ServerGame::handleInputs()
 
 void ServerGame::sendPackets()
 {
-    //Send Data to Clients
-    packageData(gameState);
-    network->sendActionPackets(gameState);
+    if (currentStatus == game) {
+        //Send Data to Clients
+        packageData(gameState);
+        network->sendActionPackets(gameState);
+    }
 }
 
 void ServerGame::initPrefabs()
 {
-    list<Entity> pathlist = prefabMap[Prefabs::PathColliders]();
+    Paths::pathlist = prefabMap[Prefabs::PathColliders]();
     /*
     for (Entity e : pathlist) {
         if (e != INVALID_ENTITY) {
@@ -329,6 +309,7 @@ void ServerGame::packageData(ServertoClientData& data)
     data.buildcosts = buildcosts;
     data.serverStatus = currentStatus;
     data.colliders = GameData::colliders;
+    data.waveTimer = WaveData::waveTick / TICK_RATE;
 }
 
 const int GRID_X = 32;

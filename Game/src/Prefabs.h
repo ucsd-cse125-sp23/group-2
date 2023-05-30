@@ -30,6 +30,7 @@ std::list<Entity> createHome();
 std::list<Entity> createWoodResourceBasic();
 std::list<Entity> createStoneResourceBasic();
 std::list<Entity> createPathColliders();
+std::list<Entity> createPlayers();
 
 namespace Prefabs {
 	enum Prefab : uint32_t{
@@ -57,6 +58,7 @@ namespace Prefabs {
 		PathColliders,
 		UI_MARKER,
 		Home = UI_MARKER,
+		Players,
 		NUM_PREFAB
 
 	};
@@ -83,13 +85,19 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createStoneResourceBasic,
 	&createTowerReticle,
 	&createPathColliders,
-	&createHome
+	&createHome,
+	&createPlayers
 };
 
+namespace PlayerSpawns {
+	extern constexpr int numSpawns = 4; //Should always be >= NUM_PLAYERS
+	extern const glm::vec3 spawnpoint[numSpawns];
+};
 
 namespace Paths {
 	extern constexpr int pathCount = 4;
 	extern const glm::vec3 path[pathCount][PATH_LENGTH];
+	extern std::list<Entity> pathlist;
 };
 
 struct enemy {
@@ -113,3 +121,6 @@ namespace WaveData {
 
 //Define buildcosts
 extern const std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;
+
+//Define Base Location
+const glm::vec3 baseLoc = glm::vec3(0, 0, 90);

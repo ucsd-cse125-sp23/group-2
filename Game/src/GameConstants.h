@@ -1,17 +1,17 @@
 //The max number of each entity type (CAN BE MODIFIED - Currently Arbitrary)
 #pragma once
-#define NUM_PLAYERS 4
-#define NUM_ENEMIES 40
-#define NUM_TOWERS 40
-#define NUM_RESOURCES 100
+#define NUM_PLAYERS 1
+#define NUM_ENEMIES 50
+#define NUM_TOWERS 50
+#define NUM_RESOURCES 750
 #define NUM_PROJECTILES 100
 #define NUM_BASES 1
 #define CLOG_MAXSIZE 50
-const float TICK_RATE = 128;
+const float TICK_RATE = 64;
 
 //World Length and Width
-constexpr float WORLD_X = 164;
-constexpr float WORLD_Z = 164;
+constexpr float WORLD_X = 150;
+constexpr float WORLD_Z = 180;
 
 //Speed of movement in units per second
 const float PLAYER_MVSPD_PERSEC = 20;
@@ -19,8 +19,14 @@ const float PLAYER_MVSPD_PERSEC = 20;
 //Initial jump speed
 const float PLAYER_JPSPD_PERSEC = 30;
 
+//Projectile Speed
+const float PROJ_MVSPD_PERSEC = 64;
+
+//Ground Height
+const float GROUND_HEIGHT = -1.0;
+
 //Base health values of different game entities
-const float PLAYER_BASE_HEALTH = 119;
+const float PLAYER_BASE_HEALTH = 100;
 const float ENEMY_BASE_HEALTH = 100;
 const float HOME_BASE_HEALTH = 100;
 const float RESOURCE_BASE_HEALTH = 100;
@@ -32,7 +38,7 @@ const float TURRET_BASE_DPS = 200;
 const float ENEMY_GND_MVSPD_PERSEC = 5;
 
 //How many seconds until first wave spawns
-const float ENEMY_SPAWNDELAY_SEC = 1;
+const float ENEMY_SPAWNDELAY_SEC = 15;
 
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;
@@ -48,6 +54,9 @@ const float GRAVITY_SEC = -120;
 
 //How high above the ground flying enemies will hover
 const float FLYING_HEIGHT = 10;
+
+//Default player spawn timer in seconds
+const float RESPAWN_TIMER = 5.0;
 
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 8
@@ -84,6 +93,9 @@ const float TOWER_PLACEMENT_RANGE = 15;
 
 #define RES_WIDTH 2560
 #define RES_HEIGHT 1440
+
+#define INVALID_CLIENT_ID NUM_PLAYERS
+#define UNKNOWN_SERVER_STATUS -1
 //.... ADD MORE ...
 
 
@@ -98,6 +110,7 @@ const float PLAYER_MVSPD = (PLAYER_MVSPD_PERSEC / TICK_RATE);
 const float PLAYER_JPSPD = (PLAYER_JPSPD_PERSEC / TICK_RATE);
 const float ENEMY_SPAWNDELAY_TICKS = (ENEMY_SPAWNDELAY_SEC * TICK_RATE);
 const float GRAVITY = (GRAVITY_SEC / (TICK_RATE * TICK_RATE));
+const float PROJ_MVSPD = PROJ_MVSPD_PERSEC/TICK_RATE;
 
 //The Start and End indices of the entity array for each entity type
 #define ENEMY_START         (NUM_PLAYERS)
@@ -113,3 +126,5 @@ const float GRAVITY = (GRAVITY_SEC / (TICK_RATE * TICK_RATE));
 
 //Total number of entities
 #define MAX_ENTITIES (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES + NUM_PROJECTILES + NUM_BASES)
+#define MAX_ENTITIES_NOBASE (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES + NUM_PROJECTILES + NUM_BASES - 1)
+
