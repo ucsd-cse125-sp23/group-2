@@ -11,7 +11,7 @@ const float TICK_RATE = 64;
 
 //World Length and Width
 constexpr float WORLD_X = 150;
-constexpr float WORLD_Z = 165;
+constexpr float WORLD_Z = 180;
 
 //Speed of movement in units per second
 const float PLAYER_MVSPD_PERSEC = 20;
@@ -120,3 +120,5 @@ const float PROJ_MVSPD = PROJ_MVSPD_PERSEC/TICK_RATE;
 
 //Total number of entities
 #define MAX_ENTITIES (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES + NUM_PROJECTILES + NUM_BASES)
+#define MAX_ENTITIES_NOBASE (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES + NUM_PROJECTILES + NUM_BASES - 1)
+

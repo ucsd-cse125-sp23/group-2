@@ -97,6 +97,7 @@ namespace PlayerSpawns {
 namespace Paths {
 	extern constexpr int pathCount = 4;
 	extern const glm::vec3 path[pathCount][PATH_LENGTH];
+	extern std::list<Entity> pathlist;
 };
 
 struct enemy {

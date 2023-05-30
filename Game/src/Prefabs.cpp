@@ -340,6 +340,7 @@ std::list<Entity> createPlayers() {
         GameData::colliders[e].colteam = CollisionLayer::WorldObj;
         GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
         GameData::playerdata.spawntimers[e] = -2;
+        Collision::updateColTable(e);
 
         GameData::tags[e] =
             ComponentTags::Position +
@@ -430,6 +431,7 @@ namespace Paths {
         { glm::vec3(20,0,-85), glm::vec3(20,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc},
         { glm::vec3(60,0,-85), glm::vec3(60,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  }
     };
+    std::list<Entity> pathlist;
 }
 namespace WaveData {
     int currentWave;
