@@ -41,7 +41,7 @@ void AudioManager::loadSound(const char* path, int model, int soundType) {
 // Play a sound from the given sound map
 void AudioManager::playSound(int model, int soundType, glm::vec3 pos) {
     if (soundArray[model][soundType] == nullptr) {
-        printf("Invalid play sound call!\n");
+        printf("Invalid play sound call! Model ID: %d Sound ID: %d\n", model, soundType);
         return;
     }
     FMOD::Channel* newChannel = nullptr;
