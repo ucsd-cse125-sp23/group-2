@@ -259,9 +259,7 @@ void ServerGame::handleInputs()
         if (jump && GameData::rigidbodies[i].grounded) {
             GameData::velocities[i].velocity.y = PLAYER_JPSPD;
             // Add jumping sound to sound log
-            GameData::soundLogs[GameData::slogpos].source = i;
-            GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_JUMP;
-            GameData::slogpos++;
+            EntityComponentSystem::logSound(i, SOUND_ID_JUMP);
         }
         //in.print(msg);
     }

@@ -308,4 +308,6 @@ namespace EntityComponentSystem
     void rePath(Entity e);
 
     void changeState(Entity e, State post);
+
+    void logSound(Entity source, int sound_id);
 };
