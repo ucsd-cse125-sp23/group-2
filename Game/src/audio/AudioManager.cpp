@@ -24,6 +24,8 @@ AudioManager::AudioManager() {
     AudioManager::loadSound("../assets/sounds/MINE Placing 01.wav", MODEL_ID_ROVER, SOUND_ID_BUILD);
     AudioManager::loadSound("../assets/sounds/Screeching Monster 2-1.wav", MODEL_ID_MOB, SOUND_ID_DEATH);
     AudioManager::loadSound("../assets/sounds/Melee_Deep_Wound_05.wav", MODEL_ID_MOB, SOUND_ID_DAMAGE);
+    AudioManager::loadSound("../assets/sounds/Robotic Lifeforms 2 - Impacts Source - Metal Tool Drawer Punch 03.wav", MODEL_ID_ROVER, SOUND_ID_LAND);
+  
     
     //AudioManager::playMusic();
     AudioManager::setMusicVolume(0.25);

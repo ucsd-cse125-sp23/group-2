@@ -129,6 +129,10 @@ void EntityComponentSystem::sysGravity()
             else {
                 GameData::positions[e].y = 0;
                 if (GameData::velocities[e].velocity.y < 0) {
+                    // Add landing sound to sound log
+                    GameData::soundLogs[GameData::slogpos].source = e;
+                    GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_LAND;
+                    GameData::slogpos++;
                     GameData::velocities[e].velocity.y = 0;
                 }
                 GameData::rigidbodies[e].grounded = true;
