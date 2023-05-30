@@ -46,6 +46,7 @@ void AudioManager::playSound(int model, int soundType, glm::vec3 pos) {
         printf("Invalid play sound call! Model ID: %d Sound ID: %d\n", model, soundType);
         return;
     }
+    //printf("Sound call! Model ID: %d Sound ID: %d\n", model, soundType);
     FMOD::Channel* newChannel = nullptr;
     AudioManager::errorCheck(audioSystem->playSound(soundArray[model][soundType], nullptr, false, &newChannel));
     AudioManager::errorCheck(newChannel->set3DAttributes(&vecConvert(pos), &zeroVec));

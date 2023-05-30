@@ -198,6 +198,7 @@ void ServerGame::handleInputs()
         glm::vec3 camDirection;
         glm::vec3 camPosition;
         bool target = false;
+        bool jump = false;
         while (!incomingDataLists[i].empty())
         {
             if ((GameData::tags[i] & ComponentTags::Dead) == ComponentTags::Dead) {
@@ -206,10 +207,10 @@ void ServerGame::handleInputs()
                 continue;
             }
             ClienttoServerData in = incomingDataLists[i].front();
-            GameData::velocities[i].velocity = glm::vec3(0,GameData::velocities[i].velocity.y,0);
+            GameData::velocities[i].velocity = glm::vec3(0, GameData::velocities[i].velocity.y, 0);
             camDirection = in.camDirectionVector;
             camPosition = in.camPosition;
-            if ( ((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
+            if (((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
                 float camAngle = in.camAngleAroundPlayer;
                 glm::vec3 moveDirection = glm::normalize(glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f)));
                 GameData::models[i].modelOrientation = -camAngle + glm::degrees(glm::acos(moveDirection.y));
@@ -230,12 +231,8 @@ void ServerGame::handleInputs()
                 }
             }
 
-            if (in.jump && GameData::rigidbodies[i].grounded) {
-                GameData::velocities[i].velocity.y = PLAYER_JPSPD;
-                // Add jumping sound to sound log
-                GameData::soundLogs[GameData::slogpos].source = i;
-                GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_JUMP;
-                GameData::slogpos++;
+            if (in.jump){
+                jump = true;
             }
             incomingDataLists[i].pop();
         }
@@ -257,6 +254,14 @@ void ServerGame::handleInputs()
         }
         else if(GameData::states[i] == PlayerState::Attack){
             changeState(i, PlayerState::Default);
+        }
+
+        if (jump && GameData::rigidbodies[i].grounded) {
+            GameData::velocities[i].velocity.y = PLAYER_JPSPD;
+            // Add jumping sound to sound log
+            GameData::soundLogs[GameData::slogpos].source = i;
+            GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_JUMP;
+            GameData::slogpos++;
         }
         //in.print(msg);
     }

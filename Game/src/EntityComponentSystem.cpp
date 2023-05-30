@@ -233,6 +233,9 @@ void EntityComponentSystem::sysPathing()
             {
                 direction = glm::vec3(direction.x, direction.y + FLYING_HEIGHT, direction.z);
             }
+            else {
+                direction.y = 0;
+            }
             GameData::velocities[e].velocity = glm::normalize(direction) * GameData::velocities[e].moveSpeed;
         }
     }
@@ -254,6 +257,9 @@ void EntityComponentSystem::sysHoming()
             if (GameData::velocities[e].flying)
             {
                 direction = glm::vec3(direction.x, direction.y + FLYING_HEIGHT, direction.z);
+            }
+            else {
+                direction.y = 0;
             }
             GameData::velocities[e].velocity = glm::normalize(direction) * GameData::velocities[e].moveSpeed;
         }
