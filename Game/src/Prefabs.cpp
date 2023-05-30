@@ -20,7 +20,7 @@ std::list<Entity> createProjectileBasic() {
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 30.0f;
     GameData::lifespans[e] = 5;
-    GameData::spawnrates[e] = 0.25;
+    GameData::spawnrates[e] = PROJ_SPAWN_RATE;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::hostilities[e].team = Teams::Projectile;
@@ -52,7 +52,7 @@ std::list<Entity> createProjectileSpread5() {
         GameData::models[e].asciiRep = 'J';
         GameData::coldmg[e].damage = 30.0f;
         GameData::lifespans[e] = 1;
-        GameData::spawnrates[e] = 0.25;
+        GameData::spawnrates[e] = PROJ_SPAWN_RATE;
         GameData::colliders[e].colteam = CollisionLayer::WorldObj;
         GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
         GameData::hostilities[e].team = Teams::Projectile;
@@ -85,7 +85,7 @@ std::list<Entity> createProjectileChaos() {
     GameData::coldmg[e].damage = 30.0f;
     GameData::lifespans[e] = 10;
     GameData::spawnrates[e] = 1;
-    GameData::pattackmodules[e].cooldown = 0.1;
+    GameData::pattackmodules[e].cooldown = PROJ_SPAWN_RATE/2;
     GameData::pattackmodules[e].attack = Prefabs::ProjectileRandom;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
@@ -120,7 +120,7 @@ std::list<Entity> createProjectileRandom() {
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 30.0f;
     GameData::lifespans[e] = 0.5;
-    GameData::spawnrates[e] = 0.1;
+    GameData::spawnrates[e] = PROJ_SPAWN_RATE/2;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::hostilities[e].team = Teams::Projectile;
@@ -165,6 +165,8 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::models[e].renderCollider = true;
     GameData::rigidbodies[e].fixed = false;
     GameData::rigidbodies[e].grounded = false;
+    GameData::coldmg[e].cooldown = 0;
+    GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE;
 
 
     GameData::tags[e] =
@@ -193,6 +195,8 @@ std::list<Entity> createEnemyGroundTank() {
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD / 2;
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 4;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG * 2;
+    GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE * 2;
+
     return createdEntities;
 };
 std::list<Entity> createEnemyFlyingBasic() {
@@ -247,6 +251,8 @@ std::list<Entity> createTowerBasic() {
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::turrets[e].damage = TURRET_BASE_DMG;
     GameData::turrets[e].range = 5;
+    GameData::turrets[e].cooldown = 0;
+    GameData::turrets[e].fireRate = TURRET_BASE_FIRE_RATE;
     GameData::models[e].modelID = MODEL_ID_TOWER;
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;

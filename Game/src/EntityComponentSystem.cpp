@@ -266,6 +266,7 @@ void EntityComponentSystem::sysTurretFire()
     {
         //Continue to next entity if this one is not active
         if (!GameData::activity[e]) { continue; }
+        GameData::turrets[e].cooldown -= 1.0f / TICK_RATE;
         //check if this entity has a turret component
         if ((GameData::tags[e] & ComponentTags::Turret) == ComponentTags::Turret)
         {
@@ -296,9 +297,10 @@ void EntityComponentSystem::sysTurretFire()
             }
 
             //If a valid target was found, fire at them
-            if (closestEnemy != e)
+            if (closestEnemy != e && GameData::turrets[e].cooldown <= 0)
             {
-               dealDamage(e, closestEnemy, (GameData::turrets[e].damage));
+                GameData::turrets[e].cooldown = GameData::turrets[e].fireRate;
+                dealDamage(e, closestEnemy, (GameData::turrets[e].damage));
                //std::cout << "Test Tower Fired at Enemy: " << closestEnemy - ENEMY_START << "\n";
 
                // Add attack sound to sound log
@@ -317,6 +319,7 @@ void EntityComponentSystem::sysDetectCollisions()
     {
         //Continue to next entity if this one is not active
         if (!GameData::activity[e]) { continue; }
+        GameData::coldmg[e].cooldown -= 1.0f / TICK_RATE;
         Tag collides = ComponentTags::Position + ComponentTags::Collidable;
         //check if this entity can can collide
         if ((GameData::tags[e] & collides) == collides)
@@ -393,7 +396,8 @@ void EntityComponentSystem::resolveCollisions()
         if ((GameData::tags[e] & (ComponentTags::CollisionDmg)) == ComponentTags::CollisionDmg) {
             //Check if hostileto
             if ((GameData::hostilities[e].hostileTo & GameData::hostilities[o].team)) {
-                if ((GameData::tags[o] & (ComponentTags::Health)) == ComponentTags::Health) {
+                if ((GameData::tags[o] & (ComponentTags::Health)) == ComponentTags::Health && GameData::coldmg[e].cooldown <= 0) {
+                    GameData::coldmg[e].cooldown = GameData::coldmg[e].damageRate;
                     dealDamage(e, o, GameData::coldmg[e].damage);
                 }
             }

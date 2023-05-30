@@ -91,6 +91,8 @@ struct Turret //Component of Towers
 {
     float range; //The range of the tower
     float damage; //The damage that the turret deals per second
+    float cooldown;
+    float fireRate;
 };
 
 namespace Collision {
@@ -109,7 +111,6 @@ struct Collider //Information for collisions
     TeamID colwith;
     int xpos;
     int zpos;
-
     //TODO: Pointer to a mesh for narrow phase
 };
 
@@ -132,6 +133,8 @@ struct Health {
 
 struct CollisionDmg {
     float damage;
+    float cooldown;
+    float damageRate;
 };
 
 struct ProjectileAttackModule {

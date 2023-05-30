@@ -23,6 +23,9 @@ const float PLAYER_JPSPD_PERSEC = 30;
 //Projectile Speed
 const float PROJ_MVSPD_PERSEC = 64;
 
+//How often projectiles spawn (seconds between spawns)
+const float PROJ_SPAWN_RATE = 0.25;
+
 //Ground Height
 const float GROUND_HEIGHT = -1.0;
 
@@ -35,6 +38,9 @@ const float RESOURCE_BASE_HEALTH = 100;
 //Base damage per second dealt by towers
 const float TURRET_BASE_DPS = 200;
 
+//How often turrets fire (seconds between damages)
+const float TURRET_BASE_FIRE_RATE = 0.25;
+
 //ground enemy base movespeed in units/sec
 const float ENEMY_GND_MVSPD_PERSEC = 5;
 
@@ -43,6 +49,9 @@ const float ENEMY_SPAWNDELAY_SEC = 15;
 
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;
+
+//How often enemies damage on collision (seconds between damages)
+const float ENEMY_BASE_DAMAGE_RATE = 0.25;
 
 //how close players must be to gain the attention of enemies
 const float AGRO_RANGE = 10;
