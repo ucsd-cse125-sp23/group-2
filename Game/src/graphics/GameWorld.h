@@ -1,24 +1,21 @@
 #pragma once
-#include "Player.h"
-#include "Mob.h"
-#include "Tower.h"
-#include "Resource.h"
-#include "Projectile.h"
+#include "RenderEntity.h"
 #include "Skybox.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "Health.h"
 #include "../GameConstants.h"
 #include "../NetworkData.h"
 class GameWorld {
 
 private:
+    std::array <Shader*, NUM_MODELS> shaders;
+    std::array <ObjectModel*, NUM_MODELS> models;
+    Shader* healthShader;
     int currID;
-    std::array <Player*, NUM_CLIENTS> players;
-    std::array <Mob*, NUM_ENEMIES> mobs;
-    std::array <Tower*, NUM_TOWERS> towers;
-    std::array <Resource*, NUM_RESOURCES> resources;
-    std::array <Projectile*, NUM_PROJECTILES> projectiles;
     std::array <Cube*, MAX_ENTITIES> AABBs;
+    std::array <RenderEntity*, MAX_ENTITIES> entities;
+    std::array <HealthBar*, MAX_ENTITIES> healths;
 
     Skybox* env;
 
@@ -33,7 +30,7 @@ public:
     void update(ServertoClientData& incomingData, int id);
 
     //render all active entities
-    void draw(Shader* shader, Shader* skyboxShader);
+    void draw();
     
     float getCamAngle() { return cam->getAngleAroundPlayer(); };
     glm::vec3 getCamDirectionVector() { return cam->getDirectionVector(); };
@@ -41,5 +38,6 @@ public:
     //callbacks - for interaction
     static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
     static void mouse_callback(GLFWwindow* window, int button, int action, int mods);
+    static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
     static void cursor_callback(GLFWwindow* window, double currX, double currY);
 };

@@ -228,6 +228,7 @@ std::list<Entity> createEnemyFlyingBasic() {
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
     GameData::models[e].asciiRep = 'E';
+    GameData::models[e].modelID = MODEL_ID_MOB_FLYING;
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
@@ -319,6 +320,7 @@ std::list<Entity> createHome() {
     GameData::activity[e] = true;
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::models[e].asciiRep = 'B';
+    GameData::models[e].modelID = MODEL_ID_BASE;
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = HOME_BASE_HEALTH;
@@ -416,7 +418,7 @@ namespace WaveData {
     int currentWave;
 
     // How much time a wave lasts before the next wave starts spawning (timer for last wave will be time until win)
-    int waveTimers[WAVE_COUNT] = { 5 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE };
+    int waveTimers[WAVE_COUNT] = { 500 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE, 5 * TICK_RATE };
 
     int waveTick; //countdown timer for waves
 
@@ -454,8 +456,9 @@ std::list<Entity> createPathColliders()
             GameData::colliders[e].AABB.y = glm::abs(GameData::colliders[e].AABB.y);
             GameData::colliders[e].AABB.z = glm::abs(GameData::colliders[e].AABB.z);
 
+            GameData::models[e].modelID = MODEL_ID_NO_MODEL;
             GameData::models[e].asciiRep = 'P';
-            //GameData::models[e].renderCollider = true;
+            GameData::models[e].renderCollider = true;
             GameData::colliders[e].colteam = CollisionLayer::UIObj;
             GameData::colliders[e].colwith = 0;
 
