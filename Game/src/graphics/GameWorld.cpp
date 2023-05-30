@@ -14,7 +14,7 @@ void GameWorld::init() {
 	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/tower.obj");
 	models[MODEL_ID_BASE] = new ObjectModel("../assets/cube/cube.obj");
 	//replace once models are done
-	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/cube/cube.obj");
+	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/tree/tree.obj");
 	models[MODEL_ID_PROJECTILE] = new ObjectModel("../assets/laser_projectile/laser_projectile.obj");
 
 	shaders[MODEL_ID_CUBE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
@@ -27,9 +27,13 @@ void GameWorld::init() {
 	shaders[MODEL_ID_RESOURCE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_PROJECTILE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
+	healthShader = new Shader("../shaders/shader.vert", "../shaders/shader.frag");
+	ObjectModel* healthModel = new ObjectModel("../assets/cube/cube.obj");
+
 	for (int i = 0; i < MAX_ENTITIES; i++) {
 		entities[i] = new RenderEntity(i);
 		AABBs[i] = new Cube();
+		healths[i] = new HealthBar(healthShader, healthModel);
 	}
 	cam = new Camera();
 }
@@ -45,7 +49,14 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 			AABBs[i]->setActive(false);
 		}
 
-		
+		//if active and should render health bar
+		if (incomingData.activity[i]) {
+			healths[i]->setActive(true);
+			healths[i]->update(incomingData.positions[id], incomingData.positions[i], incomingData.healths[i].curHealth, incomingData.healths[i].maxHealth);
+		}
+		else {
+			healths[i]->setActive(false);
+		}
 		if (incomingData.activity[i] && incomingData.models[i].modelID != MODEL_ID_NO_MODEL) {
 			entities[i]->setActive(true);
 			entities[i]->setModel(models[incomingData.models[i].modelID]);
@@ -62,7 +73,24 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 	int dy = glm::clamp(-((int)(currY - prevY)), -maxDelta, maxDelta);
 	prevX = (int)currX;
 	prevY = (int)currY;
-	cam->update(entities[id]->getPosition(), dx, dy, scrollY);
+	bool shakeScreen = false;
+	bool screenShakeOn = false;
+	float startTime = 0;
+	float currTime = glfwGetTime();
+
+	//should be bool from server
+	if (shakeScreen) {
+		screenShakeOn = true;
+		startTime = glfwGetTime();
+	}
+	if (screenShakeOn && currTime < (startTime + 3)) {
+		
+	}
+	else {
+		screenShakeOn = false;
+		shakeScreen = false;
+	}
+	cam->update(entities[id]->getPosition(), dx, dy, scrollY, screenShakeOn, currTime);
 }
 
 //render all active entities
@@ -77,7 +105,11 @@ void GameWorld::draw() {
 			e->draw(viewProjMtx, currTime);
 		}
 	}
-
+	for (HealthBar* h : healths) {
+		if (h->getActive()) {
+			h->draw(viewProjMtx);
+		}
+	}
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	for (Cube* c : AABBs) {
 		if (c->getActive()) {
@@ -97,7 +129,7 @@ void GameWorld::mouse_button_callback(GLFWwindow* window, int button, int action
 	if (action == GLFW_PRESS) {
 		switch (button) {
 		case GLFW_MOUSE_BUTTON_LEFT:
-			printf("HELLO");
+
 			break;
 		default: break;
 		}

@@ -24,7 +24,7 @@ GameWindow::GameWindow(int width, int height) {
     glfwWindowHint(GLFW_SAMPLES, 4);
 
     // Create the GLFW window.
-    window = glfwCreateWindow(width, height, windowTitle, glfwGetPrimaryMonitor(), NULL);
+    window = glfwCreateWindow(width, height, windowTitle, NULL, NULL);
 
     // Check if the window could not be created.
     if (!window) {

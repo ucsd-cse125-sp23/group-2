@@ -87,6 +87,7 @@ private:
         vector<Vertex> vertices;
         vector<unsigned int> indices;
         vector<Texture> textures;
+        Material matProps;
 
         // walk through each of the mesh's vertices
         for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -131,6 +132,7 @@ private:
 
             vertices.push_back(vertex);
         }
+
         // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
         for (unsigned int i = 0; i < mesh->mNumFaces; i++)
         {
@@ -141,6 +143,7 @@ private:
         }
         // process materials
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+        matProps = loadMaterial(material);
         // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
         // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
         // Same applies to other texture as the following list summarizes:
@@ -148,21 +151,24 @@ private:
         // specular: texture_specularN
         // normal: texture_normalN
 
+        // 0. roughness maps
+        vector<Texture> shinyMaps = loadMaterialTextures(material, aiTextureType_SHININESS, "texture_shiny", &matProps);
+        textures.insert(textures.end(), shinyMaps.begin(), shinyMaps.end());
         // 1. diffuse maps
-        vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse", &matProps);
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
         // 2. specular maps
-        vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular", &matProps);
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         // 3. normal maps
-        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal", &matProps);
         textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
         // 4. height maps
-        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height", &matProps);
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
         // return a mesh object created from the extracted mesh data
-        return Mesh(vertices, indices, textures);
+        return Mesh(vertices, indices, textures, matProps);
     }
 
     unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false)
@@ -205,13 +211,78 @@ private:
         return textureID;
     }
 
+    Material loadMaterial(aiMaterial* mat)
+    {
+        Material material;
+        aiColor3D color(0.f, 0.f, 0.f);
+        float shininess;
+
+        /*
+        float opacity;
+        float density;
+        float illum;
+
+        mat->Get(AI_MATKEY_SHININESS, shininess);
+        material.shininess = shininess;
+
+        mat->Get(AI_MATKEY_OPACITY, opacity);
+        material.opacity = opacity;
+
+        mat->Get(AI_MATKEY_COLOR_TRANSPARENT, density);
+        material.density = density;
+
+        mat->Get(AI_MATKEY_SHADING_MODEL, illum);
+        material.illum = illum;
+        */
+
+
+        material.diffuse = glm::vec3(0.0, 0.2, 0.8);
+        material.useDiffuse = false;
+
+        material.shininess = 0.0f;
+        material.useShininess = false;
+
+
+        if (AI_SUCCESS == mat->Get(AI_MATKEY_COLOR_AMBIENT, color)) {
+            material.ambient = glm::vec3(color.r, color.g, color.b);
+        }
+
+        if (AI_SUCCESS == mat->Get(AI_MATKEY_COLOR_DIFFUSE, color)) {
+            material.diffuse = glm::vec3(color.r, color.g, color.b);
+        }
+
+        if (AI_SUCCESS == mat->Get(AI_MATKEY_COLOR_SPECULAR, color)) {
+            material.specular = glm::vec3(color.r, color.g, color.b);
+        }
+
+        if (AI_SUCCESS == mat->Get(AI_MATKEY_SHININESS, shininess)) {
+            material.shininess = shininess;
+        }
+
+        return material;
+    }
+
     // checks all material textures of a given type and loads the textures if they're not loaded yet.
     // the required info is returned as a Texture struct.
-    vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName)
+    vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName, Material* usage)
     {
         vector<Texture> textures;
         for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
         {
+            switch (type) {
+            case aiTextureType_DIFFUSE :
+                usage->useDiffuse = true;
+                break;
+            case aiTextureType_SHININESS:
+                usage->useShininess = true;
+                break;
+            case aiTextureType_SPECULAR:
+                usage->useSpecular = true;
+                break;
+            case aiTextureType_AMBIENT:
+                usage->useAmbient = true;
+                break;
+            }
             aiString str;
             mat->GetTexture(type, i, &str);
             // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
