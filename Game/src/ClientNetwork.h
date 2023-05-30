@@ -21,6 +21,8 @@ class ClientNetwork
 private: 
     // receive incoming packets from server
     int receivePackets(char*);
+    Packet<ServertoClientData> datapacket;
+    Packet<ServertoClientInit> initpacket;
 public:
 
     unsigned int ndloc;

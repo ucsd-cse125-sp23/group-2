@@ -5,7 +5,7 @@
 #include "EntityComponentSystem.h"
 #include "GameConstants.h"
 
-#define MAX_PACKET_SIZE 1000000
+#define MAX_PACKET_SIZE 10000000
 #define NUM_CLIENTS 4
 
 enum PacketTypes {

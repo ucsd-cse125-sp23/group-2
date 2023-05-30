@@ -20,6 +20,7 @@ set(
     src/graphics/stb_image.cpp
     src/graphics/Skybox.cpp
     src/graphics/Cube.cpp
+    src/graphics/Health.cpp
     src/Prefabs.cpp
     src/PoissonDisk.cpp
     src/audio/AudioManager.cpp
@@ -50,6 +51,7 @@ set(
     src/Prefabs.h
     src/PoissonDisk.h
     src/audio/AudioManager.h
+    src/graphics/Health.h
 )
 
 # Require GL

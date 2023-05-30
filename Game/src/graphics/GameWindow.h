@@ -8,6 +8,7 @@ private:
 	//Window Properties
 	int width;
 	int height;
+	float lastTime;
 	const char* windowTitle;
 
 	//objects to render
@@ -17,6 +18,7 @@ private:
 	Shader* shaderProgram;
 	Shader* skyboxProgram;
 
+	
 	//camera
 	//Camera* cam;
 	//static float prevX, prevY, scrollY;

@@ -13,6 +13,24 @@ using namespace std;
 
 #define MAX_BONE_INFLUENCE 4
 
+struct Material {
+    float shininess;
+    bool useShininess;
+    float opacity;
+    bool useOpacity;
+    float density;
+    bool useDensity;
+    float illum;
+    bool useIllum;
+
+    glm::vec3 ambient;
+    bool useAmbient;
+    glm::vec3 diffuse;
+    bool useDiffuse;
+    glm::vec3 specular;
+    bool useSpecular;
+};
+
 struct Vertex {
     // position
     glm::vec3 Position;
@@ -43,14 +61,15 @@ public:
     vector<unsigned int> indices;
     vector<Texture>      textures;
     unsigned int VAO;
+    Material material;
 
     // constructor
-    Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
+    Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, Material material)
     {
         this->vertices = vertices;
         this->indices = indices;
         this->textures = textures;
-
+        this->material = material;
         // now that we have all the required data, set the vertex buffers and its attribute pointers.
         setupMesh();
     }
@@ -58,18 +77,38 @@ public:
     // render the mesh
     void Draw(Shader& shader)
     {
+
+        shader.setFloat("material.shininess", material.shininess);
+        shader.setFloat("material.opacity", material.opacity);
+        shader.setFloat("material.density", material.shininess);
+        shader.setFloat("material.illum", material.opacity);
+        shader.setVec3("material.ambient", material.ambient);
+        shader.setVec3("material.diffuse", material.diffuse);
+        shader.setVec3("material.specular", material.specular);
+
+        shader.setBool("material.useShininess", material.useShininess);
+        shader.setBool("material.useOpacity", material.useOpacity);
+        shader.setBool("material.useDensity", material.useShininess);
+        shader.setBool("material.useIllum", material.useOpacity);
+        shader.setBool("material.useAmbient", material.useAmbient);
+        shader.setBool("material.useDiffuse", material.useDiffuse);
+        shader.setBool("material.useSpecular", material.useSpecular);
+
         // bind appropriate textures
         unsigned int diffuseNr = 1;
         unsigned int specularNr = 1;
         unsigned int normalNr = 1;
         unsigned int heightNr = 1;
+        unsigned int shinyNr = 1;
         for (unsigned int i = 0; i < textures.size(); i++)
         {
             glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
             // retrieve texture number (the N in diffuse_textureN)
             string number;
             string name = textures[i].type;
-            if (name == "texture_diffuse")
+            if (name == "texture_shiny")
+                number = std::to_string(shinyNr++);
+            else if (name == "texture_diffuse")
                 number = std::to_string(diffuseNr++);
             else if (name == "texture_specular")
                 number = std::to_string(specularNr++); // transfer unsigned int to string

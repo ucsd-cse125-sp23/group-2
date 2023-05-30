@@ -1,24 +1,30 @@
 //The max number of each entity type (CAN BE MODIFIED - Currently Arbitrary)
 #pragma once
 #define NUM_PLAYERS 1
-#define NUM_ENEMIES 40
-#define NUM_TOWERS 40
-#define NUM_RESOURCES 100
+#define NUM_ENEMIES 50
+#define NUM_TOWERS 50
+#define NUM_RESOURCES 750
 #define NUM_PROJECTILES 100
 #define NUM_BASES 1
 #define CLOG_MAXSIZE 50
 #define SLOG_MAXSIZE 100
-const float TICK_RATE = 128;
+const float TICK_RATE = 64;
 
 //World Length and Width
-constexpr float WORLD_X = 164;
-constexpr float WORLD_Z = 164;
+constexpr float WORLD_X = 150;
+constexpr float WORLD_Z = 180;
 
 //Speed of movement in units per second
 const float PLAYER_MVSPD_PERSEC = 20;
 
 //Initial jump speed
 const float PLAYER_JPSPD_PERSEC = 30;
+
+//Projectile Speed
+const float PROJ_MVSPD_PERSEC = 64;
+
+//Ground Height
+const float GROUND_HEIGHT = -1.0;
 
 //Base health values of different game entities
 const float PLAYER_BASE_HEALTH = 100;
@@ -72,11 +78,22 @@ const float TOWER_PLACEMENT_RANGE = 15;
 #define MODEL_ID_CUBE 0
 #define MODEL_ID_ROVER 1
 #define MODEL_ID_MOB 2
-#define MODEL_ID_TOWER 3
-#define MODEL_ID_RESOURCE 4
-#define MODEL_ID_PROJECTILE 5
+#define MODEL_ID_MOB_FLYING 3
+#define MODEL_ID_TOWER 4
+#define MODEL_ID_RESOURCE 5
+#define MODEL_ID_PROJECTILE 6
+#define MODEL_ID_BASE 7
 
-#define NUM_MODELS 6
+#define NUM_MODELS 8
+
+//animation states
+#define ANIM_IDLE 0
+#define ANIM_ATTACKING 1
+#define ANIM_TAKING_DAMAGE 2
+#define ANIM_DEATH 3
+
+#define RES_WIDTH 2560
+#define RES_HEIGHT 1440
 
 //Sound IDs
 #define SOUND_ID_IDLE 0
@@ -105,6 +122,7 @@ const float PLAYER_MVSPD = (PLAYER_MVSPD_PERSEC / TICK_RATE);
 const float PLAYER_JPSPD = (PLAYER_JPSPD_PERSEC / TICK_RATE);
 const float ENEMY_SPAWNDELAY_TICKS = (ENEMY_SPAWNDELAY_SEC * TICK_RATE);
 const float GRAVITY = (GRAVITY_SEC / (TICK_RATE * TICK_RATE));
+const float PROJ_MVSPD = PROJ_MVSPD_PERSEC/TICK_RATE;
 
 //The Start and End indices of the entity array for each entity type
 #define ENEMY_START         (NUM_PLAYERS)
@@ -120,3 +138,5 @@ const float GRAVITY = (GRAVITY_SEC / (TICK_RATE * TICK_RATE));
 
 //Total number of entities
 #define MAX_ENTITIES (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES + NUM_PROJECTILES + NUM_BASES)
+#define MAX_ENTITIES_NOBASE (NUM_PLAYERS + NUM_ENEMIES + NUM_TOWERS + NUM_RESOURCES + NUM_PROJECTILES + NUM_BASES - 1)
+

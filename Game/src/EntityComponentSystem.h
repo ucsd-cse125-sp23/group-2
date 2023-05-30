@@ -1,7 +1,9 @@
 #pragma once
 #include <vector>
 #include <queue>
-
+#include "PoissonDisk.h"
+#include <chrono>
+#include <unordered_set>
 #include <array>
 #include "graphics/core.h"
 #include "GameConstants.h"
@@ -54,6 +56,7 @@ namespace ResourceType {
 namespace CollisionLayer {
     constexpr TeamID WorldObj = 0x1;
     constexpr TeamID UIObj = 0x1 << 1;
+    constexpr TeamID StaticObj = 0x1 << 2;
 }
 
 struct Hostility {
@@ -90,11 +93,22 @@ struct Turret //Component of Towers
     float damage; //The damage that the turret deals per second
 };
 
+namespace Collision {
+    //Side should be bigger than the greatest sidelength of any AABB in the game
+    constexpr float side = 3.0;
+    static constexpr size_t gridx = (WORLD_X / side) + 1l;
+    static constexpr size_t gridz = (WORLD_Z / side) + 1l;
+    extern std::unordered_set<Entity> cgrid[gridx][gridz];
+    void updateColTable(Entity e);
+}
+
 struct Collider //Information for collisions
 {
     glm::vec3 AABB; //Axis Aligned Bound Box vector
     TeamID colteam;
     TeamID colwith;
+    int xpos;
+    int zpos;
 
     //TODO: Pointer to a mesh for narrow phase
 };
@@ -287,12 +301,11 @@ namespace EntityComponentSystem
 
     void causeDeath(Entity source, Entity target);
 
-    //Check Collisions between two colliders and return pen
+    //Creates collisions between two objects if they collide
     bool colCheck(Entity e, Entity o);
 
     //Finds the closest path node to an enemy to put them back on track
     void rePath(Entity e);
 
     void changeState(Entity e, State post);
-
 };

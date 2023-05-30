@@ -6,7 +6,6 @@ RenderEntity::RenderEntity(int i) {
     id = i;
     orientation = 0;
     model = glm::mat4(1.0f);
-    color = glm::vec3(0.0f, 0.2f, 0.8f);
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     stbi_set_flip_vertically_on_load(false);
@@ -20,13 +19,14 @@ RenderEntity::~RenderEntity() {
 
 }
 
-void RenderEntity::draw(const glm::mat4& viewProjMtx) {
+void RenderEntity::draw(const glm::mat4& viewProjMtx, float time) {
     // actiavte the shader program
     shader->use();
 
     // get the locations and send the uniforms to the shader
     shader->setMat4("viewProj", viewProjMtx);
     shader->setMat4("model", model);
+    shader->setFloat("time", time);
 
     ourModel->Draw(*shader);
 
