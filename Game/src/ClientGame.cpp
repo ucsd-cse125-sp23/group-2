@@ -9,6 +9,11 @@ extern int selected;
 extern	std::array <GUIElement*, NUM_GUI> guis;
 extern int depth;
 extern bool menuOn;
+int health;
+int master_Volume;
+int sfx_Volume;
+int music_Volume;
+
 ClientGame::ClientGame(void)
 {
 
@@ -67,6 +72,8 @@ void ClientGame::packageData(ClienttoServerData& data) {
     data.camPosition = gameWindow->getCamPosition();
 }
 
+void handle_quit() {}
+
 
 void handle_down() {
     std::cout << "depth"<< depth << std::endl;
@@ -74,13 +81,13 @@ void handle_down() {
     case 0:
         switch (selected) {
         case 0:
-            guis[0]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/continue.jpg");
+            guis[0]->SetTexture("../assets/gui/Buttons/continue.jpg");
             break;
         case 1:
-            guis[1]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/options.jpg");
+            guis[1]->SetTexture("../assets/gui/Buttons/options.jpg");
             break;
         case 2:
-            guis[2]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/quit.jpg");
+            guis[2]->SetTexture("../assets/gui/Buttons/quit.jpg");
             break;
         }
         selected++;
@@ -89,23 +96,23 @@ void handle_down() {
         }
         switch (selected) {
         case 0:
-            guis[0]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/continueH.jpg");
+            guis[0]->SetTexture("../assets/gui/Buttons/continueH.jpg");
             break;
         case 1:
-            guis[1]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/optionsH.jpg");
+            guis[1]->SetTexture("../assets/gui/Buttons/optionsH.jpg");
             break;
         case 2:
-            guis[2]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/quitH.jpg");
+            guis[2]->SetTexture("../assets/gui/Buttons/quitH.jpg");
             break;
         }
     break;
     case 1:
         switch (selected) {
             case 3:
-                guis[3]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/back.jpg");
+                guis[3]->SetTexture("../assets/gui/Buttons/back.jpg");
                 break;
             case 4:
-                guis[4]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/volume.jpg");
+                guis[4]->SetTexture("../assets/gui/Buttons/volume.jpg");
                 break;
         }
         selected++;
@@ -115,10 +122,10 @@ void handle_down() {
         }
         switch (selected) {
             case 3:
-                guis[3]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/backH.jpg");
+                guis[3]->SetTexture("../assets/gui/Buttons/backH.jpg");
                 break;
             case 4:
-                guis[4]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/volumeH.jpg");
+                guis[4]->SetTexture("../assets/gui/Buttons/volumeH.jpg");
                 break;
         }
         break;
@@ -132,13 +139,13 @@ void handle_up() {
     case 0:
         switch (selected) {
         case 0:
-            guis[0]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/continue.jpg");
+            guis[0]->SetTexture("../assets/gui/Buttons/continue.jpg");
             break;
         case 1:
-            guis[1]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/options.jpg");
+            guis[1]->SetTexture("../assets/gui/Buttons/options.jpg");
             break;
         case 2:
-            guis[2]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/quit.jpg");
+            guis[2]->SetTexture("../assets/gui/Buttons/quit.jpg");
             break;
         }
         selected--;
@@ -147,23 +154,23 @@ void handle_up() {
         }
         switch (selected) {
         case 0:
-            guis[0]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/continueH.jpg");
+            guis[0]->SetTexture("../assets/gui/Buttons/continueH.jpg");
             break;
         case 1:
-            guis[1]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/optionsH.jpg");
+            guis[1]->SetTexture("../assets/gui/Buttons/optionsH.jpg");
             break;
         case 2:
-            guis[2]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/quitH.jpg");
+            guis[2]->SetTexture("../assets/gui/Buttons/quitH.jpg");
             break;
         }
         break;
     case 1:
         switch (selected) {
             case 3:
-                guis[3]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/back.jpg");
+                guis[3]->SetTexture("../assets/gui/Buttons/back.jpg");
                 break;
             case 4:
-                guis[4]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/options.jpg");
+                guis[4]->SetTexture("../assets/gui/Buttons/options.jpg");
                 break;
         }
         selected--;
@@ -172,10 +179,10 @@ void handle_up() {
         }
         switch (selected) {
             case 3:
-                guis[3]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/backH.jpg");
+                guis[3]->SetTexture("../assets/gui/Buttons/backH.jpg");
                 break;
             case 4:
-                guis[4]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/volumeH.jpg");
+                guis[4]->SetTexture("../assets/gui/Buttons/volumeH.jpg");
                 break;
             }
         break;
@@ -196,10 +203,10 @@ void show_options() {
     }
     guis[10]->SetHidden(false);
     guis[10]->SetPosition(glm::vec2(0.5f, 0.0f));
-    guis[3]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/back.jpg");
-    guis[4]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/volumeH.jpg");
+    guis[3]->SetTexture("../assets/gui/Buttons/back.jpg");
+    guis[4]->SetTexture("../assets/gui/Buttons/volumeH.jpg");
 
-
+  
 }
 
 void hide_options() {
@@ -212,11 +219,11 @@ void hide_options() {
         guis[i]->SetHidden(true);
     }
     guis[10]->SetHidden(true);
-    guis[0]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/continueH.jpg");
-    guis[1]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/options.jpg");
-    guis[2]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/quit.jpg");
-    guis[3]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/back.jpg");
-    guis[4]->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/volumeH.jpg");
+    guis[0]->SetTexture("../assets/gui/Buttons/continueH.jpg");
+    guis[1]->SetTexture("../assets/gui/Buttons/options.jpg");
+    guis[2]->SetTexture("../assets/gui/Buttons/quit.jpg");
+    guis[3]->SetTexture("../assets/gui/Buttons/back.jpg");
+    guis[4]->SetTexture("../assets/gui/Buttons/volumeH.jpg");
     
 
 }

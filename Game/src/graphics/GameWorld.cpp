@@ -36,7 +36,7 @@ void GameWorld::GUI_Init() {
 	continue_Btn->SetName("continue");
 	continue_Btn->SetPosition(glm::vec2(0.0f, 0.30f));
 	continue_Btn->SetSize(glm::vec2(0.75f, 0.25f));
-	continue_Btn->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/continueH.jpg");
+	continue_Btn->SetTexture("../assets/gui/Buttons/continue.jpg");
 	continue_Btn->SetTransparency(1.0);
 	guis[0] = continue_Btn;
 	//options
@@ -45,7 +45,7 @@ void GameWorld::GUI_Init() {
 	options_Btn->SetName("options");
 	options_Btn->SetPosition(glm::vec2(0.0f, 0.0f));
 	options_Btn->SetSize(glm::vec2(0.75f, 0.25f));
-	options_Btn->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/options.jpg");
+	options_Btn->SetTexture("../assets/gui/Buttons/options.jpg");
 	options_Btn->SetTransparency(1.0);
 	guis[1] = options_Btn;
 	//quit
@@ -54,7 +54,7 @@ void GameWorld::GUI_Init() {
 	quit_Btn->SetName("quit");
 	quit_Btn->SetPosition(glm::vec2(0.0f, -0.30f));
 	quit_Btn->SetSize(glm::vec2(0.75f, 0.25f));
-	quit_Btn->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/quit.jpg");
+	quit_Btn->SetTexture("../assets/gui/Buttons/quit.jpg");
 	quit_Btn->SetTransparency(1.0);
 	guis[2] = quit_Btn;
 
@@ -64,7 +64,7 @@ void GameWorld::GUI_Init() {
 	back_Btn->SetName("back");
 	back_Btn->SetPosition(glm::vec2(0.0f, -0.3f));
 	back_Btn->SetSize(glm::vec2(0.75f, 0.25f));
-	back_Btn->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/back.jpg");
+	back_Btn->SetTexture("../assets/gui/Buttons/back.jpg");
 	back_Btn->SetTransparency(1.0);
 	guis[3] = back_Btn;
 
@@ -74,7 +74,7 @@ void GameWorld::GUI_Init() {
 	volume_Sldr->SetName("volume");
 	volume_Sldr->SetPosition(glm::vec2(-0.5f, 0.0f));
 	volume_Sldr->SetSize(glm::vec2(0.75f, 0.25f));
-	volume_Sldr->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/volume.jpg");
+	volume_Sldr->SetTexture("../assets/gui/Buttons/volume.jpg");
 	volume_Sldr->SetTransparency(1.0);
 	guis[4] = volume_Sldr;
 	volume_Sldr_Back = guis[5];
@@ -82,7 +82,7 @@ void GameWorld::GUI_Init() {
 	volume_Sldr_Back->SetName("volume_Sldr_Back");
 	volume_Sldr_Back->SetPosition(glm::vec2(0.5f, 0.0f));
 	volume_Sldr_Back->SetSize(glm::vec2(0.75f, 0.1f));
-	volume_Sldr_Back->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/volume_Sldr_Back.jpg");
+	volume_Sldr_Back->SetTexture("../assets/gui/Buttons/volume_Sldr_Back.jpg");
 	volume_Sldr_Back->SetTransparency(0.0);
 	guis[5] = volume_Sldr_Back;
 	volume_Sldr_Front = guis[6];
@@ -90,7 +90,7 @@ void GameWorld::GUI_Init() {
 	volume_Sldr_Front->SetName("volume_Sldr_Front");
 	volume_Sldr_Front->SetPosition(glm::vec2(0.5f, 0.0f));
 	volume_Sldr_Front->SetSize(glm::vec2(0.75f, 0.1f));
-	volume_Sldr_Front->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/volume_Sldr_Front.jpg");
+	volume_Sldr_Front->SetTexture("../assets/gui/Buttons/volume_Sldr_Front.jpg");
 	volume_Sldr_Front->SetTransparency(1.0);
 	guis[6] = volume_Sldr_Front;
 
@@ -100,7 +100,7 @@ void GameWorld::GUI_Init() {
 	health_Bar->SetName("health");
 	health_Bar->SetPosition(glm::vec2(0.0f, 0.0f));
 	health_Bar->SetSize(glm::vec2(1.0f, 1.0f));
-	health_Bar->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/health.jpg");
+	health_Bar->SetTexture("../assets/gui/Buttons/health.jpg");
 	health_Bar->SetTransparency(1.0);
 	guis[7] = health_Bar;
 	health_Bar_Back = guis[7];
@@ -108,7 +108,7 @@ void GameWorld::GUI_Init() {
 	health_Bar_Back->SetName("health_back");
 	health_Bar_Back->SetPosition(glm::vec2(0.0f, 0.0f));
 	health_Bar_Back->SetSize(glm::vec2(1.0f, 1.0f));
-	health_Bar_Back->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/health_back.jpg");
+	health_Bar_Back->SetTexture("../assets/gui/Buttons/health_back.jpg");
 	health_Bar_Back->SetTransparency(1.0);
 	guis[8] = health_Bar_Back;
 	health_Bar_Front = guis[9];
@@ -116,7 +116,7 @@ void GameWorld::GUI_Init() {
 	health_Bar_Front->SetName("health_front");
 	health_Bar_Front->SetPosition(glm::vec2(0.0f, 0.0f));
 	health_Bar_Front->SetSize(glm::vec2(1.0f, 1.0f));
-	health_Bar_Front->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/health_front.jpg");
+	health_Bar_Front->SetTexture("../assets/gui/Buttons/health_front.jpg");
 	health_Bar_Front->SetTransparency(1.0);
 	guis[9] = health_Bar_Front;
 
@@ -125,10 +125,10 @@ void GameWorld::GUI_Init() {
 	blank->SetName("health_front");
 	blank->SetPosition(glm::vec2(0.5f, 0.0f));
 	blank->SetSize(glm::vec2(0.75f, 0.25f));
-	blank->SetTexture("C:/Users/V/Downloads/G/Game/assets/gui/Buttons/blank.jpg");
+	blank->SetTexture("../assets/gui/Buttons/blank.jpg");
 	blank->SetTransparency(1.0);
 	guis[10] = blank;
-
+	
 }
 
 void GameWorld::update(ServertoClientData& incomingData, int id) {
