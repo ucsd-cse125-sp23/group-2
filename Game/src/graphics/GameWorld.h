@@ -42,6 +42,7 @@ public:
     GUIElement* health_Bar;
     GUIElement* health_Bar_Back;
     GUIElement* health_Bar_Front;
+    GUIElement* blank;
     //
     void GUI_Init();
     void update(ServertoClientData& incomingData, int id);

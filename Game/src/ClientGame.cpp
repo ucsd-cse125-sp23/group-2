@@ -5,6 +5,14 @@ bool ClientGame::moveBack = 0;
 bool ClientGame::moveRight = 0;
 bool ClientGame::moveLeft = 0;
 bool ClientGame::playerattacking = 0;
+extern int selected;
+extern	std::array <GUIElement*, NUM_GUI> guis;
+extern int depth;
+extern bool menuOn;
+int health;
+int master_Volume;
+int sfx_Volume;
+int music_Volume;
 
 ClientGame::ClientGame(void)
 {
@@ -64,28 +72,259 @@ void ClientGame::packageData(ClienttoServerData& data) {
     data.camPosition = gameWindow->getCamPosition();
 }
 
+void handle_quit() {}
+
+
+void handle_down() {
+    std::cout << "depth"<< depth << std::endl;
+    switch (depth) {
+    case 0:
+        switch (selected) {
+        case 0:
+            guis[0]->SetTexture("../assets/gui/Buttons/continue.jpg");
+            break;
+        case 1:
+            guis[1]->SetTexture("../assets/gui/Buttons/options.jpg");
+            break;
+        case 2:
+            guis[2]->SetTexture("../assets/gui/Buttons/quit.jpg");
+            break;
+        }
+        selected++;
+        if (selected > 2) {
+            selected = 0;
+        }
+        switch (selected) {
+        case 0:
+            guis[0]->SetTexture("../assets/gui/Buttons/continueH.jpg");
+            break;
+        case 1:
+            guis[1]->SetTexture("../assets/gui/Buttons/optionsH.jpg");
+            break;
+        case 2:
+            guis[2]->SetTexture("../assets/gui/Buttons/quitH.jpg");
+            break;
+        }
+    break;
+    case 1:
+        switch (selected) {
+            case 3:
+                guis[3]->SetTexture("../assets/gui/Buttons/back.jpg");
+                break;
+            case 4:
+                guis[4]->SetTexture("../assets/gui/Buttons/volume.jpg");
+                break;
+        }
+        selected++;
+        std::cout << "moving to " <<selected << std::endl;
+        if (selected > 4) {
+        selected = 3;
+        }
+        switch (selected) {
+            case 3:
+                guis[3]->SetTexture("../assets/gui/Buttons/backH.jpg");
+                break;
+            case 4:
+                guis[4]->SetTexture("../assets/gui/Buttons/volumeH.jpg");
+                break;
+        }
+        break;
+    }
+
+
+}
+void handle_up() {
+    std::cout << selected<<std::endl;
+    switch (depth) {
+    case 0:
+        switch (selected) {
+        case 0:
+            guis[0]->SetTexture("../assets/gui/Buttons/continue.jpg");
+            break;
+        case 1:
+            guis[1]->SetTexture("../assets/gui/Buttons/options.jpg");
+            break;
+        case 2:
+            guis[2]->SetTexture("../assets/gui/Buttons/quit.jpg");
+            break;
+        }
+        selected--;
+        if (selected < 0) {
+            selected = 2;
+        }
+        switch (selected) {
+        case 0:
+            guis[0]->SetTexture("../assets/gui/Buttons/continueH.jpg");
+            break;
+        case 1:
+            guis[1]->SetTexture("../assets/gui/Buttons/optionsH.jpg");
+            break;
+        case 2:
+            guis[2]->SetTexture("../assets/gui/Buttons/quitH.jpg");
+            break;
+        }
+        break;
+    case 1:
+        switch (selected) {
+            case 3:
+                guis[3]->SetTexture("../assets/gui/Buttons/back.jpg");
+                break;
+            case 4:
+                guis[4]->SetTexture("../assets/gui/Buttons/options.jpg");
+                break;
+        }
+        selected--;
+        if (selected < 3) {
+            selected = 4;
+        }
+        switch (selected) {
+            case 3:
+                guis[3]->SetTexture("../assets/gui/Buttons/backH.jpg");
+                break;
+            case 4:
+                guis[4]->SetTexture("../assets/gui/Buttons/volumeH.jpg");
+                break;
+            }
+        break;
+    }
+   
+
+
+}
+
+void show_options() {
+    selected = 4;
+    depth = 1;
+    for (int i = 0; i < 3; i++) {
+        guis[i]->SetHidden(true);
+    }
+    for (int i = 3; i < 7; i++) {
+        guis[i]->SetHidden(false);
+    }
+    guis[10]->SetHidden(false);
+    guis[10]->SetPosition(glm::vec2(0.5f, 0.0f));
+    guis[3]->SetTexture("../assets/gui/Buttons/back.jpg");
+    guis[4]->SetTexture("../assets/gui/Buttons/volumeH.jpg");
+
+  
+}
+
+void hide_options() {
+    selected = 0;
+    depth = 0;
+    for (int i = 0; i < 3; i++) {
+        guis[i]->SetHidden(false);
+    }
+    for (int i = 3; i < 7; i++) {
+        guis[i]->SetHidden(true);
+    }
+    guis[10]->SetHidden(true);
+    guis[0]->SetTexture("../assets/gui/Buttons/continueH.jpg");
+    guis[1]->SetTexture("../assets/gui/Buttons/options.jpg");
+    guis[2]->SetTexture("../assets/gui/Buttons/quit.jpg");
+    guis[3]->SetTexture("../assets/gui/Buttons/back.jpg");
+    guis[4]->SetTexture("../assets/gui/Buttons/volumeH.jpg");
+    
+
+}
+void handle_escp(GLFWwindow* window) {
+    if (menuOn) {
+        switch (depth) {
+        case 0:
+            menuOn = false;
+            for (int i = 0; i < 3; i++) {
+                guis[i]->SetHidden(true);
+            }
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            break;
+        case 1:
+            hide_options();
+            break;
+        }
+    }
+    else {
+        menuOn = true;
+        for (int i = 0; i < 3; i++) {
+            guis[i]->SetHidden(false);
+        }
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+}
+void handle_enter(GLFWwindow* window) {
+    switch(depth) {
+        case 0:
+            switch (selected) {
+            case 0:
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                selected = 0;
+                depth = 0;
+                menuOn = false;
+                for (int i = 0; i < 3; i++) {
+                    guis[i]->SetHidden(true);
+                }
+                break;
+            case 1:
+                show_options();
+                break;
+            case 2:
+                //disconnect();
+                break;
+            }
+        break;
+        case 1:
+            switch (selected) {
+            case 4:
+                break;
+            case 3:
+                hide_options();
+                break;
+            
+            }
+            break;
+    }
+
+}
 void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         switch (key) {
         case GLFW_KEY_W:
-            moveForward = true;
-            break;
-        case GLFW_KEY_A:
-            moveLeft = true;
-            break;
-        case GLFW_KEY_S:
-            moveBack = true;
-            break;
-        case GLFW_KEY_D:
-            moveRight = true;
-            break;
-        case GLFW_KEY_ESCAPE:
-            if (glfwGetInputMode(window, GLFW_CURSOR) != GLFW_CURSOR_NORMAL) {
-                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            if (!menuOn) {
+                moveForward = true;
             }
             else {
-                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                handle_up();
             }
+            break;
+        case GLFW_KEY_A:
+            if (!menuOn) {
+                moveLeft = true;
+            }
+            else {
+                //handleLeft()
+            }
+            break;
+        case GLFW_KEY_S:
+            if (!menuOn) {
+                moveBack = true;
+            }
+            else {
+                handle_down();
+            }
+            break;
+        case GLFW_KEY_D:
+            if (!menuOn) {
+                moveRight = true;
+            }
+            else {
+                //handle_right();
+            }
+            break;
+        case GLFW_KEY_ESCAPE:
+            handle_escp(window);
+            break;
+        case GLFW_KEY_ENTER:
+            handle_enter(window);
+                break;
         default: break;
         }
     }
@@ -107,6 +346,7 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
         }
     }
 }
+
 
 void ClientGame::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {

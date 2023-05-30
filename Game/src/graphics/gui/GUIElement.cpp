@@ -96,7 +96,10 @@ void GUIElement::SetTexture(char* path) {
     }
     else
     {
-        std::cout << "Failed to load texture" << std::endl;
+        if (data == NULL) {
+            std::cout << "Data is null"<< std::endl;
+        }
+        std::cout << "Failed to set texture, texture link" << path  << std::endl;
     }
     stbi_image_free(data);
 }
