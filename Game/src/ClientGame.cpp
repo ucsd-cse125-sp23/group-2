@@ -9,6 +9,16 @@ extern int selected;
 extern	std::array <GUIElement*, NUM_GUI> guis;
 extern int depth;
 extern bool menuOn;
+extern float spawntimer;
+extern float moneyRes;
+extern float woodRes;
+extern float stoneRes;
+extern float points;
+extern float enemiesKilled;
+extern float towersBuilt;
+
+
+
 int health;
 int master_Volume;
 int sfx_Volume;
@@ -73,6 +83,21 @@ void ClientGame::update()
         audioManager->playSound(incomingData.models[source].modelID, incomingData.soundLogs[i].sound, position);
     }
     incomingData.slogsize = 0;
+
+    //Update Gui
+    if (initData.id != INVALID_CLIENT_ID && incomingData.serverStatus != UNKNOWN_SERVER_STATUS) {
+        health = incomingData.healths[initData.id].curHealth;
+        ScoreCard myscore = incomingData.playerData.scores[initData.id];
+        spawntimer = incomingData.playerData.spawntimers[initData.id];
+        woodRes = incomingData.playerData.resources[ResourceType::Wood];
+        stoneRes = incomingData.playerData.resources[ResourceType::Stone];
+        moneyRes = incomingData.playerData.resources[ResourceType::Money];
+        enemiesKilled = myscore.enemiesKilled;
+        towersBuilt = myscore.towersBuilt;
+        points = myscore.points;
+    }
+ 
+
 
 }
 
