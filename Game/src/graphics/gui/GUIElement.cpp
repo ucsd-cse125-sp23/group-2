@@ -1,6 +1,6 @@
 #include "GUIElement.h"
 
-GUIElement::GUIElement(glm::vec2 position, glm::vec2 size, float transparency, char* texturePath, char* name, bool isHidden) 
+GUIElement::GUIElement(glm::vec3 position, glm::vec2 size, float transparency, char* texturePath, char* name, bool isHidden) 
     : position(position), size(size), transparency(transparency), texturePath(texturePath), name(name), isHidden(isHidden) {
 
     float vertices[] = {
@@ -105,7 +105,7 @@ void GUIElement::SetSize(glm::vec2 newSize) {
     size = newSize;
 }
 
-void GUIElement::SetPosition(glm::vec2 newPosition) {
+void GUIElement::SetPosition(glm::vec3 newPosition) {
     position = newPosition;
 }
 
@@ -128,7 +128,7 @@ void GUIElement::draw(const glm::mat4& viewProjMtx, Shader* shader) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glm::mat4 trans = glm::mat4(1.0f);
-    trans = glm::translate(trans, glm::vec3(position, 0.0f));
+    trans = glm::translate(trans, glm::vec3(position));
     trans = glm::scale(trans, glm::vec3(size, 1.0f));
 
     glBindTexture(GL_TEXTURE_2D, texture);
