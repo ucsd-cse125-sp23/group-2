@@ -29,10 +29,10 @@ void GameWorld::init() {
 
 	healthShader = new Shader("../shaders/shader.vert", "../shaders/shader.frag");
 	ObjectModel* healthModel = new ObjectModel("../assets/cube/cube.obj");
-
+	playerHealth = 1.0f;
 	for (int i = 0; i < MAX_ENTITIES; i++) {
 		entities[i] = new RenderEntity(i);
-		AABBs[i] = new Cube();
+		AABBs[i] = new Cube(shaders[MODEL_ID_CUBE], models[MODEL_ID_CUBE]);
 		healths[i] = new HealthBar(healthShader, healthModel);
 	}
 	cam = new Camera();
@@ -41,16 +41,21 @@ void GameWorld::init() {
 void GameWorld::update(ServertoClientData& incomingData, int id) {
 
 	for (int i = 0; i < incomingData.activity.size(); i++) {
-		if (incomingData.activity[i] && incomingData.models[i].renderCollider) {
-			AABBs[i]->setActive(true);
-			AABBs[i]->update(incomingData.positions[i], incomingData.colliders[i].AABB);
-		}
-		else {
-			AABBs[i]->setActive(false);
+
+		if (incomingData.activity[i]) {
+			if (incomingData.models[i].renderCollider) {
+				AABBs[i]->setActive(true);
+				AABBs[i]->update(incomingData.positions[i], incomingData.colliders[i].AABB);
+			}
+			else {
+				AABBs[i]->setActive(false);
+			}
 		}
 
 		//if active and should render health bar
-		if (incomingData.activity[i]) {
+		if (incomingData.activity[i]
+			&& i != id
+			&& incomingData.models[i].modelID != MODEL_ID_PROJECTILE) {
 			healths[i]->setActive(true);
 			healths[i]->update(incomingData.positions[id], incomingData.positions[i], incomingData.healths[i].curHealth, incomingData.healths[i].maxHealth);
 		}
@@ -73,20 +78,23 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 	int dy = glm::clamp(-((int)(currY - prevY)), -maxDelta, maxDelta);
 	prevX = (int)currX;
 	prevY = (int)currY;
+
+	//screen shake
 	bool shakeScreen = false;
+	float currHealth = incomingData.healths[id].curHealth / incomingData.healths[id].maxHealth;
+	if (currHealth != playerHealth) {
+		shakeScreen = true;
+		playerHealth = currHealth;
+	}
 	bool screenShakeOn = false;
 	float startTime = 0;
 	float currTime = glfwGetTime();
 
-	//should be bool from server
 	if (shakeScreen) {
 		screenShakeOn = true;
 		startTime = glfwGetTime();
 	}
-	if (screenShakeOn && currTime < (startTime + 3)) {
-		
-	}
-	else {
+	if (!(screenShakeOn && currTime < (startTime + 3))) {
 		screenShakeOn = false;
 		shakeScreen = false;
 	}

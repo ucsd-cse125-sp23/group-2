@@ -10,11 +10,12 @@ private:
     int id;
     glm::vec3 position;
     float orientation;
-
+    float offset;
     glm::mat4 model;
     glm::vec3 color;
     Shader* shader;
     ObjectModel* ourModel;
+
 public:
     RenderEntity(int i);
     ~RenderEntity();
