@@ -82,8 +82,8 @@ const float TOWER_PLACEMENT_RANGE = 15;
 #define ANIM_TAKING_DAMAGE 2
 #define ANIM_DEATH 3
 
-#define RES_WIDTH 2560
-#define RES_HEIGHT 1440
+#define RES_WIDTH 1920
+#define RES_HEIGHT 1080
 //.... ADD MORE ...
 
 

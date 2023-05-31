@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Health.h"
+#include "Text.h"
 #include "../GameConstants.h"
 #include "../NetworkData.h"
 class GameWorld {
@@ -22,6 +23,8 @@ private:
     Camera* cam;
     static float prevX, prevY, currX, currY, scrollY;
     //static int mouseDX, mouseDY;
+
+    Text* text;
 
 public:
     void init();

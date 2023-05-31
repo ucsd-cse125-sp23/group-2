@@ -7,6 +7,8 @@ void GameWorld::init() {
 	env->setSkyShader(new Shader("../shaders/skybox.vert", "../shaders/skybox.frag"));
 	env->setEnvShader(new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag"));
 
+	text = new Text("../assets/fonts/Antonio-Bold.ttf");
+
 	models[MODEL_ID_CUBE] = new ObjectModel("../assets/cube/cube.obj");
 	models[MODEL_ID_ROVER] = new ObjectModel("../assets/rover/rover.obj");
 	models[MODEL_ID_MOB] = new ObjectModel("../assets/martian/martian.obj");
@@ -98,6 +100,7 @@ void GameWorld::draw() {
 	float currTime = float(glfwGetTime());
 	const glm::mat4& viewProjMtx = cam->GetViewProjectMtx();
 	env->draw(viewProjMtx);
+	text->RenderText("Hello World", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
 
 	for (RenderEntity* e : entities) {
 
@@ -117,7 +120,6 @@ void GameWorld::draw() {
 		}
 	}
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
 }
 
 void GameWorld::cursor_callback(GLFWwindow* window, double cX, double cY) {
