@@ -639,6 +639,7 @@ Entity EntityComponentSystem::createEntity(int begin, int end)
     for (int i = begin; i < end; ++i) {
         if (!GameData::activity[i]) {
             GameData::activity[i] = true;
+            GameData::states[i] = 0;
             return i;
         }
     }
