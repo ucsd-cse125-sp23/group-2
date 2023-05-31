@@ -737,7 +737,7 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
     GameData::combatLogs[GameData::clogpos].killed = true;
     GameData::clogpos++;
     // Add death sound to sound log
-
+    logSound(target, SOUND_ID_DEATH);
 
     if (source < NUM_PLAYERS) {
         if ((GameData::tags[target] & ComponentTags::WorthPoints) == ComponentTags::WorthPoints) {
@@ -862,7 +862,7 @@ void EntityComponentSystem::changeState(Entity e, State post)
 void EntityComponentSystem::logSound(Entity source, int sound_id) {
     if (GameData::slogpos < SLOG_MAXSIZE) {
         GameData::soundLogs[GameData::slogpos].source = source;
-        GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_DEATH;
+        GameData::soundLogs[GameData::slogpos].sound = sound_id;
         GameData::slogpos++;
     }
 }

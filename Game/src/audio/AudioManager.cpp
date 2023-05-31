@@ -23,7 +23,7 @@ AudioManager::AudioManager() {
     AudioManager::loadSound("../assets/sounds/PM_SFG_VOL1_WEAPON_4_4_GUN_GUNSHOT_FUTURISTIC.wav", MODEL_ID_TOWER, SOUND_ID_ATTACK);
     AudioManager::loadSound("../assets/sounds/MINE Placing 01.wav", MODEL_ID_ROVER, SOUND_ID_BUILD);
     AudioManager::loadSound("../assets/sounds/Screeching Monster 2-1.wav", MODEL_ID_MOB, SOUND_ID_DEATH);
-    AudioManager::loadSound("../assets/sounds/Melee_Deep_Wound_05.wav", MODEL_ID_MOB, SOUND_ID_DAMAGE);
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0263_creature_crab_organic_texture_carapace_crack_squishy_003.wav", MODEL_ID_MOB, SOUND_ID_DAMAGE);
     AudioManager::loadSound("../assets/sounds/IMPACT METAL Scratchy Short Punch_03.wav", MODEL_ID_MOB_FLYING, SOUND_ID_DAMAGE);
     AudioManager::loadSound("../assets/sounds/Vehicle5_BlastOff1.wav", MODEL_ID_MOB_FLYING, SOUND_ID_DEATH);
     AudioManager::loadSound("../assets/sounds/Robotic Lifeforms 2 - Impacts Source - Metal Tool Drawer Punch 03.wav", MODEL_ID_ROVER, SOUND_ID_LAND);
