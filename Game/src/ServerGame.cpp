@@ -187,6 +187,8 @@ void ServerGame::update()
 
 }
 
+const Prefab playerWeaponArray[3] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectileChaos };
+
 void ServerGame::handleInputs()
 {
 
@@ -215,6 +217,9 @@ void ServerGame::handleInputs()
                 GameData::models[i].modelOrientation = -camAngle + glm::degrees(glm::acos(moveDirection.y));
                 GameData::velocities[i].velocity += PLAYER_MVSPD * moveDirection;
             }
+
+            GameData::pattackmodules[i].attack = playerWeaponArray[in.selected];
+
             if (in.shoot) {
                 target = in.shoot;
             }

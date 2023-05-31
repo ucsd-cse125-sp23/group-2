@@ -24,7 +24,7 @@ struct ClienttoServerData {
     bool shoot;
     bool jump;
     int build;
-
+    int selected;
     void print(char * buf) {
         sprintf(buf, "Moveforward: %d, Moveback: %d, MoveLeft: %d, MoveRight: %d\n", moveForward, moveBack, moveLeft, moveRight);
     }
