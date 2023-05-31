@@ -640,6 +640,7 @@ Entity EntityComponentSystem::createEntity(int begin, int end)
         if (!GameData::activity[i]) {
             GameData::activity[i] = true;
             GameData::states[i] = 0;
+            GameData::tags[i] = 0;
             return i;
         }
     }

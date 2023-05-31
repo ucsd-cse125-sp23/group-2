@@ -10,9 +10,6 @@ std::list<Entity> createProjectileBasic() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::tags[e] = 0;
-    GameData::states[e] = 0;
-    GameData::activity[e] = true;
     GameData::positions[e] = glm::vec3(0, 0, -4);
     GameData::velocities[e].velocity = glm::vec3(0, 0, -1)*PROJ_MVSPD;
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
@@ -46,7 +43,6 @@ std::list<Entity> createProjectileSpread5() {
         if (e == INVALID_ENTITY) {
             return createdEntities;
         }
-        GameData::activity[e] = true;
         GameData::positions[e] = glm::vec3(2 - i, 0, -4);
         GameData::velocities[e].velocity = glm::vec3((2 - i) * 0.1, 0, -0.5);
         GameData::colliders[e] = { glm::vec3(.25, .25, .25) };
@@ -80,7 +76,6 @@ std::list<Entity> createProjectileChaos() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::activity[e] = true;
     GameData::positions[e] = glm::vec3(0, 0, -4);
     GameData::velocities[e].velocity = glm::vec3(0, 0, -0.1);
     GameData::colliders[e] = { glm::vec3(.25, .25, .25) };
@@ -116,7 +111,6 @@ std::list<Entity> createProjectileRandom() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::activity[e] = true;
     glm::vec3 randvec = glm::normalize(glm::vec3(rand() % 64 - 32, rand() % 64 - 32, rand() % 64 - 32));
     GameData::positions[e] = randvec * 4.0f;
     GameData::velocities[e].velocity = randvec * 0.5f;
@@ -150,7 +144,6 @@ std::list<Entity> createEnemyGroundBasic() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::activity[e] = true;
     GameData::states[e] = enemyState::Pathing;
     GameData::pathStructs[e].currentNode = 0;
     GameData::pathStructs[e].path = 0;
@@ -226,7 +219,6 @@ std::list<Entity> createTowerReticle() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::activity[e] = true;
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::models[e].modelID = MODEL_ID_TOWER;
     GameData::models[e].asciiRep = 'T';
@@ -253,7 +245,6 @@ std::list<Entity> createTowerBasic() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::activity[e] = true;
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::turrets[e].damage = TURRET_BASE_DMG;
     GameData::turrets[e].range = 5;
@@ -288,7 +279,6 @@ std::list<Entity> createHome() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::activity[e] = true;
     GameData::positions[e] = baseLoc;
     GameData::models[e].asciiRep = 'B';
     GameData::models[e].modelID = MODEL_ID_BASE;
@@ -330,7 +320,6 @@ std::list<Entity> createPlayers() {
         if (e == INVALID_ENTITY) {
             return createdEntities;
         }
-        GameData::activity[e] = true;
         GameData::positions[e] = PlayerSpawns::spawnpoint[i];
         GameData::velocities[e].velocity = glm::vec3(0, 0, 0);
         GameData::colliders[e] = { glm::vec3(1, 0.7, 1) };
@@ -375,7 +364,6 @@ std::list<Entity> createWoodResourceBasic()
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::activity[e] = true;
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
     GameData::models[e].asciiRep = 'R';
@@ -408,7 +396,6 @@ std::list<Entity> createStoneResourceBasic()
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::activity[e] = true;
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::colliders[e] = { glm::vec3(1, 1, 1) };
     GameData::models[e].asciiRep = 'R';
