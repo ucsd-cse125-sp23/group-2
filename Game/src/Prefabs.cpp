@@ -101,7 +101,7 @@ std::list<Entity> createProjectileChaos() {
         ComponentTags::CollisionDmg +
         ComponentTags::Hostility +
         ComponentTags::LifeSpan + 
-        ComponentTags::Attacker;
+        ComponentTags::AttackerProjectile;
     return createdEntities;
 }
 std::list<Entity> createProjectileRandom() {
@@ -288,10 +288,11 @@ std::list<Entity> createTowerBasic() {
         return createdEntities;
     }
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::turrets[e].damage = TURRET_BASE_DMG;
-    GameData::turrets[e].range = 5;
-    GameData::turrets[e].cooldown = 0;
-    GameData::turrets[e].fireRate = TURRET_BASE_FIRE_RATE;
+    GameData::turrets[e].range = 500;
+    GameData::turrets[e].attackState = towerStates::AttackingHitscan;
+    GameData::hattackmodules[e].damage = TURRET_BASE_DMG;
+    GameData::hattackmodules[e].cooldown = 0;
+    GameData::hattackmodules[e].fireRate = TURRET_BASE_FIRE_RATE;
     GameData::models[e].modelID = MODEL_ID_TOWER;
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
@@ -321,10 +322,10 @@ std::list<Entity> createTowerRailgun() {
         return createdEntities;
     }
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::turrets[e].damage = TURRET_BASE_DMG;
-    GameData::turrets[e].range = 5;
-    GameData::turrets[e].cooldown = 0;
-    GameData::turrets[e].fireRate = TURRET_BASE_FIRE_RATE;
+    GameData::turrets[e].range = 500;
+    GameData::turrets[e].attackState = towerStates::AttackingProjectile;
+    GameData::pattackmodules[e].cooldown = 0;
+    GameData::pattackmodules[e].attack = Prefabs::ProjectileBasic;
     GameData::models[e].modelID = MODEL_ID_RAILGUN;
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
@@ -354,10 +355,6 @@ std::list<Entity> createTowerTesla() {
         return createdEntities;
     }
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::turrets[e].damage = TURRET_BASE_DMG;
-    GameData::turrets[e].range = 5;
-    GameData::turrets[e].cooldown = 0;
-    GameData::turrets[e].fireRate = TURRET_BASE_FIRE_RATE;
     GameData::models[e].modelID = MODEL_ID_TESLA;
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
@@ -556,7 +553,7 @@ namespace WaveData {
 //Define Tower Build costs
 const std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts =
 {
-    {20, 20, 20}
+    {0, 0, 0}
 };
 
 std::list<Entity> createPathColliders()

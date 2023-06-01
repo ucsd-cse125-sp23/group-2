@@ -17,6 +17,7 @@ namespace GameData
   std::array<Hostility, MAX_ENTITIES> hostilities;
   std::array<LifeSpan, MAX_ENTITIES> lifespans;
   std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
+  std::array<HitscanAttackModule, MAX_ENTITIES> hattackmodules;
   std::array<CombatLog, CLOG_MAXSIZE> combatLogs;
   std::array<SoundLog, SLOG_MAXSIZE> soundLogs;
   std::array<Creator, MAX_ENTITIES> creators;
@@ -42,7 +43,7 @@ void EntityComponentSystem::update()
     sysHoming();
     sysMovement();
     sysGravity();
-    sysTurretFire();
+    sysTurret();
     //auto startTime = std::chrono::steady_clock::now();
     sysDetectCollisions();
     //auto endTime = std::chrono::steady_clock::now();
@@ -260,13 +261,12 @@ void EntityComponentSystem::sysHoming()
     }
 }
 
-void EntityComponentSystem::sysTurretFire()
+void EntityComponentSystem::sysTurret()
 {
     for (Entity e = 0; e < MAX_ENTITIES; e++)
     {
         //Continue to next entity if this one is not active
         if (!GameData::activity[e]) { continue; }
-        GameData::turrets[e].cooldown -= 1.0f / TICK_RATE;
         //check if this entity has a turret component
         if ((GameData::tags[e] & ComponentTags::Turret) == ComponentTags::Turret)
         {
@@ -297,16 +297,15 @@ void EntityComponentSystem::sysTurretFire()
             }
 
             //If a valid target was found, fire at them
-            if (closestEnemy != e && GameData::turrets[e].cooldown <= 0)
+            if (closestEnemy != e)
             {
-                GameData::turrets[e].cooldown = GameData::turrets[e].fireRate;
-                dealDamage(e, closestEnemy, (GameData::turrets[e].damage));
-               //std::cout << "Test Tower Fired at Enemy: " << closestEnemy - ENEMY_START << "\n";
-
-               // Add attack sound to sound log
-               GameData::soundLogs[GameData::slogpos].source = e;
-               GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_ATTACK;
-               GameData::slogpos++;
+                GameData::hattackmodules[e].target = closestEnemy;
+                GameData::pattackmodules[e].targetPos = GameData::positions[closestEnemy] + GameData::velocities[closestEnemy].velocity;
+                changeState(e, GameData::turrets[e].attackState);
+            }
+            else 
+            {
+                changeState(e, towerStates::Idle);
             }
         }
     }
@@ -456,11 +455,13 @@ void EntityComponentSystem::sysAttacks()
         //Continue to next entity if this one is not active
         if (!GameData::activity[e]) { continue; }
         GameData::pattackmodules[e].cooldown -= 1.0f / TICK_RATE;
+        GameData::hattackmodules[e].cooldown -= 1.0f / TICK_RATE;
 
-        if ((GameData::tags[e] & ComponentTags::Attacker) == ComponentTags::Attacker) {
+        if ((GameData::tags[e] & ComponentTags::AttackerProjectile) == ComponentTags::AttackerProjectile) {
             //printf("Attacker %u is attacking, checking cooldown\n", e);
             if (GameData::pattackmodules[e].cooldown <= 0) {
                 //printf("Attacker %u is attacking, creating projectile %d\n", e, GameData::pattackmodules[e].cooldown);
+                //printf("Current Pos: %f, %f, %f | Target Pos: %f, %f, %f\n", GameData::positions[e].x, GameData::positions[e].y, GameData::positions[e].z, GameData::pattackmodules[e].targetPos.x, GameData::pattackmodules[e].targetPos.y, GameData::pattackmodules[e].targetPos.z);
                 //Create transformation matrix from prefab dim, to attacker dim
                 glm::vec3 targetVec = GameData::pattackmodules[e].targetPos - GameData::positions[e];
 
@@ -498,6 +499,17 @@ void EntityComponentSystem::sysAttacks()
                 GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_ATTACK;
                 GameData::slogpos++;
             }
+        }
+        if ((GameData::tags[e] & ComponentTags::AttackerHitscan) == ComponentTags::AttackerHitscan) {
+            if (GameData::hattackmodules[e].cooldown <= 0) {
+                GameData::hattackmodules[e].cooldown = GameData::hattackmodules[e].fireRate;
+                dealDamage(e, GameData::hattackmodules[e].target, (GameData::hattackmodules[e].damage));
+                // Add attack sound to sound log
+                GameData::soundLogs[GameData::slogpos].source = e;
+                GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_ATTACK;
+                GameData::slogpos++;
+            }
+            
         }
     }
 }

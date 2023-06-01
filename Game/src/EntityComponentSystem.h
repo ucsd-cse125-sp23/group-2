@@ -90,14 +90,7 @@ struct Model //3D Model to render for the entity
 struct Turret //Component of Towers
 {
     float range; //The range of the tower
-    float damage; //The damage that the turret deals per second
-    float cooldown;
-    float fireRate;
-};
-
-struct Aimingdata
-{
-    float range; //The range to aim from
+    State attackState;
 };
 
 namespace Collision {
@@ -146,6 +139,13 @@ struct ProjectileAttackModule {
     Prefab attack;
     float cooldown; //Remaining coooldown in seconds
     glm::vec3 targetPos;
+};
+
+struct HitscanAttackModule {
+    Entity target;
+    float damage; //The damage that the dealt per second
+    float cooldown;
+    float fireRate;
 };
 
 struct ReticlePlacement {
@@ -201,24 +201,27 @@ namespace ComponentTags
     constexpr Tag CollisionDmg = 0x1 << 8;
     constexpr Tag Turret = 0x1 << 9;
     constexpr Tag Hostility = 0x1 << 10;
-    constexpr Tag Attacker = 0x1 << 11;
-    constexpr Tag LifeSpan = 0x1 << 12;
-    constexpr Tag Created = 0x1 << 13;
-    constexpr Tag Builder = 0x1 << 14;
-    constexpr Tag HomingData = 0x1 << 15;
-    constexpr Tag Dead = 0x1 << 16;
-    constexpr Tag ResourceContainer = 0x1 << 17;
-    constexpr Tag WorthPoints = 0x1 << 18;
-    constexpr Tag Aimer = 0x1 << 19;
+    constexpr Tag AttackerProjectile = 0x1 << 11;
+    constexpr Tag AttackerHitscan = 0x1 << 12;
+    constexpr Tag LifeSpan = 0x1 << 13;
+    constexpr Tag Created = 0x1 << 14;
+    constexpr Tag Builder = 0x1 << 15;
+    constexpr Tag HomingData = 0x1 << 16;
+    constexpr Tag Dead = 0x1 << 17;
+    constexpr Tag ResourceContainer = 0x1 << 18;
+    constexpr Tag WorthPoints = 0x1 << 19;
 }
 
 namespace enemyState {
     constexpr State Pathing = ComponentTags::PathData;
     constexpr State Homing = ComponentTags::HomingData;
-    constexpr State Aiming = ComponentTags::Aimer;
 };
 
-
+namespace towerStates {
+    constexpr State Idle = 0;
+    constexpr State AttackingHitscan = ComponentTags::AttackerHitscan;
+    constexpr State AttackingProjectile = ComponentTags::AttackerProjectile;
+};
 
 namespace GameData
 {
@@ -238,6 +241,7 @@ namespace GameData
     extern std::array<CollisionDmg, MAX_ENTITIES> coldmg;
     extern std::array<Hostility, MAX_ENTITIES> hostilities;
     extern std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
+    extern std::array<HitscanAttackModule, MAX_ENTITIES> hattackmodules;
     extern std::array<LifeSpan, MAX_ENTITIES> lifespans;
     extern std::array<Creator, MAX_ENTITIES> creators;
     extern std::array<SpawnRate, MAX_ENTITIES> spawnrates;
@@ -281,7 +285,7 @@ namespace EntityComponentSystem
 
 
     //All automated turret / tower firing
-    void sysTurretFire();
+    void sysTurret();
 
     //Check the status of entity's HP
     void sysDeathStatus();
