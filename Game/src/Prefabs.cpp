@@ -12,7 +12,7 @@ std::list<Entity> createProjectileBasic() {
     }
     GameData::positions[e] = glm::vec3(0, 0, -4);
     GameData::velocities[e].velocity = glm::vec3(0, 0, -1)*PROJ_MVSPD;
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
     GameData::models[e].modelID = MODEL_ID_PROJECTILE;
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 30.0f;
@@ -45,7 +45,7 @@ std::list<Entity> createProjectileSpread5() {
         }
         GameData::positions[e] = glm::vec3(2 - i, 0, -4);
         GameData::velocities[e].velocity = glm::normalize(glm::vec3((2 - i) * 0.1, 0, -0.5)) * (PROJ_MVSPD/2);
-        GameData::colliders[e] = { glm::vec3(.25, .25, .25) };
+        GameData::colliders[e].AABB =  glm::vec3(.25, .25, .25);
         GameData::models[e].modelID = MODEL_ID_PROJECTILE;
         GameData::models[e].asciiRep = 'J';
         GameData::coldmg[e].damage = 30.0f;
@@ -78,7 +78,7 @@ std::list<Entity> createProjectileChaos() {
     }
     GameData::positions[e] = glm::vec3(0, 0, -4);
     GameData::velocities[e].velocity = glm::vec3(0, 0, -0.1);
-    GameData::colliders[e] = { glm::vec3(.25, .25, .25) };
+    GameData::colliders[e].AABB =  glm::vec3(.25, .25, .25);
     GameData::models[e].modelID = MODEL_ID_PROJECTILE;
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 30.0f;
@@ -114,7 +114,7 @@ std::list<Entity> createProjectileRandom() {
     glm::vec3 randvec = glm::normalize(glm::vec3(rand() % 64 - 32, rand() % 64 - 32, rand() % 64 - 32));
     GameData::positions[e] = randvec * 4.0f;
     GameData::velocities[e].velocity = randvec * 0.5f;
-    GameData::colliders[e] = { glm::vec3(.25, .25, .25) };
+    GameData::colliders[e].AABB =  glm::vec3(.25, .25, .25);
     GameData::models[e].modelID = MODEL_ID_PROJECTILE;
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 30.0f;
@@ -150,7 +150,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::velocities[e].flying = false;
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e] = { glm::vec3(1.3, 1.7, 1.3) };
+    GameData::colliders[e].AABB =  glm::vec3(1.3, 1.7, 1.3);
     GameData::models[e].modelID = MODEL_ID_MOB;
     GameData::models[e].asciiRep = 'E';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
@@ -224,7 +224,7 @@ std::list<Entity> createTowerReticleBasic() {
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
-    GameData::colliders[e] = { glm::vec3(1.2, 1, 1.2) };
+    GameData::colliders[e].AABB =  glm::vec3(1.2, 1, 1.2);
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
@@ -245,8 +245,10 @@ std::list<Entity> createTowerReticleRailgun() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
+    
     GameData::models[e].modelID = MODEL_ID_RAILGUN;
-    GameData::colliders[e] = { glm::vec3(1.2, 1, 1.2) };
+    
+    GameData::colliders[e].AABB = glm::vec3(1.2, 1, 1.2);
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
@@ -254,7 +256,7 @@ std::list<Entity> createTowerReticleRailgun() {
         ComponentTags::Collidable +
         ComponentTags::DiesOnCollision;
     GameData::models[e].renderCollider = true;
-
+    
     return createdEntities;
 }
 
@@ -266,7 +268,7 @@ std::list<Entity> createTowerReticleTesla() {
         return createdEntities;
     }
     GameData::models[e].modelID = MODEL_ID_TESLA;
-    GameData::colliders[e] = { glm::vec3(1.2, 1, 1.2) };
+    GameData::colliders[e].AABB = glm::vec3(1.2, 1, 1.2);
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
@@ -294,7 +296,7 @@ std::list<Entity> createTowerBasic() {
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
     GameData::tags[e] =
@@ -327,7 +329,7 @@ std::list<Entity> createTowerRailgun() {
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
     GameData::tags[e] =
@@ -360,7 +362,7 @@ std::list<Entity> createTowerTesla() {
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
     GameData::tags[e] =
@@ -391,7 +393,7 @@ std::list<Entity> createHome() {
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = HOME_BASE_HEALTH;
-    GameData::colliders[e] = { glm::vec3(60, 40, 20) };
+    GameData::colliders[e].AABB =  glm::vec3(60, 40, 20);
     GameData::rigidbodies[e].fixed = true;
     GameData::models[e].renderCollider = true;
     GameData::rigidbodies[e].grounded = false;
@@ -428,7 +430,7 @@ std::list<Entity> createPlayers() {
         }
         GameData::positions[e] = PlayerSpawns::spawnpoint[i];
         GameData::velocities[e].velocity = glm::vec3(0, 0, 0);
-        GameData::colliders[e] = { glm::vec3(1, 0.7, 1) };
+        GameData::colliders[e].AABB =  glm::vec3(1, 0.7, 1);
         GameData::models[e].modelID = MODEL_ID_ROVER;
         GameData::models[e].asciiRep = 'P';
         GameData::models[i].renderCollider = true;
@@ -471,7 +473,7 @@ std::list<Entity> createWoodResourceBasic()
         return createdEntities;
     }
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
     GameData::models[e].asciiRep = 'R';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
     GameData::hostilities[e].team = Teams::Environment;
@@ -503,7 +505,7 @@ std::list<Entity> createStoneResourceBasic()
         return createdEntities;
     }
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
     GameData::models[e].asciiRep = 'R';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
     GameData::hostilities[e].team = Teams::Environment;
@@ -574,7 +576,7 @@ std::list<Entity> createPathColliders()
             GameData::activity[e] = true;
             GameData::positions[e] = (Paths::path[p][i] + Paths::path[p][i + 1]) / 2.0f;
             glm::vec3 pathvec = Paths::path[p][i + 1] - Paths::path[p][i];
-            GameData::colliders[e] = { (pathvec) / 2.0f + PATH_WIDTH * glm::normalize(pathvec) + PATH_WIDTH * glm::normalize(glm::vec3(pathvec.z, 0, -pathvec.x)) + glm::vec3(0, 1,0) };
+            GameData::colliders[e].AABB =  (pathvec) / 2.0f + PATH_WIDTH * glm::normalize(pathvec) + PATH_WIDTH * glm::normalize(glm::vec3(pathvec.z, 0, -pathvec.x)) + glm::vec3(0, 1,0);
             
             GameData::colliders[e].AABB.x = glm::abs(GameData::colliders[e].AABB.x);
             GameData::colliders[e].AABB.y = glm::abs(GameData::colliders[e].AABB.y);

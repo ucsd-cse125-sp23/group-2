@@ -227,6 +227,11 @@ void ServerGame::handleInputs()
 
             if (in.build) {
                 changeState(i, PlayerState::Build);
+                if (GameData::retplaces[i].reticlePrefab != playerReticleArray[in.selected]) {
+                    if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
+                        ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
+                    }
+                }
                 GameData::retplaces[i].buildingPrefab = playerBuildingArray[in.selected];
                 GameData::retplaces[i].reticlePrefab = playerReticleArray[in.selected];
             }
