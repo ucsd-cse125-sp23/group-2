@@ -188,7 +188,8 @@ void ServerGame::update()
 }
 
 const Prefab playerWeaponArray[3] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectileChaos };
-const Prefab playerBuildingArray[3] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerBasic };
+const Prefab playerReticleArray[3] = { Prefabs::TowerReticleBasic, Prefabs::TowerReticleRailgun, Prefabs::TowerReticleTesla };
+const Prefab playerBuildingArray[3] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerTesla };
 
 
 void ServerGame::handleInputs()
@@ -227,7 +228,7 @@ void ServerGame::handleInputs()
             if (in.build) {
                 changeState(i, PlayerState::Build);
                 GameData::retplaces[i].buildingPrefab = playerBuildingArray[in.selected];
-
+                GameData::retplaces[i].reticlePrefab = playerReticleArray[in.selected];
             }
             else {
                 changeState(i, PlayerState::Default); //May be slow
