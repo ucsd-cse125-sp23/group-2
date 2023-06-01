@@ -44,7 +44,7 @@ std::list<Entity> createProjectileSpread5() {
             return createdEntities;
         }
         GameData::positions[e] = glm::vec3(2 - i, 0, -4);
-        GameData::velocities[e].velocity = glm::vec3((2 - i) * 0.1, 0, -0.5);
+        GameData::velocities[e].velocity = glm::normalize(glm::vec3((2 - i) * 0.1, 0, -0.5)) * (PROJ_MVSPD/2);
         GameData::colliders[e] = { glm::vec3(.25, .25, .25) };
         GameData::models[e].modelID = MODEL_ID_PROJECTILE;
         GameData::models[e].asciiRep = 'J';
