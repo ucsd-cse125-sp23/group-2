@@ -2,6 +2,8 @@
 float GameWorld::prevX, GameWorld::prevY,GameWorld::currX, GameWorld::currY, GameWorld::scrollY = 0;
 
 void GameWorld::init() {
+
+
 	currID = 0;
 	env = new Skybox();
 	env->setSkyShader(new Shader("../shaders/skybox.vert", "../shaders/skybox.frag"));
@@ -12,7 +14,7 @@ void GameWorld::init() {
 	models[MODEL_ID_MOB] = new ObjectModel("../assets/martian/martian.obj");
 	models[MODEL_ID_MOB_FLYING] = new ObjectModel("../assets/ufo/ufo_v2.obj");
 	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/tower.obj");
-	models[MODEL_ID_BASE] = new ObjectModel("../assets/cube/cube.obj");
+	models[MODEL_ID_BASE] = new ObjectModel("../assets/base/test_base.obj");
 	//replace once models are done
 	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/tree/tree.obj");
 	models[MODEL_ID_PROJECTILE] = new ObjectModel("../assets/laser_projectile/laser_projectile.obj");
@@ -110,7 +112,7 @@ void GameWorld::draw() {
 	for (RenderEntity* e : entities) {
 
 		if (e->getActive()) {
-			e->draw(viewProjMtx, currTime);
+			e->draw(viewProjMtx, currTime, cam);
 		}
 	}
 	for (HealthBar* h : healths) {

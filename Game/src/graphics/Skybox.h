@@ -17,7 +17,8 @@ public:
 	glm::vec3 color;
 	Shader* skyShader;
 	Shader* envShader;
-	ObjectModel* ourModel;
+	ObjectModel* envModel;
+	ObjectModel* domeModel;
 
 	void setSkyShader(Shader* s) { skyShader = s; }
 	void setEnvShader(Shader* s) { envShader = s; }

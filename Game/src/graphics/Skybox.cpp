@@ -84,7 +84,8 @@ Skybox::Skybox() {
 	// configure global opengl state
 	// -----------------------------
 	glEnable(GL_DEPTH_TEST);
-	ourModel = new ObjectModel("../assets/environment/environment.obj");
+	envModel = new ObjectModel("../assets/environment/environment.obj");
+	domeModel = new ObjectModel("../assets/dome/dome.obj");
 }
 
 void Skybox::draw(const glm::mat4& viewProjMtx) {
@@ -101,7 +102,11 @@ void Skybox::draw(const glm::mat4& viewProjMtx) {
 	// get the locations and send the uniforms to the shader
 	envShader->setMat4("viewProj", viewProjMtx);
 	envShader->setMat4("model", model);
-	ourModel->Draw(*envShader);
+	envModel->Draw(*envShader);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	domeModel->Draw(*envShader);
+	glDisable(GL_BLEND);
 	glUseProgram(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }

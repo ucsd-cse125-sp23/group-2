@@ -20,7 +20,7 @@ RenderEntity::~RenderEntity() {
 
 }
 
-void RenderEntity::draw(const glm::mat4& viewProjMtx, float time) {
+void RenderEntity::draw(const glm::mat4& viewProjMtx, float time, Camera * cam) {
     // actiavte the shader program
     shader->use();
 
@@ -29,6 +29,7 @@ void RenderEntity::draw(const glm::mat4& viewProjMtx, float time) {
     shader->setMat4("model", model);
     shader->setFloat("time", time);
     shader->setFloat("rand", id);
+    shader->setVec3("viewPos", cam->getCameraPosition());
 
     ourModel->Draw(*shader);
 
