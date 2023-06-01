@@ -32,11 +32,12 @@ uniform sampler2D texture_shiny1;
 uniform sampler2D texture_normal1;
 uniform Material material;
 
-uniform vec4 lightPos[2] = {
+const int numLights = 2;
+uniform vec4 lightPos[numLights] = {
     vec4(0.0f, 30.0f, 0.0f, 0.0f),
     vec4(0.0f, 30.0f, 0.0f, 0.0f)
 };
-uniform vec4 lightColor[2] = {
+uniform vec4 lightColor[numLights] = {
     vec4(0.7f, 0.7f, 0.7f, 1.0f),
     vec4(0.3f, 0.3f, 0.3f, 1.0f)
 };
@@ -65,7 +66,7 @@ void main()
         shine = material.shininess;
     }
 
-    for(int i = 0; i < 2; i++){
+    for(int i = 0; i < numLights; i++){
     
         vec4 ambient = ambientColor * lightColor[i];
 
