@@ -188,6 +188,8 @@ void ServerGame::update()
 }
 
 const Prefab playerWeaponArray[3] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectileChaos };
+const Prefab playerBuildingArray[3] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerBasic };
+
 
 void ServerGame::handleInputs()
 {
@@ -218,17 +220,19 @@ void ServerGame::handleInputs()
                 GameData::velocities[i].velocity += PLAYER_MVSPD * moveDirection;
             }
 
-            GameData::pattackmodules[i].attack = playerWeaponArray[in.selected];
-
             if (in.shoot) {
                 target = in.shoot;
             }
 
             if (in.build) {
                 changeState(i, PlayerState::Build);
+                GameData::retplaces[i].buildingPrefab = playerBuildingArray[in.selected];
+
             }
             else {
                 changeState(i, PlayerState::Default); //May be slow
+                GameData::pattackmodules[i].attack = playerWeaponArray[in.selected];
+
                 if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
                     ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
                     GameData::retplaces[i].reticle = INVALID_ENTITY;

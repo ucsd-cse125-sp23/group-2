@@ -95,6 +95,11 @@ struct Turret //Component of Towers
     float fireRate;
 };
 
+struct Aimingdata
+{
+    float range; //The range to aim from
+};
+
 namespace Collision {
     //Side should be bigger than the greatest sidelength of any AABB in the game
     constexpr float side = 3.0;
@@ -204,11 +209,13 @@ namespace ComponentTags
     constexpr Tag Dead = 0x1 << 16;
     constexpr Tag ResourceContainer = 0x1 << 17;
     constexpr Tag WorthPoints = 0x1 << 18;
+    constexpr Tag Aimer = 0x1 << 19;
 }
 
 namespace enemyState {
     constexpr State Pathing = ComponentTags::PathData;
     constexpr State Homing = ComponentTags::HomingData;
+    constexpr State Aiming = ComponentTags::Aimer;
 };
 
 

@@ -271,6 +271,39 @@ std::list<Entity> createTowerBasic() {
     return createdEntities;
 };
 
+std::list<Entity> createTowerRailgun() {
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::turrets[e].damage = TURRET_BASE_DMG;
+    GameData::turrets[e].range = 5;
+    GameData::turrets[e].cooldown = 0;
+    GameData::turrets[e].fireRate = TURRET_BASE_FIRE_RATE;
+    GameData::models[e].modelID = MODEL_ID_RAILGUN;
+    GameData::models[e].asciiRep = 'T';
+    GameData::hostilities[e].team = Teams::Towers;
+    GameData::hostilities[e].hostileTo = Teams::Martians;
+    GameData::colliders[e] = { glm::vec3(1, 1, 1) };
+    GameData::rigidbodies[e].fixed = true;
+    GameData::rigidbodies[e].grounded = false;
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Hostility +
+        ComponentTags::RigidBody +
+        ComponentTags::Collidable +
+        ComponentTags::Turret;
+    GameData::models[e].renderCollider = true;
+    GameData::colliders[e].colteam = CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = 0;
+
+    return createdEntities;
+};
+
 
 std::list<Entity> createHome() {
     std::list<Entity> createdEntities;
