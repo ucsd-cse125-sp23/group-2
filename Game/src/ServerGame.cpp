@@ -174,7 +174,7 @@ void ServerGame::update()
     case win:
         break;
     default:
-        printf("Invalid server state!");
+        printf("Invalid server state!\n");
     }
 
 

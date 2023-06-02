@@ -345,7 +345,6 @@ void EntityComponentSystem::sysAbduction() {
                     //start abducting
                     GameData::abductionStructs[e].abductionTimeLeft -= 1.0f / TICK_RATE;
                     if (GameData::abductionStructs[e].abductionTimeLeft <= 0) {
-                        printf("Abduction sucessful!\n");
                         GameData::abductionStructs[e].captive = GameData::homingStructs[e].trackedEntity;
                     }
                 }
