@@ -68,6 +68,12 @@ const float DEAGRO_RANGE = 20;
 //how close players must be for enemies to shoot at them
 const float ATTACK_RANGE = 20;
 
+//how close players must be to start being abducted
+const float ABDUCT_RANGE = 15;
+
+//how long abductions take
+const float ABDUCT_TIMER = 1.0f;
+
 //gravitational acceleration in units per second squared
 const float GRAVITY_SEC = -120;
 
@@ -80,9 +86,9 @@ const float RESPAWN_TIMER = 5.0;
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 8
 
-#define WAVE_COUNT 5
+#define WAVE_COUNT 1
 
-#define NUM_ENEMY_TYPES 3
+#define NUM_ENEMY_TYPES 4
 
 #define NUM_RESOURCE_TYPES 3
 

@@ -31,6 +31,7 @@ std::list<Entity> createTowerRailgun();
 std::list<Entity> createTowerTesla();
 std::list<Entity> createEnemyGroundTank();
 std::list<Entity> createEnemyFlyingBasic();
+std::list<Entity> createEnemyFlyingTractor();
 std::list<Entity> createHome();
 std::list<Entity> createWoodResourceBasic();
 std::list<Entity> createStoneResourceBasic();
@@ -55,6 +56,7 @@ namespace Prefabs {
 		EnemyGroundBasic = PROJECTILE_MARKER,
 		EnemyGroundTank,
 		EnemyFlyingBasic,
+		EnemyFlyingTractor,
 
 		ENEMY_MARKER,//Put Enemies Above this marker
 		BASIC_WOOD_RESOURCE = ENEMY_MARKER,
@@ -93,6 +95,7 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createEnemyGroundBasic,
 	&createEnemyGroundTank,
 	&createEnemyFlyingBasic,
+	&createEnemyFlyingTractor,
 	&createWoodResourceBasic,
 	&createStoneResourceBasic,
 	&createTowerReticleBasic,

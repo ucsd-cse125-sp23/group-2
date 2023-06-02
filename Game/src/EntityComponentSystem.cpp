@@ -27,6 +27,7 @@ namespace GameData
   std::array<State, MAX_ENTITIES> states;
   std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
   std::array<HomingData, MAX_ENTITIES> homingStructs;
+  std::array<AbductionData, MAX_ENTITIES> abductionStructs;
   std::array<ResourceContainer, MAX_ENTITIES> resources;
   std::array<Points, MAX_ENTITIES> pointvalues;
   AllPlayerData playerdata;
@@ -42,6 +43,7 @@ void EntityComponentSystem::update()
     sysAttacks();
     sysPathing();
     sysHoming();
+    sysAbduction();
     sysMovement();
     sysGravity();
     sysTurret();
@@ -114,7 +116,7 @@ void EntityComponentSystem::sysEnemyAI()
                 }
                 break;
             default:
-                printf("Entity %u is a stalker with invalid state!\n", e);
+                printf("Entity %u is a hunter with invalid state!\n", e);
                 changeState(e, enemyState::Pathing);
                 rePath(e);
             }
@@ -151,6 +153,33 @@ void EntityComponentSystem::sysEnemyAI()
             }
             else
             {
+                changeState(e, enemyState::Pathing);
+                rePath(e);
+            }
+        }
+        else if ((GameData::tags[e] & ComponentTags::Trapper) == ComponentTags::Trapper)
+        {
+            switch (GameData::states[e])
+            {
+            case enemyState::Homing:
+                if (GameData::abductionStructs[e].captive != INVALID_ENTITY) {
+                    printf("Now pathing\n");
+                    changeState(e, enemyState::Pathing);
+                    rePath(e);
+                }
+
+                //find nearest player
+                for (int p = 0; p < NUM_PLAYERS; p++)
+                {
+                    if (glm::distance(GameData::positions[p], GameData::positions[e]) <= glm::distance(GameData::positions[GameData::homingStructs[e].trackedEntity], GameData::positions[e]))
+                    {
+                        GameData::homingStructs[e].trackedEntity = p;
+                    }
+                }
+            case enemyState::Pathing:
+                break;
+            default:
+                printf("Entity %u is a trapper with invalid state!\n", e);
                 changeState(e, enemyState::Pathing);
                 rePath(e);
             }
@@ -223,7 +252,6 @@ void EntityComponentSystem::sysGravity()
     }
 }
 
-//TODO: FINISH PATHING ALGO
 //Do pathfinding for entities with PathData components
 void EntityComponentSystem::sysPathing()
 {
@@ -295,6 +323,45 @@ void EntityComponentSystem::sysHoming()
                 direction.y = 0;
             }
             GameData::velocities[e].velocity = glm::normalize(direction) * GameData::velocities[e].moveSpeed;
+        }
+    }
+}
+
+void EntityComponentSystem::sysAbduction() {
+    for (Entity e = 0; e < MAX_ENTITIES; e++)
+    {
+        //Continue to next entity if this one is not active
+        if (!GameData::activity[e]) { continue; }
+        //check if this entity has a abductor component
+        if ((GameData::tags[e] & ComponentTags::Abductor) == ComponentTags::Abductor)
+        {
+            //check if there already is a captive
+            if (GameData::abductionStructs[e].captive == INVALID_ENTITY)
+            {
+                //if entity being homed on is in abduction range, start abducting
+                if (glm::distance(GameData::positions[GameData::homingStructs[e].trackedEntity], GameData::positions[e]) < ABDUCT_RANGE)
+                {
+                    //start abducting
+                    GameData::abductionStructs[e].abductionTimeLeft -= 1.0f / TICK_RATE;
+                    logSound(e, SOUND_ID_ATTACK);
+                    if (GameData::abductionStructs[e].abductionTimeLeft <= 0) {
+                        printf("Abduction sucessful!\n");
+                        GameData::abductionStructs[e].captive = GameData::homingStructs[e].trackedEntity;
+                    }
+                }
+                else
+                {
+                    GameData::abductionStructs[e].abductionTimeLeft = ABDUCT_TIMER;
+                }
+            }
+            else
+            {
+                Entity c = GameData::abductionStructs[e].captive;
+                glm::vec3 direction = (GameData::positions[e] - glm::vec3(0.0f, GameData::colliders[e].AABB.y, 0.0f) - GameData::positions[c]);
+                GameData::velocities[c].velocity = glm::normalize(direction) * GameData::velocities[c].moveSpeed * 0.01f + GameData::velocities[e].velocity;
+                GameData::pattackmodules[c].cooldown = 1.0f;
+            }
+
         }
     }
 }

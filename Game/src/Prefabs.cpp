@@ -259,6 +259,40 @@ std::list<Entity> createEnemyFlyingBasic() {
     return createdEntities;
 };
 
+std::list<Entity> createEnemyFlyingTractor() {
+    std::list<Entity> createdEntities;
+    Entity e = createEnemyFlyingBasic().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    //distinguishing factors
+    GameData::models[e].modelID = MODEL_ID_MOB_FLYING;
+    GameData::abductionStructs[e].abductionTimeLeft = ABDUCT_TIMER;
+    GameData::abductionStructs[e].captive = INVALID_ENTITY;
+    GameData::rigidbodies[e].fixed = true;
+    GameData::homingStructs[e].trackedEntity = 0;
+    GameData::states[e] = enemyState::Homing;
+    GameData::coldmg[e].damage = 0.0f;
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::PathData +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::WorthPoints +
+        ComponentTags::ResourceContainer +
+        ComponentTags::Abductor +
+        ComponentTags::HomingData +
+        ComponentTags::Trapper;
+
+    return createdEntities;
+};
+
 std::list<Entity> createTowerReticleBasic() {
     std::list<Entity> createdEntities;
     Entity e = createEntity();
@@ -480,6 +514,7 @@ std::list<Entity> createPlayers() {
         }
         GameData::positions[e] = PlayerSpawns::spawnpoint[i];
         GameData::velocities[e].velocity = glm::vec3(0, 0, 0);
+        GameData::velocities[e].moveSpeed = PLAYER_MVSPD_PERSEC;
         GameData::colliders[e].AABB =  glm::vec3(1, 0.7, 1);
         GameData::models[e].modelID = MODEL_ID_ROVER;
         GameData::models[e].asciiRep = 'P';
@@ -594,11 +629,13 @@ namespace WaveData {
     int currentWave;
 
     // How much time a wave lasts before the next wave starts spawning (timer for last wave will be time until win)
-    int waveTimers[WAVE_COUNT] = { 15 * TICK_RATE, 15 * TICK_RATE, 15 * TICK_RATE, 15 * TICK_RATE, 60  * TICK_RATE };
+    //int waveTimers[WAVE_COUNT] = { 15 * TICK_RATE, 15 * TICK_RATE, 15 * TICK_RATE, 15 * TICK_RATE, 60  * TICK_RATE };
+    int waveTimers[WAVE_COUNT] = { 1000 * TICK_RATE };
 
     int waveTick; //countdown timer for waves
 
-    int enemyTypes[NUM_ENEMY_TYPES] = { Prefabs::EnemyGroundBasic, Prefabs::EnemyGroundTank, Prefabs::EnemyFlyingBasic };
+    //int enemyTypes[NUM_ENEMY_TYPES] = { Prefabs::EnemyGroundBasic, Prefabs::EnemyGroundTank, Prefabs::EnemyFlyingBasic, Prefabs::EnemyFlyingTractor};
+    int enemyTypes[NUM_ENEMY_TYPES] = { Prefabs::EnemyFlyingTractor, Prefabs::EnemyFlyingTractor, Prefabs::EnemyFlyingTractor, Prefabs::EnemyFlyingTractor };
 
     std::queue<enemy> waves[WAVE_COUNT];
 }

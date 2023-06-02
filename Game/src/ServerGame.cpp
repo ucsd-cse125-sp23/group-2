@@ -39,7 +39,7 @@ void ServerGame::initWaves()
     //Temp Nested for loop to populate wave vectors
     for (int i = 0; i < WAVE_COUNT; i++)
     {
-        for (int j = 0; j < 15; j++)
+        for (int j = 0; j < 1; j++)
         {
             enemy e = { WaveData::enemyTypes[rand() % NUM_ENEMY_TYPES], rand() % Paths::pathCount, 1 * TICK_RATE };
             WaveData::waves[i].push(e);

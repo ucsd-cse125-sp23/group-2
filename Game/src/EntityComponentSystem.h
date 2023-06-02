@@ -118,6 +118,12 @@ struct RigidBodyInfo //Information for physical objects;
     bool grounded; //If object can be treated as being on groun (used for player jumping for now)
 };
 
+struct AbductionData
+{
+    float abductionTimeLeft;
+    Entity captive;
+};
+
 struct CollisionEvent {
     Entity e;
     Entity o;
@@ -215,12 +221,14 @@ namespace ComponentTags
     constexpr Tag LifeSpan = 0x1 << 14;
     constexpr Tag Created = 0x1 << 15;
     constexpr Tag Builder = 0x1 << 16;
-    constexpr Tag HomingData = 0x1 << 17;
-    constexpr Tag Dead = 0x1 << 18;
-    constexpr Tag ResourceContainer = 0x1 << 19;
-    constexpr Tag WorthPoints = 0x1 << 20;
-    constexpr Tag Stalker = 0x1 << 21;
-    constexpr Tag Hunter = 0x1 << 22;
+    constexpr Tag Abductor = 0x1 << 17;
+    constexpr Tag HomingData = 0x1 << 18;
+    constexpr Tag Dead = 0x1 << 19;
+    constexpr Tag ResourceContainer = 0x1 << 20;
+    constexpr Tag WorthPoints = 0x1 << 21;
+    constexpr Tag Stalker = 0x1 << 22;
+    constexpr Tag Hunter = 0x1 << 23;
+    constexpr Tag Trapper = 0x1 << 24;
 }
 
 namespace enemyState {
@@ -261,6 +269,7 @@ namespace GameData
     extern std::array<State, MAX_ENTITIES> states;
     extern std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
     extern std::array<HomingData, MAX_ENTITIES> homingStructs;
+    extern std::array<AbductionData, MAX_ENTITIES> abductionStructs;
     extern std::array<ResourceContainer, MAX_ENTITIES> resources;
     extern std::array<Points, MAX_ENTITIES> pointvalues;
 
@@ -314,6 +323,9 @@ namespace EntityComponentSystem
 
     //tracking entities
     void sysHoming();
+
+    //abducting entities
+    void sysAbduction();
 
     void sysEnemyAI();
 
