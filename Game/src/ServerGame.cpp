@@ -37,9 +37,10 @@ void ServerGame::initWaves()
     WaveData::waveTick = ENEMY_SPAWNDELAY_TICKS;
 
     //Temp Nested for loop to populate wave vectors
+    //TODO: Manually set up waves
     for (int i = 0; i < WAVE_COUNT; i++)
     {
-        for (int j = 0; j < 1; j++)
+        for (int j = 0; j < 15; j++)
         {
             enemy e = { WaveData::enemyTypes[rand() % NUM_ENEMY_TYPES], rand() % Paths::pathCount, 1 * TICK_RATE };
             WaveData::waves[i].push(e);

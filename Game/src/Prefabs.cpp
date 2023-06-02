@@ -439,7 +439,7 @@ std::list<Entity> createTowerTesla() {
     GameData::models[e].modelID = MODEL_ID_TESLA;
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
-    GameData::hostilities[e].hostileTo = Teams::Martians+Teams::Environment;
+    GameData::hostilities[e].hostileTo = Teams::Martians;
     GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
@@ -629,13 +629,13 @@ namespace WaveData {
     int currentWave;
 
     // How much time a wave lasts before the next wave starts spawning (timer for last wave will be time until win)
-    //int waveTimers[WAVE_COUNT] = { 15 * TICK_RATE, 15 * TICK_RATE, 15 * TICK_RATE, 15 * TICK_RATE, 60  * TICK_RATE };
-    int waveTimers[WAVE_COUNT] = { 1000 * TICK_RATE };
+    int waveTimers[WAVE_COUNT] = { 15 * TICK_RATE, 15 * TICK_RATE, 15 * TICK_RATE, 15 * TICK_RATE, 60  * TICK_RATE };
+    //int waveTimers[WAVE_COUNT] = { 1000 * TICK_RATE };
 
     int waveTick; //countdown timer for waves
 
-    //int enemyTypes[NUM_ENEMY_TYPES] = { Prefabs::EnemyGroundBasic, Prefabs::EnemyGroundTank, Prefabs::EnemyFlyingBasic, Prefabs::EnemyFlyingTractor};
-    int enemyTypes[NUM_ENEMY_TYPES] = { Prefabs::EnemyFlyingTractor, Prefabs::EnemyFlyingTractor, Prefabs::EnemyFlyingTractor, Prefabs::EnemyFlyingTractor };
+    int enemyTypes[NUM_ENEMY_TYPES] = { Prefabs::EnemyGroundBasic, Prefabs::EnemyGroundTank, Prefabs::EnemyFlyingBasic, Prefabs::EnemyFlyingTractor};
+    //int enemyTypes[NUM_ENEMY_TYPES] = { Prefabs::EnemyFlyingTractor, Prefabs::EnemyFlyingTractor, Prefabs::EnemyFlyingTractor, Prefabs::EnemyFlyingTractor };
 
     std::queue<enemy> waves[WAVE_COUNT];
 }

@@ -86,7 +86,7 @@ const float RESPAWN_TIMER = 5.0;
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 8
 
-#define WAVE_COUNT 1
+#define WAVE_COUNT 5
 
 #define NUM_ENEMY_TYPES 4
 
