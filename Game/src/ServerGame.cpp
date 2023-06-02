@@ -187,9 +187,10 @@ void ServerGame::update()
 
 }
 
-const Prefab playerWeaponArray[3] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectileChaos };
-const Prefab playerReticleArray[3] = { Prefabs::TowerReticleBasic, Prefabs::TowerReticleRailgun, Prefabs::TowerReticleTesla };
-const Prefab playerBuildingArray[3] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerTesla };
+const int NUM_PLAYER_ATTACK = 3;
+const Prefab playerWeaponArray[NUM_PLAYER_ATTACK] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectileChaos };
+const Prefab playerReticleArray[NUM_TOWER_PREFAB] = { Prefabs::TowerReticleBasic, Prefabs::TowerReticleRailgun, Prefabs::TowerReticleTesla };
+const Prefab playerBuildingArray[NUM_TOWER_PREFAB] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerTesla };
 
 
 void ServerGame::handleInputs()
@@ -227,6 +228,9 @@ void ServerGame::handleInputs()
 
             if (in.build) {
                 changeState(i, PlayerState::Build);
+                if (in.selected > NUM_TOWER_PREFAB) {
+                    in.selected = NUM_TOWER_PREFAB - 1;
+                }
                 if (GameData::retplaces[i].reticlePrefab != playerReticleArray[in.selected]) {
                     if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
                         ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
@@ -236,6 +240,9 @@ void ServerGame::handleInputs()
                 GameData::retplaces[i].reticlePrefab = playerReticleArray[in.selected];
             }
             else {
+                if (in.selected > NUM_PLAYER_ATTACK) {
+                    in.selected = NUM_PLAYER_ATTACK - 1;
+                }
                 changeState(i, PlayerState::Default); //May be slow
                 GameData::pattackmodules[i].attack = playerWeaponArray[in.selected];
 

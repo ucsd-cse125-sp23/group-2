@@ -108,6 +108,7 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
             else {
                 build = 1;
             }
+            selected = 0;
             break;
         case GLFW_KEY_1:
             selected = 0;
@@ -117,6 +118,9 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
             break;
         case GLFW_KEY_3:
             selected = 2;
+            break;
+        case GLFW_KEY_4:
+            selected = 3;
             break;
         default: break;
         }
