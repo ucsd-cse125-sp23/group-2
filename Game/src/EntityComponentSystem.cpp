@@ -314,10 +314,7 @@ void EntityComponentSystem::sysTurret()
             }
             else 
             {
-                changeState(e, towerStates::Idle);
-               dealDamage(e, closestEnemy, (GameData::turrets[e].damage));
-               //std::cout << "Test Tower Fired at Enemy: " << closestEnemy - ENEMY_START << "\n";
-
+               changeState(e, towerStates::Idle);
             }
         }
     }
