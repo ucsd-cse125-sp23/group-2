@@ -367,6 +367,27 @@ void EntityComponentSystem::sysDetectCollisions()
     }
 }
 
+Entity EntityComponentSystem::findClosestPathCollider(glm::vec3 origin)
+{
+
+
+    //find closest path node
+    float closestDistance = 100;
+    Entity closestPath = INVALID_ENTITY;
+    //loop thru all pathNodes to find the closest one
+    for (Entity p : Paths::pathlist) {
+        float distance = glm::distance(origin, GameData::positions[p]);
+        if (distance < closestDistance)
+        {
+            closestDistance = distance;
+            closestPath = p;
+        }
+    }
+    return closestPath;
+
+
+}
+
 void EntityComponentSystem::resolveCollisions()
 {
     while (!GameData::colevents.empty())

@@ -398,6 +398,18 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
     }
     glm::vec3 dirYNorm = camdir / (camdir.y*-1);
     glm::vec3 targetpos = glm::vec3(campos.x + dirYNorm.x * campos.y, 0, campos.z + dirYNorm.z * campos.y);
+    if(GameData::retplaces[i].reticlePrefab == Prefabs::TowerReticleBarrier){
+        Entity p = ECS::findClosestPathCollider(targetpos);
+        if (p == INVALID_ENTITY) {
+            GameData::retplaces[i].validTarget = false;
+            return;
+        }
+        if (glm::distance(targetpos, GameData::positions[p]) > SNAP_RANGE) {
+            GameData::retplaces[i].validTarget = false;
+            return;
+        }
+        targetpos = GameData::positions[p];
+    }
     if (glm::distance(targetpos, GameData::positions[i]) > range) {
         //printf("Out of range\n");
 

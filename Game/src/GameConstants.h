@@ -37,6 +37,7 @@ const float PLAYER_BASE_HEALTH = 100;
 const float ENEMY_BASE_HEALTH = 100;
 const float HOME_BASE_HEALTH = 100;
 const float RESOURCE_BASE_HEALTH = 100;
+const float BARRIER_BASE_HEALTH = 100;
 
 //Base damage per second dealt by towers
 const float TURRET_BASE_DPS = 200;
@@ -47,8 +48,8 @@ const float TURRET_BASE_FIRE_RATE = 0.25;
 //How often turrets fire (seconds between damages)
 const float TURRET_BASE_RANGE = 10;
 
-//How often turrets fire (seconds between damages)
-const float BARRIER_BASE_HEALTH = 100;
+//Snap range barrier
+const float SNAP_RANGE = 5;
 
 
 //ground enemy base movespeed in units/sec

@@ -294,7 +294,6 @@ namespace EntityComponentSystem
     //Handle&Resolve Collisions
     void resolveCollisions();
 
-
     //All automated turret / tower firing
     void sysTurret();
 
@@ -336,4 +335,7 @@ namespace EntityComponentSystem
 
     //Get all Entitis is range
     std::list<Entity> getTargetsInRange(glm::vec3 & source, float & range, TeamID & hostileTo);
+
+    //Finds closes path collider
+    Entity findClosestPathCollider(glm::vec3 origin);
 };
