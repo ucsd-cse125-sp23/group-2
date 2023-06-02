@@ -341,9 +341,9 @@ void EntityComponentSystem::sysAbduction() {
                 //if entity being homed on is in abduction range, start abducting
                 if (glm::distance(GameData::positions[GameData::homingStructs[e].trackedEntity], GameData::positions[e]) < ABDUCT_RANGE)
                 {
+                    logSound(e, SOUND_ID_ATTACK);
                     //start abducting
                     GameData::abductionStructs[e].abductionTimeLeft -= 1.0f / TICK_RATE;
-                    logSound(e, SOUND_ID_ATTACK);
                     if (GameData::abductionStructs[e].abductionTimeLeft <= 0) {
                         printf("Abduction sucessful!\n");
                         GameData::abductionStructs[e].captive = GameData::homingStructs[e].trackedEntity;

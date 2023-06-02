@@ -102,15 +102,17 @@ const float TOWER_PLACEMENT_RANGE = 15;
 #define MODEL_ID_CUBE 0
 #define MODEL_ID_ROVER 1
 #define MODEL_ID_MOB 2
-#define MODEL_ID_MOB_FLYING 3
-#define MODEL_ID_TOWER 4
-#define MODEL_ID_RAILGUN 5
-#define MODEL_ID_TESLA 6
-#define MODEL_ID_RESOURCE 7
-#define MODEL_ID_PROJECTILE 8
-#define MODEL_ID_BASE 9
+#define MODEL_ID_MOB_TANK 3
+#define MODEL_ID_MOB_FLYING 4
+#define MODEL_ID_MOB_TRACTOR 5
+#define MODEL_ID_TOWER 6
+#define MODEL_ID_RAILGUN 7
+#define MODEL_ID_TESLA 8
+#define MODEL_ID_RESOURCE 9
+#define MODEL_ID_PROJECTILE 10
+#define MODEL_ID_BASE 11
 
-#define NUM_MODELS 10
+#define NUM_MODELS 12
 
 //animation states
 #define ANIM_IDLE 0

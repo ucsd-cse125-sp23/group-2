@@ -26,9 +26,15 @@ AudioManager::AudioManager() {
     AudioManager::loadSound("../assets/sounds/Magic_Spells_CastLong_Electricity11.wav", MODEL_ID_TESLA, SOUND_ID_ATTACK);
     AudioManager::loadSound("../assets/sounds/MINE Placing 01.wav", MODEL_ID_ROVER, SOUND_ID_BUILD);
     AudioManager::loadSound("../assets/sounds/Screeching Monster 2-1.wav", MODEL_ID_MOB, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/Screeching Monster 2-1.wav", MODEL_ID_MOB_TANK, SOUND_ID_DEATH); //TODO: CHANGE
     AudioManager::loadSound("../assets/sounds/Bluezone_BC0263_creature_crab_organic_texture_carapace_crack_squishy_003.wav", MODEL_ID_MOB, SOUND_ID_DAMAGE);
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0263_creature_crab_organic_texture_carapace_crack_squishy_003.wav", MODEL_ID_MOB_TANK, SOUND_ID_DAMAGE); //TODO: CHANGE
     AudioManager::loadSound("../assets/sounds/IMPACT METAL Scratchy Short Punch_03.wav", MODEL_ID_MOB_FLYING, SOUND_ID_DAMAGE);
+    AudioManager::loadSound("../assets/sounds/IMPACT METAL Scratchy Short Punch_03.wav", MODEL_ID_MOB_TRACTOR, SOUND_ID_DAMAGE); //Maybe change?
     AudioManager::loadSound("../assets/sounds/Vehicle5_BlastOff1.wav", MODEL_ID_MOB_FLYING, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/Vehicle5_BlastOff1.wav", MODEL_ID_MOB_TRACTOR, SOUND_ID_DEATH); //Maybe change?
+    AudioManager::loadSound("../assets/sounds/Big Blast 4.wav", MODEL_ID_MOB_FLYING, SOUND_ID_ATTACK); //Maybe change
+    AudioManager::loadSound("../assets/sounds/4B8NZTJ-tractor-beam.wav", MODEL_ID_MOB_TRACTOR, SOUND_ID_ATTACK);
     AudioManager::loadSound("../assets/sounds/Robotic Lifeforms 2 - Impacts Source - Metal Tool Drawer Punch 03.wav", MODEL_ID_ROVER, SOUND_ID_LAND);
     AudioManager::loadSound("../assets/sounds/PM_FSSF2_EXOSKELETON_11_SERVO_MOVEMENT_ROTATION.wav", MODEL_ID_ROVER, SOUND_ID_JUMP);
 

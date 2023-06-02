@@ -267,7 +267,7 @@ std::list<Entity> createEnemyFlyingTractor() {
         return createdEntities;
     }
     //distinguishing factors
-    GameData::models[e].modelID = MODEL_ID_MOB_FLYING;
+    GameData::models[e].modelID = MODEL_ID_MOB_TRACTOR;
     GameData::abductionStructs[e].abductionTimeLeft = ABDUCT_TIMER;
     GameData::abductionStructs[e].captive = INVALID_ENTITY;
     GameData::rigidbodies[e].fixed = true;
