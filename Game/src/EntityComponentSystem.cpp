@@ -30,6 +30,7 @@ namespace GameData
   std::array<ResourceContainer, MAX_ENTITIES> resources;
   std::array<Points, MAX_ENTITIES> pointvalues;
   AllPlayerData playerdata;
+  std::array<AOEAttackModule, MAX_ENTITIES> AOEattackmodules;
 }
 
 //Call all systems each update
@@ -273,6 +274,10 @@ void EntityComponentSystem::sysTurret()
             //Find closest enemy to shoot
             Entity closestEnemy = e; //initialized to turret ID in case of no valid target found
             float closestDistance = GameData::turrets[e].range + 1; //Set closest found distance to out of range
+
+            //std::list<Entity> inRange = getTargetsInRange(GameData::positions[e], GameData::turrets[e].range, GameData::hostilities[e].hostileTo);
+
+
             //Loop Thru enemies and find one in range
             for (Entity i = 0; i < MAX_ENTITIES; i++)
             {
@@ -456,6 +461,7 @@ void EntityComponentSystem::sysAttacks()
         if (!GameData::activity[e]) { continue; }
         GameData::pattackmodules[e].cooldown -= 1.0f / TICK_RATE;
         GameData::hattackmodules[e].cooldown -= 1.0f / TICK_RATE;
+        GameData::AOEattackmodules[e].cooldown -= 1.0f / TICK_RATE;
 
         if ((GameData::tags[e] & ComponentTags::AttackerProjectile) == ComponentTags::AttackerProjectile) {
             //printf("Attacker %u is attacking, checking cooldown\n", e);
@@ -500,6 +506,7 @@ void EntityComponentSystem::sysAttacks()
                 GameData::slogpos++;
             }
         }
+
         if ((GameData::tags[e] & ComponentTags::AttackerHitscan) == ComponentTags::AttackerHitscan) {
             if (GameData::hattackmodules[e].cooldown <= 0) {
                 GameData::hattackmodules[e].cooldown = GameData::hattackmodules[e].fireRate;
@@ -509,7 +516,26 @@ void EntityComponentSystem::sysAttacks()
                 GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_ATTACK;
                 GameData::slogpos++;
             }
-            
+        }
+
+        if ((GameData::tags[e] & ComponentTags::AttackerAOE) == ComponentTags::AttackerAOE) {
+            if (GameData::AOEattackmodules[e].cooldown <= 0) {
+                
+                std::list<Entity> targets = getTargetsInRange(GameData::AOEattackmodules[e].source, GameData::AOEattackmodules[e].range, GameData::hostilities[e].hostileTo);
+                //printf("Attempting to fire\n");
+
+                if (!targets.empty()) {
+                    GameData::AOEattackmodules[e].cooldown = GameData::AOEattackmodules[e].fireRate; 
+                    printf("Non empty targets\n");
+                    // Add attack sound to sound log
+                    GameData::soundLogs[GameData::slogpos].source = e;
+                    GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_ATTACK;
+                    GameData::slogpos++;
+                    for (Entity t : targets) {
+                        dealDamage(e, t, (GameData::AOEattackmodules[e].damage));
+                    }
+                }
+            }
         }
     }
 }
@@ -653,6 +679,8 @@ Entity EntityComponentSystem::createEntity(int begin, int end)
             GameData::activity[i] = true;
             GameData::states[i] = 0;
             GameData::tags[i] = 0;
+            GameData::hostilities[i].team = 0;
+            GameData::hostilities[i].hostileTo = 0;
             return i;
         }
     }
@@ -881,4 +909,25 @@ void EntityComponentSystem::changeState(Entity e, State post)
     GameData::tags[e] ^= GameData::states[e];
     GameData::states[e] = post;
     GameData::tags[e] |= post;
+}
+
+std::list<Entity> EntityComponentSystem::getTargetsInRange(glm::vec3 & source, float & range, TeamID & hostileTo)
+{
+    int dist = range / Collision::side + 1;
+    std::list<Entity> output;
+    int xpos = (int)((source.x + WORLD_X / 2) / Collision::side);
+    int zpos = (int)((source.z + WORLD_Z / 2) / Collision::side);
+
+    for (int j = glm::max(zpos - dist, 0); j <= glm::min(zpos + dist, (int)Collision::gridz - dist); ++j) {
+        for (int i = glm::max(xpos - dist, 0); i <= glm::min(xpos + dist, (int)Collision::gridx - dist); ++i) {
+            for (Entity e : Collision::cgrid[i][j]) {
+                if (GameData::activity[e] && !(ComponentTags::Dead & GameData::tags[e])) {
+                    if (hostileTo & GameData::hostilities[e].team) {
+                        output.push_back(e);
+                    }
+                }
+            }
+        }
+    }
+    return output;
 }
