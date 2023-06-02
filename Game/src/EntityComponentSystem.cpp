@@ -723,7 +723,7 @@ Entity EntityComponentSystem::createEntity(int begin, int end)
     return INVALID_ENTITY;
 }
 
-glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, float tminog, float tmaxog)
+glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, float tminog, float tmaxog, Entity * out)
 {
     float tfirst = 1024;
     glm::vec3 dirNorm = glm::normalize(dir);
@@ -756,6 +756,9 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
                 if (tmin < tfirst) {
                     //printf("Firing at entity %d\n", e);
                     tfirst = tmin;
+                    if (out) {
+                        *out = e;
+                    }
                 }
             }
         }

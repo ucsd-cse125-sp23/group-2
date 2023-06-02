@@ -319,7 +319,7 @@ namespace EntityComponentSystem
     Entity createEntity(int begin = 0, int end = MAX_ENTITIES);
 
     //Find the position of inte rsection with first rigid body (uses Peter Shirley's method at http://psgraphics.blogspot.com/2016/02/new-simple-ray-box-test-from-andrew.html)
-    glm::vec3 computeRaycast(glm::vec3& pos, glm::vec3& dir, float tmin, float tmax);
+    glm::vec3 computeRaycast(glm::vec3& pos, glm::vec3& dir, float tmin, float tmax, Entity * out = 0);
 
     //Deals damage (And will eventuall call death functions)
     void dealDamage(Entity source, Entity target, float damage);
