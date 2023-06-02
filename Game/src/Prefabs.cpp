@@ -419,7 +419,32 @@ std::list<Entity> createTowerTesla() {
 }
 std::list<Entity> createTowerBarrier()
 {
-    return std::list<Entity>();
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::models[e].modelID = MODEL_ID_BARRIER;
+    GameData::models[e].asciiRep = 'T';
+    GameData::hostilities[e].team = Teams::Barrier;
+    GameData::hostilities[e].hostileTo = 0;
+    GameData::colliders[e].AABB = glm::vec3(1, 1, 1);
+    GameData::rigidbodies[e].fixed = true;
+    GameData::rigidbodies[e].grounded = false;
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Hostility +
+        ComponentTags::RigidBody +
+        ComponentTags::Collidable +
+        ComponentTags::Turret;
+    GameData::models[e].renderCollider = true;
+    GameData::colliders[e].colteam = CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = 0;
+
+    return createdEntities;
 }
 ;
 

@@ -97,11 +97,12 @@ const float TOWER_PLACEMENT_RANGE = 15;
 #define MODEL_ID_TOWER 4
 #define MODEL_ID_RAILGUN 5
 #define MODEL_ID_TESLA 6
-#define MODEL_ID_RESOURCE 7
-#define MODEL_ID_PROJECTILE 8
-#define MODEL_ID_BASE 9
+#define MODEL_ID_BARRIER 7
+#define MODEL_ID_RESOURCE 8
+#define MODEL_ID_PROJECTILE 9
+#define MODEL_ID_BASE 10
 
-#define NUM_MODELS 10
+#define NUM_MODELS 11
 
 //animation states
 #define ANIM_IDLE 0
