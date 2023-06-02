@@ -69,6 +69,37 @@ std::list<Entity> createProjectileSpread5() {
     }
     return createdEntities;
 };
+std::list<Entity> createProjectilePierce() {
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::positions[e] = glm::vec3(0, 0, -4);
+    GameData::velocities[e].velocity = glm::vec3(0, 0, -5) * PROJ_MVSPD;
+    GameData::colliders[e].AABB = glm::vec3(1, 1, 1);
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
+    GameData::models[e].asciiRep = 'J';
+    GameData::coldmg[e].damage = 50.0f;
+    GameData::lifespans[e] = 5;
+    GameData::spawnrates[e] = PROJ_SPAWN_RATE * 4;
+    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::hostilities[e].team = Teams::Projectile;
+    GameData::coldmg[e].cooldown = 0;
+    GameData::coldmg[e].damageRate = 0;
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::LifeSpan;
+    return createdEntities;
+};
 std::list<Entity> createProjectileChaos() {
     std::list<Entity> createdEntities;
     Entity e = createEntity();
@@ -325,7 +356,7 @@ std::list<Entity> createTowerRailgun() {
     GameData::turrets[e].range = TURRET_BASE_RANGE*10;
     GameData::turrets[e].attackState = towerStates::AttackingProjectile;
     GameData::pattackmodules[e].cooldown = 0;
-    GameData::pattackmodules[e].attack = Prefabs::ProjectileBasic;
+    GameData::pattackmodules[e].attack = Prefabs::ProjectilePierce;
     GameData::models[e].modelID = MODEL_ID_RAILGUN;
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;

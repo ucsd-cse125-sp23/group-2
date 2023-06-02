@@ -21,6 +21,7 @@ std::list<Entity> createProjectileBasic();
 std::list<Entity> createProjectileSpread5();
 std::list<Entity> createProjectileChaos();
 std::list<Entity> createProjectileRandom();
+std::list<Entity> createProjectilePierce();
 std::list<Entity> createEnemyGroundBasic();
 std::list<Entity> createTowerReticleBasic();
 std::list<Entity> createTowerReticleRailgun();
@@ -47,6 +48,7 @@ namespace Prefabs {
 		ProjectileSpread5,
 		ProjectileChaos,
 		ProjectileRandom,
+		ProjectilePierce,
 
 
 		PROJECTILE_MARKER,//Put Projectiles Above this marker
@@ -87,6 +89,7 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createProjectileSpread5,
 	&createProjectileChaos,
 	&createProjectileRandom,
+	&createProjectilePierce,
 	&createEnemyGroundBasic,
 	&createEnemyGroundTank,
 	&createEnemyFlyingBasic,
