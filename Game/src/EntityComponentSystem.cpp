@@ -517,9 +517,7 @@ void EntityComponentSystem::sysAttacks()
                 GameData::hattackmodules[e].cooldown = GameData::hattackmodules[e].fireRate;
                 dealDamage(e, GameData::hattackmodules[e].target, (GameData::hattackmodules[e].damage));
                 // Add attack sound to sound log
-                GameData::soundLogs[GameData::slogpos].source = e;
-                GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_ATTACK;
-                GameData::slogpos++;
+                logSound(e, SOUND_ID_ATTACK);
             }
         }
 
@@ -533,9 +531,7 @@ void EntityComponentSystem::sysAttacks()
                     GameData::AOEattackmodules[e].cooldown = GameData::AOEattackmodules[e].fireRate; 
                     printf("Non empty targets\n");
                     // Add attack sound to sound log
-                    GameData::soundLogs[GameData::slogpos].source = e;
-                    GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_ATTACK;
-                    GameData::slogpos++;
+                    logSound(e, SOUND_ID_ATTACK);
                     for (Entity t : targets) {
                         dealDamage(e, t, (GameData::AOEattackmodules[e].damage));
                     }
