@@ -219,11 +219,14 @@ namespace ComponentTags
     constexpr Tag Dead = 0x1 << 18;
     constexpr Tag ResourceContainer = 0x1 << 19;
     constexpr Tag WorthPoints = 0x1 << 20;
+    constexpr Tag Stalker = 0x1 << 21;
+    constexpr Tag Hunter = 0x1 << 22;
 }
 
 namespace enemyState {
     constexpr State Pathing = ComponentTags::PathData;
     constexpr State Homing = ComponentTags::HomingData;
+    constexpr State ShootingProjectile = ComponentTags::AttackerProjectile | ComponentTags::HomingData;
 };
 
 namespace towerStates {
@@ -312,7 +315,7 @@ namespace EntityComponentSystem
     //tracking entities
     void sysHoming();
 
-    void sysStateMachine();
+    void sysEnemyAI();
 
     //Helper functions
     Entity createEntity(int begin = 0, int end = MAX_ENTITIES);

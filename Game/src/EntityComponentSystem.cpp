@@ -36,8 +36,8 @@ namespace GameData
 //Call all systems each update
 void EntityComponentSystem::update()
 {
-    sysStateMachine();
     GameData::clogpos = 0;
+    sysEnemyAI();
     sysDeathStatus();
     sysAttacks();
     sysPathing();
@@ -80,47 +80,80 @@ namespace Collision {
     }
 }
 
-void EntityComponentSystem::sysStateMachine()
+void EntityComponentSystem::sysEnemyAI()
 {
     for (Entity e = 0; e < MAX_ENTITIES; e++)
     {
-        switch (GameData::states[e])
+        //Continue to next entity if this one is not active
+        if (!GameData::activity[e]) { continue; }
+
+        //check if this entity has the stalker AI tag
+        if ((GameData::tags[e] & ComponentTags::Stalker) == ComponentTags::Stalker)
         {
-
-
-        case enemyState::Pathing:
-            //check if players nearby
-            for (int p = 0; p < NUM_PLAYERS; p++)
+            switch (GameData::states[e])
             {
-                if (glm::distance(GameData::positions[p], GameData::positions[e]) <= AGRO_RANGE)
+            case enemyState::Pathing:
+                //check if players nearby
+                for (int p = 0; p < NUM_PLAYERS; p++)
                 {
-                    changeState(e, enemyState::Homing);
-                    GameData::homingStructs[e].trackedEntity = p;
+                    if (glm::distance(GameData::positions[p], GameData::positions[e]) <= AGRO_RANGE)
+                    {
+                        changeState(e, enemyState::Homing);
+                        GameData::homingStructs[e].trackedEntity = p;
+                    }
                 }
-            }
-            break;
-
-
-        case enemyState::Homing:
-            Entity t = GameData::homingStructs[e].trackedEntity;
-            //If tracked entity is a player
-            if (t < NUM_PLAYERS)
-            {
+                break;
+            case enemyState::Homing:
+                //If hostile to tracked entity
+                if (!(GameData::hostilities[e].hostileTo & GameData::hostilities[GameData::homingStructs[e].trackedEntity].team)) { continue; }
                 //check for DEAGRO
-                if (glm::distance(GameData::positions[e], GameData::positions[t]) >= DEAGRO_RANGE)
+                if (glm::distance(GameData::positions[e], GameData::positions[GameData::homingStructs[e].trackedEntity]) >= DEAGRO_RANGE)
                 {
                     changeState(e, enemyState::Pathing);
                     rePath(e);
                 }
+                break;
+            default:
+                printf("Entity %u is a stalker with invalid state!\n", e);
+                changeState(e, enemyState::Pathing);
+                rePath(e);
             }
-            //If tracked entity is a tower
-            //USE HOSTILITIES INSTEAD OF CHECKING IF IT HAS A TURRET
-            if ((GameData::tags[t] & ComponentTags::Turret) == ComponentTags::Turret)
+        }
+        else if ((GameData::tags[e] & ComponentTags::Hunter) == ComponentTags::Hunter)
+        {
+
+            //Find closest enemy to shoot
+            Entity closestEnemy = e; //initialized to turret ID in case of no valid target found
+            float closestDistance = ATTACK_RANGE + 1; //Set closest found distance to out of range
+
+            //Loop Thru enemies and find one in range
+            for (Entity i = 0; i < MAX_ENTITIES; i++)
             {
-                //check for finding another target OR repathing
-                // --- if Turret state is disabled...
+                //Check if enemy is active
+                if (!GameData::activity[i]) { continue; }
+                //Check if hostileto
+                if (!(GameData::hostilities[e].hostileTo & GameData::hostilities[i].team)) { continue; }
+                //Check if enemy is in range
+                float enemyDistance = glm::distance(GameData::positions[e], GameData::positions[i]);
+                //check if this enemy is the new closest entity
+                if (enemyDistance < closestDistance)
+                {
+                    closestEnemy = i;
+                    closestDistance = enemyDistance;
+                }
             }
-            break;
+            //If a valid target was found, fire at them
+            if (closestEnemy != e)
+            {
+                GameData::hattackmodules[e].target = closestEnemy;
+                GameData::pattackmodules[e].targetPos = GameData::positions[closestEnemy] + GameData::velocities[closestEnemy].velocity;
+                changeState(e, enemyState::ShootingProjectile);
+            }
+            else
+            {
+                changeState(e, enemyState::Pathing);
+                rePath(e);
+            }
         }
     }
 }

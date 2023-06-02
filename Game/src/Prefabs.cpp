@@ -210,7 +210,8 @@ std::list<Entity> createEnemyGroundBasic() {
         ComponentTags::CollisionDmg +
         ComponentTags::Hostility +
         ComponentTags::WorthPoints +
-        ComponentTags::ResourceContainer;
+        ComponentTags::ResourceContainer + 
+        ComponentTags::Stalker;
 
     return createdEntities;
 };
@@ -237,8 +238,23 @@ std::list<Entity> createEnemyFlyingBasic() {
         return createdEntities;
     }
     //distinguishing factors
+    GameData::pattackmodules[e].cooldown = 0;
+    GameData::pattackmodules[e].attack = Prefabs::ProjectileBasic;
     GameData::velocities[e].flying = true;
     GameData::models[e].modelID = MODEL_ID_MOB_FLYING;
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::PathData +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::WorthPoints +
+        ComponentTags::ResourceContainer +
+        ComponentTags::Hunter;
 
     return createdEntities;
 };

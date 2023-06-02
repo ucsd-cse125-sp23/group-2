@@ -65,6 +65,9 @@ const float AGRO_RANGE = 10;
 //how far players must be for enemies to lose interest in them
 const float DEAGRO_RANGE = 20;
 
+//how close players must be for enemies to shoot at them
+const float ATTACK_RANGE = 20;
+
 //gravitational acceleration in units per second squared
 const float GRAVITY_SEC = -120;
 
