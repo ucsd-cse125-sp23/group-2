@@ -307,6 +307,10 @@ void EntityComponentSystem::sysTurret()
                 GameData::hattackmodules[e].target = closestEnemy;
                 GameData::pattackmodules[e].targetPos = GameData::positions[closestEnemy] + GameData::velocities[closestEnemy].velocity;
                 changeState(e, GameData::turrets[e].attackState);
+
+                //Set model orientation
+                glm::vec3 projDir = glm::normalize(glm::vec3(GameData::models[e].dirNorm.x, 0, GameData::models[e].dirNorm.z));
+                GameData::models[e].modelOrientation = -glm::degrees(glm::acos(projDir.x));
             }
             else 
             {
