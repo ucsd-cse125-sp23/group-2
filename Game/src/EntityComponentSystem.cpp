@@ -640,6 +640,13 @@ void EntityComponentSystem::sysBuild()
                             for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
                                 GameData::playerdata.resources[i] -= buildcosts[GameData::retplaces[e].buildingPrefab][i];
                             }
+                            //Transform colider
+                            if (GameData::retplaces[e].targetOrientation != 0) {
+                                GameData::models[b].modelOrientation = GameData::retplaces[e].targetOrientation;
+                                float temp = GameData::colliders[b].AABB.x;
+                                GameData::colliders[b].AABB.x = GameData::colliders[b].AABB.z;
+                                GameData::colliders[b].AABB.z = temp;
+                            }
                             // Add sound to sound log
                             GameData::soundLogs[GameData::slogpos].source = e;
                             GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_BUILD;
@@ -685,6 +692,9 @@ void EntityComponentSystem::sysBuild()
                 GameData::positions[r] = transform * glm::vec4(GameData::positions[r], 1);
                 GameData::velocities[r].velocity = transform * glm::vec4(GameData::velocities[r].velocity, 0);
                 GameData::tags[r] ^= ComponentTags::Velocity;
+                if (GameData::retplaces[e].targetOrientation != 0) {
+                    GameData::models[r].modelOrientation = GameData::retplaces[e].targetOrientation;
+                }
                 //Set creator
                 GameData::tags[r] |= ComponentTags::Created;
                 GameData::creators[r] = e;

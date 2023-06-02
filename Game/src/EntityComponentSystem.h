@@ -163,6 +163,7 @@ struct ReticlePlacement {
     Entity reticle = INVALID_ENTITY;
     bool validTarget;
     glm::vec3 targetPos;
+    float targetOrientation;
 };
 
 struct CombatLog {

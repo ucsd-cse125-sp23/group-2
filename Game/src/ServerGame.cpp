@@ -398,6 +398,7 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
     }
     glm::vec3 dirYNorm = camdir / (camdir.y*-1);
     glm::vec3 targetpos = glm::vec3(campos.x + dirYNorm.x * campos.y, 0, campos.z + dirYNorm.z * campos.y);
+    float angle = 0;
     if(GameData::retplaces[i].reticlePrefab == Prefabs::TowerReticleBarrier){
         Entity p = ECS::findClosestPathCollider(targetpos);
         if (p == INVALID_ENTITY) {
@@ -409,6 +410,7 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
             return;
         }
         targetpos = GameData::positions[p];
+        angle = GameData::models[p].modelOrientation;
     }
     if (glm::distance(targetpos, GameData::positions[i]) > range) {
         //printf("Out of range\n");
@@ -418,6 +420,7 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
     }
     GameData::retplaces[i].targetPos = targetpos;
     GameData::retplaces[i].validTarget = true;
+    GameData::retplaces[i].targetOrientation = angle;
     //printf("Valid Target\n");
 }
 

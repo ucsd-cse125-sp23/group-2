@@ -678,6 +678,7 @@ std::list<Entity> createPathColliders()
             GameData::models[e].modelID = MODEL_ID_NO_MODEL;
             GameData::models[e].asciiRep = 'P';
             GameData::models[e].renderCollider = true;
+            GameData::models[e].modelOrientation = glm::degrees(glm::acos(glm::normalize(pathvec).x));
             GameData::colliders[e].colteam = CollisionLayer::UIObj;
             GameData::colliders[e].colwith = 0;
 
