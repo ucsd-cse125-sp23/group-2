@@ -23,6 +23,12 @@ const float PLAYER_JPSPD_PERSEC = 30;
 //Projectile Speed
 const float PROJ_MVSPD_PERSEC = 64;
 
+//How often projectiles spawn (seconds between spawns)
+const float PROJ_SPAWN_RATE = 0.25;
+
+//How often projectiles damage on collision (seconds between damages)
+const float PROJ_DAMAGE_RATE = 0.25;
+
 //Ground Height
 const float GROUND_HEIGHT = -1.0;
 
@@ -35,6 +41,12 @@ const float RESOURCE_BASE_HEALTH = 100;
 //Base damage per second dealt by towers
 const float TURRET_BASE_DPS = 200;
 
+//How often turrets fire (seconds between damages)
+const float TURRET_BASE_FIRE_RATE = 0.25;
+
+//How often turrets fire (seconds between damages)
+const float TURRET_BASE_RANGE = 10;
+
 //ground enemy base movespeed in units/sec
 const float ENEMY_GND_MVSPD_PERSEC = 5;
 
@@ -43,6 +55,9 @@ const float ENEMY_SPAWNDELAY_SEC = 0;
 
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;
+
+//How often enemies damage on collision (seconds between damages)
+const float ENEMY_BASE_DAMAGE_RATE = 0.25;
 
 //how close players must be to gain the attention of enemies
 const float AGRO_RANGE = 10;
@@ -80,11 +95,13 @@ const float TOWER_PLACEMENT_RANGE = 15;
 #define MODEL_ID_MOB 2
 #define MODEL_ID_MOB_FLYING 3
 #define MODEL_ID_TOWER 4
-#define MODEL_ID_RESOURCE 5
-#define MODEL_ID_PROJECTILE 6
-#define MODEL_ID_BASE 7
+#define MODEL_ID_RAILGUN 5
+#define MODEL_ID_TESLA 6
+#define MODEL_ID_RESOURCE 7
+#define MODEL_ID_PROJECTILE 8
+#define MODEL_ID_BASE 9
 
-#define NUM_MODELS 8
+#define NUM_MODELS 10
 
 //animation states
 #define ANIM_IDLE 0

@@ -42,7 +42,7 @@ public:
 private:
     struct PlayerState {
         static constexpr State Default = 0;
-        static constexpr State Attack = ComponentTags::Attacker;
+        static constexpr State Attack = ComponentTags::AttackerProjectile;
         static constexpr State Build = ComponentTags::Builder;
     };
 

@@ -12,6 +12,8 @@ void GameWorld::init() {
 	models[MODEL_ID_MOB] = new ObjectModel("../assets/martian/martian.obj");
 	models[MODEL_ID_MOB_FLYING] = new ObjectModel("../assets/ufo/ufo_v2.obj");
 	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/tower.obj");
+	models[MODEL_ID_RAILGUN] = new ObjectModel("../assets/railgun/tower_railgun.obj");
+	models[MODEL_ID_TESLA] = new ObjectModel("../assets/tesla/tower_tesla.obj");
 	models[MODEL_ID_BASE] = new ObjectModel("../assets/cube/cube.obj");
 	//replace once models are done
 	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/tree/tree.obj");
@@ -22,6 +24,9 @@ void GameWorld::init() {
 	shaders[MODEL_ID_MOB] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_MOB_FLYING] = new Shader("../shaders/ufo_shader.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_TOWER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_RAILGUN] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_TESLA] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+
 	shaders[MODEL_ID_BASE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	//replace once models are done
 	shaders[MODEL_ID_RESOURCE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");

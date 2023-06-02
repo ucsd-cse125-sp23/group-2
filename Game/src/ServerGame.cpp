@@ -187,6 +187,11 @@ void ServerGame::update()
 
 }
 
+const Prefab playerWeaponArray[3] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectileChaos };
+const Prefab playerReticleArray[3] = { Prefabs::TowerReticleBasic, Prefabs::TowerReticleRailgun, Prefabs::TowerReticleTesla };
+const Prefab playerBuildingArray[3] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerTesla };
+
+
 void ServerGame::handleInputs()
 {
 
@@ -216,15 +221,25 @@ void ServerGame::handleInputs()
                 GameData::models[i].modelOrientation = -camAngle + glm::degrees(glm::acos(moveDirection.y));
                 GameData::velocities[i].velocity += PLAYER_MVSPD * moveDirection;
             }
+
             if (in.shoot) {
                 target = in.shoot;
             }
 
             if (in.build) {
                 changeState(i, PlayerState::Build);
+                if (GameData::retplaces[i].reticlePrefab != playerReticleArray[in.selected]) {
+                    if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
+                        ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
+                    }
+                }
+                GameData::retplaces[i].buildingPrefab = playerBuildingArray[in.selected];
+                GameData::retplaces[i].reticlePrefab = playerReticleArray[in.selected];
             }
             else {
                 changeState(i, PlayerState::Default); //May be slow
+                GameData::pattackmodules[i].attack = playerWeaponArray[in.selected];
+
                 if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
                     ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
                     GameData::retplaces[i].reticle = INVALID_ENTITY;
