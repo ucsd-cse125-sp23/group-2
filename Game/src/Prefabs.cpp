@@ -288,7 +288,7 @@ std::list<Entity> createTowerBasic() {
         return createdEntities;
     }
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::turrets[e].range = 500;
+    GameData::turrets[e].range = TURRET_BASE_RANGE;
     GameData::turrets[e].attackState = towerStates::AttackingHitscan;
     GameData::hattackmodules[e].damage = TURRET_BASE_DMG;
     GameData::hattackmodules[e].cooldown = 0;
@@ -322,7 +322,7 @@ std::list<Entity> createTowerRailgun() {
         return createdEntities;
     }
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::turrets[e].range = 500;
+    GameData::turrets[e].range = TURRET_BASE_RANGE*10;
     GameData::turrets[e].attackState = towerStates::AttackingProjectile;
     GameData::pattackmodules[e].cooldown = 0;
     GameData::pattackmodules[e].attack = Prefabs::ProjectileBasic;
@@ -358,17 +358,23 @@ std::list<Entity> createTowerTesla() {
     GameData::models[e].modelID = MODEL_ID_TESLA;
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
-    GameData::hostilities[e].hostileTo = Teams::Martians;
+    GameData::hostilities[e].hostileTo = Teams::Martians+Teams::Environment;
     GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
+    GameData::AOEattackmodules[e].cooldown = 0;
+    GameData::AOEattackmodules[e].fireRate = TURRET_BASE_FIRE_RATE * 2;
+    GameData::AOEattackmodules[e].damage = TURRET_BASE_DMG;
+    GameData::AOEattackmodules[e].range = TURRET_BASE_RANGE;
+    GameData::AOEattackmodules[e].source = GameData::positions[e];
+
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Hostility +
         ComponentTags::RigidBody +
         ComponentTags::Collidable +
-        ComponentTags::Turret;
+        ComponentTags::AttackerAOE;
     GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = 0;

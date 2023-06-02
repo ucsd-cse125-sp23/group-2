@@ -148,6 +148,14 @@ struct HitscanAttackModule {
     float fireRate;
 };
 
+struct AOEAttackModule {
+    glm::vec3 source;
+    float range;
+    float damage; //The damage that the dealt per aoe blast
+    float cooldown; //Cooldown between AOEs
+    float fireRate;
+};
+
 struct ReticlePlacement {
     bool place;
     Prefab reticlePrefab;
@@ -203,13 +211,14 @@ namespace ComponentTags
     constexpr Tag Hostility = 0x1 << 10;
     constexpr Tag AttackerProjectile = 0x1 << 11;
     constexpr Tag AttackerHitscan = 0x1 << 12;
-    constexpr Tag LifeSpan = 0x1 << 13;
-    constexpr Tag Created = 0x1 << 14;
-    constexpr Tag Builder = 0x1 << 15;
-    constexpr Tag HomingData = 0x1 << 16;
-    constexpr Tag Dead = 0x1 << 17;
-    constexpr Tag ResourceContainer = 0x1 << 18;
-    constexpr Tag WorthPoints = 0x1 << 19;
+    constexpr Tag AttackerAOE = 0x1 << 13;
+    constexpr Tag LifeSpan = 0x1 << 14;
+    constexpr Tag Created = 0x1 << 15;
+    constexpr Tag Builder = 0x1 << 16;
+    constexpr Tag HomingData = 0x1 << 17;
+    constexpr Tag Dead = 0x1 << 18;
+    constexpr Tag ResourceContainer = 0x1 << 19;
+    constexpr Tag WorthPoints = 0x1 << 20;
 }
 
 namespace enemyState {
@@ -242,6 +251,7 @@ namespace GameData
     extern std::array<Hostility, MAX_ENTITIES> hostilities;
     extern std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
     extern std::array<HitscanAttackModule, MAX_ENTITIES> hattackmodules;
+    extern std::array<AOEAttackModule, MAX_ENTITIES> AOEattackmodules;
     extern std::array<LifeSpan, MAX_ENTITIES> lifespans;
     extern std::array<Creator, MAX_ENTITIES> creators;
     extern std::array<SpawnRate, MAX_ENTITIES> spawnrates;
@@ -322,4 +332,7 @@ namespace EntityComponentSystem
     void rePath(Entity e);
 
     void changeState(Entity e, State post);
+
+    //Get all Entitis is range
+    std::list<Entity> getTargetsInRange(glm::vec3 & source, float & range, TeamID & hostileTo);
 };
