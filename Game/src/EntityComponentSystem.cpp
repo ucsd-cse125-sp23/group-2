@@ -360,6 +360,7 @@ void EntityComponentSystem::sysAbduction() {
                 glm::vec3 direction = (GameData::positions[e] - glm::vec3(0.0f, GameData::colliders[e].AABB.y, 0.0f) - GameData::positions[c]);
                 GameData::velocities[c].velocity = glm::normalize(direction) * GameData::velocities[c].moveSpeed * 0.01f + GameData::velocities[e].velocity;
                 GameData::pattackmodules[c].cooldown = 1.0f;
+                GameData::rigidbodies[e].grounded = false;
             }
 
         }
