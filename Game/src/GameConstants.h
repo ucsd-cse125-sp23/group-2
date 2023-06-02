@@ -47,6 +47,10 @@ const float TURRET_BASE_FIRE_RATE = 0.25;
 //How often turrets fire (seconds between damages)
 const float TURRET_BASE_RANGE = 10;
 
+//How often turrets fire (seconds between damages)
+const float BARRIER_BASE_HEALTH = 100;
+
+
 //ground enemy base movespeed in units/sec
 const float ENEMY_GND_MVSPD_PERSEC = 5;
 

@@ -313,7 +313,30 @@ std::list<Entity> createTowerReticleTesla() {
 
 std::list<Entity> createTowerReticleBarrier()
 {
-    return std::list<Entity>();
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::models[e].modelID = MODEL_ID_BARRIER;
+    GameData::models[e].asciiRep = 'T';
+    GameData::hostilities[e].team = Teams::Towers;
+    GameData::hostilities[e].hostileTo = Teams::Martians;
+    GameData::colliders[e].AABB = glm::vec3(1.2, 1, 1.2);
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Hostility +
+        ComponentTags::Collidable +
+        ComponentTags::DiesOnCollision +
+        ComponentTags::BarrierReticle;
+    GameData::models[e].renderCollider = true;
+    GameData::colliders[e].colteam = CollisionLayer::UIObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+
+    return createdEntities;
 }
 
 std::list<Entity> createTowerBasic() {
@@ -428,18 +451,19 @@ std::list<Entity> createTowerBarrier()
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::models[e].modelID = MODEL_ID_BARRIER;
     GameData::models[e].asciiRep = 'T';
-    GameData::hostilities[e].team = Teams::Barrier;
+    GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = 0;
     GameData::colliders[e].AABB = glm::vec3(1, 1, 1);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
+    GameData::healths[e].curHealth = GameData::healths[e].maxHealth = BARRIER_BASE_HEALTH;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Hostility +
         ComponentTags::RigidBody +
         ComponentTags::Collidable +
-        ComponentTags::Turret;
+        ComponentTags::Health;
     GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = 0;

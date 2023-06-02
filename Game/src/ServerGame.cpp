@@ -189,8 +189,8 @@ void ServerGame::update()
 
 const int NUM_PLAYER_ATTACK = 3;
 const Prefab playerWeaponArray[NUM_PLAYER_ATTACK] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectileChaos };
-const Prefab playerReticleArray[NUM_TOWER_PREFAB] = { Prefabs::TowerReticleBasic, Prefabs::TowerReticleRailgun, Prefabs::TowerReticleTesla };
-const Prefab playerBuildingArray[NUM_TOWER_PREFAB] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerTesla };
+const Prefab playerReticleArray[NUM_TOWER_PREFAB] = { Prefabs::TowerReticleBasic, Prefabs::TowerReticleRailgun, Prefabs::TowerReticleTesla, Prefabs::TowerReticleBarrier };
+const Prefab playerBuildingArray[NUM_TOWER_PREFAB] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerTesla, Prefabs::TowerBarrier };
 
 
 void ServerGame::handleInputs()
