@@ -311,6 +311,11 @@ std::list<Entity> createTowerReticleTesla() {
     return createdEntities;
 }
 
+std::list<Entity> createTowerReticleBarrier()
+{
+    return std::list<Entity>();
+}
+
 std::list<Entity> createTowerBasic() {
     std::list<Entity> createdEntities;
     Entity e = createEntity();
@@ -411,7 +416,12 @@ std::list<Entity> createTowerTesla() {
     GameData::colliders[e].colwith = 0;
 
     return createdEntities;
-};
+}
+std::list<Entity> createTowerBarrier()
+{
+    return std::list<Entity>();
+}
+;
 
 
 std::list<Entity> createHome() {

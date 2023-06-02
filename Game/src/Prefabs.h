@@ -26,9 +26,11 @@ std::list<Entity> createEnemyGroundBasic();
 std::list<Entity> createTowerReticleBasic();
 std::list<Entity> createTowerReticleRailgun();
 std::list<Entity> createTowerReticleTesla();
+std::list<Entity> createTowerReticleBarrier();
 std::list<Entity> createTowerBasic();
 std::list<Entity> createTowerRailgun();
 std::list<Entity> createTowerTesla();
+std::list<Entity> createTowerBarrier();
 std::list<Entity> createEnemyGroundTank();
 std::list<Entity> createEnemyFlyingBasic();
 std::list<Entity> createHome();
@@ -42,6 +44,7 @@ namespace Prefabs {
 		TowerBasic,
 		TowerRailgun,
 		TowerTesla,
+		TowerBarrier,
 
 		TOWER_MARKER,//Put Towers Above this marker
 		ProjectileBasic = TOWER_MARKER,
@@ -64,6 +67,8 @@ namespace Prefabs {
 		TowerReticleBasic = RESOURCE_MARKER,
 		TowerReticleRailgun,
 		TowerReticleTesla,
+		TowerReticleBarrier,
+
 		PathColliders,
 		UI_MARKER,
 		Home = UI_MARKER,
@@ -85,6 +90,7 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createTowerBasic,
 	&createTowerRailgun,
 	&createTowerTesla,
+	&createTowerBarrier,
 	&createProjectileBasic,
 	&createProjectileSpread5,
 	&createProjectileChaos,
@@ -98,6 +104,7 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createTowerReticleBasic,
 	&createTowerReticleRailgun,
 	&createTowerReticleTesla,
+	&createTowerReticleBarrier,
 	&createPathColliders,
 	&createHome,
 	&createPlayers
