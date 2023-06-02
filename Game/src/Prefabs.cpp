@@ -270,7 +270,6 @@ std::list<Entity> createEnemyFlyingTractor() {
     GameData::models[e].modelID = MODEL_ID_MOB_TRACTOR;
     GameData::abductionStructs[e].abductionTimeLeft = ABDUCT_TIMER;
     GameData::abductionStructs[e].captive = INVALID_ENTITY;
-    GameData::rigidbodies[e].fixed = true;
     GameData::homingStructs[e].trackedEntity = 0;
     GameData::states[e] = enemyState::Homing;
     GameData::coldmg[e].damage = 0.0f;

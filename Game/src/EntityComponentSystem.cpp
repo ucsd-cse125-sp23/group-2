@@ -108,8 +108,8 @@ void EntityComponentSystem::sysEnemyAI()
             case enemyState::Homing:
                 //If hostile to tracked entity
                 if (!(GameData::hostilities[e].hostileTo & GameData::hostilities[GameData::homingStructs[e].trackedEntity].team)) { continue; }
-                //check for DEAGRO
-                if (glm::distance(GameData::positions[e], GameData::positions[GameData::homingStructs[e].trackedEntity]) >= DEAGRO_RANGE)
+                //check for DEAGRO or death
+                if (glm::distance(GameData::positions[e], GameData::positions[GameData::homingStructs[e].trackedEntity]) >= DEAGRO_RANGE || (GameData::tags[GameData::homingStructs[e].trackedEntity] & ComponentTags::Dead) == ComponentTags::Dead)
                 {
                     changeState(e, enemyState::Pathing);
                     rePath(e);
@@ -162,10 +162,12 @@ void EntityComponentSystem::sysEnemyAI()
             switch (GameData::states[e])
             {
             case enemyState::Homing:
-                if (GameData::abductionStructs[e].captive != INVALID_ENTITY) {
+                if (GameData::abductionStructs[e].captive != INVALID_ENTITY)
+                {
                     printf("Now pathing\n");
                     changeState(e, enemyState::Pathing);
                     rePath(e);
+                    GameData::rigidbodies[e].fixed = true; //BAD BAD CODE, but stops the weird movement
                 }
 
                 //find nearest player
@@ -177,6 +179,10 @@ void EntityComponentSystem::sysEnemyAI()
                     }
                 }
             case enemyState::Pathing:
+                if (GameData::abductionStructs[e].captive == INVALID_ENTITY)
+                {
+                    changeState(e, enemyState::Homing);
+                }
                 break;
             default:
                 printf("Entity %u is a trapper with invalid state!\n", e);
@@ -311,18 +317,22 @@ void EntityComponentSystem::sysHoming()
         //check if this entity has a homing component
         if ((GameData::tags[e] & ComponentTags::HomingData) == ComponentTags::HomingData)
         {
-            //Update entity velocity vector to move towards tracked entity
-            glm::vec3 trackedPos = GameData::positions[GameData::homingStructs[e].trackedEntity];
-            glm::vec3 direction = trackedPos - GameData::positions[e];
-            //Modify height of direction vector before normalization if applicable
-            if (GameData::velocities[e].flying)
+            Entity target = GameData::homingStructs[e].trackedEntity;
+            if (target != INVALID_ENTITY)
             {
-                direction = glm::vec3(direction.x, direction.y + FLYING_HEIGHT, direction.z);
+                //Update entity velocity vector to move towards tracked entity
+                glm::vec3 trackedPos = GameData::positions[target];
+                glm::vec3 direction = trackedPos - GameData::positions[e];
+                //Modify height of direction vector before normalization if applicable
+                if (GameData::velocities[e].flying)
+                {
+                    direction = glm::vec3(direction.x, direction.y + FLYING_HEIGHT, direction.z);
+                }
+                else {
+                    direction.y = 0;
+                }
+                GameData::velocities[e].velocity = glm::normalize(direction) * GameData::velocities[e].moveSpeed;
             }
-            else {
-                direction.y = 0;
-            }
-            GameData::velocities[e].velocity = glm::normalize(direction) * GameData::velocities[e].moveSpeed;
         }
     }
 }
@@ -332,20 +342,24 @@ void EntityComponentSystem::sysAbduction() {
     {
         //Continue to next entity if this one is not active
         if (!GameData::activity[e]) { continue; }
+
         //check if this entity has a abductor component
         if ((GameData::tags[e] & ComponentTags::Abductor) == ComponentTags::Abductor)
         {
+            Entity c = GameData::abductionStructs[e].captive; //Entity being held captive
+            Entity t = GameData::homingStructs[e].trackedEntity; //Entity being homed on
             //check if there already is a captive
-            if (GameData::abductionStructs[e].captive == INVALID_ENTITY)
+            if (c == INVALID_ENTITY)
             {
-                //if entity being homed on is in abduction range, start abducting
-                if (glm::distance(GameData::positions[GameData::homingStructs[e].trackedEntity], GameData::positions[e]) < ABDUCT_RANGE)
+                //if entity being homed on is in abduction range, and can be abducted
+                if (glm::distance(GameData::positions[t], GameData::positions[e]) < ABDUCT_RANGE && !(GameData::tags[t] & (ComponentTags::Abducted | ComponentTags::Dead)))
                 {
                     logSound(e, SOUND_ID_ATTACK);
                     //start abducting
                     GameData::abductionStructs[e].abductionTimeLeft -= 1.0f / TICK_RATE;
                     if (GameData::abductionStructs[e].abductionTimeLeft <= 0) {
                         GameData::abductionStructs[e].captive = GameData::homingStructs[e].trackedEntity;
+                        GameData::tags[GameData::homingStructs[e].trackedEntity] |= ComponentTags::Abducted;
                     }
                 }
                 else
@@ -355,11 +369,18 @@ void EntityComponentSystem::sysAbduction() {
             }
             else
             {
-                Entity c = GameData::abductionStructs[e].captive;
-                glm::vec3 direction = (GameData::positions[e] - glm::vec3(0.0f, GameData::colliders[e].AABB.y, 0.0f) - GameData::positions[c]);
-                GameData::velocities[c].velocity = glm::normalize(direction) * GameData::velocities[c].moveSpeed * 0.01f + GameData::velocities[e].velocity;
-                GameData::pattackmodules[c].cooldown = 1.0f;
-                GameData::rigidbodies[e].grounded = false;
+                //If either entity is dead, destroy abductor captive relationship
+                if ((GameData::tags[c] & ComponentTags::Dead) == ComponentTags::Dead || (GameData::tags[e] & ComponentTags::Dead) == ComponentTags::Dead) {
+                    GameData::abductionStructs[e].captive = INVALID_ENTITY;
+                    GameData::tags[c] ^= ComponentTags::Abducted;
+                }
+                else {
+                    glm::vec3 direction = (GameData::positions[e] - glm::vec3(0.0f, GameData::colliders[e].AABB.y, 0.0f) - GameData::positions[c]);
+                    GameData::velocities[c].velocity = glm::normalize(direction) * GameData::velocities[c].moveSpeed * 0.01f + GameData::velocities[e].velocity;
+                    //Stop captive from shooting when fully abducted
+                    GameData::pattackmodules[c].cooldown = 1.0f;
+                    GameData::rigidbodies[e].grounded = false;
+                }
             }
 
         }

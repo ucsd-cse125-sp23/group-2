@@ -222,13 +222,14 @@ namespace ComponentTags
     constexpr Tag Created = 0x1 << 15;
     constexpr Tag Builder = 0x1 << 16;
     constexpr Tag Abductor = 0x1 << 17;
-    constexpr Tag HomingData = 0x1 << 18;
-    constexpr Tag Dead = 0x1 << 19;
-    constexpr Tag ResourceContainer = 0x1 << 20;
-    constexpr Tag WorthPoints = 0x1 << 21;
-    constexpr Tag Stalker = 0x1 << 22;
-    constexpr Tag Hunter = 0x1 << 23;
-    constexpr Tag Trapper = 0x1 << 24;
+    constexpr Tag Abducted = 0x1 << 18;
+    constexpr Tag HomingData = 0x1 << 19;
+    constexpr Tag Dead = 0x1 << 20;
+    constexpr Tag ResourceContainer = 0x1 << 21;
+    constexpr Tag WorthPoints = 0x1 << 22;
+    constexpr Tag Stalker = 0x1 << 23;
+    constexpr Tag Hunter = 0x1 << 24;
+    constexpr Tag Trapper = 0x1 << 25;
 }
 
 namespace enemyState {
