@@ -223,10 +223,27 @@ std::list<Entity> createEnemyGroundTank() {
         return createdEntities;
     }
     //distinguishing factors
+    GameData::models[e].modelID = MODEL_ID_MOB_TANK;
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD / 2;
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 4;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG * 2;
-    GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE * 2;
+    GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE;
+
+    return createdEntities;
+};
+std::list<Entity> createEnemyGroundMini() {
+    std::list<Entity> createdEntities;
+    Entity e = createEnemyGroundBasic().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    //distinguishing factors
+    GameData::models[e].modelID = MODEL_ID_MOB_MINI;
+    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD * 4;
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH/2;
+    GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG/2;
+    GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE;
 
     return createdEntities;
 };
@@ -633,8 +650,7 @@ namespace WaveData {
 
     int waveTick; //countdown timer for waves
 
-    int enemyTypes[NUM_ENEMY_TYPES] = { Prefabs::EnemyGroundBasic, Prefabs::EnemyGroundTank, Prefabs::EnemyFlyingBasic, Prefabs::EnemyFlyingTractor};
-    //int enemyTypes[NUM_ENEMY_TYPES] = { Prefabs::EnemyFlyingTractor, Prefabs::EnemyFlyingTractor, Prefabs::EnemyFlyingTractor, Prefabs::EnemyFlyingTractor };
+    int enemyTypes[NUM_ENEMY_TYPES] = { Prefabs::EnemyGroundBasic, Prefabs::EnemyGroundTank, Prefabs::EnemyFlyingBasic, Prefabs::EnemyFlyingTractor, Prefabs::EnemyGroundMini};
 
     std::queue<enemy> waves[WAVE_COUNT];
 }

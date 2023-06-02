@@ -10,6 +10,8 @@ void GameWorld::init() {
 	models[MODEL_ID_CUBE] = new ObjectModel("../assets/cube/cube.obj");
 	models[MODEL_ID_ROVER] = new ObjectModel("../assets/rover/rover.obj");
 	models[MODEL_ID_MOB] = new ObjectModel("../assets/martian/martian.obj");
+	models[MODEL_ID_MOB_TANK] = new ObjectModel("../assets/martian/martian.obj");
+	models[MODEL_ID_MOB_MINI] = new ObjectModel("../assets/martian/martian.obj"); //TODO: make smol
 	models[MODEL_ID_MOB_FLYING] = new ObjectModel("../assets/ufo/ufo_v2.obj");
 	models[MODEL_ID_MOB_TRACTOR] = new ObjectModel("../assets/ufo/ufo_v2.obj");
 	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/tower.obj");
@@ -23,6 +25,8 @@ void GameWorld::init() {
 	shaders[MODEL_ID_CUBE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_ROVER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_MOB] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_MOB_TANK] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag"); //dunno if we want new shading for the tank and minis
+	shaders[MODEL_ID_MOB_MINI] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_MOB_FLYING] = new Shader("../shaders/ufo_shader.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_MOB_TRACTOR] = new Shader("../shaders/ufo_shader.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_TOWER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");

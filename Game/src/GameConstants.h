@@ -88,7 +88,7 @@ const float RESPAWN_TIMER = 5.0;
 
 #define WAVE_COUNT 5
 
-#define NUM_ENEMY_TYPES 4
+#define NUM_ENEMY_TYPES 5
 
 #define NUM_RESOURCE_TYPES 3
 
@@ -103,16 +103,17 @@ const float TOWER_PLACEMENT_RANGE = 15;
 #define MODEL_ID_ROVER 1
 #define MODEL_ID_MOB 2
 #define MODEL_ID_MOB_TANK 3
-#define MODEL_ID_MOB_FLYING 4
-#define MODEL_ID_MOB_TRACTOR 5
-#define MODEL_ID_TOWER 6
-#define MODEL_ID_RAILGUN 7
-#define MODEL_ID_TESLA 8
-#define MODEL_ID_RESOURCE 9
-#define MODEL_ID_PROJECTILE 10
-#define MODEL_ID_BASE 11
+#define MODEL_ID_MOB_MINI 4
+#define MODEL_ID_MOB_FLYING 5
+#define MODEL_ID_MOB_TRACTOR 6
+#define MODEL_ID_TOWER 7
+#define MODEL_ID_RAILGUN 8
+#define MODEL_ID_TESLA 9
+#define MODEL_ID_RESOURCE 10
+#define MODEL_ID_PROJECTILE 11
+#define MODEL_ID_BASE 12
 
-#define NUM_MODELS 12
+#define NUM_MODELS 13
 
 //animation states
 #define ANIM_IDLE 0
