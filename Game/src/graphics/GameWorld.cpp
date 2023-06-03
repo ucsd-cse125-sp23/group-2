@@ -54,16 +54,13 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 
 	for (int i = 0; i < incomingData.activity.size(); i++) {
 
-		if (incomingData.activity[i]) {
-			if (incomingData.models[i].renderCollider) {
+		if (incomingData.activity[i] && incomingData.models[i].renderCollider) {
 				AABBs[i]->setActive(true);
 				AABBs[i]->update(incomingData.positions[i], incomingData.colliders[i].AABB);
-			}
-			else {
-				AABBs[i]->setActive(false);
-			}
 		}
-
+		else {
+			AABBs[i]->setActive(false);
+		}
 		//if active and should render health bar
 		if (incomingData.activity[i]
 			&& i != id
