@@ -934,7 +934,7 @@ std::list<Entity> createBossHead()
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::velocities[e].flying = false;
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e].AABB = glm::vec3(1.5, 1.7, 1.5);
+    GameData::colliders[e].AABB = glm::vec3(4, 2, 2);
     GameData::models[e].modelID = MODEL_ID_BEAR_HEAD;
     GameData::models[e].asciiRep = 'E';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
@@ -982,7 +982,7 @@ std::list<Entity> createBossLArm()
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::velocities[e].flying = false;
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e].AABB = glm::vec3(1.5, 1.7, 1.5);
+    GameData::colliders[e].AABB = glm::vec3(2, 3.5, 2.5);
     GameData::models[e].modelID = MODEL_ID_BEAR_LARM;
     GameData::models[e].asciiRep = 'E';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
@@ -1033,7 +1033,7 @@ std::list<Entity> createBossBody()
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::velocities[e].flying = false;
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e].AABB = glm::vec3(1.5, 1.7, 1.5);
+    GameData::colliders[e].AABB = glm::vec3(5, 7, 3);
     GameData::models[e].modelID = MODEL_ID_BEAR_BODY;
     GameData::models[e].asciiRep = 'E';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH*20;
@@ -1078,7 +1078,7 @@ std::list<Entity> createBossRArm()
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::velocities[e].flying = false;
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e].AABB = glm::vec3(1.5, 1.7, 1.5);
+    GameData::colliders[e].AABB = glm::vec3(2, 2, 3);
     GameData::models[e].modelID = MODEL_ID_BEAR_RARM;
     GameData::models[e].asciiRep = 'E';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
@@ -1126,7 +1126,7 @@ std::list<Entity> createBossRLeg()
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::velocities[e].flying = false;
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e].AABB = glm::vec3(1.5, 1.7, 1.5);
+    GameData::colliders[e].AABB = glm::vec3(2, 2.5, 3);
     GameData::models[e].modelID = MODEL_ID_BEAR_RLEG;
     GameData::models[e].asciiRep = 'E';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
@@ -1172,7 +1172,7 @@ std::list<Entity> createBossLLeg()
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::velocities[e].flying = false;
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e].AABB = glm::vec3(1.5, 1.7, 1.5);
+    GameData::colliders[e].AABB = glm::vec3(2, 2, 4);
     GameData::models[e].modelID = MODEL_ID_BEAR_LLEG;
     GameData::models[e].asciiRep = 'E';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
@@ -1220,28 +1220,28 @@ std::list<Entity> createBoss()
     
 
     GameData::homingStructs[head].trackedEntity = body;
-    GameData::homingStructs[head].offset = glm::vec3(0, GameData::colliders[body].AABB.y * 2 + GameData::colliders[head].AABB.y, 0);
+    GameData::homingStructs[head].offset = glm::vec3(0, GameData::colliders[body].AABB.y + GameData::colliders[head].AABB.y, 0);
   
     
     GameData::homingStructs[lleg].trackedEntity = body;
-    GameData::homingStructs[lleg].offset = glm::vec3(GameData::colliders[body].AABB.x, GameData::colliders[body].AABB.y * 0.5, 0);
+    GameData::homingStructs[lleg].offset = glm::vec3(-GameData::colliders[body].AABB.x - GameData::colliders[lleg].AABB.x + 2, -GameData::colliders[body].AABB.y + GameData::colliders[lleg].AABB.y, 2);
     GameData::homingStructs[rleg].trackedEntity = body;
-    GameData::homingStructs[rleg].offset = glm::vec3(-GameData::colliders[body].AABB.x, GameData::colliders[body].AABB.y * 0.5, 0);
+    GameData::homingStructs[rleg].offset = glm::vec3(GameData::colliders[body].AABB.x + GameData::colliders[rleg].AABB.x - 2, -GameData::colliders[body].AABB.y + GameData::colliders[rleg].AABB.y, 2);
     GameData::homingStructs[larm].trackedEntity = body;
-    GameData::homingStructs[larm].offset = glm::vec3(GameData::colliders[body].AABB.x, GameData::colliders[body].AABB.y * 1.5, 0);
+    GameData::homingStructs[larm].offset = glm::vec3(-GameData::colliders[body].AABB.x - GameData::colliders[larm].AABB.x + 2, GameData::colliders[body].AABB.y - GameData::colliders[larm].AABB.y - 2, 3);
     GameData::homingStructs[rarm].trackedEntity = body;
-    GameData::homingStructs[rarm].offset = glm::vec3(-GameData::colliders[body].AABB.x, GameData::colliders[body].AABB.y * 1.5, 0);
+    GameData::homingStructs[rarm].offset = glm::vec3(GameData::colliders[body].AABB.x + GameData::colliders[rarm].AABB.x - 2, GameData::colliders[body].AABB.y - GameData::colliders[rarm].AABB.y - 3, 2);
     
     GameData::positions[body] = glm::vec3(0, 0, 20);
-    GameData::positions[head] = glm::vec3(10, 0, 20);
+    GameData::positions[head] = glm::vec3(0, 0, 10);
     
     GameData::positions[lleg] = glm::vec3(-10, 0, 20);
 
-    GameData::positions[rleg] = glm::vec3(20, 0, 20);
+    GameData::positions[rleg] = glm::vec3(10, 0, 20);
 
     GameData::positions[larm] = glm::vec3(-20, 0, 20);
 
-    GameData::positions[rarm] = glm::vec3(30, 0, 20);
+    GameData::positions[rarm] = glm::vec3(20, 0, 20);
     
 
 
