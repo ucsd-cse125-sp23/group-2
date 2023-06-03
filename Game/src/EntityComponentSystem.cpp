@@ -935,13 +935,17 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
         source = GameData::creators[source];
     }
     printf("Ent %d dealing %f dmg to %d\n", source, damage, target);
-
-    // Add damage to combat log
-    GameData::combatLogs[GameData::clogpos].source = source;
-    GameData::combatLogs[GameData::clogpos].target = target;
-    GameData::combatLogs[GameData::clogpos].damage = damage;
-    GameData::combatLogs[GameData::clogpos].killed = false;
-    GameData::clogpos++;
+    if (GameData::clogpos < CLOG_MAXSIZE) {
+        // Add damage to combat log
+        GameData::combatLogs[GameData::clogpos].source = source;
+        GameData::combatLogs[GameData::clogpos].target = target;
+        GameData::combatLogs[GameData::clogpos].damage = damage;
+        GameData::combatLogs[GameData::clogpos].killed = false;
+        GameData::clogpos++;
+    } 
+    else {
+        printf("Exceeded combat logsize server side\n");
+    }
     // Add damage sound to sound log
     logSound(target, SOUND_ID_DAMAGE);
     if (GameData::healths[target].curHealth <= 0) {
@@ -969,11 +973,16 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
 
     
     if (source == target) { return; }
-    // Add death to combat log
-    GameData::combatLogs[GameData::clogpos].source = source;
-    GameData::combatLogs[GameData::clogpos].target = target;
-    GameData::combatLogs[GameData::clogpos].killed = true;
-    GameData::clogpos++;
+    if (GameData::clogpos < CLOG_MAXSIZE) {
+        // Add death to combat log
+        GameData::combatLogs[GameData::clogpos].source = source;
+        GameData::combatLogs[GameData::clogpos].target = target;
+        GameData::combatLogs[GameData::clogpos].killed = true;
+        GameData::clogpos++;
+    }
+    else{
+        printf("exceeded combatlog size\n");
+    }
     // Add death sound to sound log
     logSound(target, SOUND_ID_DEATH);
 

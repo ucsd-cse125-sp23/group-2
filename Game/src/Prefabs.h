@@ -123,7 +123,6 @@ namespace Prefabs {
 		EnemyGroundMini,
 		EnemyFlyingBasic,
 		EnemyFlyingTractor,
-		EnemyBoss,
 
 		ENEMY_MARKER,//Put Enemies Above this marker
 		BASIC_WOOD_RESOURCE = ENEMY_MARKER,
@@ -138,6 +137,7 @@ namespace Prefabs {
 		PathColliders,
 		UI_MARKER,
 		Home = UI_MARKER,
+		EnemyBoss,
 		Players,
 		NUM_PREFAB
 
@@ -183,7 +183,6 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
     &createEnemyGroundMini,
 	&createEnemyFlyingBasic,
 	&createEnemyFlyingTractor,
-	&createBoss,
 	&createWoodResourceBasic,
 	&createStoneResourceBasic,
 	&createTowerReticleBasic,
@@ -192,6 +191,7 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createTowerReticleBarrier,
 	&createPathColliders,
 	&createHome,
+		& createBoss,
 	&createPlayers
 };
 
@@ -201,6 +201,7 @@ namespace PlayerSpawns {
 };
 
 namespace Paths {
+	extern constexpr int bossPath = 2;
 	extern constexpr int pathCount = 5;
 	extern const glm::vec3 path[pathCount][PATH_LENGTH];
 	extern std::list<Entity> pathlist;

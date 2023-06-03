@@ -36,23 +36,23 @@ void ServerGame::initPlayers()
 
 void ServerGame::initWaves()
 {
-    WaveData::currentWave = -1;
+    WaveData::currentWave = WAVE_COUNT-2;
     WaveData::waveTick = ENEMY_SPAWNDELAY_TICKS;
 
     //Temp Nested for loop to populate wave vectors
     //TODO: Manually set up waves
 
-    /*
-    for (int i = 0; i < WAVE_COUNT; i++)
+    
+    for (int i = 0; i < WAVE_COUNT - 1; i++)
     {
         for (int j = 0; j < 15; j++)
         {
-            enemy e = { WaveData::enemyTypes[rand() % NUM_ENEMY_TYPES], rand() % (Paths::pathCount - 1), 1 * TICK_RATE };
+            enemy e = { WaveData::enemyTypes[rand() % NUM_ENEMY_TYPES], rand() % (Paths::pathCount), 1 * TICK_RATE };
             WaveData::waves[i].push(e);
         }
     }
-    */
-    prefabMap[Prefabs::EnemyBoss]();
+    enemy boss = { Prefabs::EnemyBoss, Paths::bossPath, 0 };
+    WaveData::waves[WAVE_COUNT - 1].push(boss);
 }
 
 void ServerGame::initBase()
@@ -64,14 +64,13 @@ void ServerGame::waveSpawner()
 {
     static int spawnCooldown = 0;
 
-    /*
+    
     if (WaveData::waveTick <= 0)
     {
         WaveData::currentWave++;
         if (WaveData::currentWave < WAVE_COUNT)
         {
             WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave];
-            spawnCooldown = WaveData::waves[WaveData::currentWave].front().cooldown;
         }
     }
 
@@ -99,7 +98,7 @@ void ServerGame::waveSpawner()
     }
 
     WaveData::waveTick--;
-    */
+    
 }
 
 //Spawn Initial assortment of resources
