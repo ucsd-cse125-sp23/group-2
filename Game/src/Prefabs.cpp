@@ -10,7 +10,7 @@ std::list<Entity> createProjectileBasic() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::positions[e] = glm::vec3(0, 0, -4);
+    GameData::positions[e] = glm::vec3(0, 0, -2);
     GameData::velocities[e].velocity = glm::vec3(0, 0, -1)*PROJ_MVSPD;
     GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
     GameData::models[e].modelID = MODEL_ID_PROJECTILE;
@@ -43,14 +43,14 @@ std::list<Entity> createProjectileSpread5() {
         if (e == INVALID_ENTITY) {
             return createdEntities;
         }
-        GameData::positions[e] = glm::vec3(2 - i, 0, -4);
+        GameData::positions[e] = glm::vec3(2 - i, 0, -2);
         GameData::velocities[e].velocity = glm::normalize(glm::vec3((2 - i) * 0.1, 0, -0.5)) * (PROJ_MVSPD/2);
         GameData::colliders[e].AABB =  glm::vec3(.25, .25, .25);
         GameData::models[e].modelID = MODEL_ID_PROJECTILE;
         GameData::models[e].asciiRep = 'J';
-        GameData::coldmg[e].damage = 30.0f;
+        GameData::coldmg[e].damage = 20.0f;
         GameData::lifespans[e] = 1;
-        GameData::spawnrates[e] = PROJ_SPAWN_RATE;
+        GameData::spawnrates[e] = PROJ_SPAWN_RATE*2;
         GameData::colliders[e].colteam = CollisionLayer::WorldObj;
         GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
         GameData::hostilities[e].team = Teams::Projectile;
@@ -76,7 +76,7 @@ std::list<Entity> createProjectilePierce() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::positions[e] = glm::vec3(0, 0, -4);
+    GameData::positions[e] = glm::vec3(0, 0, -1);
     GameData::velocities[e].velocity = glm::vec3(0, 0, -5) * PROJ_MVSPD;
     GameData::colliders[e].AABB = glm::vec3(1, 1, 1);
     GameData::models[e].modelID = MODEL_ID_PROJECTILE;
@@ -107,7 +107,7 @@ std::list<Entity> createProjectileSpray() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::positions[e] = glm::vec3(0, 0, -4);
+    GameData::positions[e] = glm::vec3(0, 0, -1);
     GameData::velocities[e].velocity = glm::normalize(glm::vec3(rand() % 64 - 32, rand() % 64 - 32, -256)) * PROJ_MVSPD;
     GameData::colliders[e].AABB = glm::vec3(.25, .25, .25);
     GameData::models[e].modelID = MODEL_ID_PROJECTILE;
