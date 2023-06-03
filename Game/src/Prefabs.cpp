@@ -100,6 +100,52 @@ std::list<Entity> createProjectilePierce() {
         ComponentTags::LifeSpan;
     return createdEntities;
 };
+
+std::list<Entity> createProjectilePierce1() {
+    std::list<Entity> createdEntities;
+    Entity e = createProjectilePierce().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    //distinguishing factors
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
+    GameData::spawnrates[e] /= 1.2;
+
+
+    return createdEntities;
+};
+
+std::list<Entity> createProjectilePierce2() {
+    std::list<Entity> createdEntities;
+    Entity e = createProjectilePierce().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    //distinguishing factors
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
+    GameData::spawnrates[e] /= 1.5;
+
+
+    return createdEntities;
+};
+
+std::list<Entity> createProjectilePierce3() {
+    std::list<Entity> createdEntities;
+    Entity e = createProjectilePierce().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    //distinguishing factors
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
+    GameData::spawnrates[e] /= 2;
+
+
+    return createdEntities;
+};
+
 std::list<Entity> createProjectileSpray() {
     std::list<Entity> createdEntities;
     Entity e = createEntity();
@@ -246,6 +292,7 @@ std::list<Entity> createEnemyGroundBasic() {
 
     return createdEntities;
 };
+
 std::list<Entity> createEnemyGroundTank() {
     std::list<Entity> createdEntities;
     Entity e = createEnemyGroundBasic().front();
@@ -366,6 +413,7 @@ std::list<Entity> createTowerReticleBasic() {
     return createdEntities;
 }
 
+
 std::list<Entity> createTowerReticleRailgun() {
     std::list<Entity> createdEntities;
     Entity e = createTowerReticleBasic().front();
@@ -408,6 +456,7 @@ std::list<Entity> createTowerReticleTesla() {
     return createdEntities;
 }
 
+
 std::list<Entity> createTowerReticleBarrier()
 {
     std::list<Entity> createdEntities;
@@ -436,6 +485,7 @@ std::list<Entity> createTowerReticleBarrier()
     return createdEntities;
 }
 
+
 std::list<Entity> createTowerBasic() {
     std::list<Entity> createdEntities;
     Entity e = createEntity();
@@ -456,8 +506,8 @@ std::list<Entity> createTowerBasic() {
     GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
-    GameData::upgradedata[e].cost = { 0, 0, 0 };
-    GameData::upgradedata[e].upgrade = Prefabs::TowerBarrier;
+    GameData::upgradedata[e].cost = { 20, 20, 0 };
+    GameData::upgradedata[e].upgrade = Prefabs::TowerBasic1;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
@@ -469,6 +519,56 @@ std::list<Entity> createTowerBasic() {
     GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = 0;
+
+    return createdEntities;
+};
+
+std::list<Entity> createTowerBasic1() {
+    std::list<Entity> createdEntities;
+    Entity e = createTowerBasic().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+
+    GameData::models[e].modelID = MODEL_ID_TOWER;
+    GameData::upgradedata[e].cost = { 20, 20, 0 };
+    GameData::upgradedata[e].upgrade = Prefabs::TowerBasic2;
+    GameData::hattackmodules[e].damage *= 1.20;
+
+
+    return createdEntities;
+};
+
+std::list<Entity> createTowerBasic2() {
+    std::list<Entity> createdEntities;
+    Entity e = createTowerBasic().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+
+    GameData::models[e].modelID = MODEL_ID_TOWER;
+    GameData::upgradedata[e].cost = { 100, 100, 0 };
+    GameData::upgradedata[e].upgrade = Prefabs::TowerBasic3;
+    GameData::hattackmodules[e].damage *= 2.00;
+
+
+    return createdEntities;
+};
+
+std::list<Entity> createTowerBasic3() {
+    std::list<Entity> createdEntities;
+    Entity e = createTowerBasic().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+
+    GameData::models[e].modelID = MODEL_ID_TOWER;
+    GameData::tags[e] ^= ComponentTags::Upgradeable;
+    GameData::hattackmodules[e].damage *= 5.00;
+
 
     return createdEntities;
 };
@@ -492,6 +592,8 @@ std::list<Entity> createTowerRailgun() {
     GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
+    GameData::upgradedata[e].cost = { 20, 20, 0 };
+    GameData::upgradedata[e].upgrade = Prefabs::TowerRailgun1;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
@@ -503,6 +605,56 @@ std::list<Entity> createTowerRailgun() {
     GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = 0;
+
+    return createdEntities;
+};
+
+std::list<Entity> createTowerRailgun1() {
+    std::list<Entity> createdEntities;
+    Entity e = createTowerRailgun().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+
+    GameData::models[e].modelID = MODEL_ID_RAILGUN;
+    GameData::upgradedata[e].cost = { 20, 20, 0 };
+    GameData::upgradedata[e].upgrade = Prefabs::TowerRailgun2;
+    GameData::pattackmodules[e].attack = Prefabs::ProjectilePierce1;
+
+
+    return createdEntities;
+};
+
+std::list<Entity> createTowerRailgun2() {
+    std::list<Entity> createdEntities;
+    Entity e = createTowerRailgun().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+
+    GameData::models[e].modelID = MODEL_ID_RAILGUN;
+    GameData::upgradedata[e].cost = { 100, 100, 0 };
+    GameData::upgradedata[e].upgrade = Prefabs::TowerRailgun3;
+    GameData::pattackmodules[e].attack = Prefabs::ProjectilePierce2;
+
+
+    return createdEntities;
+};
+
+std::list<Entity> createTowerRailgun3() {
+    std::list<Entity> createdEntities;
+    Entity e = createTowerRailgun().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+
+    GameData::models[e].modelID = MODEL_ID_RAILGUN;
+    GameData::tags[e] ^= ComponentTags::Upgradeable;
+    GameData::pattackmodules[e].attack = Prefabs::ProjectilePierce3;
+
 
     return createdEntities;
 };
@@ -542,6 +694,58 @@ std::list<Entity> createTowerTesla() {
 
     return createdEntities;
 }
+
+std::list<Entity> createTowerTesla1() {
+    std::list<Entity> createdEntities;
+    Entity e = createTowerTesla().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+
+    GameData::models[e].modelID = MODEL_ID_TESLA;
+    GameData::upgradedata[e].cost = { 20, 20, 0 };
+    GameData::upgradedata[e].upgrade = Prefabs::TowerTesla2;
+    GameData::AOEattackmodules[e].range *= 1.2;
+
+
+    return createdEntities;
+};
+
+std::list<Entity> createTowerTesla2() {
+    std::list<Entity> createdEntities;
+    Entity e = createTowerTesla().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+
+    GameData::models[e].modelID = MODEL_ID_TESLA;
+    GameData::upgradedata[e].cost = { 100, 100, 0 };
+    GameData::upgradedata[e].upgrade = Prefabs::TowerTesla3;
+    GameData::AOEattackmodules[e].range *= 2; 
+
+
+    return createdEntities;
+};
+
+std::list<Entity> createTowerTesla3() {
+    std::list<Entity> createdEntities;
+    Entity e = createTowerTesla().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+
+    GameData::models[e].modelID = MODEL_ID_TESLA;
+    GameData::tags[e] ^= ComponentTags::Upgradeable;
+    GameData::AOEattackmodules[e].range *= 5;
+
+
+    return createdEntities;
+};
+
+
 std::list<Entity> createTowerBarrier()
 {
     std::list<Entity> createdEntities;
@@ -560,7 +764,7 @@ std::list<Entity> createTowerBarrier()
     GameData::rigidbodies[e].grounded = false;
     GameData::healths[e].curHealth = GameData::healths[e].maxHealth = BARRIER_BASE_HEALTH;
     GameData::upgradedata[e].cost = { 0, 0, 0 };
-    GameData::upgradedata[e].upgrade = Prefabs::TowerBasic;
+    GameData::upgradedata[e].upgrade = Prefabs::TowerBarrier1;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
@@ -574,8 +778,58 @@ std::list<Entity> createTowerBarrier()
     GameData::colliders[e].colwith = 0;
 
     return createdEntities;
-}
-;
+};
+
+std::list<Entity> createTowerBarrier1() {
+    std::list<Entity> createdEntities;
+    Entity e = createTowerBarrier().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+
+    GameData::models[e].modelID = MODEL_ID_BARRIER;
+    GameData::upgradedata[e].cost = { 20, 20, 0 };
+    GameData::upgradedata[e].upgrade = Prefabs::TowerBarrier2;
+    GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= 2;
+
+
+    return createdEntities;
+};
+
+std::list<Entity> createTowerBarrier2() {
+    std::list<Entity> createdEntities;
+    Entity e = createTowerBarrier().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+
+    GameData::models[e].modelID = MODEL_ID_BARRIER;
+    GameData::upgradedata[e].cost = { 100, 100, 0 };
+    GameData::upgradedata[e].upgrade = Prefabs::TowerBarrier3;
+    GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= 5;
+
+
+    return createdEntities;
+};
+
+std::list<Entity> createTowerBarrier3() {
+    std::list<Entity> createdEntities;
+    Entity e = createTowerBarrier().front();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+
+    GameData::models[e].modelID = MODEL_ID_BARRIER;
+    GameData::tags[e] ^= ComponentTags::Upgradeable;
+
+    GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= 10;
+
+
+    return createdEntities;
+};
 
 
 std::list<Entity> createHome() {

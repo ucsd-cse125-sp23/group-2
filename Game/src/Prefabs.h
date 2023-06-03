@@ -22,6 +22,10 @@ std::list<Entity> createProjectileSpread5();
 std::list<Entity> createProjectileChaos();
 std::list<Entity> createProjectileRandom();
 std::list<Entity> createProjectilePierce();
+std::list<Entity> createProjectilePierce1();
+std::list<Entity> createProjectilePierce2();
+std::list<Entity> createProjectilePierce3();
+
 std::list<Entity> createProjectileSpray();
 std::list<Entity> createEnemyGroundBasic();
 std::list<Entity> createEnemyGroundTank();
@@ -32,10 +36,34 @@ std::list<Entity> createTowerReticleBasic();
 std::list<Entity> createTowerReticleRailgun();
 std::list<Entity> createTowerReticleTesla();
 std::list<Entity> createTowerReticleBarrier();
+
 std::list<Entity> createTowerBasic();
+std::list<Entity> createTowerBasic1();
+std::list<Entity> createTowerBasic2();
+std::list<Entity> createTowerBasic3();
+
+
+
 std::list<Entity> createTowerRailgun();
+std::list<Entity> createTowerRailgun1();
+std::list<Entity> createTowerRailgun2();
+std::list<Entity> createTowerRailgun3();
+
+
 std::list<Entity> createTowerTesla();
+std::list<Entity> createTowerTesla1();
+std::list<Entity> createTowerTesla2();
+std::list<Entity> createTowerTesla3();
+
+
+
 std::list<Entity> createTowerBarrier();
+std::list<Entity> createTowerBarrier1();
+std::list<Entity> createTowerBarrier2();
+std::list<Entity> createTowerBarrier3();
+
+
+
 std::list<Entity> createEnemyGroundTank();
 std::list<Entity> createEnemyFlyingBasic();
 std::list<Entity> createHome();
@@ -47,9 +75,21 @@ std::list<Entity> createPlayers();
 namespace Prefabs {
 	enum Prefab : uint32_t{
 		TowerBasic,
+		TowerBasic1,
+		TowerBasic2,
+		TowerBasic3,
 		TowerRailgun,
+		TowerRailgun1,
+		TowerRailgun2,
+		TowerRailgun3,
 		TowerTesla,
+		TowerTesla1,
+		TowerTesla2,
+		TowerTesla3,
 		TowerBarrier,
+		TowerBarrier1,
+		TowerBarrier2,
+		TowerBarrier3,
 
 		TOWER_MARKER,//Put Towers Above this marker
 		ProjectileBasic = TOWER_MARKER,
@@ -57,6 +97,10 @@ namespace Prefabs {
 		ProjectileChaos,
 		ProjectileRandom,
 		ProjectilePierce,
+		ProjectilePierce1,
+		ProjectilePierce2,
+		ProjectilePierce3,
+
 		ProjectileSpray,
 
 
@@ -96,14 +140,29 @@ typedef std::list<Entity>(*PrefabFunction)(); // function pointer type
 //Add functions in same order as prefabs above
 const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createTowerBasic,
+	& createTowerBasic1,
+	& createTowerBasic2,
+	& createTowerBasic3,
 	&createTowerRailgun,
+	& createTowerRailgun1,
+	& createTowerRailgun2,
+	& createTowerRailgun3,
 	&createTowerTesla,
+	& createTowerTesla1,
+	& createTowerTesla2,
+	& createTowerTesla3,
 	&createTowerBarrier,
+	& createTowerBarrier1,
+	& createTowerBarrier2,
+	& createTowerBarrier3,
 	&createProjectileBasic,
 	&createProjectileSpread5,
 	&createProjectileChaos,
 	&createProjectileRandom,
 	&createProjectilePierce,
+	& createProjectilePierce1,
+	& createProjectilePierce2,
+	& createProjectilePierce3,
 	&createProjectileSpray,
 	&createEnemyGroundBasic,
 	&createEnemyGroundTank,

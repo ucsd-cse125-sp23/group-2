@@ -791,7 +791,7 @@ void EntityComponentSystem::sysBuild()
                                 GameData::playerdata.resources[i] -= buildcosts[GameData::retplaces[e].buildingPrefab][i];
                             }
                             //Transform colider
-                            if (GameData::retplaces[e].targetOrientation != 0) {
+                            if (GameData::retplaces[e].targetOrientation != 0 || GameData::retplaces[e].targetOrientation != 180) {
                                 GameData::models[b].modelOrientation = GameData::retplaces[e].targetOrientation;
                                 float temp = GameData::colliders[b].AABB.x;
                                 GameData::colliders[b].AABB.x = GameData::colliders[b].AABB.z;
