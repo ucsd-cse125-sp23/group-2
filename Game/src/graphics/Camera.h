@@ -40,6 +40,7 @@ private:
     float Incline;   // Angle of the camera eye position over the XZ plane (degrees)
 
     // Computed data
+    glm::mat4 view;
     glm::mat4 ViewProjectMtx;
 
 public:
@@ -69,6 +70,9 @@ public:
     glm::vec3 getDirectionVector();
     glm::vec3 getUpVector();
     glm::vec3 getCameraPosition() { return position; };
+    glm::mat4 getVM() {
+        return view;
+    }
     void setCamPosition(glm::vec3 pos) { position = pos; };
 
     const glm::mat4 &GetViewProjectMtx() { return ViewProjectMtx; }

@@ -2,6 +2,8 @@
 float GameWorld::prevX, GameWorld::prevY,GameWorld::currX, GameWorld::currY, GameWorld::scrollY = 0;
 
 void GameWorld::init() {
+
+
 	currID = 0;
 	env = new Skybox();
 	env->setSkyShader(new Shader("../shaders/skybox.vert", "../shaders/skybox.frag"));
@@ -17,7 +19,7 @@ void GameWorld::init() {
 	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/tower.obj");
 	models[MODEL_ID_RAILGUN] = new ObjectModel("../assets/railgun/tower_railgun.obj");
 	models[MODEL_ID_TESLA] = new ObjectModel("../assets/tesla/tower_tesla.obj");
-	models[MODEL_ID_BASE] = new ObjectModel("../assets/cube/cube.obj");
+	models[MODEL_ID_BASE] = new ObjectModel("../assets/base/test_base.obj");
 	//replace once models are done
 	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/tree/tree.obj");
 	models[MODEL_ID_RESOURCE_STONE] = new ObjectModel("../assets/stone/crystal_rock.obj");
@@ -45,10 +47,10 @@ void GameWorld::init() {
 	shaders[MODEL_ID_BARRIER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	healthShader = new Shader("../shaders/shader.vert", "../shaders/shader.frag");
 	ObjectModel* healthModel = new ObjectModel("../assets/cube/cube.obj");
-
+	playerHealth = 1.0f;
 	for (int i = 0; i < MAX_ENTITIES; i++) {
 		entities[i] = new RenderEntity(i);
-		AABBs[i] = new Cube();
+		AABBs[i] = new Cube(shaders[MODEL_ID_CUBE], models[MODEL_ID_CUBE]);
 		healths[i] = new HealthBar(healthShader, healthModel);
 	}
 	cam = new Camera();
@@ -57,16 +59,21 @@ void GameWorld::init() {
 void GameWorld::update(ServertoClientData& incomingData, int id) {
 
 	for (int i = 0; i < incomingData.activity.size(); i++) {
-		if (incomingData.activity[i] && incomingData.models[i].renderCollider) {
-			AABBs[i]->setActive(true);
-			AABBs[i]->update(incomingData.positions[i], incomingData.colliders[i].AABB);
-		}
-		else {
-			AABBs[i]->setActive(false);
+
+		if (incomingData.activity[i]) {
+			if (incomingData.models[i].renderCollider) {
+				AABBs[i]->setActive(true);
+				AABBs[i]->update(incomingData.positions[i], incomingData.colliders[i].AABB);
+			}
+			else {
+				AABBs[i]->setActive(false);
+			}
 		}
 
 		//if active and should render health bar
-		if (incomingData.activity[i]) {
+		if (incomingData.activity[i]
+			&& i != id
+			&& incomingData.models[i].modelID != MODEL_ID_PROJECTILE) {
 			healths[i]->setActive(true);
 			healths[i]->update(incomingData.positions[id], incomingData.positions[i], incomingData.healths[i].curHealth, incomingData.healths[i].maxHealth);
 		}
@@ -89,20 +96,23 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 	int dy = glm::clamp(-((int)(currY - prevY)), -maxDelta, maxDelta);
 	prevX = (int)currX;
 	prevY = (int)currY;
+
+	//screen shake
 	bool shakeScreen = false;
+	float currHealth = incomingData.healths[id].curHealth / incomingData.healths[id].maxHealth;
+	if (currHealth != playerHealth) {
+		shakeScreen = true;
+		playerHealth = currHealth;
+	}
 	bool screenShakeOn = false;
 	float startTime = 0;
 	float currTime = glfwGetTime();
 
-	//should be bool from server
 	if (shakeScreen) {
 		screenShakeOn = true;
 		startTime = glfwGetTime();
 	}
-	if (screenShakeOn && currTime < (startTime + 3)) {
-		
-	}
-	else {
+	if (!(screenShakeOn && currTime < (startTime + 3))) {
 		screenShakeOn = false;
 		shakeScreen = false;
 	}
@@ -118,7 +128,7 @@ void GameWorld::draw() {
 	for (RenderEntity* e : entities) {
 
 		if (e->getActive()) {
-			e->draw(viewProjMtx, currTime);
+			e->draw(viewProjMtx, currTime, cam);
 		}
 	}
 	for (HealthBar* h : healths) {

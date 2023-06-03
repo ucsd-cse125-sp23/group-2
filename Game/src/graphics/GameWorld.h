@@ -21,6 +21,7 @@ private:
 
     Camera* cam;
     static float prevX, prevY, currX, currY, scrollY;
+    float playerHealth;
     //static int mouseDX, mouseDY;
 
 public:

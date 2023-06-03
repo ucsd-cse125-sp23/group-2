@@ -29,6 +29,7 @@ struct Material {
     bool useDiffuse;
     glm::vec3 specular;
     bool useSpecular;
+    glm::vec3 emision;
 };
 
 struct Vertex {
@@ -94,6 +95,8 @@ public:
         shader.setBool("material.useDiffuse", material.useDiffuse);
         shader.setBool("material.useSpecular", material.useSpecular);
 
+        shader.setVec3("material.emision", material.emision);
+
         // bind appropriate textures
         unsigned int diffuseNr = 1;
         unsigned int specularNr = 1;
@@ -112,8 +115,8 @@ public:
                 number = std::to_string(diffuseNr++);
             else if (name == "texture_specular")
                 number = std::to_string(specularNr++); // transfer unsigned int to string
-            else if (name == "texture_normal")
-                number = std::to_string(normalNr++); // transfer unsigned int to string
+            else if (name == "texture_normal") 
+                number = std::to_string(normalNr++);// transfer unsigned int to string
             else if (name == "texture_height")
                 number = std::to_string(heightNr++); // transfer unsigned int to string
 

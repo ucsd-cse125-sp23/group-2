@@ -6,7 +6,8 @@ RenderEntity::RenderEntity(int i) {
     id = i;
     orientation = 0;
     model = glm::mat4(1.0f);
-
+    srand(i);
+    offset = rand() % 1000 + 1;
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     stbi_set_flip_vertically_on_load(false);
 
@@ -19,7 +20,7 @@ RenderEntity::~RenderEntity() {
 
 }
 
-void RenderEntity::draw(const glm::mat4& viewProjMtx, float time) {
+void RenderEntity::draw(const glm::mat4& viewProjMtx, float time, Camera * cam) {
     // actiavte the shader program
     shader->use();
 
@@ -27,6 +28,8 @@ void RenderEntity::draw(const glm::mat4& viewProjMtx, float time) {
     shader->setMat4("viewProj", viewProjMtx);
     shader->setMat4("model", model);
     shader->setFloat("time", time);
+    shader->setFloat("rand", id);
+    shader->setVec3("viewPos", cam->getCameraPosition());
 
     ourModel->Draw(*shader);
 

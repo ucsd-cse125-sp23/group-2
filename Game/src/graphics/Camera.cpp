@@ -75,12 +75,12 @@ void Camera::calcCameraPosition(float hDist, float vDist, bool screenShake, floa
 }
 
 void Camera::calcViewProjectMtx() {
-    glm::mat4 vm(1);
-    vm *= glm::rotate(glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f)) *
+    view = glm::mat4(1);
+    view *= glm::rotate(glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f)) *
         glm::rotate(glm::radians(yaw), glm::vec3(0.0f, 1.0f, 0.0f)) *
         glm::translate(-position);
     glm::mat4 project = glm::perspective(glm::radians(FOV), Aspect, NearClip, FarClip);
-    ViewProjectMtx = project * vm;
+    ViewProjectMtx = project * view;
     
 }
 
