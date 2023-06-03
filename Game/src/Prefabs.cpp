@@ -940,9 +940,9 @@ std::list<Entity> createBossHead()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
-    //GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
@@ -979,7 +979,7 @@ std::list<Entity> createBossLArm()
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
+    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD * 1.2;
     GameData::velocities[e].flying = false;
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::colliders[e].AABB = glm::vec3(2, 3.5, 2.5);
@@ -988,9 +988,9 @@ std::list<Entity> createBossLArm()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
-    //GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
@@ -1027,10 +1027,10 @@ std::list<Entity> createBossBody()
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    //GameData::states[e] = enemyState::Pathing;
+    GameData::states[e] = enemyState::Pathing;
     GameData::pathStructs[e].currentNode = 0;
     GameData::pathStructs[e].path = Paths::pathCount-1;
-    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
+    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD * 0.8;
     GameData::velocities[e].flying = false;
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::colliders[e].AABB = glm::vec3(5, 7, 3);
@@ -1039,9 +1039,9 @@ std::list<Entity> createBossBody()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH*20;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
-   // GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
@@ -1054,7 +1054,7 @@ std::list<Entity> createBossBody()
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Velocity +
-    //    ComponentTags::PathData +
+        ComponentTags::PathData +
         ComponentTags::Model +
         ComponentTags::Collidable +
         ComponentTags::RigidBody +
@@ -1075,7 +1075,7 @@ std::list<Entity> createBossRArm()
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
-    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
+    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD * 1.2;
     GameData::velocities[e].flying = false;
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::colliders[e].AABB = glm::vec3(2, 2, 3);
@@ -1084,9 +1084,9 @@ std::list<Entity> createBossRArm()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
-    //GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
@@ -1132,9 +1132,9 @@ std::list<Entity> createBossRLeg()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
-    //GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
@@ -1178,9 +1178,9 @@ std::list<Entity> createBossLLeg()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
-    //GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
@@ -1232,16 +1232,16 @@ std::list<Entity> createBoss()
     GameData::homingStructs[rarm].trackedEntity = body;
     GameData::homingStructs[rarm].offset = glm::vec3(GameData::colliders[body].AABB.x + GameData::colliders[rarm].AABB.x - 2, GameData::colliders[body].AABB.y - GameData::colliders[rarm].AABB.y - 3, 2);
     
-    GameData::positions[body] = glm::vec3(0, 0, 20);
-    GameData::positions[head] = glm::vec3(0, 0, 10);
+    GameData::positions[body] = glm::vec3(0, 0, -60);
+    GameData::positions[head] = glm::vec3(0, 0, -70);
     
-    GameData::positions[lleg] = glm::vec3(-10, 0, 20);
+    GameData::positions[lleg] = glm::vec3(-20, 0, -70);
 
-    GameData::positions[rleg] = glm::vec3(10, 0, 20);
+    GameData::positions[rleg] = glm::vec3(20, 0, -70);
 
-    GameData::positions[larm] = glm::vec3(-20, 0, 20);
+    GameData::positions[larm] = glm::vec3(-40, 0, -70);
 
-    GameData::positions[rarm] = glm::vec3(20, 0, 20);
+    GameData::positions[rarm] = glm::vec3(40, 0, -70);
     
 
 
@@ -1322,7 +1322,7 @@ namespace Paths {
         { glm::vec3(-20,0,-85), glm::vec3(-20,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
         { glm::vec3(20,0,-85), glm::vec3(20,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc},
         { glm::vec3(60,0,-85), glm::vec3(60,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
-        { glm::vec3(0,0,-85), glm::vec3(0,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  }
+        { baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  }
     };
     std::list<Entity> pathlist;
 }
