@@ -6,11 +6,13 @@
 #include "Health.h"
 #include "../GameConstants.h"
 #include "../NetworkData.h"
+#include "ParticleGenerator.h"
 class GameWorld {
 
 private:
     std::array <Shader*, NUM_MODELS> shaders;
     std::array <ObjectModel*, NUM_MODELS> models;
+    ParticleGenerator* particle;
     Shader* healthShader;
     int currID;
     std::array <Cube*, MAX_ENTITIES> AABBs;

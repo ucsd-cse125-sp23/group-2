@@ -9,6 +9,10 @@ void GameWorld::init() {
 	env->setSkyShader(new Shader("../shaders/skybox.vert", "../shaders/skybox.frag"));
 	env->setEnvShader(new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag"));
 
+	Shader* particleShader = new Shader("../shaders/particle.vert", "../shaders/particle.frag");
+	ObjectModel* particleModel = new ObjectModel("../assets/particle/testParticle.obj");
+	particle = new ParticleGenerator(particleShader, particleModel, 500);
+
 	models[MODEL_ID_CUBE] = new ObjectModel("../assets/cube/cube.obj");
 	models[MODEL_ID_ROVER] = new ObjectModel("../assets/rover/rover.obj");
 
@@ -105,6 +109,11 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 			entities[i]->setActive(true);
 			entities[i]->setModel(models[incomingData.models[i].modelID]);
 			entities[i]->setShader(shaders[incomingData.models[i].modelID]);
+			/*
+			if (incomingData.models[i].modelID == MODEL_ID_ROVER) {
+				entities[i]->setParticle(particle);
+			}
+			*/
 			entities[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
 		}
 		else {

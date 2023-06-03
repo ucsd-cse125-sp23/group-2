@@ -21,6 +21,7 @@ set(
     src/graphics/Skybox.cpp
     src/graphics/Cube.cpp
     src/graphics/Health.cpp
+    src/graphics/ParticleGenerator.cpp
     src/Prefabs.cpp
     src/PoissonDisk.cpp
     src/audio/AudioManager.cpp
@@ -48,6 +49,7 @@ set(
     src/graphics/ObjectModel.h
     src/graphics/Mesh.h
     src/graphics/Cube.h
+    src/graphics/ParticleGenerator.h
     src/Prefabs.h
     src/PoissonDisk.h
     src/audio/AudioManager.h

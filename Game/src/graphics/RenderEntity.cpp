@@ -8,6 +8,7 @@ RenderEntity::RenderEntity(int i) {
     model = glm::mat4(1.0f);
     srand(i);
     offset = rand() % 1000 + 1;
+    //particle = NULL;
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     stbi_set_flip_vertically_on_load(false);
 
@@ -32,7 +33,11 @@ void RenderEntity::draw(const glm::mat4& viewProjMtx, float time, Camera * cam) 
     shader->setVec3("viewPos", cam->getCameraPosition());
 
     ourModel->Draw(*shader);
-
+    /*
+    if (particle != NULL) {
+        particle->Draw();
+    }
+    */
     glUseProgram(0);
 
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -42,4 +47,12 @@ void RenderEntity::update(glm::vec3& position, float deg) {
     this->position = position;
     model = glm::rotate(glm::radians(-deg), glm::vec3(0.0f, 1.0f, 0.0f));
     model[3] = glm::vec4(position, 1.0f);
+    /*
+    if (particle != NULL) {
+
+        particle->Update(glfwGetTime(), position, 2, glm::vec3(5.0f));
+
+
+    }
+    */
 }

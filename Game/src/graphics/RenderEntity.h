@@ -5,6 +5,7 @@
 #include "Cube.h"
 #include "Shader.h"
 #include "ObjectModel.h"
+#include "ParticleGenerator.h"
 class RenderEntity {
 private:
     bool active;
@@ -16,6 +17,8 @@ private:
     glm::vec3 color;
     Shader* shader;
     ObjectModel* ourModel;
+
+    //ParticleGenerator* particle;
 
 public:
     RenderEntity(int i);
@@ -29,6 +32,7 @@ public:
 
     void setShader(Shader* s) { shader = s; }
     void setModel(ObjectModel* m) { ourModel = m; }
+    //void setParticle(ParticleGenerator* p) { particle = p; }
 
     glm::vec3 getPosition() { return position; };
 };
