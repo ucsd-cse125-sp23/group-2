@@ -23,6 +23,12 @@ const float PLAYER_JPSPD_PERSEC = 30;
 //Projectile Speed
 const float PROJ_MVSPD_PERSEC = 64;
 
+//How often projectiles spawn (seconds between spawns)
+const float PROJ_SPAWN_RATE = 0.25;
+
+//How often projectiles damage on collision (seconds between damages)
+const float PROJ_DAMAGE_RATE = 0.25;
+
 //Ground Height
 const float GROUND_HEIGHT = -1.0;
 
@@ -31,24 +37,52 @@ const float PLAYER_BASE_HEALTH = 100;
 const float ENEMY_BASE_HEALTH = 100;
 const float HOME_BASE_HEALTH = 100;
 const float RESOURCE_BASE_HEALTH = 100;
+const float BARRIER_BASE_HEALTH = 100;
 
 //Base damage per second dealt by towers
 const float TURRET_BASE_DPS = 200;
+
+//How often turrets fire (seconds between damages)
+const float TURRET_BASE_FIRE_RATE = 0.25;
+
+//How often turrets fire (seconds between damages)
+const float TURRET_BASE_RANGE = 10;
+
+//Snap range barrier
+const float SNAP_RANGE = 5;
+
+//Number of levels for of upgrades
+constexpr size_t NUM_UP_LEVELS = 3;
+
+//Player build cooldown in ticks
+const int ACTION_COOLDOWN = TICK_RATE;
 
 //ground enemy base movespeed in units/sec
 const float ENEMY_GND_MVSPD_PERSEC = 5;
 
 //How many seconds until first wave spawns
-const float ENEMY_SPAWNDELAY_SEC = 15;
+const float ENEMY_SPAWNDELAY_SEC = 0;
 
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;
+
+//How often enemies damage on collision (seconds between damages)
+const float ENEMY_BASE_DAMAGE_RATE = 0.25;
 
 //how close players must be to gain the attention of enemies
 const float AGRO_RANGE = 10;
 
 //how far players must be for enemies to lose interest in them
 const float DEAGRO_RANGE = 20;
+
+//how close players must be for enemies to shoot at them
+const float ATTACK_RANGE = 20;
+
+//how close players must be to start being abducted
+const float ABDUCT_RANGE = 15;
+
+//how long abductions take
+const float ABDUCT_TIMER = 1.0f;
 
 //gravitational acceleration in units per second squared
 const float GRAVITY_SEC = -120;
@@ -64,7 +98,7 @@ const float RESPAWN_TIMER = 5.0;
 
 #define WAVE_COUNT 5
 
-#define NUM_ENEMY_TYPES 3
+#define NUM_ENEMY_TYPES 5
 
 #define NUM_RESOURCE_TYPES 3
 
@@ -78,13 +112,22 @@ const float TOWER_PLACEMENT_RANGE = 15;
 #define MODEL_ID_CUBE 0
 #define MODEL_ID_ROVER 1
 #define MODEL_ID_MOB 2
-#define MODEL_ID_MOB_FLYING 3
-#define MODEL_ID_TOWER 4
-#define MODEL_ID_RESOURCE 5
-#define MODEL_ID_PROJECTILE 6
-#define MODEL_ID_BASE 7
+#define MODEL_ID_MOB_TANK 3
+#define MODEL_ID_MOB_MINI 4
+#define MODEL_ID_MOB_FLYING 5
+#define MODEL_ID_MOB_TRACTOR 6
+#define MODEL_ID_TOWER 7
+#define MODEL_ID_RAILGUN 8
+#define MODEL_ID_TESLA 9
+#define MODEL_ID_RESOURCE 10
+#define MODEL_ID_RESOURCE_STONE 11
+#define MODEL_ID_PROJECTILE 12
 
-#define NUM_MODELS 8
+#define MODEL_ID_BARRIER 13
+
+#define MODEL_ID_BASE 14
+
+#define NUM_MODELS 15
 
 //animation states
 #define ANIM_IDLE 0
@@ -92,8 +135,8 @@ const float TOWER_PLACEMENT_RANGE = 15;
 #define ANIM_TAKING_DAMAGE 2
 #define ANIM_DEATH 3
 
-#define RES_WIDTH 2560
-#define RES_HEIGHT 1440
+#define RES_WIDTH 1920
+#define RES_HEIGHT 1080
 
 //Sound IDs
 #define SOUND_ID_IDLE 0

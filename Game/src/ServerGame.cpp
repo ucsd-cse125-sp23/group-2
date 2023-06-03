@@ -28,6 +28,9 @@ void ServerGame::initializeGame()
 void ServerGame::initPlayers()
 {
     prefabMap[Prefab::Players]();
+    for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+        GameData::playerdata.resources[i] = 1000;
+    }
 
 }
 
@@ -37,6 +40,7 @@ void ServerGame::initWaves()
     WaveData::waveTick = ENEMY_SPAWNDELAY_TICKS;
 
     //Temp Nested for loop to populate wave vectors
+    //TODO: Manually set up waves
     for (int i = 0; i < WAVE_COUNT; i++)
     {
         for (int j = 0; j < 15; j++)
@@ -174,7 +178,7 @@ void ServerGame::update()
     case win:
         break;
     default:
-        printf("Invalid server state!");
+        printf("Invalid server state!\n");
     }
 
 
@@ -187,6 +191,12 @@ void ServerGame::update()
 
 }
 
+const int NUM_PLAYER_ATTACK = 3;
+const Prefab playerWeaponArray[NUM_PLAYER_ATTACK] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectileSpray };
+const Prefab playerReticleArray[NUM_TOWER_PREFAB] = { Prefabs::TowerReticleBasic, Prefabs::TowerReticleRailgun, Prefabs::TowerReticleTesla, Prefabs::TowerReticleBarrier };
+const Prefab playerBuildingArray[NUM_TOWER_PREFAB] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerTesla, Prefabs::TowerBarrier };
+
+
 void ServerGame::handleInputs()
 {
 
@@ -195,9 +205,13 @@ void ServerGame::handleInputs()
 
     for(int i = 0; i < NUM_CLIENTS; i++)
     {
+        //Decrement cooldown
+        GameData::playerdata.actioncooldown[i]--;
         glm::vec3 camDirection;
         glm::vec3 camPosition;
         bool target = false;
+        bool jump = false;
+        Entity choose = INVALID_ENTITY;
         while (!incomingDataLists[i].empty())
         {
             if ((GameData::tags[i] & ComponentTags::Dead) == ComponentTags::Dead) {
@@ -206,48 +220,87 @@ void ServerGame::handleInputs()
                 continue;
             }
             ClienttoServerData in = incomingDataLists[i].front();
-            GameData::velocities[i].velocity = glm::vec3(0,GameData::velocities[i].velocity.y,0);
+            GameData::velocities[i].velocity = glm::vec3(0, GameData::velocities[i].velocity.y, 0);
             camDirection = in.camDirectionVector;
             camPosition = in.camPosition;
-            if ( ((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
+            if (((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
                 float camAngle = in.camAngleAroundPlayer;
                 glm::vec3 moveDirection = glm::normalize(glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f)));
                 GameData::models[i].modelOrientation = -camAngle + glm::degrees(glm::acos(moveDirection.y));
                 GameData::velocities[i].velocity += PLAYER_MVSPD * moveDirection;
             }
+
             if (in.shoot) {
                 target = in.shoot;
             }
 
             if (in.build) {
                 changeState(i, PlayerState::Build);
+                if (in.selected > NUM_TOWER_PREFAB) {
+                    in.selected = NUM_TOWER_PREFAB - 1;
+                }
+                if (GameData::retplaces[i].reticlePrefab != playerReticleArray[in.selected]) {
+                    if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
+                        ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
+                    }
+                }
+                GameData::retplaces[i].buildingPrefab = playerBuildingArray[in.selected];
+                GameData::retplaces[i].reticlePrefab = playerReticleArray[in.selected];
+                choose = INVALID_ENTITY;
             }
-            else {
-                changeState(i, PlayerState::Default); //May be slow
+            else if (in.upgrade) {
+                changeState(i, PlayerState::Upgrading);
+                choose = playerUpgrade(i, camDirection, camPosition, TOWER_PLACEMENT_RANGE);
                 if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
                     ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
                     GameData::retplaces[i].reticle = INVALID_ENTITY;
                 }
             }
+            else {
+                if (in.selected > NUM_PLAYER_ATTACK) {
+                    in.selected = NUM_PLAYER_ATTACK - 1;
+                }
+                changeState(i, PlayerState::Default); //May be slow
+                GameData::pattackmodules[i].attack = playerWeaponArray[in.selected];
 
-            if (in.jump && GameData::rigidbodies[i].grounded) {
-                GameData::velocities[i].velocity.y = PLAYER_JPSPD;
-                // Add jumping sound to sound log
-                GameData::soundLogs[GameData::slogpos].source = i;
-                GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_JUMP;
-                GameData::slogpos++;
+                if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
+                    ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
+                    GameData::retplaces[i].reticle = INVALID_ENTITY;
+                }
+                choose = INVALID_ENTITY;
+
+            }
+
+            if (in.jump){
+                jump = true;
             }
             incomingDataLists[i].pop();
         }
+
+        
+
 
         if (GameData::states[i] == PlayerState::Build) {
             //printf("Calling Player build\n");
             playerBuild(i, camDirection, camPosition, TOWER_PLACEMENT_RANGE);
         }
+        else if (GameData::states[i] == PlayerState::Upgrading) {
+            if (choose != INVALID_ENTITY) {
+                GameData::models[choose].upgradeSelected = true;
+            }
+        }
 
         if (target) {
             if (GameData::states[i] == PlayerState::Build) {
                 GameData::retplaces[i].place = true;
+            }
+            else if (GameData::states[i] == PlayerState::Upgrading) {
+                if (GameData::playerdata.actioncooldown[i] < 0) {
+                    if (choose != INVALID_ENTITY) {
+                        ECS::applyUpgrade(i, choose);
+                        GameData::playerdata.actioncooldown[i] = ACTION_COOLDOWN;
+                    }
+                }
             }
             else {
                 changeState(i, PlayerState::Attack);
@@ -257,6 +310,12 @@ void ServerGame::handleInputs()
         }
         else if(GameData::states[i] == PlayerState::Attack){
             changeState(i, PlayerState::Default);
+        }
+
+        if (jump && GameData::rigidbodies[i].grounded) {
+            GameData::velocities[i].velocity.y = PLAYER_JPSPD;
+            // Add jumping sound to sound log
+            EntityComponentSystem::logSound(i, SOUND_ID_JUMP);
         }
         //in.print(msg);
     }
@@ -376,6 +435,20 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
     }
     glm::vec3 dirYNorm = camdir / (camdir.y*-1);
     glm::vec3 targetpos = glm::vec3(campos.x + dirYNorm.x * campos.y, 0, campos.z + dirYNorm.z * campos.y);
+    float angle = 0;
+    if(GameData::retplaces[i].reticlePrefab == Prefabs::TowerReticleBarrier){
+        Entity p = ECS::findClosestPathCollider(targetpos);
+        if (p == INVALID_ENTITY) {
+            GameData::retplaces[i].validTarget = false;
+            return;
+        }
+        if (glm::distance(targetpos, GameData::positions[p]) > SNAP_RANGE) {
+            GameData::retplaces[i].validTarget = false;
+            return;
+        }
+        targetpos = GameData::positions[p];
+        angle = GameData::models[p].modelOrientation;
+    }
     if (glm::distance(targetpos, GameData::positions[i]) > range) {
         //printf("Out of range\n");
 
@@ -384,6 +457,7 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
     }
     GameData::retplaces[i].targetPos = targetpos;
     GameData::retplaces[i].validTarget = true;
+    GameData::retplaces[i].targetOrientation = angle;
     //printf("Valid Target\n");
 }
 
@@ -396,4 +470,17 @@ void ServerGame::checkStatus() {
         printf("LOSE! :(\n");
         currentStatus = loss;
     }
+}
+
+Entity ServerGame::playerUpgrade(Entity e, glm::vec3& camdir, glm::vec3& campos, float range)
+{
+    Entity target = INVALID_ENTITY;
+    ECS::computeRaycast(campos, camdir, glm::distance(campos, GameData::positions[e]) + glm::length(GameData::colliders[e].AABB), FLT_MAX, &target);
+    if (target == INVALID_ENTITY) {
+        return target;
+    }
+    if (GameData::tags[target] & ComponentTags::Upgradeable) {
+        return target;
+    }
+    return INVALID_ENTITY;
 }

@@ -13,7 +13,7 @@ private:
     ObjectModel* ourModel;
 
 public:
-    Cube(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
+    Cube(Shader * s, ObjectModel * m);
     ~Cube();
 
     void draw(const glm::mat4& viewProjMtx);
