@@ -100,6 +100,37 @@ std::list<Entity> createProjectilePierce() {
         ComponentTags::LifeSpan;
     return createdEntities;
 };
+std::list<Entity> createProjectileSpray() {
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::positions[e] = glm::vec3(0, 0, -4);
+    GameData::velocities[e].velocity = glm::normalize(glm::vec3(rand() % 64 - 32, rand() % 64 - 32, -256)) * PROJ_MVSPD;
+    GameData::colliders[e].AABB = glm::vec3(.25, .25, .25);
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
+    GameData::models[e].asciiRep = 'J';
+    GameData::coldmg[e].damage = 10.0f;
+    GameData::lifespans[e] = 0.25;
+    GameData::spawnrates[e] = PROJ_SPAWN_RATE/10;
+    GameData::colliders[e].colteam = CollisionLayer::WorldObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::hostilities[e].team = Teams::Projectile;
+    GameData::coldmg[e].cooldown = 0;
+    GameData::coldmg[e].damageRate = PROJ_DAMAGE_RATE;
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::LifeSpan;
+    return createdEntities;
+};
 std::list<Entity> createProjectileChaos() {
     std::list<Entity> createdEntities;
     Entity e = createEntity();

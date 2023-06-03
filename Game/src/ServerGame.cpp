@@ -188,7 +188,7 @@ void ServerGame::update()
 
 }
 
-const Prefab playerWeaponArray[3] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectileChaos };
+const Prefab playerWeaponArray[3] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectileSpray };
 const Prefab playerReticleArray[3] = { Prefabs::TowerReticleBasic, Prefabs::TowerReticleRailgun, Prefabs::TowerReticleTesla };
 const Prefab playerBuildingArray[3] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerTesla };
 
