@@ -82,7 +82,7 @@ struct Model //3D Model to render for the entity
     glm::vec3 dirNorm;
     bool renderCollider;
     bool upgradeSelected;
-    //TODO: Other Model Data
+
 
     //degrees
     float modelOrientation;
@@ -110,7 +110,6 @@ struct Collider //Information for collisions
     TeamID colwith;
     int xpos;
     int zpos;
-    //TODO: Pointer to a mesh for narrow phase
 };
 
 struct RigidBodyInfo //Information for physical objects;

@@ -288,7 +288,6 @@ void EntityComponentSystem::sysPathing()
             //Check if entity has reached the final pathNode (currentNode now out of bounds)
             if (GameData::pathStructs[e].currentNode >= PATH_LENGTH)
             {
-                //TODO: (Temporarily Set Enemy to inactive once it reaches the end of the path)
                 causeDeath(e, e);
                 //std::cout << "Entity " << e << " Reached the end of its path! (Despawning...)\n";
                 continue;

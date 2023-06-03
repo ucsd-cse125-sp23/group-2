@@ -912,7 +912,6 @@ std::list<Entity> createPlayers() {
             ComponentTags::RigidBody +
             ComponentTags::Health +
             ComponentTags::Hostility;
-        //TODO: Other Model Data
     }
     return createdEntities;
 }
