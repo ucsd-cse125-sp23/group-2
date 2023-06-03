@@ -39,7 +39,7 @@ uniform vec4 lightPos[numLights] = {
 };
 uniform vec4 lightColor[numLights] = {
     vec4(0.7f, 0.7f, 0.7f, 1.0f),
-    vec4(0.3f, 0.3f, 0.3f, 1.0f)
+    vec4(0.3f, 0.3f, 0.2f, 1.0f)
 };
 //uniform vec3 lightPos = vec3(0.0f, 40.0f, 0.0f);
 //uniform vec3 lightColor = vec3(0.9f, 0.4f, 0.1f);
@@ -64,6 +64,10 @@ void main()
     }
     else{
         shine = material.shininess;
+    }
+
+    if(material.emision.x != 0 || material.emision.y != 0 || material.emision.z != 0){
+        FragColor += vec4(material.emision, 1.0f);
     }
 
     for(int i = 0; i < numLights; i++){
