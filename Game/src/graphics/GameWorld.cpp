@@ -5,6 +5,13 @@
 	int selected;
 	int depth;
 	bool menuOn;
+	float spawntimer;
+	float moneyRes;
+	float woodRes;
+	float stoneRes;
+	float points;
+	float enemiesKilled;
+	float towersBuilt;
 void GameWorld::init() {
 
 	currID = 0;
@@ -98,11 +105,12 @@ void GameWorld::GUI_Init() {
 	volume_Sldr->SetSize(glm::vec2(0.75f, 0.25f));
 	volume_Sldr->SetTexture("../assets/gui/Buttons/volume.jpg");
 	volume_Sldr->SetTransparency(1.0);
+	 
 	guis[4] = volume_Sldr;
 	volume_Sldr_Back = guis[5];
 	volume_Sldr_Back->SetHidden(true);
 	volume_Sldr_Back->SetName("volume_Sldr_Back");
-	volume_Sldr_Back->SetPosition(glm::vec3(0.5f, 0.0f, 0.0f));
+	volume_Sldr_Back->SetPosition(glm::vec3(0.5f, 0.0f, 0.2f));
 	volume_Sldr_Back->SetSize(glm::vec2(0.75f, 0.1f));
 	volume_Sldr_Back->SetTexture("../assets/gui/Buttons/volume_Sldr_Back.jpg");
 	volume_Sldr_Back->SetTransparency(0.0);
@@ -110,7 +118,7 @@ void GameWorld::GUI_Init() {
 	volume_Sldr_Front = guis[6];
 	volume_Sldr_Front->SetHidden(true);
 	volume_Sldr_Front->SetName("volume_Sldr_Front");
-	volume_Sldr_Front->SetPosition(glm::vec3(0.5f, 0.0f, 0.0f));
+	volume_Sldr_Front->SetPosition(glm::vec3(0.5f, 0.0f, 0.1f));
 	volume_Sldr_Front->SetSize(glm::vec2(0.75f, 0.1f));
 	volume_Sldr_Front->SetTexture("../assets/gui/Buttons/volume_Sldr_Front.jpg");
 	volume_Sldr_Front->SetTransparency(1.0);
