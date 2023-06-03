@@ -846,6 +846,8 @@ void EntityComponentSystem::sysBuild()
                 GameData::tags[r] |= ComponentTags::Created;
                 GameData::creators[r] = e;
                 GameData::retplaces[e].reticle = r;
+                GameData::positions[r].y = GameData::colliders[r].AABB.y + GROUND_HEIGHT;
+
                 Collision::updateColTable(r);
             }
         }
