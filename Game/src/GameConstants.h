@@ -61,7 +61,7 @@ const int ACTION_COOLDOWN = TICK_RATE;
 const float ENEMY_GND_MVSPD_PERSEC = 5;
 
 //How many seconds until first wave spawns
-const float ENEMY_SPAWNDELAY_SEC = 0;
+const float ENEMY_SPAWNDELAY_SEC = 60;
 
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;
@@ -105,7 +105,7 @@ const float STOMP_RANGE = 5;
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 30
 
-#define WAVE_COUNT 5
+#define WAVE_COUNT 7
 
 #define NUM_ENEMY_TYPES 5
 

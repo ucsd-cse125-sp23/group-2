@@ -1338,8 +1338,7 @@ namespace WaveData {
     int currentWave;
 
     // How much time a wave lasts before the next wave starts spawning (timer for last wave will be time until win)
-    int waveTimers[WAVE_COUNT] = { 15 * TICK_RATE, 15 * TICK_RATE, 15 * TICK_RATE, 15 * TICK_RATE, 60  * TICK_RATE };
-    //int waveTimers[WAVE_COUNT] = { 1000 * TICK_RATE };
+    int waveTimers[WAVE_COUNT] = { 60 * TICK_RATE, 60 * TICK_RATE, 60 * TICK_RATE, 60 * TICK_RATE, 90  * TICK_RATE, 90 * TICK_RATE, 120 * TICK_RATE };
 
     int waveTick; //countdown timer for waves
 
