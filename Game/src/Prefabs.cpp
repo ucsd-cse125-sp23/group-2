@@ -962,7 +962,7 @@ std::list<Entity> createStoneResourceBasic()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
     GameData::hostilities[e].team = Teams::Environment;
     GameData::hostilities[e].hostileTo = 0;
-    GameData::models[e].modelID = MODEL_ID_RESOURCE;
+    GameData::models[e].modelID = MODEL_ID_RESOURCE_STONE;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = 0;
     GameData::resources[e].resources[ResourceType::Stone] = 20;
