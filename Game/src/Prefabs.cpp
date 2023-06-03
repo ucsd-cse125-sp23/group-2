@@ -258,7 +258,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::velocities[e].flying = false;
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e].AABB =  glm::vec3(1.3, 1.7, 1.3);
+    GameData::colliders[e].AABB =  glm::vec3(1.5, 1.7, 1.5);
     GameData::models[e].modelID = MODEL_ID_MOB;
     GameData::models[e].asciiRep = 'E';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
@@ -932,7 +932,7 @@ std::list<Entity> createWoodResourceBasic()
         return createdEntities;
     }
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
+    GameData::colliders[e].AABB =  glm::vec3(2, 8, 2);
     GameData::models[e].asciiRep = 'R';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
     GameData::hostilities[e].team = Teams::Environment;
