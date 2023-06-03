@@ -102,6 +102,9 @@ const float STOMP_DMG = 50;
 //Stomp range
 const float STOMP_RANGE = 5;
 
+//Player safe area
+const float SAFE_AREA = 80;
+
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 30
 
