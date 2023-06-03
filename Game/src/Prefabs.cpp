@@ -766,7 +766,7 @@ std::list<Entity> createTowerBarrier()
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = 0;
-    GameData::colliders[e].AABB = glm::vec3(1, 1, 1);
+    GameData::colliders[e].AABB = glm::vec3(2, 1.5, 5);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
     GameData::healths[e].curHealth = GameData::healths[e].maxHealth = BARRIER_BASE_HEALTH;
@@ -1141,8 +1141,9 @@ std::list<Entity> createBossRLeg()
     GameData::rigidbodies[e].fixed = false;
     GameData::rigidbodies[e].grounded = false;
     GameData::coldmg[e].cooldown = 0;
-    GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE;
     GameData::AOEattackmodules[e].fireRate = STOMP_RATE;
+    GameData::AOEattackmodules[e].damage = STOMP_DMG;
+    GameData::AOEattackmodules[e].range = STOMP_RANGE;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -1189,7 +1190,8 @@ std::list<Entity> createBossLLeg()
     GameData::coldmg[e].cooldown = 0;
     GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE;
     GameData::AOEattackmodules[e].fireRate = STOMP_RATE;
-
+    GameData::AOEattackmodules[e].damage = STOMP_DMG;
+    GameData::AOEattackmodules[e].range = STOMP_RANGE;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Velocity +
@@ -1323,7 +1325,7 @@ std::list<Entity> createStoneResourceBasic()
 namespace Paths {
     const glm::vec3 path[pathCount][PATH_LENGTH] =
     {
-        { glm::vec3(-60,0,-85), glm::vec3(-60,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc },
+        { glm::vec3(-60,0,-85),glm::vec3(-60,0,-75),glm::vec3(-60,0,-65),glm::vec3(-60,0,-55),glm::vec3(-60,0,-45),glm::vec3(-60,0,-35),glm::vec3(-60,0,-25),glm::vec3(-60,0,-15),glm::vec3(-60,0,-5),glm::vec3(-60,0,35), glm::vec3(-60,0,85), glm::vec3(-60,0,85)},
         { glm::vec3(-30,0,-85), glm::vec3(-30,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
         { glm::vec3(0,0,-85), glm::vec3(0,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
         { glm::vec3(30,0,-85), glm::vec3(30,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc},
@@ -1357,7 +1359,7 @@ std::list<Entity> createPathColliders()
     for (int p = 0; p < Paths::pathCount; ++p) {
         for (int i = 0; (i < PATH_LENGTH - 1); i++) {
             if (Paths::path[p][i] == Paths::path[p][i + 1]) {
-                continue;
+                break;
             }
             Entity e = createEntity();
             createdEntities.push_back(e);

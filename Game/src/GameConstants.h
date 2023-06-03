@@ -94,10 +94,16 @@ const float FLYING_HEIGHT = 10;
 const float RESPAWN_TIMER = 5.0;
 
 //Boss Stomp Rate
-const float STOMP_RATE = 0.25;
+const float STOMP_RATE = 2;
+
+//Stomp dmg
+const float STOMP_DMG = 50;
+
+//Stomp range
+const float STOMP_RANGE = 5;
 
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
-#define PATH_LENGTH 8
+#define PATH_LENGTH 30
 
 #define WAVE_COUNT 5
 

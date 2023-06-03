@@ -438,7 +438,7 @@ void EntityComponentSystem::sysTurret()
 
                 //Set model orientation
                 glm::vec3 projDir = glm::normalize(glm::vec3(GameData::models[e].dirNorm.x, 0, GameData::models[e].dirNorm.z));
-                //GameData::models[e].modelOrientation = -glm::degrees(glm::acos(projDir.x));
+                GameData::models[e].modelOrientation = -glm::degrees(glm::acos(projDir.x));
             }
             else 
             {
@@ -700,6 +700,7 @@ void EntityComponentSystem::sysAttacks()
         if ((GameData::tags[e] & ComponentTags::AttackerAOE) == ComponentTags::AttackerAOE) {
             if (GameData::AOEattackmodules[e].cooldown <= 0) {
                 
+                GameData::AOEattackmodules[e].source = GameData::positions[e];
                 std::list<Entity> targets = getTargetsInRange(GameData::AOEattackmodules[e].source, GameData::AOEattackmodules[e].range, GameData::hostilities[e].hostileTo);
                 //printf("Attempting to fire\n");
 
