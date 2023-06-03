@@ -72,6 +72,19 @@ std::list<Entity> createStoneResourceBasic();
 std::list<Entity> createPathColliders();
 std::list<Entity> createPlayers();
 
+std::list<Entity> createBossHead();
+std::list<Entity> createBossLArm();
+std::list<Entity> createBossBody();
+std::list<Entity> createBossRArm();
+std::list<Entity> createBossRLeg();
+std::list<Entity> createBossLLeg();
+std::list<Entity> createBoss();
+
+
+
+
+
+
 namespace Prefabs {
 	enum Prefab : uint32_t{
 		TowerBasic,
@@ -124,6 +137,7 @@ namespace Prefabs {
 		PathColliders,
 		UI_MARKER,
 		Home = UI_MARKER,
+		EnemyBoss,
 		Players,
 		NUM_PREFAB
 
@@ -177,6 +191,7 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createTowerReticleBarrier,
 	&createPathColliders,
 	&createHome,
+		& createBoss,
 	&createPlayers
 };
 
@@ -186,7 +201,8 @@ namespace PlayerSpawns {
 };
 
 namespace Paths {
-	extern constexpr int pathCount = 4;
+	extern constexpr int bossPath = 2;
+	extern constexpr int pathCount = 5;
 	extern const glm::vec3 path[pathCount][PATH_LENGTH];
 	extern std::list<Entity> pathlist;
 };
