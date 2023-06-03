@@ -388,6 +388,11 @@ Entity EntityComponentSystem::findClosestPathCollider(glm::vec3 origin)
 
 }
 
+bool EntityComponentSystem::applyUpgrade(Entity play, Entity target)
+{
+    return false;
+}
+
 void EntityComponentSystem::resolveCollisions()
 {
     while (!GameData::colevents.empty())

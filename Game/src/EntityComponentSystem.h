@@ -81,6 +81,7 @@ struct Model //3D Model to render for the entity
     char asciiRep;
     glm::vec3 dirNorm;
     bool renderCollider;
+    bool upgradeSelected;
     //TODO: Other Model Data
 
     //degrees
@@ -221,6 +222,8 @@ namespace ComponentTags
     constexpr Tag ResourceContainer = 0x1 << 19;
     constexpr Tag WorthPoints = 0x1 << 20;
     constexpr Tag BarrierReticle = 0x1 << 21;
+    constexpr Tag Upgradeable = 0x1 << 22;
+    constexpr Tag Upgrading = 0x1 << 23;
 }
 
 namespace enemyState {
@@ -339,4 +342,7 @@ namespace EntityComponentSystem
 
     //Finds closes path collider
     Entity findClosestPathCollider(glm::vec3 origin);
+
+    //Applies an Upgrade if possible
+    bool applyUpgrade(Entity play, Entity target);
 };

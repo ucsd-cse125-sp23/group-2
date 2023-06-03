@@ -44,6 +44,7 @@ private:
         static constexpr State Default = 0;
         static constexpr State Attack = ComponentTags::AttackerProjectile;
         static constexpr State Build = ComponentTags::Builder;
+        static constexpr State Upgrading = ComponentTags::Upgrading;
     };
 
     // The ServerNetwork object 
@@ -71,6 +72,8 @@ private:
     void initBase();
 
     void checkStatus();
+
+    Entity playerUpgrade(Entity i, glm::vec3& camdir, glm::vec3& campos, float range);
 
     Entity home;
 

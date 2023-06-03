@@ -204,6 +204,7 @@ void ServerGame::handleInputs()
         glm::vec3 camDirection;
         glm::vec3 camPosition;
         bool target = false;
+        Entity choose = INVALID_ENTITY;
         while (!incomingDataLists[i].empty())
         {
             if ((GameData::tags[i] & ComponentTags::Dead) == ComponentTags::Dead) {
@@ -238,6 +239,15 @@ void ServerGame::handleInputs()
                 }
                 GameData::retplaces[i].buildingPrefab = playerBuildingArray[in.selected];
                 GameData::retplaces[i].reticlePrefab = playerReticleArray[in.selected];
+                choose = INVALID_ENTITY;
+            }
+            else if (in.upgrade) {
+                changeState(i, PlayerState::Upgrading);
+                choose = playerUpgrade(i, camDirection, camPosition, TOWER_PLACEMENT_RANGE);
+                if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
+                    ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
+                    GameData::retplaces[i].reticle = INVALID_ENTITY;
+                }
             }
             else {
                 if (in.selected > NUM_PLAYER_ATTACK) {
@@ -250,6 +260,8 @@ void ServerGame::handleInputs()
                     ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
                     GameData::retplaces[i].reticle = INVALID_ENTITY;
                 }
+                choose = INVALID_ENTITY;
+
             }
 
             if (in.jump && GameData::rigidbodies[i].grounded) {
@@ -262,14 +274,27 @@ void ServerGame::handleInputs()
             incomingDataLists[i].pop();
         }
 
+        
+
+
         if (GameData::states[i] == PlayerState::Build) {
             //printf("Calling Player build\n");
             playerBuild(i, camDirection, camPosition, TOWER_PLACEMENT_RANGE);
+        }
+        else if (GameData::states[i] == PlayerState::Upgrading) {
+            if (choose != INVALID_ENTITY) {
+                GameData::models[choose].upgradeSelected = true;
+            }
         }
 
         if (target) {
             if (GameData::states[i] == PlayerState::Build) {
                 GameData::retplaces[i].place = true;
+            }
+            else if (GameData::states[i] == PlayerState::Upgrading) {
+                if (choose != INVALID_ENTITY) {
+                    ECS::applyUpgrade(i, choose);
+                }
             }
             else {
                 changeState(i, PlayerState::Attack);
@@ -433,4 +458,17 @@ void ServerGame::checkStatus() {
         printf("LOSE! :(\n");
         currentStatus = loss;
     }
+}
+
+Entity ServerGame::playerUpgrade(Entity e, glm::vec3& camdir, glm::vec3& campos, float range)
+{
+    Entity target = INVALID_ENTITY;
+    ECS::computeRaycast(campos, camdir, glm::distance(campos, GameData::positions[e]) + glm::length(GameData::colliders[e].AABB), FLT_MAX, &target);
+    if (target == INVALID_ENTITY) {
+        return target;
+    }
+    if (GameData::tags[target] & ComponentTags::Upgradeable) {
+        return target;
+    }
+    return INVALID_ENTITY;
 }

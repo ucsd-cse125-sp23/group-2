@@ -8,6 +8,7 @@ bool ClientGame::playerattacking = 0;
 bool ClientGame::jumping = 0;
 int ClientGame::build = 0;
 int ClientGame::selected = 0;
+bool ClientGame::upgrade = 0;
 
 ClientGame::ClientGame(void)
 {
@@ -81,6 +82,7 @@ void ClientGame::packageData(ClienttoServerData& data) {
     data.camAngleAroundPlayer = gameWindow->getCamAngle();
     data.camDirectionVector = gameWindow->getCamDirectionVector();
     data.camPosition = gameWindow->getCamPosition();
+    data.upgrade = upgrade;
 }
 
 void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -104,11 +106,23 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
         case GLFW_KEY_E:
             if (build != 0) {
                 build = 0;
+                upgrade = 0;
             }
             else {
+                upgrade = 0;
                 build = 1;
             }
             selected = 0;
+            break;
+        case GLFW_KEY_R:
+            if (upgrade != 0) {
+                build = 0;
+                upgrade = 0;
+            }
+            else {
+                build = 0;
+                upgrade = 1;
+            }
             break;
         case GLFW_KEY_1:
             selected = 0;
