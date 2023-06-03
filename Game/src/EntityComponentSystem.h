@@ -81,6 +81,7 @@ struct Model //3D Model to render for the entity
     char asciiRep;
     glm::vec3 dirNorm;
     bool renderCollider;
+    bool upgradeSelected;
     //TODO: Other Model Data
 
     //degrees
@@ -169,6 +170,7 @@ struct ReticlePlacement {
     Entity reticle = INVALID_ENTITY;
     bool validTarget;
     glm::vec3 targetPos;
+    float targetOrientation;
 };
 
 struct CombatLog {
@@ -194,10 +196,16 @@ struct AllPlayerData {
     std::array<ScoreCard, NUM_PLAYERS> scores;
     std::array<int, NUM_RESOURCE_TYPES> resources;
     std::array<float, NUM_PLAYERS> spawntimers;
+    std::array<int, NUM_PLAYERS> actioncooldown;
 };
 
 struct ResourceContainer {
     std::array<int, NUM_RESOURCE_TYPES> resources;
+};
+
+struct Upgradeable {
+    std::array<int, NUM_RESOURCE_TYPES> cost;
+    Prefab upgrade;
 };
 
 
@@ -230,6 +238,9 @@ namespace ComponentTags
     constexpr Tag Stalker = 0x1 << 23;
     constexpr Tag Hunter = 0x1 << 24;
     constexpr Tag Trapper = 0x1 << 25;
+    constexpr Tag BarrierReticle = 0x1 << 26;
+    constexpr Tag Upgradeable = 0x1 << 27;
+    constexpr Tag Upgrading = 0x1 << 28;
 }
 
 namespace enemyState {
@@ -273,7 +284,7 @@ namespace GameData
     extern std::array<AbductionData, MAX_ENTITIES> abductionStructs;
     extern std::array<ResourceContainer, MAX_ENTITIES> resources;
     extern std::array<Points, MAX_ENTITIES> pointvalues;
-
+    extern std::array<Upgradeable, MAX_ENTITIES> upgradedata;
     //Events
     extern std::queue<CollisionEvent> colevents;
 
@@ -306,7 +317,6 @@ namespace EntityComponentSystem
     //Handle&Resolve Collisions
     void resolveCollisions();
 
-
     //All automated turret / tower firing
     void sysTurret();
 
@@ -334,7 +344,7 @@ namespace EntityComponentSystem
     Entity createEntity(int begin = 0, int end = MAX_ENTITIES);
 
     //Find the position of inte rsection with first rigid body (uses Peter Shirley's method at http://psgraphics.blogspot.com/2016/02/new-simple-ray-box-test-from-andrew.html)
-    glm::vec3 computeRaycast(glm::vec3& pos, glm::vec3& dir, float tmin, float tmax);
+    glm::vec3 computeRaycast(glm::vec3& pos, glm::vec3& dir, float tmin, float tmax, Entity * out = 0);
 
     //Deals damage (And will eventuall call death functions)
     void dealDamage(Entity source, Entity target, float damage);
@@ -353,4 +363,10 @@ namespace EntityComponentSystem
 
     //Get all Entitis is range
     std::list<Entity> getTargetsInRange(glm::vec3 & source, float & range, TeamID & hostileTo);
+
+    //Finds closes path collider
+    Entity findClosestPathCollider(glm::vec3 origin);
+
+    //Applies an Upgrade if possible
+    bool applyUpgrade(Entity play, Entity target);
 };

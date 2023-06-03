@@ -37,6 +37,7 @@ const float PLAYER_BASE_HEALTH = 100;
 const float ENEMY_BASE_HEALTH = 100;
 const float HOME_BASE_HEALTH = 100;
 const float RESOURCE_BASE_HEALTH = 100;
+const float BARRIER_BASE_HEALTH = 100;
 
 //Base damage per second dealt by towers
 const float TURRET_BASE_DPS = 200;
@@ -46,6 +47,15 @@ const float TURRET_BASE_FIRE_RATE = 0.25;
 
 //How often turrets fire (seconds between damages)
 const float TURRET_BASE_RANGE = 10;
+
+//Snap range barrier
+const float SNAP_RANGE = 5;
+
+//Number of levels for of upgrades
+constexpr size_t NUM_UP_LEVELS = 3;
+
+//Player build cooldown in ticks
+const int ACTION_COOLDOWN = TICK_RATE;
 
 //ground enemy base movespeed in units/sec
 const float ENEMY_GND_MVSPD_PERSEC = 5;
@@ -111,9 +121,12 @@ const float TOWER_PLACEMENT_RANGE = 15;
 #define MODEL_ID_TESLA 9
 #define MODEL_ID_RESOURCE 10
 #define MODEL_ID_PROJECTILE 11
-#define MODEL_ID_BASE 12
 
-#define NUM_MODELS 13
+#define MODEL_ID_BARRIER 12
+
+#define MODEL_ID_BASE 13
+
+#define NUM_MODELS 14
 
 //animation states
 #define ANIM_IDLE 0

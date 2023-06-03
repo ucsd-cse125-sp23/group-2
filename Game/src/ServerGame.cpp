@@ -188,9 +188,10 @@ void ServerGame::update()
 
 }
 
-const Prefab playerWeaponArray[3] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectileSpray };
-const Prefab playerReticleArray[3] = { Prefabs::TowerReticleBasic, Prefabs::TowerReticleRailgun, Prefabs::TowerReticleTesla };
-const Prefab playerBuildingArray[3] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerTesla };
+const int NUM_PLAYER_ATTACK = 3;
+const Prefab playerWeaponArray[NUM_PLAYER_ATTACK] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectileSpray };
+const Prefab playerReticleArray[NUM_TOWER_PREFAB] = { Prefabs::TowerReticleBasic, Prefabs::TowerReticleRailgun, Prefabs::TowerReticleTesla, Prefabs::TowerReticleBarrier };
+const Prefab playerBuildingArray[NUM_TOWER_PREFAB] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerTesla, Prefabs::TowerBarrier };
 
 
 void ServerGame::handleInputs()
@@ -201,10 +202,13 @@ void ServerGame::handleInputs()
 
     for(int i = 0; i < NUM_CLIENTS; i++)
     {
+        //Decrement cooldown
+        GameData::playerdata.actioncooldown[i]--;
         glm::vec3 camDirection;
         glm::vec3 camPosition;
         bool target = false;
         bool jump = false;
+        Entity choose = INVALID_ENTITY;
         while (!incomingDataLists[i].empty())
         {
             if ((GameData::tags[i] & ComponentTags::Dead) == ComponentTags::Dead) {
@@ -229,6 +233,9 @@ void ServerGame::handleInputs()
 
             if (in.build) {
                 changeState(i, PlayerState::Build);
+                if (in.selected > NUM_TOWER_PREFAB) {
+                    in.selected = NUM_TOWER_PREFAB - 1;
+                }
                 if (GameData::retplaces[i].reticlePrefab != playerReticleArray[in.selected]) {
                     if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
                         ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
@@ -236,8 +243,20 @@ void ServerGame::handleInputs()
                 }
                 GameData::retplaces[i].buildingPrefab = playerBuildingArray[in.selected];
                 GameData::retplaces[i].reticlePrefab = playerReticleArray[in.selected];
+                choose = INVALID_ENTITY;
+            }
+            else if (in.upgrade) {
+                changeState(i, PlayerState::Upgrading);
+                choose = playerUpgrade(i, camDirection, camPosition, TOWER_PLACEMENT_RANGE);
+                if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
+                    ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
+                    GameData::retplaces[i].reticle = INVALID_ENTITY;
+                }
             }
             else {
+                if (in.selected > NUM_PLAYER_ATTACK) {
+                    in.selected = NUM_PLAYER_ATTACK - 1;
+                }
                 changeState(i, PlayerState::Default); //May be slow
                 GameData::pattackmodules[i].attack = playerWeaponArray[in.selected];
 
@@ -245,6 +264,8 @@ void ServerGame::handleInputs()
                     ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
                     GameData::retplaces[i].reticle = INVALID_ENTITY;
                 }
+                choose = INVALID_ENTITY;
+
             }
 
             if (in.jump){
@@ -253,14 +274,30 @@ void ServerGame::handleInputs()
             incomingDataLists[i].pop();
         }
 
+        
+
+
         if (GameData::states[i] == PlayerState::Build) {
             //printf("Calling Player build\n");
             playerBuild(i, camDirection, camPosition, TOWER_PLACEMENT_RANGE);
+        }
+        else if (GameData::states[i] == PlayerState::Upgrading) {
+            if (choose != INVALID_ENTITY) {
+                GameData::models[choose].upgradeSelected = true;
+            }
         }
 
         if (target) {
             if (GameData::states[i] == PlayerState::Build) {
                 GameData::retplaces[i].place = true;
+            }
+            else if (GameData::states[i] == PlayerState::Upgrading) {
+                if (GameData::playerdata.actioncooldown[i] < 0) {
+                    if (choose != INVALID_ENTITY) {
+                        ECS::applyUpgrade(i, choose);
+                        GameData::playerdata.actioncooldown[i] = ACTION_COOLDOWN;
+                    }
+                }
             }
             else {
                 changeState(i, PlayerState::Attack);
@@ -395,6 +432,20 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
     }
     glm::vec3 dirYNorm = camdir / (camdir.y*-1);
     glm::vec3 targetpos = glm::vec3(campos.x + dirYNorm.x * campos.y, 0, campos.z + dirYNorm.z * campos.y);
+    float angle = 0;
+    if(GameData::retplaces[i].reticlePrefab == Prefabs::TowerReticleBarrier){
+        Entity p = ECS::findClosestPathCollider(targetpos);
+        if (p == INVALID_ENTITY) {
+            GameData::retplaces[i].validTarget = false;
+            return;
+        }
+        if (glm::distance(targetpos, GameData::positions[p]) > SNAP_RANGE) {
+            GameData::retplaces[i].validTarget = false;
+            return;
+        }
+        targetpos = GameData::positions[p];
+        angle = GameData::models[p].modelOrientation;
+    }
     if (glm::distance(targetpos, GameData::positions[i]) > range) {
         //printf("Out of range\n");
 
@@ -403,6 +454,7 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
     }
     GameData::retplaces[i].targetPos = targetpos;
     GameData::retplaces[i].validTarget = true;
+    GameData::retplaces[i].targetOrientation = angle;
     //printf("Valid Target\n");
 }
 
@@ -415,4 +467,17 @@ void ServerGame::checkStatus() {
         printf("LOSE! :(\n");
         currentStatus = loss;
     }
+}
+
+Entity ServerGame::playerUpgrade(Entity e, glm::vec3& camdir, glm::vec3& campos, float range)
+{
+    Entity target = INVALID_ENTITY;
+    ECS::computeRaycast(campos, camdir, glm::distance(campos, GameData::positions[e]) + glm::length(GameData::colliders[e].AABB), FLT_MAX, &target);
+    if (target == INVALID_ENTITY) {
+        return target;
+    }
+    if (GameData::tags[target] & ComponentTags::Upgradeable) {
+        return target;
+    }
+    return INVALID_ENTITY;
 }

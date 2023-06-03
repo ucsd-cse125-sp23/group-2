@@ -23,6 +23,7 @@ struct ClienttoServerData {
     bool moveForward, moveBack, moveLeft, moveRight;
     bool shoot;
     bool jump;
+    bool upgrade;
     int build;
     int selected;
     void print(char * buf) {

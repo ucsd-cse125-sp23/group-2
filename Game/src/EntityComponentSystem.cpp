@@ -32,6 +32,7 @@ namespace GameData
   std::array<Points, MAX_ENTITIES> pointvalues;
   AllPlayerData playerdata;
   std::array<AOEAttackModule, MAX_ENTITIES> AOEattackmodules;
+  std::array<Upgradeable, MAX_ENTITIES> upgradedata;
 }
 
 //Call all systems each update
@@ -432,6 +433,10 @@ void EntityComponentSystem::sysTurret()
                 GameData::hattackmodules[e].target = closestEnemy;
                 GameData::pattackmodules[e].targetPos = GameData::positions[closestEnemy] + GameData::velocities[closestEnemy].velocity;
                 changeState(e, GameData::turrets[e].attackState);
+
+                //Set model orientation
+                glm::vec3 projDir = glm::normalize(glm::vec3(GameData::models[e].dirNorm.x, 0, GameData::models[e].dirNorm.z));
+                GameData::models[e].modelOrientation = -glm::degrees(glm::acos(projDir.x));
             }
             else 
             {
@@ -486,6 +491,57 @@ void EntityComponentSystem::sysDetectCollisions()
 
 
     }
+}
+
+Entity EntityComponentSystem::findClosestPathCollider(glm::vec3 origin)
+{
+
+
+    //find closest path node
+    float closestDistance = 100;
+    Entity closestPath = INVALID_ENTITY;
+    //loop thru all pathNodes to find the closest one
+    for (Entity p : Paths::pathlist) {
+        float distance = glm::distance(origin, GameData::positions[p]);
+        if (distance < closestDistance)
+        {
+            closestDistance = distance;
+            closestPath = p;
+        }
+    }
+    return closestPath;
+
+
+}
+
+bool EntityComponentSystem::applyUpgrade(Entity play, Entity target)
+{
+    if (GameData::tags[target] & ComponentTags::Upgradeable) {
+        bool hasenough = true;
+        for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+            hasenough &= GameData::upgradedata[target].cost[i] <= GameData::playerdata.resources[i];
+        }
+        if (!hasenough) {
+            return false;
+        }
+        Entity up = prefabMap[GameData::upgradedata[target].upgrade]().front();
+        if (up == INVALID_ENTITY) {
+            return false;
+        }
+        causeDeath(target, target);
+
+
+        //Subtract resources
+        for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+            GameData::playerdata.resources[i] -= GameData::upgradedata[target].cost[i];
+        }
+
+        //Set position of new tower
+        GameData::positions[up] = GameData::positions[target];
+        return true;
+
+    }
+    return false;
 }
 
 void EntityComponentSystem::resolveCollisions()
@@ -734,6 +790,13 @@ void EntityComponentSystem::sysBuild()
                             for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
                                 GameData::playerdata.resources[i] -= buildcosts[GameData::retplaces[e].buildingPrefab][i];
                             }
+                            //Transform colider
+                            if (GameData::retplaces[e].targetOrientation != 0) {
+                                GameData::models[b].modelOrientation = GameData::retplaces[e].targetOrientation;
+                                float temp = GameData::colliders[b].AABB.x;
+                                GameData::colliders[b].AABB.x = GameData::colliders[b].AABB.z;
+                                GameData::colliders[b].AABB.z = temp;
+                            }
                             // Add sound to sound log
                             logSound(e, SOUND_ID_BUILD);
                             Collision::updateColTable(b);
@@ -777,6 +840,9 @@ void EntityComponentSystem::sysBuild()
                 GameData::positions[r] = transform * glm::vec4(GameData::positions[r], 1);
                 GameData::velocities[r].velocity = transform * glm::vec4(GameData::velocities[r].velocity, 0);
                 GameData::tags[r] ^= ComponentTags::Velocity;
+                if (GameData::retplaces[e].targetOrientation != 0) {
+                    GameData::models[r].modelOrientation = GameData::retplaces[e].targetOrientation;
+                }
                 //Set creator
                 GameData::tags[r] |= ComponentTags::Created;
                 GameData::creators[r] = e;
@@ -805,7 +871,7 @@ Entity EntityComponentSystem::createEntity(int begin, int end)
     return INVALID_ENTITY;
 }
 
-glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, float tminog, float tmaxog)
+glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, float tminog, float tmaxog, Entity * out)
 {
     float tfirst = 1024;
     glm::vec3 dirNorm = glm::normalize(dir);
@@ -838,6 +904,9 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
                 if (tmin < tfirst) {
                     //printf("Firing at entity %d\n", e);
                     tfirst = tmin;
+                    if (out) {
+                        *out = e;
+                    }
                 }
             }
         }
