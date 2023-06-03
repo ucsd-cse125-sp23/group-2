@@ -475,7 +475,7 @@ std::list<Entity> createTowerReticleBarrier()
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
-    GameData::colliders[e].AABB = glm::vec3(1.2, 1, 1.2);
+    GameData::colliders[e].AABB = glm::vec3(2, 2, 5);
     GameData::positions[e].y = GameData::colliders[e].AABB.y;
 
     GameData::tags[e] =
@@ -1326,11 +1326,11 @@ namespace PlayerSpawns {
 namespace Paths {
     const glm::vec3 path[pathCount][PATH_LENGTH] =
     {
-        { glm::vec3(-60,0,-85),glm::vec3(-60,0,-75),glm::vec3(-60,0,-65),glm::vec3(-60,0,-55),glm::vec3(-60,0,-45),glm::vec3(-60,0,-35),glm::vec3(-60,0,-25),glm::vec3(-60,0,-15),glm::vec3(-60,0,-5),glm::vec3(-60,0,35), glm::vec3(-60,0,85), glm::vec3(-60,0,85)},
-        { glm::vec3(-30,0,-85), glm::vec3(-30,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
-        { glm::vec3(0,0,-85), glm::vec3(0,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
-        { glm::vec3(30,0,-85), glm::vec3(30,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc},
-        { glm::vec3(60,0,-85), glm::vec3(60,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
+        { glm::vec3(-60,0,-85),glm::vec3(-60,0,85), glm::vec3(-60,0,85),baseLoc},
+        { glm::vec3(-30,0,-85), glm::vec3(-30,0,85), glm::vec3(-30,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
+        { glm::vec3(0,0,-85), glm::vec3(0,0,85), glm::vec3(0,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
+        { glm::vec3(30,0,-85), glm::vec3(30,0,85), glm::vec3(30,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc},
+        { glm::vec3(60,0,-85), glm::vec3(60,0,85), glm::vec3(60,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
     };
     std::list<Entity> pathlist;
 }
@@ -1362,32 +1362,40 @@ std::list<Entity> createPathColliders()
             if (Paths::path[p][i] == Paths::path[p][i + 1]) {
                 break;
             }
-            Entity e = createEntity();
-            createdEntities.push_back(e);
-            if (e == INVALID_ENTITY) {
-                return createdEntities;
+            float currdiff = glm::distance(Paths::path[p][i + 1], Paths::path[p][i]);
+            float progress = 0;
+            glm::vec3 pathvec = glm::normalize(Paths::path[p][i + 1] - Paths::path[p][i]);
+            printf("Curdiif is init %f\n", currdiff);
+            while (currdiff > progress) {
+
+                Entity e = createEntity();
+                createdEntities.push_back(e);
+                if (e == INVALID_ENTITY) {
+                    return createdEntities;
+                }
+
+                progress += PATH_WIDTH;
+                printf("Curdiif is now %f creating entity %d\n", currdiff, e);
+
+
+                GameData::activity[e] = true;
+
+                GameData::positions[e] = Paths::path[p][i] + progress*pathvec;
+                
+                GameData::colliders[e].AABB = glm::vec3(PATH_WIDTH/2, 1, PATH_WIDTH/2);
+
+                GameData::models[e].modelID = MODEL_ID_NO_MODEL;
+                GameData::models[e].asciiRep = 'P';
+                GameData::models[e].renderCollider = true;
+                GameData::models[e].modelOrientation = glm::degrees(glm::acos(pathvec.x));
+                GameData::colliders[e].colteam = CollisionLayer::UIObj;
+                GameData::colliders[e].colwith = 0;
+
+                GameData::tags[e] =
+                    ComponentTags::Position +
+                    ComponentTags::Model +
+                    ComponentTags::Collidable;
             }
-
-            GameData::activity[e] = true;
-            GameData::positions[e] = (Paths::path[p][i] + Paths::path[p][i + 1]) / 2.0f;
-            glm::vec3 pathvec = Paths::path[p][i + 1] - Paths::path[p][i];
-            GameData::colliders[e].AABB =  (pathvec) / 2.0f + PATH_WIDTH * glm::normalize(pathvec) + PATH_WIDTH * glm::normalize(glm::vec3(pathvec.z, 0, -pathvec.x)) + glm::vec3(0, 1,0);
-            
-            GameData::colliders[e].AABB.x = glm::abs(GameData::colliders[e].AABB.x);
-            GameData::colliders[e].AABB.y = glm::abs(GameData::colliders[e].AABB.y);
-            GameData::colliders[e].AABB.z = glm::abs(GameData::colliders[e].AABB.z);
-
-            GameData::models[e].modelID = MODEL_ID_NO_MODEL;
-            GameData::models[e].asciiRep = 'P';
-            GameData::models[e].renderCollider = true;
-            GameData::models[e].modelOrientation = glm::degrees(glm::acos(glm::normalize(pathvec).x));
-            GameData::colliders[e].colteam = CollisionLayer::UIObj;
-            GameData::colliders[e].colwith = 0;
-
-            GameData::tags[e] =
-                ComponentTags::Position +
-                ComponentTags::Model +
-                ComponentTags::Collidable;
         }
     }
 

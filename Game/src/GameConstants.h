@@ -111,7 +111,7 @@ const float STOMP_RANGE = 5;
 
 #define NUM_RESOURCE_TYPES 3
 
-const float PATH_WIDTH = 3;
+const float PATH_WIDTH = 10;
 
 //TOwer placement range
 const float TOWER_PLACEMENT_RANGE = 15;
