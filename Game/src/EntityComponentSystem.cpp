@@ -438,7 +438,7 @@ void EntityComponentSystem::sysTurret()
 
                 //Set model orientation
                 glm::vec3 projDir = glm::normalize(glm::vec3(GameData::models[e].dirNorm.x, 0, GameData::models[e].dirNorm.z));
-                GameData::models[e].modelOrientation = -glm::degrees(glm::acos(projDir.x));
+                GameData::models[e].modelOrientation = (projDir.z < 0) ? -glm::degrees(glm::acos(projDir.x)) : glm::degrees(glm::acos(projDir.x));
             }
             else 
             {

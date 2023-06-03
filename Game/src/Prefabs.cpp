@@ -941,6 +941,7 @@ std::list<Entity> createBossHead()
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
+    GameData::models[e].modelOrientation = -90;
     GameData::rigidbodies[e].fixed = false;
     GameData::rigidbodies[e].grounded = false;
     GameData::coldmg[e].cooldown = 0;
