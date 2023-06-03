@@ -27,6 +27,7 @@ namespace GameData
   std::array<State, MAX_ENTITIES> states;
   std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
   std::array<HomingData, MAX_ENTITIES> homingStructs;
+  std::array<AbductionData, MAX_ENTITIES> abductionStructs;
   std::array<ResourceContainer, MAX_ENTITIES> resources;
   std::array<Points, MAX_ENTITIES> pointvalues;
   AllPlayerData playerdata;
@@ -37,12 +38,13 @@ namespace GameData
 //Call all systems each update
 void EntityComponentSystem::update()
 {
-    sysStateMachine();
     GameData::clogpos = 0;
+    sysEnemyAI();
     sysDeathStatus();
     sysAttacks();
     sysPathing();
     sysHoming();
+    sysAbduction();
     sysMovement();
     sysGravity();
     sysTurret();
@@ -81,47 +83,113 @@ namespace Collision {
     }
 }
 
-void EntityComponentSystem::sysStateMachine()
+void EntityComponentSystem::sysEnemyAI()
 {
     for (Entity e = 0; e < MAX_ENTITIES; e++)
     {
-        switch (GameData::states[e])
+        //Continue to next entity if this one is not active
+        if (!GameData::activity[e]) { continue; }
+
+        //check if this entity has the stalker AI tag
+        if ((GameData::tags[e] & ComponentTags::Stalker) == ComponentTags::Stalker)
         {
-
-
-        case enemyState::Pathing:
-            //check if players nearby
-            for (int p = 0; p < NUM_PLAYERS; p++)
+            switch (GameData::states[e])
             {
-                if (glm::distance(GameData::positions[p], GameData::positions[e]) <= AGRO_RANGE)
+            case enemyState::Pathing:
+                //check if players nearby
+                for (int p = 0; p < NUM_PLAYERS; p++)
                 {
-                    changeState(e, enemyState::Homing);
-                    GameData::homingStructs[e].trackedEntity = p;
+                    if (glm::distance(GameData::positions[p], GameData::positions[e]) <= AGRO_RANGE)
+                    {
+                        changeState(e, enemyState::Homing);
+                        GameData::homingStructs[e].trackedEntity = p;
+                    }
                 }
-            }
-            break;
-
-
-        case enemyState::Homing:
-            Entity t = GameData::homingStructs[e].trackedEntity;
-            //If tracked entity is a player
-            if (t < NUM_PLAYERS)
-            {
-                //check for DEAGRO
-                if (glm::distance(GameData::positions[e], GameData::positions[t]) >= DEAGRO_RANGE)
+                break;
+            case enemyState::Homing:
+                //If hostile to tracked entity
+                if (!(GameData::hostilities[e].hostileTo & GameData::hostilities[GameData::homingStructs[e].trackedEntity].team)) { continue; }
+                //check for DEAGRO or death
+                if (glm::distance(GameData::positions[e], GameData::positions[GameData::homingStructs[e].trackedEntity]) >= DEAGRO_RANGE || (GameData::tags[GameData::homingStructs[e].trackedEntity] & ComponentTags::Dead) == ComponentTags::Dead)
                 {
                     changeState(e, enemyState::Pathing);
                     rePath(e);
                 }
+                break;
+            default:
+                printf("Entity %u is a hunter with invalid state!\n", e);
+                changeState(e, enemyState::Pathing);
+                rePath(e);
             }
-            //If tracked entity is a tower
-            //USE HOSTILITIES INSTEAD OF CHECKING IF IT HAS A TURRET
-            if ((GameData::tags[t] & ComponentTags::Turret) == ComponentTags::Turret)
+        }
+        else if ((GameData::tags[e] & ComponentTags::Hunter) == ComponentTags::Hunter)
+        {
+
+            //Find closest enemy to shoot
+            Entity closestEnemy = e; //initialized to turret ID in case of no valid target found
+            float closestDistance = ATTACK_RANGE + 1; //Set closest found distance to out of range
+
+            //Loop Thru enemies and find one in range
+            for (Entity i = 0; i < MAX_ENTITIES; i++)
             {
-                //check for finding another target OR repathing
-                // --- if Turret state is disabled...
+                //Check if enemy is active
+                if (!GameData::activity[i]) { continue; }
+                //Check if hostileto
+                if (!(GameData::hostilities[e].hostileTo & GameData::hostilities[i].team)) { continue; }
+                //Check if enemy is in range
+                float enemyDistance = glm::distance(GameData::positions[e], GameData::positions[i]);
+                //check if this enemy is the new closest entity
+                if (enemyDistance < closestDistance)
+                {
+                    closestEnemy = i;
+                    closestDistance = enemyDistance;
+                }
             }
-            break;
+            //If a valid target was found, fire at them
+            if (closestEnemy != e)
+            {
+                GameData::hattackmodules[e].target = closestEnemy;
+                GameData::pattackmodules[e].targetPos = GameData::positions[closestEnemy] + GameData::velocities[closestEnemy].velocity;
+                changeState(e, enemyState::ShootingProjectile);
+            }
+            else
+            {
+                changeState(e, enemyState::Pathing);
+                rePath(e);
+            }
+        }
+        else if ((GameData::tags[e] & ComponentTags::Trapper) == ComponentTags::Trapper)
+        {
+            switch (GameData::states[e])
+            {
+            case enemyState::Homing:
+                if (GameData::abductionStructs[e].captive != INVALID_ENTITY)
+                {
+                    printf("Now pathing\n");
+                    changeState(e, enemyState::Pathing);
+                    rePath(e);
+                    GameData::rigidbodies[e].fixed = true; //BAD BAD CODE, but stops the weird movement
+                }
+
+                //find nearest player
+                for (int p = 0; p < NUM_PLAYERS; p++)
+                {
+                    if (glm::distance(GameData::positions[p], GameData::positions[e]) <= glm::distance(GameData::positions[GameData::homingStructs[e].trackedEntity], GameData::positions[e]))
+                    {
+                        GameData::homingStructs[e].trackedEntity = p;
+                    }
+                }
+            case enemyState::Pathing:
+                if (GameData::abductionStructs[e].captive == INVALID_ENTITY)
+                {
+                    changeState(e, enemyState::Homing);
+                }
+                break;
+            default:
+                printf("Entity %u is a trapper with invalid state!\n", e);
+                changeState(e, enemyState::Pathing);
+                rePath(e);
+            }
         }
     }
 }
@@ -182,9 +250,7 @@ void EntityComponentSystem::sysGravity()
                 GameData::positions[e].y = (GROUND_HEIGHT+GameData::colliders[e].AABB.y);
                 if (GameData::velocities[e].velocity.y < 0) {
                     // Add landing sound to sound log
-                    GameData::soundLogs[GameData::slogpos].source = e;
-                    GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_LAND;
-                    GameData::slogpos++;
+                    logSound(e, SOUND_ID_LAND);
                     GameData::velocities[e].velocity.y = 0;
                 }
                 GameData::rigidbodies[e].grounded = true;
@@ -193,7 +259,6 @@ void EntityComponentSystem::sysGravity()
     }
 }
 
-//TODO: FINISH PATHING ALGO
 //Do pathfinding for entities with PathData components
 void EntityComponentSystem::sysPathing()
 {
@@ -236,6 +301,9 @@ void EntityComponentSystem::sysPathing()
             {
                 direction = glm::vec3(direction.x, direction.y + FLYING_HEIGHT, direction.z);
             }
+            else {
+                direction.y = 0;
+            }
             GameData::velocities[e].velocity = glm::normalize(direction) * GameData::velocities[e].moveSpeed;
         }
     }
@@ -250,15 +318,72 @@ void EntityComponentSystem::sysHoming()
         //check if this entity has a homing component
         if ((GameData::tags[e] & ComponentTags::HomingData) == ComponentTags::HomingData)
         {
-            //Update entity velocity vector to move towards tracked entity
-            glm::vec3 trackedPos = GameData::positions[GameData::homingStructs[e].trackedEntity];
-            glm::vec3 direction = trackedPos - GameData::positions[e];
-            //Modify height of direction vector before normalization if applicable
-            if (GameData::velocities[e].flying)
+            Entity target = GameData::homingStructs[e].trackedEntity;
+            if (target != INVALID_ENTITY)
             {
-                direction = glm::vec3(direction.x, direction.y + FLYING_HEIGHT, direction.z);
+                //Update entity velocity vector to move towards tracked entity
+                glm::vec3 trackedPos = GameData::positions[target];
+                glm::vec3 direction = trackedPos - GameData::positions[e];
+                //Modify height of direction vector before normalization if applicable
+                if (GameData::velocities[e].flying)
+                {
+                    direction = glm::vec3(direction.x, direction.y + FLYING_HEIGHT, direction.z);
+                }
+                else {
+                    direction.y = 0;
+                }
+                GameData::velocities[e].velocity = glm::normalize(direction) * GameData::velocities[e].moveSpeed;
             }
-            GameData::velocities[e].velocity = glm::normalize(direction) * GameData::velocities[e].moveSpeed;
+        }
+    }
+}
+
+void EntityComponentSystem::sysAbduction() {
+    for (Entity e = 0; e < MAX_ENTITIES; e++)
+    {
+        //Continue to next entity if this one is not active
+        if (!GameData::activity[e]) { continue; }
+
+        //check if this entity has a abductor component
+        if ((GameData::tags[e] & ComponentTags::Abductor) == ComponentTags::Abductor)
+        {
+            Entity c = GameData::abductionStructs[e].captive; //Entity being held captive
+            Entity t = GameData::homingStructs[e].trackedEntity; //Entity being homed on
+            //check if there already is a captive
+            if (c == INVALID_ENTITY)
+            {
+                //if entity being homed on is in abduction range, and can be abducted
+                if (glm::distance(GameData::positions[t], GameData::positions[e]) < ABDUCT_RANGE && !(GameData::tags[t] & (ComponentTags::Abducted | ComponentTags::Dead)))
+                {
+                    logSound(e, SOUND_ID_ATTACK);
+                    //start abducting
+                    GameData::abductionStructs[e].abductionTimeLeft -= 1.0f / TICK_RATE;
+                    if (GameData::abductionStructs[e].abductionTimeLeft <= 0) {
+                        GameData::abductionStructs[e].captive = GameData::homingStructs[e].trackedEntity;
+                        GameData::tags[GameData::homingStructs[e].trackedEntity] |= ComponentTags::Abducted;
+                    }
+                }
+                else
+                {
+                    GameData::abductionStructs[e].abductionTimeLeft = ABDUCT_TIMER;
+                }
+            }
+            else
+            {
+                //If either entity is dead, destroy abductor captive relationship
+                if ((GameData::tags[c] & ComponentTags::Dead) == ComponentTags::Dead || (GameData::tags[e] & ComponentTags::Dead) == ComponentTags::Dead) {
+                    GameData::abductionStructs[e].captive = INVALID_ENTITY;
+                    GameData::tags[c] ^= ComponentTags::Abducted;
+                }
+                else {
+                    glm::vec3 direction = (GameData::positions[e] - glm::vec3(0.0f, GameData::colliders[e].AABB.y, 0.0f) - GameData::positions[c]);
+                    GameData::velocities[c].velocity = glm::normalize(direction) * GameData::velocities[c].moveSpeed * 0.01f + GameData::velocities[e].velocity;
+                    //Stop captive from shooting when fully abducted
+                    GameData::pattackmodules[c].cooldown = 1.0f;
+                    GameData::rigidbodies[e].grounded = false;
+                }
+            }
+
         }
     }
 }
@@ -315,7 +440,7 @@ void EntityComponentSystem::sysTurret()
             }
             else 
             {
-                changeState(e, towerStates::Idle);
+               changeState(e, towerStates::Idle);
             }
         }
     }
@@ -557,9 +682,7 @@ void EntityComponentSystem::sysAttacks()
                 GameData::pattackmodules[e].cooldown = cooldown;
 
                 // Add attack sound to sound log
-                GameData::soundLogs[GameData::slogpos].source = e;
-                GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_ATTACK;
-                GameData::slogpos++;
+                logSound(e, SOUND_ID_ATTACK);
             }
         }
 
@@ -568,9 +691,7 @@ void EntityComponentSystem::sysAttacks()
                 GameData::hattackmodules[e].cooldown = GameData::hattackmodules[e].fireRate;
                 dealDamage(e, GameData::hattackmodules[e].target, (GameData::hattackmodules[e].damage));
                 // Add attack sound to sound log
-                GameData::soundLogs[GameData::slogpos].source = e;
-                GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_ATTACK;
-                GameData::slogpos++;
+                logSound(e, SOUND_ID_ATTACK);
             }
         }
 
@@ -584,9 +705,7 @@ void EntityComponentSystem::sysAttacks()
                     GameData::AOEattackmodules[e].cooldown = GameData::AOEattackmodules[e].fireRate; 
                     printf("Non empty targets\n");
                     // Add attack sound to sound log
-                    GameData::soundLogs[GameData::slogpos].source = e;
-                    GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_ATTACK;
-                    GameData::slogpos++;
+                    logSound(e, SOUND_ID_ATTACK);
                     for (Entity t : targets) {
                         dealDamage(e, t, (GameData::AOEattackmodules[e].damage));
                     }
@@ -679,9 +798,7 @@ void EntityComponentSystem::sysBuild()
                                 GameData::colliders[b].AABB.z = temp;
                             }
                             // Add sound to sound log
-                            GameData::soundLogs[GameData::slogpos].source = e;
-                            GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_BUILD;
-                            GameData::slogpos++;
+                            logSound(e, SOUND_ID_BUILD);
                             Collision::updateColTable(b);
                         }
                     }
@@ -822,9 +939,7 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     GameData::combatLogs[GameData::clogpos].killed = false;
     GameData::clogpos++;
     // Add damage sound to sound log
-    GameData::soundLogs[GameData::slogpos].source = target;
-    GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_DAMAGE;
-    GameData::slogpos++;
+    logSound(target, SOUND_ID_DAMAGE);
     if (GameData::healths[target].curHealth <= 0) {
         causeDeath(source, target);
     }
@@ -856,9 +971,7 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
     GameData::combatLogs[GameData::clogpos].killed = true;
     GameData::clogpos++;
     // Add death sound to sound log
-    GameData::soundLogs[GameData::slogpos].source = target;
-    GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_DEATH;
-    GameData::slogpos++;
+    logSound(target, SOUND_ID_DEATH);
 
     if (source < NUM_PLAYERS) {
         if ((GameData::tags[target] & ComponentTags::WorthPoints) == ComponentTags::WorthPoints) {
@@ -978,6 +1091,14 @@ void EntityComponentSystem::changeState(Entity e, State post)
     GameData::tags[e] ^= GameData::states[e];
     GameData::states[e] = post;
     GameData::tags[e] |= post;
+}
+
+void EntityComponentSystem::logSound(Entity source, int sound_id) {
+    if (GameData::slogpos < SLOG_MAXSIZE) {
+        GameData::soundLogs[GameData::slogpos].source = source;
+        GameData::soundLogs[GameData::slogpos].sound = sound_id;
+        GameData::slogpos++;
+    }
 }
 
 std::list<Entity> EntityComponentSystem::getTargetsInRange(glm::vec3 & source, float & range, TeamID & hostileTo)

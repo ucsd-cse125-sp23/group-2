@@ -22,7 +22,12 @@ std::list<Entity> createProjectileSpread5();
 std::list<Entity> createProjectileChaos();
 std::list<Entity> createProjectileRandom();
 std::list<Entity> createProjectilePierce();
+std::list<Entity> createProjectileSpray();
 std::list<Entity> createEnemyGroundBasic();
+std::list<Entity> createEnemyGroundTank();
+std::list<Entity> createEnemyGroundMini();
+std::list<Entity> createEnemyFlyingBasic();
+std::list<Entity> createEnemyFlyingTractor();
 std::list<Entity> createTowerReticleBasic();
 std::list<Entity> createTowerReticleRailgun();
 std::list<Entity> createTowerReticleTesla();
@@ -52,12 +57,15 @@ namespace Prefabs {
 		ProjectileChaos,
 		ProjectileRandom,
 		ProjectilePierce,
+		ProjectileSpray,
 
 
 		PROJECTILE_MARKER,//Put Projectiles Above this marker
 		EnemyGroundBasic = PROJECTILE_MARKER,
 		EnemyGroundTank,
+		EnemyGroundMini,
 		EnemyFlyingBasic,
+		EnemyFlyingTractor,
 
 		ENEMY_MARKER,//Put Enemies Above this marker
 		BASIC_WOOD_RESOURCE = ENEMY_MARKER,
@@ -96,9 +104,12 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createProjectileChaos,
 	&createProjectileRandom,
 	&createProjectilePierce,
+	&createProjectileSpray,
 	&createEnemyGroundBasic,
 	&createEnemyGroundTank,
+    &createEnemyGroundMini,
 	&createEnemyFlyingBasic,
+	&createEnemyFlyingTractor,
 	&createWoodResourceBasic,
 	&createStoneResourceBasic,
 	&createTowerReticleBasic,
