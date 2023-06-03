@@ -940,7 +940,7 @@ std::list<Entity> createBossHead()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
+    GameData::hostilities[e].hostileTo = Teams::Players;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
     GameData::resources[e].resources[ResourceType::Money] = 20;
@@ -952,7 +952,7 @@ std::list<Entity> createBossHead()
     GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE;
     GameData::pattackmodules[e].attack = Prefabs::ProjectileChaos;
     GameData::turrets[e].attackState = ComponentTags::AttackerProjectile;
-    GameData::turrets[e].range = ATTACK_RANGE;
+    GameData::turrets[e].range = 50;
 
     GameData::tags[e] =
         ComponentTags::Position +
