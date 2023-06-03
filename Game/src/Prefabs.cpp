@@ -766,7 +766,7 @@ std::list<Entity> createTowerBarrier()
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = 0;
-    GameData::colliders[e].AABB = glm::vec3(2, 1.5, 5);
+    GameData::colliders[e].AABB = glm::vec3(2, 2, 5);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
     GameData::healths[e].curHealth = GameData::healths[e].maxHealth = BARRIER_BASE_HEALTH;
@@ -870,11 +870,6 @@ std::list<Entity> createHome() {
     return createdEntities;
 }
 
-namespace PlayerSpawns {
-    const glm::vec3 spawnpoint[numSpawns] = {
-        glm::vec3(0, 0, 0), glm::vec3(0, 0, 3), glm::vec3(3, 0, 0), glm::vec3(3, 0, 3)
-    };
-}
 
 std::list<Entity> createPlayers() {
     std::list<Entity> createdEntities;
@@ -1322,6 +1317,11 @@ std::list<Entity> createStoneResourceBasic()
 }
 
 
+namespace PlayerSpawns {
+    const glm::vec3 spawnpoint[numSpawns] = {
+        glm::vec3(-20,0,50), glm::vec3(-10,0,50), glm::vec3(0,0,50), glm::vec3(10,0,50)
+    };
+}\
 namespace Paths {
     const glm::vec3 path[pathCount][PATH_LENGTH] =
     {
