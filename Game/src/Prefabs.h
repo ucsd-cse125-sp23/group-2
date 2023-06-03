@@ -72,6 +72,19 @@ std::list<Entity> createStoneResourceBasic();
 std::list<Entity> createPathColliders();
 std::list<Entity> createPlayers();
 
+std::list<Entity> createBossHead();
+std::list<Entity> createBossLArm();
+std::list<Entity> createBossBody();
+std::list<Entity> createBossRArm();
+std::list<Entity> createBossRLeg();
+std::list<Entity> createBossLLeg();
+std::list<Entity> createBoss();
+
+
+
+
+
+
 namespace Prefabs {
 	enum Prefab : uint32_t{
 		TowerBasic,
@@ -110,6 +123,7 @@ namespace Prefabs {
 		EnemyGroundMini,
 		EnemyFlyingBasic,
 		EnemyFlyingTractor,
+		EnemyBoss,
 
 		ENEMY_MARKER,//Put Enemies Above this marker
 		BASIC_WOOD_RESOURCE = ENEMY_MARKER,
@@ -169,6 +183,7 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
     &createEnemyGroundMini,
 	&createEnemyFlyingBasic,
 	&createEnemyFlyingTractor,
+	&createBoss,
 	&createWoodResourceBasic,
 	&createStoneResourceBasic,
 	&createTowerReticleBasic,
@@ -186,7 +201,7 @@ namespace PlayerSpawns {
 };
 
 namespace Paths {
-	extern constexpr int pathCount = 4;
+	extern constexpr int pathCount = 5;
 	extern const glm::vec3 path[pathCount][PATH_LENGTH];
 	extern std::list<Entity> pathlist;
 };

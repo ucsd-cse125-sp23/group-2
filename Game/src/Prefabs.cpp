@@ -923,6 +923,332 @@ std::list<Entity> createPlayers() {
     return createdEntities;
 }
 
+std::list<Entity> createBossHead()
+{
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
+    GameData::velocities[e].flying = false;
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::colliders[e].AABB = glm::vec3(1.5, 1.7, 1.5);
+    GameData::models[e].modelID = MODEL_ID_BEAR_HEAD;
+    GameData::models[e].asciiRep = 'E';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
+    GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
+    GameData::hostilities[e].team = Teams::Martians;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+    GameData::colliders[e].colteam = CollisionLayer::Boss;
+    //GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::resources[e].resources[ResourceType::Money] = 20;
+    GameData::pointvalues[e] = 20;
+    GameData::models[e].renderCollider = true;
+    GameData::rigidbodies[e].fixed = false;
+    GameData::rigidbodies[e].grounded = false;
+    GameData::coldmg[e].cooldown = 0;
+    GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE;
+    GameData::pattackmodules[e].attack = Prefabs::ProjectileChaos;
+    GameData::turrets[e].attackState = ComponentTags::AttackerProjectile;
+    GameData::turrets[e].range = ATTACK_RANGE;
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::WorthPoints +
+        ComponentTags::ResourceContainer +
+        ComponentTags::HomingData +
+        ComponentTags::Turret;
+
+    return createdEntities;
+}
+
+std::list<Entity> createBossLArm()
+{
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
+    GameData::velocities[e].flying = false;
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::colliders[e].AABB = glm::vec3(1.5, 1.7, 1.5);
+    GameData::models[e].modelID = MODEL_ID_BEAR_LARM;
+    GameData::models[e].asciiRep = 'E';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
+    GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
+    GameData::hostilities[e].team = Teams::Martians;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+    GameData::colliders[e].colteam = CollisionLayer::Boss;
+    //GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::resources[e].resources[ResourceType::Money] = 20;
+    GameData::pointvalues[e] = 20;
+    GameData::models[e].renderCollider = true;
+    GameData::rigidbodies[e].fixed = false;
+    GameData::rigidbodies[e].grounded = false;
+    GameData::coldmg[e].cooldown = 0;
+    GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE;
+    GameData::pattackmodules[e].attack = Prefabs::ProjectileBasic;
+    GameData::turrets[e].attackState = ComponentTags::AttackerProjectile;
+    GameData::turrets[e].range = ATTACK_RANGE;
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::WorthPoints +
+        ComponentTags::ResourceContainer +
+        ComponentTags::HomingData +
+        ComponentTags::Turret;
+
+    return createdEntities;
+}
+
+std::list<Entity> createBossBody()
+{
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    //GameData::states[e] = enemyState::Pathing;
+    GameData::pathStructs[e].currentNode = 0;
+    GameData::pathStructs[e].path = Paths::pathCount-1;
+    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
+    GameData::velocities[e].flying = false;
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::colliders[e].AABB = glm::vec3(1.5, 1.7, 1.5);
+    GameData::models[e].modelID = MODEL_ID_BEAR_BODY;
+    GameData::models[e].asciiRep = 'E';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH*20;
+    GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
+    GameData::hostilities[e].team = Teams::Martians;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+    GameData::colliders[e].colteam = CollisionLayer::Boss;
+   // GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::resources[e].resources[ResourceType::Money] = 20;
+    GameData::pointvalues[e] = 20;
+    GameData::models[e].renderCollider = true;
+    GameData::rigidbodies[e].fixed = false;
+    GameData::rigidbodies[e].grounded = false;
+    GameData::coldmg[e].cooldown = 0;
+    GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE;
+
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+    //    ComponentTags::PathData +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::WorthPoints +
+        ComponentTags::ResourceContainer;
+
+    return createdEntities;
+}
+
+std::list<Entity> createBossRArm()
+{
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
+    GameData::velocities[e].flying = false;
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::colliders[e].AABB = glm::vec3(1.5, 1.7, 1.5);
+    GameData::models[e].modelID = MODEL_ID_BEAR_RARM;
+    GameData::models[e].asciiRep = 'E';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
+    GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
+    GameData::hostilities[e].team = Teams::Martians;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+    GameData::colliders[e].colteam = CollisionLayer::Boss;
+    //GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::resources[e].resources[ResourceType::Money] = 20;
+    GameData::pointvalues[e] = 20;
+    GameData::models[e].renderCollider = true;
+    GameData::rigidbodies[e].fixed = false;
+    GameData::rigidbodies[e].grounded = false;
+    GameData::coldmg[e].cooldown = 0;
+    GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE;
+    GameData::pattackmodules[e].attack = Prefabs::ProjectileSpray;
+    GameData::turrets[e].attackState = ComponentTags::AttackerProjectile;
+    GameData::turrets[e].range = ATTACK_RANGE;
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::WorthPoints +
+        ComponentTags::ResourceContainer +
+        ComponentTags::HomingData +
+        ComponentTags::Turret;
+
+    return createdEntities;
+}
+
+std::list<Entity> createBossRLeg()
+{
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
+    GameData::velocities[e].flying = false;
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::colliders[e].AABB = glm::vec3(1.5, 1.7, 1.5);
+    GameData::models[e].modelID = MODEL_ID_BEAR_RLEG;
+    GameData::models[e].asciiRep = 'E';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
+    GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
+    GameData::hostilities[e].team = Teams::Martians;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+    GameData::colliders[e].colteam = CollisionLayer::Boss;
+    //GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::resources[e].resources[ResourceType::Money] = 20;
+    GameData::pointvalues[e] = 20;
+    GameData::models[e].renderCollider = true;
+    GameData::rigidbodies[e].fixed = false;
+    GameData::rigidbodies[e].grounded = false;
+    GameData::coldmg[e].cooldown = 0;
+    GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE;
+    GameData::AOEattackmodules[e].fireRate = STOMP_RATE;
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::WorthPoints +
+        ComponentTags::ResourceContainer +
+        ComponentTags::HomingData +
+        ComponentTags::AttackerAOE;
+
+    return createdEntities;
+}
+
+std::list<Entity> createBossLLeg()
+{
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
+    GameData::velocities[e].flying = false;
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::colliders[e].AABB = glm::vec3(1.5, 1.7, 1.5);
+    GameData::models[e].modelID = MODEL_ID_BEAR_LLEG;
+    GameData::models[e].asciiRep = 'E';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
+    GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
+    GameData::hostilities[e].team = Teams::Martians;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
+    GameData::colliders[e].colteam = CollisionLayer::Boss;
+    //GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::resources[e].resources[ResourceType::Money] = 20;
+    GameData::pointvalues[e] = 20;
+    GameData::models[e].renderCollider = true;
+    GameData::rigidbodies[e].fixed = false;
+    GameData::rigidbodies[e].grounded = false;
+    GameData::coldmg[e].cooldown = 0;
+    GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE;
+    GameData::AOEattackmodules[e].fireRate = STOMP_RATE;
+
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Velocity +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::RigidBody +
+        ComponentTags::Health +
+        ComponentTags::CollisionDmg +
+        ComponentTags::Hostility +
+        ComponentTags::WorthPoints +
+        ComponentTags::ResourceContainer +
+        ComponentTags::HomingData +
+        ComponentTags::AttackerAOE;
+
+    return createdEntities;
+}
+
+std::list<Entity> createBoss()
+{
+    std::list<Entity> boss;
+    Entity body = createBossBody().front();
+    Entity head = createBossHead().front();
+   
+    Entity lleg = createBossLLeg().front();
+    Entity rleg = createBossRLeg().front();
+    Entity larm = createBossLArm().front();
+    Entity rarm = createBossRArm().front();
+    
+
+    GameData::homingStructs[head].trackedEntity = body;
+    GameData::homingStructs[head].offset = glm::vec3(0, GameData::colliders[body].AABB.y * 2 + GameData::colliders[head].AABB.y, 0);
+  
+    
+    GameData::homingStructs[lleg].trackedEntity = body;
+    GameData::homingStructs[lleg].offset = glm::vec3(GameData::colliders[body].AABB.x, GameData::colliders[body].AABB.y * 0.5, 0);
+    GameData::homingStructs[rleg].trackedEntity = body;
+    GameData::homingStructs[rleg].offset = glm::vec3(-GameData::colliders[body].AABB.x, GameData::colliders[body].AABB.y * 0.5, 0);
+    GameData::homingStructs[larm].trackedEntity = body;
+    GameData::homingStructs[larm].offset = glm::vec3(GameData::colliders[body].AABB.x, GameData::colliders[body].AABB.y * 1.5, 0);
+    GameData::homingStructs[rarm].trackedEntity = body;
+    GameData::homingStructs[rarm].offset = glm::vec3(-GameData::colliders[body].AABB.x, GameData::colliders[body].AABB.y * 1.5, 0);
+    
+    GameData::positions[body] = glm::vec3(0, 0, 20);
+    GameData::positions[head] = glm::vec3(10, 0, 20);
+    
+    GameData::positions[lleg] = glm::vec3(-10, 0, 20);
+
+    GameData::positions[rleg] = glm::vec3(20, 0, 20);
+
+    GameData::positions[larm] = glm::vec3(-20, 0, 20);
+
+    GameData::positions[rarm] = glm::vec3(30, 0, 20);
+    
+
+
+
+    return std::list<Entity>();
+}
+
 std::list<Entity> createWoodResourceBasic()
 {
     std::list<Entity> createdEntities;
@@ -995,7 +1321,8 @@ namespace Paths {
         { glm::vec3(-60,0,-85), glm::vec3(-60,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc },
         { glm::vec3(-20,0,-85), glm::vec3(-20,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
         { glm::vec3(20,0,-85), glm::vec3(20,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc},
-        { glm::vec3(60,0,-85), glm::vec3(60,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  }
+        { glm::vec3(60,0,-85), glm::vec3(60,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
+        { glm::vec3(0,0,-85), glm::vec3(0,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  }
     };
     std::list<Entity> pathlist;
 }

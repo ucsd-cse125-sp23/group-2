@@ -41,14 +41,18 @@ void ServerGame::initWaves()
 
     //Temp Nested for loop to populate wave vectors
     //TODO: Manually set up waves
+
+    /*
     for (int i = 0; i < WAVE_COUNT; i++)
     {
         for (int j = 0; j < 15; j++)
         {
-            enemy e = { WaveData::enemyTypes[rand() % NUM_ENEMY_TYPES], rand() % Paths::pathCount, 1 * TICK_RATE };
+            enemy e = { WaveData::enemyTypes[rand() % NUM_ENEMY_TYPES], rand() % (Paths::pathCount - 1), 1 * TICK_RATE };
             WaveData::waves[i].push(e);
         }
     }
+    */
+    prefabMap[Prefabs::EnemyBoss]();
 }
 
 void ServerGame::initBase()
@@ -60,6 +64,7 @@ void ServerGame::waveSpawner()
 {
     static int spawnCooldown = 0;
 
+    /*
     if (WaveData::waveTick <= 0)
     {
         WaveData::currentWave++;
@@ -94,6 +99,7 @@ void ServerGame::waveSpawner()
     }
 
     WaveData::waveTick--;
+    */
 }
 
 //Spawn Initial assortment of resources

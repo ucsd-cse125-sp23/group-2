@@ -329,8 +329,11 @@ void EntityComponentSystem::sysHoming()
                     direction = glm::vec3(direction.x, direction.y + FLYING_HEIGHT, direction.z);
                 }
                 else {
-                    direction.y = 0;
+                    //direction.y = 0; Maybe TODO????
                 }
+                direction += GameData::homingStructs[e].offset; //This means only somethng with offset can track in y direction
+
+                //printf("Dirrection is (%f, %f, %f)\n", direction.x, direction.y, direction.z);
                 GameData::velocities[e].velocity = glm::normalize(direction) * GameData::velocities[e].moveSpeed;
             }
         }
