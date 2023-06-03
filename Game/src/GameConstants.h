@@ -51,6 +51,11 @@ const float TURRET_BASE_RANGE = 10;
 //Snap range barrier
 const float SNAP_RANGE = 5;
 
+//Number of levels for of upgrades
+constexpr size_t NUM_UP_LEVELS = 3;
+
+//Player build cooldown in ticks
+const int ACTION_COOLDOWN = TICK_RATE;
 
 //ground enemy base movespeed in units/sec
 const float ENEMY_GND_MVSPD_PERSEC = 5;

@@ -31,6 +31,7 @@ namespace GameData
   std::array<Points, MAX_ENTITIES> pointvalues;
   AllPlayerData playerdata;
   std::array<AOEAttackModule, MAX_ENTITIES> AOEattackmodules;
+  std::array<Upgradeable, MAX_ENTITIES> upgradedata;
 }
 
 //Call all systems each update
@@ -390,6 +391,31 @@ Entity EntityComponentSystem::findClosestPathCollider(glm::vec3 origin)
 
 bool EntityComponentSystem::applyUpgrade(Entity play, Entity target)
 {
+    if (GameData::tags[target] & ComponentTags::Upgradeable) {
+        bool hasenough = true;
+        for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+            hasenough &= GameData::upgradedata[target].cost[i] <= GameData::playerdata.resources[i];
+        }
+        if (!hasenough) {
+            return false;
+        }
+        Entity up = prefabMap[GameData::upgradedata[target].upgrade]().front();
+        if (up == INVALID_ENTITY) {
+            return false;
+        }
+        causeDeath(target, target);
+
+
+        //Subtract resources
+        for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+            GameData::playerdata.resources[i] -= GameData::upgradedata[target].cost[i];
+        }
+
+        //Set position of new tower
+        GameData::positions[up] = GameData::positions[target];
+        return true;
+
+    }
     return false;
 }
 

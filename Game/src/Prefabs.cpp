@@ -359,13 +359,16 @@ std::list<Entity> createTowerBasic() {
     GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
+    GameData::upgradedata[e].cost = { 0, 0, 0 };
+    GameData::upgradedata[e].upgrade = Prefabs::TowerBarrier;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Hostility +
         ComponentTags::RigidBody +
         ComponentTags::Collidable +
-        ComponentTags::Turret;
+        ComponentTags::Turret +
+        ComponentTags::Upgradeable;
     GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = 0;
@@ -398,7 +401,8 @@ std::list<Entity> createTowerRailgun() {
         ComponentTags::Hostility +
         ComponentTags::RigidBody +
         ComponentTags::Collidable +
-        ComponentTags::Turret;
+        ComponentTags::Turret +
+        ComponentTags::Upgradeable;
     GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = 0;
@@ -433,7 +437,8 @@ std::list<Entity> createTowerTesla() {
         ComponentTags::Hostility +
         ComponentTags::RigidBody +
         ComponentTags::Collidable +
-        ComponentTags::AttackerAOE;
+        ComponentTags::AttackerAOE +
+        ComponentTags::Upgradeable;
     GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = 0;
@@ -457,13 +462,16 @@ std::list<Entity> createTowerBarrier()
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
     GameData::healths[e].curHealth = GameData::healths[e].maxHealth = BARRIER_BASE_HEALTH;
+    GameData::upgradedata[e].cost = { 0, 0, 0 };
+    GameData::upgradedata[e].upgrade = Prefabs::TowerBasic;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Hostility +
         ComponentTags::RigidBody +
         ComponentTags::Collidable +
-        ComponentTags::Health;
+        ComponentTags::Health +
+        ComponentTags::Upgradeable;
     GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = 0;

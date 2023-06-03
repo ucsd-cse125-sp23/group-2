@@ -190,10 +190,16 @@ struct AllPlayerData {
     std::array<ScoreCard, NUM_PLAYERS> scores;
     std::array<int, NUM_RESOURCE_TYPES> resources;
     std::array<float, NUM_PLAYERS> spawntimers;
+    std::array<int, NUM_PLAYERS> actioncooldown;
 };
 
 struct ResourceContainer {
     std::array<int, NUM_RESOURCE_TYPES> resources;
+};
+
+struct Upgradeable {
+    std::array<int, NUM_RESOURCE_TYPES> cost;
+    Prefab upgrade;
 };
 
 
@@ -265,7 +271,7 @@ namespace GameData
     extern std::array<HomingData, MAX_ENTITIES> homingStructs;
     extern std::array<ResourceContainer, MAX_ENTITIES> resources;
     extern std::array<Points, MAX_ENTITIES> pointvalues;
-
+    extern std::array<Upgradeable, MAX_ENTITIES> upgradedata;
     //Events
     extern std::queue<CollisionEvent> colevents;
 

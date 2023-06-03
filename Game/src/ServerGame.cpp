@@ -201,6 +201,8 @@ void ServerGame::handleInputs()
 
     for(int i = 0; i < NUM_CLIENTS; i++)
     {
+        //Decrement cooldown
+        GameData::playerdata.actioncooldown[i]--;
         glm::vec3 camDirection;
         glm::vec3 camPosition;
         bool target = false;
@@ -292,8 +294,11 @@ void ServerGame::handleInputs()
                 GameData::retplaces[i].place = true;
             }
             else if (GameData::states[i] == PlayerState::Upgrading) {
-                if (choose != INVALID_ENTITY) {
-                    ECS::applyUpgrade(i, choose);
+                if (GameData::playerdata.actioncooldown[i] < 0) {
+                    if (choose != INVALID_ENTITY) {
+                        ECS::applyUpgrade(i, choose);
+                        GameData::playerdata.actioncooldown[i] = ACTION_COOLDOWN;
+                    }
                 }
             }
             else {
