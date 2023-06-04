@@ -43,7 +43,7 @@ void ServerGame::initWaves()
     //TODO: Manually set up waves
 
     //Intro wave (16 basic enemies), random paths
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < 32; i++)
     {
         enemy e = { Prefabs::EnemyGroundBasic, rand() % (Paths::pathCount), 1 * TICK_RATE };
         WaveData::waves[0].push(e);
@@ -51,14 +51,14 @@ void ServerGame::initWaves()
 
     //Wave 2 (Introduce basic flying)
     //Randomly placed flying enemies
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < 32; i++)
     {
         enemy e = { Prefabs::EnemyFlyingBasic, rand() % (Paths::pathCount), 1 * TICK_RATE };
         WaveData::waves[1].push(e);
     }
     WaveData::waves[1].back().cooldown = 10 * TICK_RATE;
-    //four basics on each path
-    for (int i = 0; i < 4; i++)
+    //eight basics on each path
+    for (int i = 0; i < 8; i++)
     {
         for (int p = 0; p < Paths::pathCount; p++)
         {
@@ -76,7 +76,7 @@ void ServerGame::initWaves()
     }
     WaveData::waves[2].back().cooldown = 15 * TICK_RATE;
     //four mini, four flying on each path
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 8; i++)
     {
         for (int p = 0; p < Paths::pathCount; p++)
         {
@@ -93,7 +93,7 @@ void ServerGame::initWaves()
     }
     //Wave 4 (Introduce abductors)
     //Eight basics on each path
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 16; i++)
     {
         for (int p = 0; p < Paths::pathCount; p++)
         {
@@ -103,13 +103,13 @@ void ServerGame::initWaves()
         WaveData::waves[3].back().cooldown = 1 * TICK_RATE;
     }
     //Randomly placed tractors
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 4; i++)
     {
         enemy e = { Prefabs::EnemyFlyingTractor, rand() % (Paths::pathCount), 1 * TICK_RATE };
         WaveData::waves[3].push(e);
     }
     //Eight fliers on each path
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 16; i++)
     {
         for (int p = 0; p < Paths::pathCount; p++)
         {
@@ -127,32 +127,32 @@ void ServerGame::initWaves()
     }
     //Wave 6 (Challenge Wave)
     //Basic - Flying - Tank - Mini times 4 on each path
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 4; i++)
     {
         for (int p = 0; p < Paths::pathCount; p++)
         {
             enemy e = { Prefabs::EnemyGroundBasic, p, 0 };
             WaveData::waves[5].push(e);
         }
-        WaveData::waves[5].back().cooldown = 0.25 * TICK_RATE;
+        WaveData::waves[5].back().cooldown = 1 * TICK_RATE;
         for (int p = 0; p < Paths::pathCount; p++)
         {
             enemy e = { Prefabs::EnemyFlyingBasic, p, 0 };
             WaveData::waves[5].push(e);
         }
-        WaveData::waves[5].back().cooldown = 0.25 * TICK_RATE;
+        WaveData::waves[5].back().cooldown = 1 * TICK_RATE;
         for (int p = 0; p < Paths::pathCount; p++)
         {
             enemy e = { Prefabs::EnemyGroundTank, p, 0 };
             WaveData::waves[5].push(e);
         }
-        WaveData::waves[5].back().cooldown = 0.25 * TICK_RATE;
+        WaveData::waves[5].back().cooldown = 1 * TICK_RATE;
         for (int p = 0; p < Paths::pathCount; p++)
         {
             enemy e = { Prefabs::EnemyGroundMini, p, 0 };
             WaveData::waves[5].push(e);
         }
-        WaveData::waves[5].back().cooldown = 0.25 * TICK_RATE;
+        WaveData::waves[5].back().cooldown = 1 * TICK_RATE;
     }
     //Tractor on each path
     for (int p = 0; p < Paths::pathCount; p++)
@@ -170,7 +170,7 @@ void ServerGame::initWaves()
             enemy e = { Prefabs::EnemyGroundMini, p, 0 };
             WaveData::waves[5].push(e);
         }
-        WaveData::waves[5].back().cooldown = 0.25 * TICK_RATE;
+        WaveData::waves[5].back().cooldown = 1 * TICK_RATE;
     }
     //Buncha tanks now
     for (int i = 0; i < 16; i++)
@@ -180,7 +180,7 @@ void ServerGame::initWaves()
             enemy e = { Prefabs::EnemyGroundTank, p, 0 };
             WaveData::waves[5].push(e);
         }
-        WaveData::waves[5].back().cooldown = 0.25 * TICK_RATE;
+        WaveData::waves[5].back().cooldown = 1 * TICK_RATE;
     }
     //Tractors and fliers
     for (int i = 0; i < 16; i++)
@@ -190,7 +190,7 @@ void ServerGame::initWaves()
             enemy e = { Prefabs::EnemyFlyingBasic, p, 0 };
             WaveData::waves[5].push(e);
         }
-        WaveData::waves[5].back().cooldown = 0.25 * TICK_RATE;
+        WaveData::waves[5].back().cooldown = 1 * TICK_RATE;
         for (int p = 0; p < Paths::pathCount; p++)
         {
             enemy e = { Prefabs::EnemyFlyingTractor, p, 0 };
@@ -380,7 +380,7 @@ void ServerGame::update()
 }
 
 const int NUM_PLAYER_ATTACK = 3;
-const Prefab playerWeaponArray[NUM_PLAYER_ATTACK] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectileSpray };
+const Prefab playerWeaponArray[NUM_PLAYER_ATTACK] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectilePierce };
 const Prefab playerReticleArray[NUM_TOWER_PREFAB] = { Prefabs::TowerReticleBasic, Prefabs::TowerReticleRailgun, Prefabs::TowerReticleTesla, Prefabs::TowerReticleBarrier };
 const Prefab playerBuildingArray[NUM_TOWER_PREFAB] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerTesla, Prefabs::TowerBarrier };
 
@@ -424,8 +424,11 @@ void ServerGame::handleInputs()
 
             if (in.build) {
                 changeState(i, PlayerState::Build);
-                if (in.selected > NUM_TOWER_PREFAB) {
-                    in.selected = NUM_TOWER_PREFAB - 1;
+                if (in.selected > NUM_TOWER_TYPES) {
+                    in.selected = NUM_TOWER_TYPES - 1;
+                }
+                if (in.selected < 0) {
+                    in.selected = 0; //BAD BAD CODE
                 }
                 if (GameData::retplaces[i].reticlePrefab != playerReticleArray[in.selected]) {
                     if (GameData::retplaces[i].reticle != INVALID_ENTITY) {

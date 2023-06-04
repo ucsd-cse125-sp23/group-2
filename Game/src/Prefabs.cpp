@@ -81,7 +81,7 @@ std::list<Entity> createProjectilePierce() {
     GameData::colliders[e].AABB = glm::vec3(1, 1, 1);
     GameData::models[e].modelID = MODEL_ID_PROJECTILE;
     GameData::models[e].asciiRep = 'J';
-    GameData::coldmg[e].damage = 10.0f;
+    GameData::coldmg[e].damage = 5.0f;
     GameData::lifespans[e] = 5;
     GameData::spawnrates[e] = PROJ_SPAWN_RATE * 4;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
@@ -588,7 +588,7 @@ std::list<Entity> createTowerRailgun() {
         return createdEntities;
     }
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::turrets[e].range = TURRET_BASE_RANGE*10;
+    GameData::turrets[e].range = TURRET_BASE_RANGE*4;
     GameData::turrets[e].attackState = towerStates::AttackingProjectile;
     GameData::pattackmodules[e].cooldown = 0;
     GameData::pattackmodules[e].attack = Prefabs::ProjectilePierce;

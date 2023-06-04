@@ -1,6 +1,6 @@
 //The max number of each entity type (CAN BE MODIFIED - Currently Arbitrary)
 #pragma once
-#define NUM_PLAYERS 1
+#define NUM_PLAYERS 4
 #define NUM_ENEMIES 50
 #define NUM_TOWERS 50
 #define NUM_RESOURCES 750
@@ -33,14 +33,14 @@ const float PROJ_DAMAGE_RATE = 0.25;
 const float GROUND_HEIGHT = -1.0;
 
 //Base health values of different game entities
-const float PLAYER_BASE_HEALTH = 200000000;
-const float ENEMY_BASE_HEALTH = 100;
-const float HOME_BASE_HEALTH = 100000000;
-const float RESOURCE_BASE_HEALTH = 100;
+const float PLAYER_BASE_HEALTH = 100;
+const float ENEMY_BASE_HEALTH = 200;
+const float HOME_BASE_HEALTH = 1000;
+const float RESOURCE_BASE_HEALTH = 200;
 const float BARRIER_BASE_HEALTH = 100;
 
 //Base damage per second dealt by towers
-const float TURRET_BASE_DPS = 200;
+const float TURRET_BASE_DPS = 400;
 
 //How often turrets fire (seconds between damages)
 const float TURRET_BASE_FIRE_RATE = 0.25;
