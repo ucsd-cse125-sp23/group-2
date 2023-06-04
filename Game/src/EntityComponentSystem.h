@@ -57,6 +57,7 @@ namespace CollisionLayer {
     constexpr TeamID WorldObj = 0x1;
     constexpr TeamID UIObj = 0x1 << 1;
     constexpr TeamID StaticObj = 0x1 << 2;
+    constexpr TeamID Boss = 0x1 << 3;
 }
 
 struct Hostility {
@@ -73,6 +74,7 @@ struct PathData //Data for entity pathing
 struct HomingData //Data for tracking another entity
 {
     Entity trackedEntity; //The entity to follow (player, tower, enemy, etc...)
+    glm::vec3 offset; //A 3d offset to track
 };
 
 struct Model //3D Model to render for the entity
@@ -240,6 +242,8 @@ namespace ComponentTags
     constexpr Tag BarrierReticle = 0x1 << 26;
     constexpr Tag Upgradeable = 0x1 << 27;
     constexpr Tag Upgrading = 0x1 << 28;
+    constexpr Tag PAttackInRangeAI = 0x1 << 29;
+
 }
 
 namespace enemyState {

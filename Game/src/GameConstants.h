@@ -93,6 +93,9 @@ const float FLYING_HEIGHT = 10;
 //Default player spawn timer in seconds
 const float RESPAWN_TIMER = 5.0;
 
+//Boss Stomp Rate
+const float STOMP_RATE = 0.25;
+
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 8
 
@@ -131,8 +134,17 @@ const float TOWER_PLACEMENT_RANGE = 15;
 #define MODEL_ID_BASE 14
 #define MODEL_ID_BEAR 15
 #define MODEL_ID_SUNGOD 16
+#define MODEL_ID_BEAR_BODY 17
+#define MODEL_ID_BEAR_HEAD 18
+#define MODEL_ID_BEAR_LARM 19
+#define MODEL_ID_BEAR_RARM 20
+#define MODEL_ID_BEAR_LLEG 21
+#define MODEL_ID_BEAR_RLEG 22
 
-#define NUM_MODELS 17
+
+
+
+#define NUM_MODELS 23
 
 //animation states
 #define ANIM_IDLE 0
