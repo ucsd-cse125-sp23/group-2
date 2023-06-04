@@ -1,6 +1,7 @@
 #version 330 core
 out vec4 FragColor;
-
+    vec3 position;
+    
 struct Material {
     float shininess;
     bool useShininess;
@@ -32,14 +33,12 @@ uniform sampler2D texture_shiny1;
 uniform sampler2D texture_normal1;
 uniform Material material;
 
-const int numLights = 2;
+const int numLights = 1;
 uniform vec4 lightPos[numLights] = {
-    vec4(0.0f, 30.0f, 0.0f, 0.0f),
     vec4(0.0f, 30.0f, 0.0f, 0.0f)
 };
 uniform vec4 lightColor[numLights] = {
-    vec4(0.7f, 0.7f, 0.7f, 1.0f),
-    vec4(0.3f, 0.3f, 0.2f, 1.0f)
+    vec4(1.0f, 0.9f, 0.8f, 1.0f)
 };
 //uniform vec3 lightPos = vec3(0.0f, 40.0f, 0.0f);
 //uniform vec3 lightColor = vec3(0.9f, 0.4f, 0.1f);
@@ -67,25 +66,23 @@ void main()
     }
 
     if(material.emision.x != 0 || material.emision.y != 0 || material.emision.z != 0){
-        FragColor += vec4(material.emision, 1.0f);
+        FragColor += vec4(material.emision, 0.8f);
     }
-
+    vec3 norm = normalize(Normal);
+    vec3 viewDir = normalize(viewPos - FragPos);
     for(int i = 0; i < numLights; i++){
     
         vec4 ambient = ambientColor * lightColor[i];
-
-        vec3 norm = normalize(Normal);
         vec3 lightDir = normalize(vec3(lightPos[i]) - FragPos);
         float diff = max(dot(norm, lightDir), 0.0);
         vec4 diffuse = lightColor[i] * (diff * diffuseColor);
 
-        vec3 viewDir = normalize(viewPos - FragPos);
         vec3 reflectDir = reflect(-lightDir, norm);  
         vec3 halfway = normalize(lightDir + viewDir);
         float spec = pow(max(dot(norm, reflectDir), 0.0), shine);
         vec4 specular = lightColor[i] * (spec * specColor);
 
-
+                                     
         FragColor += 0.13f * ambient + diffuse + 0.1f* specular;
     }
 

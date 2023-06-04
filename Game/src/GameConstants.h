@@ -33,9 +33,9 @@ const float PROJ_DAMAGE_RATE = 0.25;
 const float GROUND_HEIGHT = -1.0;
 
 //Base health values of different game entities
-const float PLAYER_BASE_HEALTH = 100;
+const float PLAYER_BASE_HEALTH = 200000000;
 const float ENEMY_BASE_HEALTH = 100;
-const float HOME_BASE_HEALTH = 100;
+const float HOME_BASE_HEALTH = 100000000;
 const float RESOURCE_BASE_HEALTH = 100;
 const float BARRIER_BASE_HEALTH = 100;
 

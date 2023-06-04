@@ -10,7 +10,7 @@ out vec3 FragPos;
 uniform mat4 model;
 uniform mat4 viewProj;
 uniform float time;
-
+uniform float rand;
 mat4 rotationMatrix(vec3 axis, float angle)
 {
     axis = normalize(axis);
@@ -23,7 +23,7 @@ mat4 rotationMatrix(vec3 axis, float angle)
                 oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,
                 0.0,                                0.0,                                0.0,                                1.0);
 }
-mat4 scaleMatrix(float x, float y, float z)\
+mat4 scaleMatrix(float x, float y, float z)
 {
     return mat4(x,	0.0,	0.0,	 0.0,
 		0.0,	y,	0.0, 	 0.0,
@@ -34,13 +34,9 @@ mat4 scaleMatrix(float x, float y, float z)\
 void main()
 {
     TexCoords = aTexCoords;
-    float y_pos = 1.2*sin(3*time) + model[3][1];
     mat4 m = model;
-    m[3][1] = y_pos;
-    vec3 newPos = aPos;
-    newPos[1] = y_pos;
-    FragPos = vec3(model * vec4(newPos, 1.0));
-    m *= rotationMatrix(vec3(0,1,0), time);
+    FragPos = vec3(model * vec4(aPos, 1.0));
+    m *= scaleMatrix(0.1 * sin(time * 6 + rand + 1) + 1, 0.1 * sin(time*  6 + rand + 2) + 1, 0.1 * sin(time*  6 + rand + 3) + 1);
     Normal = mat3(transpose(inverse(m))) * aNormal;
     gl_Position = viewProj * m  * vec4(aPos, 1.0);
 }

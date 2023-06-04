@@ -47,6 +47,6 @@ void HealthBar::update(glm::vec3 playerPos, glm::vec3 targetPos, float cH, float
     model *= glm::scale(glm::vec3(0.01f, 0.2f, currHealth / maxHealth));
     //update location
     model[3] = glm::vec4(targetPos, 1.0f);
-    model[3][1] += 2;  
+    model[3][1] += 1;  
 
 }

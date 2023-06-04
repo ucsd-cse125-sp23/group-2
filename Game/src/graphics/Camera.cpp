@@ -68,9 +68,9 @@ void Camera::calcCameraPosition(float hDist, float vDist, bool screenShake, floa
 
     if (screenShake) {
         srand(time);
-        position.x += glm::sin(time * 20 + 1) * (rand() % 100 + 1) / 75.0f;
-        position.y += glm::sin(time * 20 + 2) * (rand() % 100 + 1) / 75.0f;
-        position.z += glm::sin(time * 20 + 3) * (rand() % 100 + 1) / 75.0f;
+        position.x += 0.4f * glm::sin(time * 20 + 1);
+        position.y += 0.4f * glm::sin(time * 20 + 2);
+        position.z += 0.4f * glm::sin(time * 20 + 3);
     }
 }
 

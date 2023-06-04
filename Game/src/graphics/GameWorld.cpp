@@ -2,8 +2,6 @@
 float GameWorld::prevX, GameWorld::prevY,GameWorld::currX, GameWorld::currY, GameWorld::scrollY = 0;
 
 void GameWorld::init() {
-
-
 	currID = 0;
 	env = new Skybox();
 	env->setSkyShader(new Shader("../shaders/skybox.vert", "../shaders/skybox.frag"));
@@ -35,9 +33,9 @@ void GameWorld::init() {
 	shaders[MODEL_ID_CUBE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_ROVER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
-	shaders[MODEL_ID_MOB] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
-	shaders[MODEL_ID_MOB_TANK] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag"); //dunno if we want new shading for the tank and minis
-	shaders[MODEL_ID_MOB_MINI] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_MOB] = new Shader("../shaders/martian_shader.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_MOB_TANK] = new Shader("../shaders/martian_shader.vert", "../shaders/model_loading.frag"); //dunno if we want new shading for the tank and minis
+	shaders[MODEL_ID_MOB_MINI] = new Shader("../shaders/martian_shader.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_MOB_FLYING] = new Shader("../shaders/ufo_shader.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_MOB_TRACTOR] = new Shader("../shaders/ufo_shader.vert", "../shaders/model_loading.frag");
 
@@ -64,6 +62,9 @@ void GameWorld::init() {
 		healths[i] = new HealthBar(healthShader, healthModel);
 	}
 	cam = new Camera();
+	shakeScreen = false;
+	screenShakeOn = false;
+	startTime = 0;
 }
 
 void GameWorld::update(ServertoClientData& incomingData, int id) {
@@ -83,7 +84,8 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 			&& incomingData.models[i].modelID != MODEL_ID_PROJECTILE
 			&& incomingData.healths[i].curHealth / incomingData.healths[i].maxHealth < 1) {
 			healths[i]->setActive(true);
-			healths[i]->update(incomingData.positions[id], incomingData.positions[i], incomingData.healths[i].curHealth, incomingData.healths[i].maxHealth);
+			healths[i]->update(cam->getCameraPosition(), incomingData.positions[i] +  glm::vec3(0.0f,incomingData.colliders[i].AABB.y, 0.0f), 
+				 incomingData.healths[i].curHealth, incomingData.healths[i].maxHealth);
 		}
 		else {
 			healths[i]->setActive(false);
@@ -97,7 +99,7 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		else {
 			entities[i]->setActive(false);
 		}
-	}
+		}
 
 	int maxDelta = 100;
 	int dx = glm::clamp((int)(currX - prevX), -maxDelta, maxDelta);
@@ -106,21 +108,23 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 	prevY = (int)currY;
 
 	//screen shake
-	bool shakeScreen = false;
 	float currHealth = incomingData.healths[id].curHealth / incomingData.healths[id].maxHealth;
-	if (currHealth != playerHealth) {
+	if (currHealth < playerHealth) {
 		shakeScreen = true;
 		playerHealth = currHealth;
 	}
-	bool screenShakeOn = false;
-	float startTime = 0;
+	else {
+		shakeScreen = false;
+	}
+
 	float currTime = glfwGetTime();
 
 	if (shakeScreen) {
 		screenShakeOn = true;
 		startTime = glfwGetTime();
 	}
-	if (!(screenShakeOn && currTime < (startTime + 3))) {
+
+	if (currTime > (startTime + 0.3f)) {
 		screenShakeOn = false;
 		shakeScreen = false;
 	}

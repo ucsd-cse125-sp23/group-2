@@ -10,7 +10,7 @@ out vec3 FragPos;
 uniform mat4 model;
 uniform mat4 viewProj;
 uniform float time;
-
+uniform float rand;   
 mat4 rotationMatrix(vec3 axis, float angle)
 {
     axis = normalize(axis);
@@ -27,7 +27,7 @@ mat4 rotationMatrix(vec3 axis, float angle)
 void main()
 {
     TexCoords = aTexCoords;
-    float y_pos = 1.2*sin(3*time) + model[3][1];
+    float y_pos = 1.2*sin(3*time + rand) + model[3][1];
     mat4 m = model;
     m[3][1] = y_pos;
     vec3 newPos = aPos;

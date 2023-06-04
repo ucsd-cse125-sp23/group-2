@@ -5,6 +5,7 @@
 #include "Cube.h"
 #include "Shader.h"
 #include "ObjectModel.h"
+#include <random>
 class RenderEntity {
 private:
     bool active;
@@ -16,6 +17,7 @@ private:
     glm::vec3 color;
     Shader* shader;
     ObjectModel* ourModel;
+   
 
 public:
     RenderEntity(int i);
