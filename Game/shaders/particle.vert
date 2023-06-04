@@ -15,7 +15,7 @@ out vec4 ParticleColor;
 uniform mat4 model;
 uniform mat4 viewProj;
 
-uniform vec2 offset;
+uniform vec3 offset;
 uniform vec4 color;
 
 void main()
