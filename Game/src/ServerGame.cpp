@@ -451,6 +451,9 @@ void ServerGame::handleInputs()
                 if (in.selected > NUM_PLAYER_ATTACK) {
                     in.selected = NUM_PLAYER_ATTACK - 1;
                 }
+                if (in.selected < 0) {
+                    in.selected = 0; //BAD BAD CODE
+                }
                 changeState(i, PlayerState::Default); //May be slow
                 GameData::pattackmodules[i].attack = playerWeaponArray[in.selected];
 

@@ -1350,10 +1350,10 @@ namespace WaveData {
 //Define Tower Build costs
 const std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_TYPES> buildcosts =
 { {
-    {{10, 20, 0}},
-    {{20, 10, 20}},
-    {{20, 20, 10}},
-    {{10, 0, 20}}
+    {{20, 40, 0}},
+    {{40, 20, 40}},
+    {{40, 40, 20}},
+    {{20, 0, 40}}
 }};
 
 std::list<Entity> createPathColliders()
