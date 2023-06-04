@@ -124,7 +124,6 @@ void EntityComponentSystem::sysEnemyAI()
         }
         else if ((GameData::tags[e] & ComponentTags::Hunter) == ComponentTags::Hunter)
         {
-
             //Find closest enemy to shoot
             Entity closestEnemy = e; //initialized to turret ID in case of no valid target found
             float closestDistance = ATTACK_RANGE + 1; //Set closest found distance to out of range
@@ -145,15 +144,28 @@ void EntityComponentSystem::sysEnemyAI()
                     closestDistance = enemyDistance;
                 }
             }
-            //If a valid target was found, fire at them
-            if (closestEnemy != e)
+            switch (GameData::states[e])
             {
+            case enemyState::Pathing:
+                //If a valid target was found, fire at them
+                if (closestEnemy != e)
+                {
+                    GameData::hattackmodules[e].target = closestEnemy;
+                    GameData::pattackmodules[e].targetPos = GameData::positions[closestEnemy] + GameData::velocities[closestEnemy].velocity;
+                    changeState(e, enemyState::ShootingProjectile);
+                }
+                break;
+            case enemyState::ShootingProjectile:
                 GameData::hattackmodules[e].target = closestEnemy;
                 GameData::pattackmodules[e].targetPos = GameData::positions[closestEnemy] + GameData::velocities[closestEnemy].velocity;
-                changeState(e, enemyState::ShootingProjectile);
-            }
-            else
-            {
+                if (closestEnemy == e)
+                {
+                    changeState(e, enemyState::Pathing);
+                    rePath(e);
+                }
+                break;
+            default:
+                printf("Entity %u is a trapper with invalid state!\n", e);
                 changeState(e, enemyState::Pathing);
                 rePath(e);
             }
@@ -273,10 +285,7 @@ void EntityComponentSystem::sysPathing()
             //Check if entity has reached its currently tracked destination (+/- 1 unit)
             glm::vec3 nodePos = Paths::path[GameData::pathStructs[e].path][GameData::pathStructs[e].currentNode];
             glm::vec3 curPos = GameData::positions[e];
-            if (GameData::velocities[e].flying)
-            {
-                curPos = glm::vec3(curPos.x, curPos.y - FLYING_HEIGHT, curPos.z);
-            }
+            curPos = glm::vec3(curPos.x, 0, curPos.z);
             bool closeEnough = glm::distance(nodePos, curPos) < 1;
             if (closeEnough)
             {

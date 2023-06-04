@@ -108,12 +108,12 @@ void ServerGame::initWaves()
         enemy e = { Prefabs::EnemyFlyingTractor, rand() % (Paths::pathCount), 1 * TICK_RATE };
         WaveData::waves[3].push(e);
     }
-    //Eight more basics on each path
+    //Eight fliers on each path
     for (int i = 0; i < 8; i++)
     {
         for (int p = 0; p < Paths::pathCount; p++)
         {
-            enemy e = { Prefabs::EnemyGroundBasic, p, 0 };
+            enemy e = { Prefabs::EnemyFlyingBasic, p, 0 };
             WaveData::waves[3].push(e);
         }
         WaveData::waves[3].back().cooldown = 1 * TICK_RATE;

@@ -109,6 +109,8 @@ const float STOMP_RANGE = 5;
 
 #define NUM_ENEMY_TYPES 5
 
+#define NUM_TOWER_TYPES 4
+
 #define NUM_RESOURCE_TYPES 3
 
 const float PATH_WIDTH = 3;

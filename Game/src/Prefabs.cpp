@@ -158,7 +158,7 @@ std::list<Entity> createProjectileSpray() {
     GameData::colliders[e].AABB = glm::vec3(.25, .25, .25);
     GameData::models[e].modelID = MODEL_ID_PROJECTILE;
     GameData::models[e].asciiRep = 'J';
-    GameData::coldmg[e].damage = 10.0f;
+    GameData::coldmg[e].damage = 6.0f;
     GameData::lifespans[e] = 0.25;
     GameData::spawnrates[e] = PROJ_SPAWN_RATE/10;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
@@ -1348,10 +1348,13 @@ namespace WaveData {
 }
 
 //Define Tower Build costs
-const std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts =
-{
-    {0, 0, 0}
-};
+const std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_TYPES> buildcosts =
+{ {
+    {{10, 20, 0}},
+    {{20, 10, 20}},
+    {{20, 20, 10}},
+    {{10, 0, 20}}
+}};
 
 std::list<Entity> createPathColliders()
 {
