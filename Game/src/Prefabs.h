@@ -88,20 +88,20 @@ std::list<Entity> createBoss();
 namespace Prefabs {
 	enum Prefab : uint32_t{
 		TowerBasic,
-		TowerBasic1,
-		TowerBasic2,
-		TowerBasic3,
 		TowerRailgun,
-		TowerRailgun1,
-		TowerRailgun2,
-		TowerRailgun3,
 		TowerTesla,
-		TowerTesla1,
-		TowerTesla2,
-		TowerTesla3,
 		TowerBarrier,
+		TowerBasic1,
+		TowerRailgun1,
+		TowerTesla1,
 		TowerBarrier1,
+		TowerBasic2,
+		TowerRailgun2,
+		TowerTesla2,
+		TowerBasic3,
 		TowerBarrier2,
+		TowerRailgun3,
+		TowerTesla3,
 		TowerBarrier3,
 
 		TOWER_MARKER,//Put Towers Above this marker
@@ -154,29 +154,29 @@ typedef std::list<Entity>(*PrefabFunction)(); // function pointer type
 //Add functions in same order as prefabs above
 const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createTowerBasic,
-	& createTowerBasic1,
-	& createTowerBasic2,
-	& createTowerBasic3,
 	&createTowerRailgun,
-	& createTowerRailgun1,
-	& createTowerRailgun2,
-	& createTowerRailgun3,
 	&createTowerTesla,
-	& createTowerTesla1,
-	& createTowerTesla2,
-	& createTowerTesla3,
 	&createTowerBarrier,
-	& createTowerBarrier1,
-	& createTowerBarrier2,
+	&createTowerBasic1,
+	&createTowerRailgun1,
+	&createTowerTesla1,
+	&createTowerBarrier1,
+	&createTowerBasic2,
+	&createTowerRailgun2,
+	&createTowerTesla2,
+	&createTowerBarrier2,
+	&createTowerBasic3,
+	&createTowerRailgun3,
+	&createTowerTesla3,
 	& createTowerBarrier3,
 	&createProjectileBasic,
 	&createProjectileSpread5,
 	&createProjectileChaos,
 	&createProjectileRandom,
 	&createProjectilePierce,
-	& createProjectilePierce1,
-	& createProjectilePierce2,
-	& createProjectilePierce3,
+	&createProjectilePierce1,
+	&createProjectilePierce2,
+	&createProjectilePierce3,
 	&createProjectileSpray,
 	&createEnemyGroundBasic,
 	&createEnemyGroundTank,
@@ -191,7 +191,7 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createTowerReticleBarrier,
 	&createPathColliders,
 	&createHome,
-		& createBoss,
+	&createBoss,
 	&createPlayers
 };
 
@@ -227,7 +227,7 @@ namespace WaveData {
 };
 
 //Define buildcosts
-extern const std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;
+extern const std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_TYPES> buildcosts;
 
 //Define Base Location
 const glm::vec3 baseLoc = glm::vec3(0, 0, 90);

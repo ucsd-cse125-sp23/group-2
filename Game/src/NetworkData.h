@@ -45,7 +45,7 @@ struct ServertoClientData {
     int numWaves;
     std::array<Collider, MAX_ENTITIES> colliders;
     AllPlayerData playerData;
-    std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;
+    std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_TYPES> buildcosts;
     int serverStatus;
     float waveTimer;
 };

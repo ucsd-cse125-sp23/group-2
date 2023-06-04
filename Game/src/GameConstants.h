@@ -61,7 +61,7 @@ const int ACTION_COOLDOWN = TICK_RATE;
 const float ENEMY_GND_MVSPD_PERSEC = 5;
 
 //How many seconds until first wave spawns
-const float ENEMY_SPAWNDELAY_SEC = 0;
+const float ENEMY_SPAWNDELAY_SEC = 60;
 
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;
@@ -94,18 +94,29 @@ const float FLYING_HEIGHT = 10;
 const float RESPAWN_TIMER = 5.0;
 
 //Boss Stomp Rate
-const float STOMP_RATE = 0.25;
+const float STOMP_RATE = 2;
+
+//Stomp dmg
+const float STOMP_DMG = 50;
+
+//Stomp range
+const float STOMP_RANGE = 5;
+
+//Player safe area
+const float SAFE_AREA = 80;
 
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
-#define PATH_LENGTH 8
+#define PATH_LENGTH 30
 
-#define WAVE_COUNT 5
+#define WAVE_COUNT 7
 
 #define NUM_ENEMY_TYPES 5
 
+#define NUM_TOWER_TYPES 4
+
 #define NUM_RESOURCE_TYPES 3
 
-const float PATH_WIDTH = 3;
+const float PATH_WIDTH = 10;
 
 //TOwer placement range
 const float TOWER_PLACEMENT_RANGE = 15;

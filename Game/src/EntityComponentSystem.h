@@ -98,7 +98,7 @@ struct Turret //Component of Towers
 
 namespace Collision {
     //Side should be bigger than the greatest sidelength of any AABB in the game
-    constexpr float side = 3.0;
+    constexpr float side = 8.0;
     static constexpr size_t gridx = (WORLD_X / side) + 1l;
     static constexpr size_t gridz = (WORLD_Z / side) + 1l;
     extern std::unordered_set<Entity> cgrid[gridx][gridz];
