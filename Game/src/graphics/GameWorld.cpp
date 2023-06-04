@@ -10,8 +10,8 @@ void GameWorld::init() {
 	env->setEnvShader(new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag"));
 
 	Shader* particleShader = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
-	ObjectModel* particleModel = new ObjectModel("../assets/rover/rover.obj");
-	particle = new ParticleGenerator(particleShader, particleModel, 500);
+	ObjectModel* particleModel = new ObjectModel("../assets/particle/testParticle.obj");
+	particle = new ParticleGenerator(particleShader, particleModel, 1);
 
 	models[MODEL_ID_CUBE] = new ObjectModel("../assets/cube/cube.obj");
 	models[MODEL_ID_ROVER] = new ObjectModel("../assets/rover/rover.obj");
@@ -84,8 +84,7 @@ void GameWorld::init() {
 }
 
 void GameWorld::update(ServertoClientData& incomingData, int id) {
-
-	particle->Update(0.0f, glm::vec3(0.0f, 0.0f, 5.0f), 2, glm::vec3(1.0f));
+	//particle->Update(0.0f, glm::vec3(0.0f, 0.0f, 5.0f), 2, glm::vec3(1.0f));
 
 	for (int i = 0; i < incomingData.activity.size(); i++) {
 
@@ -111,7 +110,6 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 			entities[i]->setActive(true);
 			entities[i]->setModel(models[incomingData.models[i].modelID]);
 			entities[i]->setShader(shaders[incomingData.models[i].modelID]);
-			
 			entities[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
 		}
 		else {
@@ -152,7 +150,7 @@ void GameWorld::draw() {
 	float currTime = float(glfwGetTime());
 	const glm::mat4& viewProjMtx = cam->GetViewProjectMtx();
 	//env->draw(viewProjMtx);
-	particle->Draw();
+	particle->draw(viewProjMtx, currTime, cam);
 	/*
 	for (RenderEntity* e : entities) {
 
