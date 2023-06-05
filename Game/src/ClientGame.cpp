@@ -19,7 +19,7 @@ extern float towersBuilt;
 
 
 
-int health;
+float health = 0.8;
 float master_Volume = 1.0;
 int sfx_Volume;
 int music_Volume;
@@ -96,7 +96,7 @@ void ClientGame::update()
         towersBuilt = myscore.towersBuilt;
         points = myscore.points;
     }
- 
+    guis[9]->SetSize(glm::vec2(0.7f * health, 0.05f));
 
 
 }
