@@ -30,8 +30,8 @@ AudioManager::AudioManager() {
     AudioManager::loadSound("../assets/sounds/Magic_Spells_CastLong_Electricity11.wav", MODEL_ID_TESLA, SOUND_ID_ATTACK);
     AudioManager::loadSound("../assets/sounds/MINE Placing 01.wav", MODEL_ID_ROVER, SOUND_ID_BUILD);
     AudioManager::loadSound("../assets/sounds/Screeching Monster 2-1.wav", MODEL_ID_MOB, SOUND_ID_DEATH);
-    AudioManager::loadSound("../assets/sounds/Screeching Monster 2-1.wav", MODEL_ID_MOB_TANK, SOUND_ID_DEATH); //TODO: CHANGE
-    AudioManager::loadSound("../assets/sounds/Screeching Monster 2-1.wav", MODEL_ID_MOB_MINI, SOUND_ID_DEATH); //TODO: CHANGE
+    AudioManager::loadSound("../assets/sounds/Screeching Monster 2-1 Pitch Down.wav", MODEL_ID_MOB_TANK, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/Screeching Monster 2-1 Pitch Up.wav", MODEL_ID_MOB_MINI, SOUND_ID_DEATH);
     AudioManager::loadSound("../assets/sounds/Bluezone_BC0263_creature_crab_organic_texture_carapace_crack_squishy_003.wav", MODEL_ID_MOB, SOUND_ID_DAMAGE);
     AudioManager::loadSound("../assets/sounds/Bluezone_BC0263_creature_crab_organic_texture_carapace_crack_squishy_003.wav", MODEL_ID_MOB_TANK, SOUND_ID_DAMAGE); //TODO: CHANGE
     AudioManager::loadSound("../assets/sounds/Bluezone_BC0263_creature_crab_organic_texture_carapace_crack_squishy_003.wav", MODEL_ID_MOB_MINI, SOUND_ID_DAMAGE); //TODO: CHANGE
