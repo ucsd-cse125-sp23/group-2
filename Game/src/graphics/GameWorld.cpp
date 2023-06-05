@@ -153,7 +153,7 @@ void GameWorld::GUI_Init() {
 	blank = guis[10];
 	blank->SetHidden(true);
 	blank->SetName("health_front");
-	blank->SetPosition(glm::vec3(0.5f, 0.0f, 0.0f));
+	blank->SetPosition(glm::vec3(0.5f, 0.0f, -0.3f));
 	blank->SetSize(glm::vec2(0.75f, 0.25f));
 	blank->SetTexture("../assets/gui/Buttons/blank.jpg");
 	blank->SetTransparency(1.0);
