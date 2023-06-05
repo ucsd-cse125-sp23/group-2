@@ -20,7 +20,7 @@ extern float towersBuilt;
 
 
 int health;
-int master_Volume;
+float master_Volume = 1.0;
 int sfx_Volume;
 int music_Volume;
 bool ClientGame::jumping = 0;
@@ -240,7 +240,7 @@ void show_options() {
     for (int i = 0; i < 3; i++) {
         guis[i]->SetHidden(true);
     }
-    for (int i = 3; i < 7; i++) {
+    for (int i = 3; i < 6; i++) {
         guis[i]->SetHidden(false);
     }
     guis[10]->SetHidden(false);
@@ -257,7 +257,7 @@ void hide_options() {
     for (int i = 0; i < 3; i++) {
         guis[i]->SetHidden(false);
     }
-    for (int i = 3; i < 7; i++) {
+    for (int i = 3; i < 6; i++) {
         guis[i]->SetHidden(true);
     }
     guis[10]->SetHidden(true);
@@ -289,6 +289,7 @@ void handle_escp(GLFWwindow* window) {
         for (int i = 0; i < 3; i++) {
             guis[i]->SetHidden(false);
         }
+        guis[0]->SetTexture("../assets/gui/Buttons/continueH.jpg");
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
@@ -326,6 +327,59 @@ void handle_enter(GLFWwindow* window) {
     }
 
 }
+
+void handle_left() {
+
+    switch (depth) {
+    case 0:
+        break;
+    case 1:
+        switch (selected) {
+        case 4:
+            if (master_Volume > 0) {
+                master_Volume = master_Volume - 0.05;
+            }
+            else {
+                master_Volume = 0;
+            }
+          //guis[6]->SetPosition(glm::vec3(0.5f, 0.0f, -0.2f));
+            guis[6]->SetSize(glm::vec2(0.60f * master_Volume, 0.1f));
+            break;
+        case 3:
+           
+            break;
+
+        }
+        break;
+    }
+
+}
+
+void handle_right() {
+    switch (depth) {
+    case 0:
+        break;
+    case 1:
+        switch (selected) {
+        case 4:
+            if (master_Volume < 1) {
+                master_Volume = master_Volume + 0.05;
+            }
+            else {
+                master_Volume = 1;
+            }
+            //guis[6]->SetPosition(glm::vec3(0.5f, 0.0f, -0.2f));
+            guis[6]->SetSize(glm::vec2(0.60f * master_Volume, 0.1f));
+            break;
+        case 3:
+
+            break;
+
+        }
+        break;
+    }
+}
+
 void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         switch (key) {
@@ -334,6 +388,7 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
                 moveForward = true;
             }
             else {
+                moveForward = false;
                 handle_up();
             }
             break;
@@ -342,7 +397,8 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
                 moveLeft = true;
             }
             else {
-                //handleLeft()
+                moveLeft = false;
+                handle_left();
             }
             break;
         case GLFW_KEY_S:
@@ -350,7 +406,9 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
                 moveBack = true;
             }
             else {
+                moveBack = false;
                 handle_down();
+               
             }
             break;
         case GLFW_KEY_D:
@@ -358,21 +416,36 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
                 moveRight = true;
             }
             else {
-                //handle_right();
+                moveRight = false;
+                handle_right();
+               
             }
             break;
         case GLFW_KEY_ESCAPE:
+            moveRight = false;
+            moveLeft = false;
+            moveBack = false;
+            moveForward = false;
+            build = false; 
+            jumping = false;
             handle_escp(window);
             break;
         case GLFW_KEY_SPACE:
-            jumping = true;
-            break;
-        case GLFW_KEY_E:
-            if (build != 0) {
-                build = 0;
+            if (!menuOn) {
+                jumping = true;
             }
             else {
-                build = 1;
+                jumping = false;
+            }
+            break;
+        case GLFW_KEY_E:
+            if (!menuOn) {
+                if (build != 0) {
+                    build = 0;
+                }
+                else {
+                    build = 1;
+                }
             }
             break;
         case GLFW_KEY_ENTER:
