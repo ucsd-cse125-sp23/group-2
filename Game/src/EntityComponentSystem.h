@@ -198,6 +198,7 @@ struct AllPlayerData {
     std::array<int, NUM_RESOURCE_TYPES> resources;
     std::array<float, NUM_PLAYERS> spawntimers;
     std::array<int, NUM_PLAYERS> actioncooldown;
+    std::array<State, NUM_PLAYERS> playerStates;
 };
 
 struct ResourceContainer {

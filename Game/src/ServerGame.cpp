@@ -571,6 +571,9 @@ void ServerGame::packageData(ServertoClientData& data)
     data.serverStatus = currentStatus;
     data.colliders = GameData::colliders;
     data.waveTimer = WaveData::waveTick / TICK_RATE;
+    for (int i = 0; i < NUM_PLAYERS; ++i) {
+        data.playerData.playerStates[i] = GameData::states[i];
+    }
 }
 
 const int GRID_X = 32;
