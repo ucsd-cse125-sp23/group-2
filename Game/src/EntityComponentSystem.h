@@ -88,6 +88,8 @@ struct Model //3D Model to render for the entity
 
     //degrees
     float modelOrientation;
+
+    float scale = 1;
 };
 
 struct Turret //Component of Towers
