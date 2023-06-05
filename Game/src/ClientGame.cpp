@@ -95,8 +95,12 @@ void ClientGame::update()
         enemiesKilled = myscore.enemiesKilled;
         towersBuilt = myscore.towersBuilt;
         points = myscore.points;
+        if (health < 0) {
+            health = 0;
+        }
+        guis[9]->SetSize(glm::vec2(0.7f * health/ incomingData.healths[initData.id].maxHealth, 0.05f));
+
     }
-    guis[9]->SetSize(glm::vec2(0.7f * health, 0.05f));
 
 
 }
