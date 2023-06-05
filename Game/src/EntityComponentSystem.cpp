@@ -527,7 +527,7 @@ Entity EntityComponentSystem::findClosestPathCollider(glm::vec3 origin)
 
 bool EntityComponentSystem::applyUpgrade(Entity play, Entity target)
 {
-    if (GameData::tags[target] & ComponentTags::Upgradeable) {
+    if ((GameData::tags[target] & ComponentTags::Upgradeable)==ComponentTags::Upgradeable) {
         bool hasenough = true;
         for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
             hasenough &= GameData::upgradedata[target].cost[i] <= GameData::playerdata.resources[i];
@@ -549,6 +549,10 @@ bool EntityComponentSystem::applyUpgrade(Entity play, Entity target)
 
         //Set position of new tower
         GameData::positions[up] = GameData::positions[target];
+
+        //Add to collision table
+        Collision::updateColTable(up);
+
         return true;
 
     }
@@ -617,7 +621,7 @@ void EntityComponentSystem::sysDeathStatus()
         {
             if (GameData::hostilities[e].team == Teams::Players) {
                 //printf("%d should be player\n", e);
-                if (GameData::playerdata.spawntimers[e] < -1) {
+                if (GameData::playerdata.spawntimers[e] < -1.0f) {
                     GameData::playerdata.spawntimers[e] = RESPAWN_TIMER;
                     GameData::rigidbodies[e].fixed = true;
                 }

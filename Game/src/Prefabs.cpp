@@ -44,7 +44,7 @@ std::list<Entity> createProjectileSpread5() {
             return createdEntities;
         }
         GameData::positions[e] = glm::vec3(2 - i, 0, -2);
-        GameData::velocities[e].velocity = glm::normalize(glm::vec3((2 - i) * 0.1, 0, -0.5)) * (PROJ_MVSPD/2);
+        GameData::velocities[e].velocity = glm::normalize(glm::vec3((float)(2 - i) * 0.1, 0, -0.5)) * (PROJ_MVSPD/2);
         GameData::colliders[e].AABB =  glm::vec3(.25, .25, .25);
         GameData::models[e].modelID = MODEL_ID_PROJECTILE;
         GameData::models[e].asciiRep = 'J';
@@ -573,7 +573,13 @@ std::list<Entity> createTowerBasic3() {
     }
 
     GameData::models[e].modelID = MODEL_ID_TOWER;
-    GameData::tags[e] ^= ComponentTags::Upgradeable;
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Hostility +
+        ComponentTags::RigidBody +
+        ComponentTags::Collidable +
+        ComponentTags::Turret;
     GameData::hattackmodules[e].damage *= 5.00;
 
 
@@ -659,7 +665,13 @@ std::list<Entity> createTowerRailgun3() {
     }
 
     GameData::models[e].modelID = MODEL_ID_RAILGUN;
-    GameData::tags[e] ^= ComponentTags::Upgradeable;
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Hostility +
+        ComponentTags::RigidBody +
+        ComponentTags::Collidable +
+        ComponentTags::Turret;
     GameData::pattackmodules[e].attack = Prefabs::ProjectilePierce3;
 
 
@@ -745,7 +757,13 @@ std::list<Entity> createTowerTesla3() {
     }
 
     GameData::models[e].modelID = MODEL_ID_TESLA;
-    GameData::tags[e] ^= ComponentTags::Upgradeable;
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Hostility +
+        ComponentTags::RigidBody +
+        ComponentTags::Collidable +
+        ComponentTags::AttackerAOE;
     GameData::AOEattackmodules[e].range *= 5;
 
 
@@ -830,7 +848,13 @@ std::list<Entity> createTowerBarrier3() {
     }
 
     GameData::models[e].modelID = MODEL_ID_BARRIER;
-    GameData::tags[e] ^= ComponentTags::Upgradeable;
+    GameData::tags[e] =
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Hostility +
+        ComponentTags::RigidBody +
+        ComponentTags::Collidable +
+        ComponentTags::Health;
 
     GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= 10;
 
