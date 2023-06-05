@@ -81,7 +81,7 @@ std::list<Entity> createProjectilePierce() {
     GameData::colliders[e].AABB = glm::vec3(1, 1, 1);
     GameData::models[e].modelID = MODEL_ID_PROJECTILE;
     GameData::models[e].asciiRep = 'J';
-    GameData::coldmg[e].damage = 10.0f;
+    GameData::coldmg[e].damage = 20.0f;
     GameData::lifespans[e] = 5;
     GameData::spawnrates[e] = PROJ_SPAWN_RATE * 4;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
@@ -258,7 +258,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD;
     GameData::velocities[e].flying = false;
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e].AABB =  glm::vec3(1.5, 1.7, 1.5);
+    GameData::colliders[e].AABB =  glm::vec3(1.5, 2, 1.5);
     GameData::models[e].modelID = MODEL_ID_MOB;
     GameData::models[e].asciiRep = 'E';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
@@ -302,6 +302,7 @@ std::list<Entity> createEnemyGroundTank() {
     }
     //distinguishing factors
     GameData::models[e].modelID = MODEL_ID_MOB_TANK;
+    GameData::colliders[e].AABB = glm::vec3(2.25, 3, 2.25);
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD / 2;
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 4;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG * 2;
@@ -318,6 +319,7 @@ std::list<Entity> createEnemyGroundMini() {
     }
     //distinguishing factors
     GameData::models[e].modelID = MODEL_ID_MOB_MINI;
+    GameData::colliders[e].AABB = glm::vec3(1.125, 1.5, 1.125);
     GameData::velocities[e].moveSpeed = ENEMY_GND_BASE_MVSPD * 4;
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH/2;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG/2;

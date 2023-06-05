@@ -11,8 +11,8 @@ void GameWorld::init() {
 	models[MODEL_ID_ROVER] = new ObjectModel("../assets/rover/rover.obj");
 
 	models[MODEL_ID_MOB] = new ObjectModel("../assets/martian/martian.obj");
-	models[MODEL_ID_MOB_TANK] = new ObjectModel("../assets/martian/martian.obj");
-	models[MODEL_ID_MOB_MINI] = new ObjectModel("../assets/martian/martian.obj"); //TODO: make smol
+	models[MODEL_ID_MOB_TANK] = new ObjectModel("../assets/martian/martian_tank.obj");
+	models[MODEL_ID_MOB_MINI] = new ObjectModel("../assets/martian/martian_fast.obj"); //TODO: make smol
 	models[MODEL_ID_MOB_FLYING] = new ObjectModel("../assets/ufo/ufo_v2.obj");
 	models[MODEL_ID_MOB_TRACTOR] = new ObjectModel("../assets/ufo/ufo_v2.obj");
 
