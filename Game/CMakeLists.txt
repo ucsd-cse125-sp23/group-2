@@ -25,6 +25,7 @@ set(
     src/PoissonDisk.cpp
     src/audio/AudioManager.cpp
     src/graphics/gui/GUIElement.cpp
+    src/graphics/Text.cpp
 )
 
 # Add header files
@@ -54,6 +55,7 @@ set(
     src/audio/AudioManager.h
     src/graphics/Health.h
     src/graphics/gui/GUIElement.h
+    src/graphics/Text.h
 )
 
 # Require GL
@@ -73,7 +75,7 @@ link_directories(
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3.lib assimp-vc143-mt.lib fmod_vc.lib)
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3.lib assimp-vc143-mt.lib fmod_vc.lib freetype.lib)
 
 # Move assets to .exe
 add_custom_command(TARGET mars-rover-client POST_BUILD

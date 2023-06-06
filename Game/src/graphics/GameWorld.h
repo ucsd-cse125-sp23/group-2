@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Health.h"
+#include "Text.h"
 #include "gui/GUIElement.h"
 #include "../GameConstants.h"
 #include "../NetworkData.h"
@@ -23,7 +24,7 @@ private:
     Camera* cam;
     static float prevX, prevY, currX, currY, scrollY;
 
-
+    Text* text;
 
     //static int mouseDX, mouseDY;
 
