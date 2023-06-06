@@ -1319,7 +1319,7 @@ std::list<Entity> createStoneResourceBasic()
         return createdEntities;
     }
     GameData::positions[e] = glm::vec3(0, 0, 0);
-    GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
+    GameData::colliders[e].AABB =  glm::vec3(2, 2, 2);
     GameData::models[e].asciiRep = 'R';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
     GameData::hostilities[e].team = Teams::Environment;
