@@ -9,6 +9,7 @@ bool ClientGame::jumping = 0;
 int ClientGame::build = 0;
 int ClientGame::selected = 0;
 bool ClientGame::upgrade = 0;
+bool ClientGame::renderColliders = 0;
 
 ClientGame::ClientGame(void)
 {
@@ -46,6 +47,9 @@ void ClientGame::update()
 
     //Render
     if (initData.id != INVALID_CLIENT_ID && incomingData.serverStatus != UNKNOWN_SERVER_STATUS) {
+        for (int i = 0; i < MAX_ENTITIES; ++i) {
+            incomingData.models[i].renderCollider = renderColliders;
+        }
         gameWindow->update(incomingData, initData.id);
         audioManager->update(gameWindow->getCamPosition(), glm::normalize(gameWindow->getCamDirectionVector()), glm::normalize(gameWindow->getCamUpVector()), incomingData);
     }
@@ -118,6 +122,14 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
                 build = 1;
             }
             selected = 0;
+            break;
+        case GLFW_KEY_C:
+            if (renderColliders) {
+                renderColliders = 0;
+            }
+            else {
+                renderColliders = 1;
+            } //Fancy one line flip
             break;
         case GLFW_KEY_R:
             if (upgrade != 0) {
