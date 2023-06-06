@@ -316,6 +316,7 @@ void ServerGame::initResources()
         ECS::resolveCollisions();
         GameData::tags[e] ^= ComponentTags::DiesOnCollision;
         GameData::colliders[e].colwith ^= CollisionLayer::UIObj + CollisionLayer::StaticObj;
+        GameData::models[e].modelOrientation = rand() % 360;
     }
 
 

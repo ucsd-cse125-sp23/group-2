@@ -186,6 +186,7 @@ struct CombatLog {
 struct SoundLog {
     Entity source;
     int sound;
+    bool stop = false;
 };
 
 struct ScoreCard {
@@ -365,7 +366,7 @@ namespace EntityComponentSystem
 
     void changeState(Entity e, State post);
 
-    void logSound(Entity source, int sound_id);
+    void logSound(Entity source, int sound_id, bool stop = false);
 
     //Get all Entitis is range
     std::list<Entity> getTargetsInRange(glm::vec3 & source, float & range, TeamID & hostileTo);
