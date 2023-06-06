@@ -39,9 +39,9 @@ void RenderEntity::draw(const glm::mat4& viewProjMtx, float time, Camera * cam) 
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void RenderEntity::update(glm::vec3& position, float deg) {
+void RenderEntity::update(glm::vec3& position, float deg, float scale) {
     this->position = position;
     model = glm::rotate(glm::radians(-deg), glm::vec3(0.0f, 1.0f, 0.0f));
-
+    model *= glm::scale(glm::vec3(scale, scale, scale));
     model[3] = glm::vec4(position, 1.0f);
 }

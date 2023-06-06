@@ -35,7 +35,7 @@ uniform Material material;
 
 const int numLights = 1;
 uniform vec4 lightPos[numLights] = {
-    vec4(0.0f, 30.0f, 0.0f, 0.0f)
+    vec4(0.0f, 30.0f, 60.0f, 0.0f),
 };
 uniform vec4 lightColor[numLights] = {
     vec4(1.0f, 0.9f, 0.8f, 1.0f)
@@ -64,7 +64,7 @@ void main()
     else{
         shine = material.shininess;
     }
-
+    ambientColor  = diffuseColor;
     if(material.emision.x != 0 || material.emision.y != 0 || material.emision.z != 0){
         FragColor += vec4(material.emision, 0.8f);
     }
@@ -83,7 +83,8 @@ void main()
         vec4 specular = lightColor[i] * (spec * specColor);
 
                                      
-        FragColor += 0.13f * ambient + diffuse + 0.1f* specular;
+        // FragColor += 0.13f * ambient + diffuse + 0.1f* specular;
+        FragColor += (0.3f * ambient + 0.7f * diffuse + 0.05f * specular);
     }
 
 }

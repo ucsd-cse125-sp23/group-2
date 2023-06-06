@@ -24,7 +24,7 @@ public:
     ~RenderEntity();
 
     void draw(const glm::mat4& viewProjMtx, float time, Camera* cam);
-    void update(glm::vec3& translation, float degrees);
+    void update(glm::vec3& translation, float degrees, float scale);
 
     void setActive(bool a) { active = a; };
     bool getActive() { return active; };
