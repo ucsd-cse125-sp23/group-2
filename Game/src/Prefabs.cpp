@@ -1402,17 +1402,17 @@ std::list<Entity> createPathColliders()
                     return createdEntities;
                 }
 
-                progress += PATH_WIDTH;
                 printf("Curdiif is now %f creating entity %d\n", currdiff, e);
 
 
                 GameData::activity[e] = true;
 
                 GameData::positions[e] = Paths::path[p][i] + progress*pathvec;
+                GameData::positions[e].y = GROUND_HEIGHT + 0.01;
                 
-                GameData::colliders[e].AABB = glm::vec3(PATH_WIDTH/2, 1, PATH_WIDTH/2);
+                GameData::colliders[e].AABB = glm::vec3(PATH_WIDTH / 2, 0.01 , PATH_WIDTH / 2);
 
-                GameData::models[e].modelID = MODEL_ID_NO_MODEL;
+                GameData::models[e].modelID = MODEL_ID_PATH_STRAIGHT;
                 GameData::models[e].asciiRep = 'P';
                 GameData::models[e].renderCollider = true;
                 GameData::models[e].modelOrientation = glm::degrees(glm::acos(pathvec.x));
@@ -1423,6 +1423,8 @@ std::list<Entity> createPathColliders()
                     ComponentTags::Position +
                     ComponentTags::Model +
                     ComponentTags::Collidable;
+                progress += PATH_WIDTH;
+
             }
         }
     }
