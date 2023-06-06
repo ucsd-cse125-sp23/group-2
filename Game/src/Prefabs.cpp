@@ -19,7 +19,7 @@ std::list<Entity> createProjectileBasic() {
     GameData::lifespans[e] = 5;
     GameData::spawnrates[e] = PROJ_SPAWN_RATE;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Boss;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players + CollisionLayer::Boss;
     GameData::hostilities[e].team = Teams::Projectile;
     GameData::coldmg[e].cooldown = 0;
     GameData::coldmg[e].damageRate = PROJ_DAMAGE_RATE;
@@ -52,7 +52,7 @@ std::list<Entity> createProjectileSpread5() {
         GameData::lifespans[e] = 1;
         GameData::spawnrates[e] = PROJ_SPAWN_RATE*1.5;
         GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-        GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Boss;
+        GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players + CollisionLayer::Boss;
         GameData::hostilities[e].team = Teams::Projectile;
         GameData::coldmg[e].cooldown = 0;
         GameData::coldmg[e].damageRate = PROJ_DAMAGE_RATE;
@@ -85,7 +85,7 @@ std::list<Entity> createProjectilePierce() {
     GameData::lifespans[e] = 5;
     GameData::spawnrates[e] = PROJ_SPAWN_RATE * 4;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Boss;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players + CollisionLayer::Boss;
     GameData::hostilities[e].team = Teams::Projectile;
     GameData::coldmg[e].cooldown = 0;
     GameData::coldmg[e].damageRate = 0;
@@ -162,7 +162,7 @@ std::list<Entity> createProjectileSpray() {
     GameData::lifespans[e] = 0.25;
     GameData::spawnrates[e] = PROJ_SPAWN_RATE/10;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Boss;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players + CollisionLayer::Boss;
     GameData::hostilities[e].team = Teams::Projectile;
     GameData::coldmg[e].cooldown = 0;
     GameData::coldmg[e].damageRate = PROJ_DAMAGE_RATE;
@@ -195,7 +195,7 @@ std::list<Entity> createProjectileChaos() {
     GameData::pattackmodules[e].cooldown = PROJ_SPAWN_RATE/2;
     GameData::pattackmodules[e].attack = Prefabs::ProjectileRandom;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Boss;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players + CollisionLayer::Boss;
     GameData::hostilities[e].team = Teams::Projectile;
     GameData::coldmg[e].cooldown = 0;
     GameData::coldmg[e].damageRate = PROJ_DAMAGE_RATE;
@@ -229,7 +229,7 @@ std::list<Entity> createProjectileRandom() {
     GameData::lifespans[e] = 0.5;
     GameData::spawnrates[e] = PROJ_SPAWN_RATE/8;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Boss;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players + CollisionLayer::Boss;
     GameData::hostilities[e].team = Teams::Projectile;
     GameData::coldmg[e].cooldown = 0;
     GameData::coldmg[e].damageRate = PROJ_DAMAGE_RATE;
@@ -266,7 +266,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::hostilities[e].team = Teams::Martians;
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Boss;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players + CollisionLayer::Boss;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
@@ -412,7 +412,7 @@ std::list<Entity> createTowerReticleBasic() {
         ComponentTags::DiesOnCollision;
     GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::UIObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::UIObj + CollisionLayer::Boss;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::UIObj + CollisionLayer::Players + CollisionLayer::Boss;
 
     return createdEntities;
 }
@@ -489,7 +489,7 @@ std::list<Entity> createTowerReticleBarrier()
         ComponentTags::BarrierReticle;
     GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::UIObj;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Boss;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players + CollisionLayer::Boss;
 
     return createdEntities;
 }
@@ -927,8 +927,8 @@ std::list<Entity> createPlayers() {
         GameData::retplaces[e].reticle = INVALID_ENTITY;
         GameData::retplaces[e].place = false;
         GameData::retplaces[e].validTarget = false;
-        GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-        GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Boss + CollisionLayer::Powerup;
+        GameData::colliders[e].colteam = CollisionLayer::Players;
+        GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players + CollisionLayer::Boss + CollisionLayer::Powerup;
         GameData::playerdata.spawntimers[e] = -2;
         Collision::updateColTable(e);
 
@@ -963,7 +963,7 @@ std::list<Entity> createBossHead()
     GameData::hostilities[e].team = Teams::Martians;
     GameData::hostilities[e].hostileTo = Teams::Players;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
@@ -1012,7 +1012,7 @@ std::list<Entity> createBossLArm()
     GameData::hostilities[e].team = Teams::Martians;
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
@@ -1063,7 +1063,7 @@ std::list<Entity> createBossBody()
     GameData::hostilities[e].team = Teams::Martians;
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
@@ -1108,7 +1108,7 @@ std::list<Entity> createBossRArm()
     GameData::hostilities[e].team = Teams::Martians;
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
@@ -1156,7 +1156,7 @@ std::list<Entity> createBossRLeg()
     GameData::hostilities[e].team = Teams::Martians;
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
@@ -1203,7 +1203,7 @@ std::list<Entity> createBossLLeg()
     GameData::hostilities[e].team = Teams::Martians;
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
-    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players;
     GameData::resources[e].resources[ResourceType::Money] = 20;
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
@@ -1354,12 +1354,12 @@ std::list<Entity> createPowerupSpread()
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::colliders[e].AABB = glm::vec3(1, 1, 1);
     GameData::models[e].asciiRep = 'P';
-    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = 1;
     GameData::hostilities[e].team = Teams::Powerup;
     GameData::hostilities[e].hostileTo = 0;
     GameData::models[e].modelID = MODEL_ID_POWERUP_SPREAD;
     GameData::colliders[e].colteam = CollisionLayer::Powerup;
-    GameData::colliders[e].colwith = 0;
+    GameData::colliders[e].colwith = CollisionLayer::Players;
+    GameData::rigidbodies[e].fixed = false;
     GameData::models[e].renderCollider = true;
     GameData::powerupdata[e].newAttack = Prefabs::ProjectileSpread5;
 
@@ -1368,7 +1368,8 @@ std::list<Entity> createPowerupSpread()
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Collidable +
-        ComponentTags::Health;
+        ComponentTags::DiesOnCollision +
+        ComponentTags::Powerup;
 
     return createdEntities;
 }
@@ -1384,12 +1385,12 @@ std::list<Entity> createPowerupRapid()
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::colliders[e].AABB = glm::vec3(1, 1, 1);
     GameData::models[e].asciiRep = 'P';
-    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = 1;
     GameData::hostilities[e].team = Teams::Powerup;
     GameData::hostilities[e].hostileTo = 0;
     GameData::models[e].modelID = MODEL_ID_POWERUP_RAPID;
     GameData::colliders[e].colteam = CollisionLayer::Powerup;
-    GameData::colliders[e].colwith = 0;
+    GameData::colliders[e].colwith = CollisionLayer::Players;
+    GameData::rigidbodies[e].fixed = false;
     GameData::models[e].renderCollider = true;
     GameData::powerupdata[e].newAttack = Prefabs::ProjectileSpray;
 
@@ -1398,7 +1399,9 @@ std::list<Entity> createPowerupRapid()
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Collidable +
+        ComponentTags::DiesOnCollision +
         ComponentTags::Powerup;
+    ;
 
     return createdEntities;
 }

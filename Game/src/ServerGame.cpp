@@ -461,7 +461,7 @@ void ServerGame::handleInputs()
                     in.selected = 0; //BAD BAD CODE
                 }
                 changeState(i, PlayerState::Default); //May be slow
-                GameData::pattackmodules[i].attack = playerWeaponArray[in.selected];
+                //GameData::pattackmodules[i].attack = playerWeaponArray[in.selected];
 
                 if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
                     ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);

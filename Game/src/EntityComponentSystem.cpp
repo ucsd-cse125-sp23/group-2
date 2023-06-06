@@ -588,7 +588,7 @@ void EntityComponentSystem::resolveCollisions()
 
         //Check if dies on Collision
         if ((GameData::tags[e] & (ComponentTags::DiesOnCollision)) == ComponentTags::DiesOnCollision) {
-            causeDeath(e, e);
+            causeDeath(o, e);
             GameData::tags[e] ^= ComponentTags::Collidable;
         }
 
@@ -642,6 +642,7 @@ void EntityComponentSystem::sysDeathStatus()
                     Entity p = prefabMap[PowerupRandom]().front();
                     if (p != INVALID_ENTITY) {
                         GameData::positions[p] = GameData::positions[e];
+                        Collision::updateColTable(p);
                     }
                 }
             default:
@@ -957,7 +958,7 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     if (GameData::tags[source] & ComponentTags::Created) {
         source = GameData::creators[source];
     }
-    printf("Ent %d dealing %f dmg to %d\n", source, damage, target);
+    //printf("Ent %d dealing %f dmg to %d\n", source, damage, target);
     if (GameData::clogpos < CLOG_MAXSIZE) {
         // Add damage to combat log
         GameData::combatLogs[GameData::clogpos].source = source;
@@ -978,7 +979,6 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
 
 void EntityComponentSystem::causeDeath(Entity source, Entity target)
 {
-
     //Remove  from collision grid
     if ((GameData::tags[target] & ComponentTags::Collidable) == ComponentTags::Collidable) {
         Collision::cgrid[GameData::colliders[target].xpos][GameData::colliders[target].zpos].erase(target);
@@ -1020,6 +1020,10 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
                 GameData::playerdata.resources[i] += GameData::resources[target].resources[i];
                 //printf("Gaining Resources %d\n", GameData::playerdata.resources[i]);
             }
+        }
+        if ((GameData::tags[target] & ComponentTags::Powerup) == ComponentTags::Powerup) {
+            printf("Powerup yaya\n");
+            GameData::pattackmodules[source].attack = GameData::powerupdata[target].newAttack;
         }
         if ((GameData::tags[target] & ComponentTags::Hostility) == ComponentTags::Hostility) {
             if (GameData::hostilities[target].team == Teams::Martians) {
