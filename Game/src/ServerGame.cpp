@@ -309,6 +309,10 @@ void ServerGame::initResources()
         //printf("Pos is %f, %f, %f\n", pos.x, pos.y, pos.z);
     }
     for (Entity e : resources) {
+        float scaleFactor = (rand() % 32) / ((float)32) + 0.5;
+        GameData::colliders[e].AABB.x *= scaleFactor;
+        GameData::colliders[e].AABB.y *= scaleFactor;
+        GameData::colliders[e].AABB.z *= scaleFactor;
         for (Entity p : Paths::pathlist) {
             ECS::colCheck(e, p);
         }
@@ -317,6 +321,7 @@ void ServerGame::initResources()
         GameData::tags[e] ^= ComponentTags::DiesOnCollision;
         GameData::colliders[e].colwith ^= CollisionLayer::UIObj + CollisionLayer::StaticObj;
         GameData::models[e].modelOrientation = rand() % 360;
+        GameData::models[e].scale = scaleFactor;
     }
 
 
@@ -572,6 +577,9 @@ void ServerGame::packageData(ServertoClientData& data)
     data.serverStatus = currentStatus;
     data.colliders = GameData::colliders;
     data.waveTimer = WaveData::waveTick / TICK_RATE;
+    for (int i = 0; i < NUM_PLAYERS; ++i) {
+        data.playerData.playerStates[i] = GameData::states[i];
+    }
 }
 
 const int GRID_X = 32;

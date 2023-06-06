@@ -47,7 +47,7 @@ void ClientGame::update()
     //Render
     if (initData.id != INVALID_CLIENT_ID && incomingData.serverStatus != UNKNOWN_SERVER_STATUS) {
         gameWindow->update(incomingData, initData.id);
-        audioManager->update(gameWindow->getCamPosition(), glm::normalize(gameWindow->getCamDirectionVector()), glm::normalize(gameWindow->getCamUpVector()));
+        audioManager->update(gameWindow->getCamPosition(), glm::normalize(gameWindow->getCamDirectionVector()), glm::normalize(gameWindow->getCamUpVector()), incomingData);
     }
     
     //Process combat logs
@@ -63,8 +63,13 @@ void ClientGame::update()
     //Process sound logs
     for (int i = 0; i < incomingData.slogsize; ++i) {
         Entity source = incomingData.soundLogs[i].source;
-        glm::vec3 position = incomingData.positions[source];
-        audioManager->playSound(incomingData.models[source].modelID, incomingData.soundLogs[i].sound, position);
+        if (!incomingData.soundLogs[i].stop) {
+            glm::vec3 position = incomingData.positions[source];
+            audioManager->playSound(incomingData.models[source].modelID, incomingData.soundLogs[i].sound, position, source);
+        }
+        else {
+            audioManager->stopSound(source);
+        }
     }
     incomingData.slogsize = 0;
 

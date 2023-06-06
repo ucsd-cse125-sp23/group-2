@@ -88,6 +88,8 @@ struct Model //3D Model to render for the entity
 
     //degrees
     float modelOrientation;
+
+    float scale = 1;
 };
 
 struct Turret //Component of Towers
@@ -184,6 +186,7 @@ struct CombatLog {
 struct SoundLog {
     Entity source;
     int sound;
+    bool stop = false;
 };
 
 struct ScoreCard {
@@ -198,6 +201,7 @@ struct AllPlayerData {
     std::array<int, NUM_RESOURCE_TYPES> resources;
     std::array<float, NUM_PLAYERS> spawntimers;
     std::array<int, NUM_PLAYERS> actioncooldown;
+    std::array<State, NUM_PLAYERS> playerStates;
 };
 
 struct ResourceContainer {
@@ -362,7 +366,7 @@ namespace EntityComponentSystem
 
     void changeState(Entity e, State post);
 
-    void logSound(Entity source, int sound_id);
+    void logSound(Entity source, int sound_id, bool stop = false);
 
     //Get all Entitis is range
     std::list<Entity> getTargetsInRange(glm::vec3 & source, float & range, TeamID & hostileTo);

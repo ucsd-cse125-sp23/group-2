@@ -107,7 +107,7 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 			entities[i]->setActive(true);
 			entities[i]->setModel(models[incomingData.models[i].modelID]);
 			entities[i]->setShader(shaders[incomingData.models[i].modelID]);
-			entities[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
+			entities[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation, incomingData.models[i].scale);
 		}
 		else {
 			entities[i]->setActive(false);
