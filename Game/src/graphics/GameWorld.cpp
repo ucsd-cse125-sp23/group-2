@@ -34,6 +34,8 @@ void GameWorld::init() {
 	models[MODEL_ID_BEAR_LLEG] = new ObjectModel("../assets/bear/lleg.obj");
 	models[MODEL_ID_BEAR_RLEG] = new ObjectModel("../assets/bear/rleg.obj");
 	models[MODEL_ID_BEAR_BODY] = new ObjectModel("../assets/bear/body.obj");
+	models[MODEL_ID_PATH_STRAIGHT] = new ObjectModel("../assets/paths/path_straight.obj");
+	models[MODEL_ID_PATH_CORNER] = new ObjectModel("../assets/paths/path_corner.obj");
 
 	//models[MODEL_ID_SUNGOD] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
 
@@ -64,6 +66,8 @@ void GameWorld::init() {
 	shaders[MODEL_ID_BEAR_LLEG] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_BEAR_RLEG] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_BEAR_BODY] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PATH_STRAIGHT] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PATH_CORNER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	//shaders[MODEL_ID_SUNGOD] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
 
 	healthShader = new Shader("../shaders/shader.vert", "../shaders/shader.frag");

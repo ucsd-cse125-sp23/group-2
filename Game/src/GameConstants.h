@@ -151,11 +151,13 @@ const float TOWER_PLACEMENT_RANGE = 15;
 #define MODEL_ID_BEAR_RARM 20
 #define MODEL_ID_BEAR_LLEG 21
 #define MODEL_ID_BEAR_RLEG 22
+#define MODEL_ID_PATH_STRAIGHT 23
+#define MODEL_ID_PATH_CORNER 24
 
 
 
 
-#define NUM_MODELS 23
+#define NUM_MODELS 25
 
 //animation states
 #define ANIM_IDLE 0
