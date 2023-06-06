@@ -48,9 +48,9 @@ std::list<Entity> createProjectileSpread5() {
         GameData::colliders[e].AABB =  glm::vec3(.25, .25, .25);
         GameData::models[e].modelID = MODEL_ID_PROJECTILE;
         GameData::models[e].asciiRep = 'J';
-        GameData::coldmg[e].damage = 20.0f;
+        GameData::coldmg[e].damage = 60.0f;
         GameData::lifespans[e] = 1;
-        GameData::spawnrates[e] = PROJ_SPAWN_RATE*1.5;
+        GameData::spawnrates[e] = PROJ_SPAWN_RATE;
         GameData::colliders[e].colteam = CollisionLayer::WorldObj;
         GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players + CollisionLayer::Boss;
         GameData::hostilities[e].team = Teams::Projectile;
@@ -158,7 +158,7 @@ std::list<Entity> createProjectileSpray() {
     GameData::colliders[e].AABB = glm::vec3(.25, .25, .25);
     GameData::models[e].modelID = MODEL_ID_PROJECTILE;
     GameData::models[e].asciiRep = 'J';
-    GameData::coldmg[e].damage = 6.0f;
+    GameData::coldmg[e].damage = 10.0f;
     GameData::lifespans[e] = 0.25;
     GameData::spawnrates[e] = PROJ_SPAWN_RATE/10;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;

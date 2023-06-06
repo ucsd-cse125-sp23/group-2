@@ -205,6 +205,7 @@ struct AllPlayerData {
     std::array<float, NUM_PLAYERS> spawntimers;
     std::array<int, NUM_PLAYERS> actioncooldown;
     std::array<State, NUM_PLAYERS> playerStates;
+    std::array<float, NUM_PLAYERS> powerupTimers;
 };
 
 struct ResourceContainer {
@@ -352,6 +353,8 @@ namespace EntityComponentSystem
     void sysAbduction();
 
     void sysEnemyAI();
+
+    void sysPowerup();
 
     //Helper functions
     Entity createEntity(int begin = 0, int end = MAX_ENTITIES);

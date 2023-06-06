@@ -62,6 +62,7 @@ void EntityComponentSystem::update()
     //::cout << "Resolve took " << duration.count() << " milliseconds.\n";
     sysBuild();
     sysLifeSpan();
+    sysPowerup();
 }
 
 namespace Collision {
@@ -759,6 +760,18 @@ void EntityComponentSystem::sysLifeSpan()
     }
 }
 
+void EntityComponentSystem::sysPowerup()
+{
+    for (Entity e = 0; e < NUM_PLAYERS; e++) {
+        if (GameData::playerdata.powerupTimers[e] > 0) {
+            GameData::playerdata.powerupTimers[e] -= 1.0f / TICK_RATE;
+            if (GameData::playerdata.powerupTimers[e] <= 0) {
+                GameData::pattackmodules[e].attack = Prefabs::ProjectileBasic;
+            }
+        }
+    }
+}
+
 void EntityComponentSystem::sysBuild()
 {
     for (Entity e = 0; e < MAX_ENTITIES; e++)
@@ -1022,8 +1035,8 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
             }
         }
         if ((GameData::tags[target] & ComponentTags::Powerup) == ComponentTags::Powerup) {
-            printf("Powerup yaya\n");
             GameData::pattackmodules[source].attack = GameData::powerupdata[target].newAttack;
+            GameData::playerdata.powerupTimers[source] = POWERUP_DURATION_SEC;
         }
         if ((GameData::tags[target] & ComponentTags::Hostility) == ComponentTags::Hostility) {
             if (GameData::hostilities[target].team == Teams::Martians) {
