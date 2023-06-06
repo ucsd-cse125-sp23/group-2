@@ -21,8 +21,8 @@ extern float towersBuilt;
 
 float health = 0.8;
 float master_Volume = 1.0;
-int sfx_Volume;
-int music_Volume;
+float sfx_Volume;
+float music_Volume;
 bool ClientGame::jumping = 0;
 int ClientGame::build = 0;
 
@@ -59,7 +59,7 @@ void ClientGame::update()
     ClienttoServerData newPackage;
     packageData(newPackage);
     network->sendActionPackets(newPackage);
-
+    
     //Render
     if (initData.id != INVALID_CLIENT_ID && incomingData.serverStatus != UNKNOWN_SERVER_STATUS) {
         gameWindow->update(incomingData, initData.id);
@@ -98,7 +98,7 @@ void ClientGame::update()
         if (health < 0) {
             health = 0;
         }
-        guis[9]->SetSize(glm::vec2(0.7f * health/ incomingData.healths[initData.id].maxHealth, 0.05f));
+        guis[9]->SetSize(glm::vec2(0.38f * health/ incomingData.healths[initData.id].maxHealth, 0.05f));
 
     }
 
@@ -117,6 +117,28 @@ void ClientGame::packageData(ClienttoServerData& data) {
     data.camDirectionVector = gameWindow->getCamDirectionVector();
     data.camPosition = gameWindow->getCamPosition();
 }
+
+void handle_win(GLFWwindow* window) {
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    menuOn = 1;
+    guis[12]->SetHidden(false);
+    guis[13]->SetHidden(false);
+    guis[15]->SetHidden(false);
+    guis[16]->SetHidden(false);
+    depth = 2;
+    selected = 5;
+}
+void handle_lose(GLFWwindow* window) {
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    menuOn = 1;
+    guis[12]->SetHidden(false);
+    guis[14]->SetHidden(false);
+    guis[15]->SetHidden(false);
+    guis[16]->SetHidden(false);
+    depth = 2;
+    selected = 5;
+}
+
 
 void handle_quit() {}
 
@@ -175,6 +197,29 @@ void handle_down() {
                 break;
         }
         break;
+    case 2:
+        switch (selected) {
+        case 5:
+            guis[15]->SetTexture("../assets/gui/Buttons/new_game.jpg");
+            break;
+        case 6:
+            guis[16]->SetTexture("../assets/gui/Buttons/quit.jpg");
+            break;
+        }
+        selected++;
+        std::cout << "moving to " << selected << std::endl;
+        if (selected > 6) {
+            selected = 5;
+        }
+        switch (selected) {
+        case 5:
+            guis[15]->SetTexture("../assets/gui/Buttons/new_gameH.jpg");
+            break;
+        case 6:
+            guis[16]->SetTexture("../assets/gui/Buttons/quitH.jpg");
+            break;
+        }
+        break;
     }
 
 
@@ -216,7 +261,7 @@ void handle_up() {
                 guis[3]->SetTexture("../assets/gui/Buttons/back.jpg");
                 break;
             case 4:
-                guis[4]->SetTexture("../assets/gui/Buttons/options.jpg");
+                guis[4]->SetTexture("../assets/gui/Buttons/volume.jpg");
                 break;
         }
         selected--;
@@ -231,6 +276,29 @@ void handle_up() {
                 guis[4]->SetTexture("../assets/gui/Buttons/volumeH.jpg");
                 break;
             }
+        break;
+    case 2:
+        switch (selected) {
+        case 5:
+            guis[15]->SetTexture("../assets/gui/Buttons/new_game.jpg");
+            break;
+        case 6:
+            guis[16]->SetTexture("../assets/gui/Buttons/quit.jpg");
+            break;
+        }
+        selected--;
+        std::cout << "moving to " << selected << std::endl;
+        if (selected < 5) {
+            selected = 6;
+        }
+        switch (selected) {
+        case 5:
+            guis[15]->SetTexture("../assets/gui/Buttons/new_gameH.jpg");
+            break;
+        case 6:
+            guis[16]->SetTexture("../assets/gui/Buttons/quitH.jpg");
+            break;
+        }
         break;
     }
    
@@ -340,6 +408,7 @@ void handle_left() {
     case 1:
         switch (selected) {
         case 4:
+            std::cout << "master volume: " << master_Volume << std::endl;
             if (master_Volume > 0) {
                 master_Volume = master_Volume - 0.05;
             }
@@ -347,7 +416,7 @@ void handle_left() {
                 master_Volume = 0;
             }
           //guis[6]->SetPosition(glm::vec3(0.5f, 0.0f, -0.2f));
-            guis[6]->SetSize(glm::vec2(0.60f * master_Volume, 0.1f));
+            guis[6]->SetSize(glm::vec2(0.6f * master_Volume, 0.1f));
             break;
         case 3:
            
@@ -366,6 +435,7 @@ void handle_right() {
     case 1:
         switch (selected) {
         case 4:
+            std::cout << "master volume: " << master_Volume << std::endl;
             if (master_Volume < 1) {
                 master_Volume = master_Volume + 0.05;
             }
@@ -373,7 +443,7 @@ void handle_right() {
                 master_Volume = 1;
             }
             //guis[6]->SetPosition(glm::vec3(0.5f, 0.0f, -0.2f));
-            guis[6]->SetSize(glm::vec2(0.60f * master_Volume, 0.1f));
+            guis[6]->SetSize(glm::vec2(0.6f * master_Volume, 0.1f));
             break;
         case 3:
 

@@ -105,8 +105,8 @@ void GameWorld::GUI_Init() {
 	volume_Sldr->SetSize(glm::vec2(0.75f, 0.25f));
 	volume_Sldr->SetTexture("../assets/gui/Buttons/volume.jpg");
 	volume_Sldr->SetTransparency(1.0);
-	 
 	guis[4] = volume_Sldr;
+
 	volume_Sldr_Back = guis[5];
 	volume_Sldr_Back->SetHidden(true);
 	volume_Sldr_Back->SetName("volume_Sldr_Back");
@@ -118,7 +118,7 @@ void GameWorld::GUI_Init() {
 	volume_Sldr_Front = guis[6];
 	volume_Sldr_Front->SetHidden(true);
 	volume_Sldr_Front->SetName("volume_Sldr_Front");
-	volume_Sldr_Front->SetPosition(glm::vec3(0.5f, 0.0f, -0.2f));
+	volume_Sldr_Front->SetPosition(glm::vec3(0.5f, 0.0f	, -0.6f));
 	volume_Sldr_Front->SetSize(glm::vec2(0.60f, 0.1f));
 	volume_Sldr_Front->SetTexture("../assets/gui/Buttons/volume_Sldr_Front.jpg");
 	volume_Sldr_Front->SetTransparency(1.0);
@@ -136,28 +136,92 @@ void GameWorld::GUI_Init() {
 	health_Bar_Back = guis[7];
 	health_Bar_Back->SetHidden(false);
 	health_Bar_Back->SetName("health_back");
-	health_Bar_Back->SetPosition(glm::vec3(0.6f, 0.9f, 0.0f));
-	health_Bar_Back->SetSize(glm::vec2(0.7f, 0.05f));
+	health_Bar_Back->SetPosition(glm::vec3(-0.72f, -0.905f, 0.0f));
+	health_Bar_Back->SetSize(glm::vec2(0.38f, 0.05f));
 	health_Bar_Back->SetTexture("../assets/gui/Buttons/health_back.jpg");
 	health_Bar_Back->SetTransparency(1.0);
 	guis[8] = health_Bar_Back;
 	health_Bar_Front = guis[9];
 	health_Bar_Front->SetHidden(false);
 	health_Bar_Front->SetName("health_front");
-	health_Bar_Front->SetPosition(glm::vec3(0.6f, 0.9f, -0.2f));
-	health_Bar_Front->SetSize(glm::vec2(0.7f, 0.05f));
+	health_Bar_Front->SetPosition(glm::vec3(-0.72f, -0.905f, -0.2f));
+	health_Bar_Front->SetSize(glm::vec2(0.38f, 0.05f));
 	health_Bar_Front->SetTexture("../assets/gui/Buttons/health_front.jpg");
 	health_Bar_Front->SetTransparency(1.0);
 	guis[9] = health_Bar_Front;
 
 	blank = guis[10];
 	blank->SetHidden(true);
-	blank->SetName("health_front");
-	blank->SetPosition(glm::vec3(0.5f, 0.0f, 0.3f));
+	blank->SetName("blank");
+	blank->SetPosition(glm::vec3(0.5f, 0.0f, 0.0f));
 	blank->SetSize(glm::vec2(0.75f, 0.25f));
 	blank->SetTexture("../assets/gui/Buttons/blank.jpg");
 	blank->SetTransparency(1.0);
 	guis[10] = blank;
+
+	gui = guis[11];
+	gui->SetHidden(false);
+	gui->SetName("gui");
+	gui->SetPosition(glm::vec3(0.0f, -0.90f, 0.3f));
+	gui->SetSize(glm::vec2(2.0f, 0.2f));
+	gui->SetTexture("../assets/gui/Buttons/hud.jpg");
+	gui->SetTransparency(1.0);
+	guis[11] = gui;
+
+	black = guis[12];
+	black->SetHidden(true);
+	black->SetName("black");
+	black->SetPosition(glm::vec3(0.0f, 0.0f, -0.7f));
+	black->SetSize(glm::vec2(2.0f, 2.0f));
+	black->SetTexture("../assets/gui/Buttons/black.jpg");
+	black->SetTransparency(1.0);
+	guis[12] = black;
+
+	you_win = guis[13];
+	you_win->SetHidden(true);
+	you_win->SetName("you_win");
+	you_win->SetPosition(glm::vec3(0.0f, 0.5f, -0.8f));
+	you_win->SetSize(glm::vec2(0.75f, 0.25f));
+	you_win->SetTexture("../assets/gui/Buttons/victory.jpg");
+	you_win->SetTransparency(1.0);
+	guis[13] = you_win;
+	
+	you_lose = guis[14];
+	you_lose->SetHidden(true);
+	you_lose->SetName("black");
+	you_lose->SetPosition(glm::vec3(0.0f, 0.5f, -0.8f));
+	you_lose->SetSize(glm::vec2(0.75f, 0.25f));	
+	you_lose->SetTexture("../assets/gui/Buttons/you_died.jpg");
+	you_lose->SetTransparency(1.0);
+	guis[14] = you_lose;
+
+	new_game = guis[15];
+	new_game->SetHidden(true);
+	new_game->SetName("new_game");
+	new_game->SetPosition(glm::vec3(0.0f, 0.0f, -0.8f));
+	new_game->SetSize(glm::vec2(0.75f, 0.25f));
+	new_game->SetTexture("../assets/gui/Buttons/new_game.jpg");
+	new_game->SetTransparency(1.0);
+	guis[15] = new_game;
+
+	quit_Btn1 = guis[16];
+	quit_Btn1->SetHidden(true);
+	quit_Btn1->SetName("quit");
+	quit_Btn1->SetPosition(glm::vec3(0.0f, -0.30f, -0.8f));
+	quit_Btn1->SetSize(glm::vec2(0.75f, 0.25f));
+	quit_Btn1->SetTexture("../assets/gui/Buttons/quit.jpg");
+	quit_Btn1->SetTransparency(1.0);
+	guis[16] = quit_Btn1;
+
+	/*= guis[];
+	->SetHidden(true);
+	->SetName("black");
+	->SetPosition(glm::vec3(0.0f, 0.0f, -0.8f));
+	->SetSize(glm::vec2(0.75f, 0.25f));
+	->SetTexture("../assets/gui/Buttons/.jpg");
+	->SetTransparency(1.0);
+	guis[] = ;*/
+
 	
 }
 

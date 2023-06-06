@@ -9,7 +9,7 @@
 #define CLOG_MAXSIZE 50
 #define SLOG_MAXSIZE 100
 const float TICK_RATE = 64;
-#define NUM_GUI 11
+#define NUM_GUI 17
 
 //World Length and Width
 constexpr float WORLD_X = 150;
