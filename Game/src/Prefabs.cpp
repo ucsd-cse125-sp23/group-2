@@ -691,7 +691,7 @@ std::list<Entity> createTowerTesla() {
     GameData::models[e].modelID = MODEL_ID_TESLA;
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
-    GameData::hostilities[e].hostileTo = Teams::Martians;
+    GameData::hostilities[e].hostileTo = Teams::Martians + Teams::Environment;
     GameData::colliders[e].AABB = glm::vec3(1.8, 6.5, 1.8);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;

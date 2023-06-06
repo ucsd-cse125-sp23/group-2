@@ -36,7 +36,7 @@ void ServerGame::initPlayers()
 
 void ServerGame::initWaves()
 {
-    WaveData::currentWave = 2;
+    WaveData::currentWave = -1;
     WaveData::waveTick = ENEMY_SPAWNDELAY_TICKS;
 
     //Temp Nested for loop to populate wave vectors

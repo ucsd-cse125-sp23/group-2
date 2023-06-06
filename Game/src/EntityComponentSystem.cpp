@@ -726,6 +726,10 @@ void EntityComponentSystem::sysAttacks()
                         dealDamage(e, t, (GameData::AOEattackmodules[e].damage));
                     }
                 }
+                else {
+                    // Stop the attack sound
+                    logSound(e, SOUND_ID_ATTACK, true);
+                }
             }
         }
     }
@@ -1120,10 +1124,11 @@ void EntityComponentSystem::changeState(Entity e, State post)
     GameData::tags[e] |= post;
 }
 
-void EntityComponentSystem::logSound(Entity source, int sound_id) {
+void EntityComponentSystem::logSound(Entity source, int sound_id, bool stop) {
     if (GameData::slogpos < SLOG_MAXSIZE) {
         GameData::soundLogs[GameData::slogpos].source = source;
         GameData::soundLogs[GameData::slogpos].sound = sound_id;
+        GameData::soundLogs[GameData::slogpos].stop = stop;
         GameData::slogpos++;
     }
 }
