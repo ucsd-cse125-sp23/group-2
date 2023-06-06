@@ -12,8 +12,6 @@
 	float points;
 	float enemiesKilled;
 	float towersBuilt;
-
-
 void GameWorld::init() {
 
 	currID = 0;
