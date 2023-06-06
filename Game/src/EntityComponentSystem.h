@@ -296,6 +296,7 @@ namespace GameData
     extern std::array<ResourceContainer, MAX_ENTITIES> resources;
     extern std::array<Points, MAX_ENTITIES> pointvalues;
     extern std::array<Upgradeable, MAX_ENTITIES> upgradedata;
+    extern std::array<Powerup, MAX_ENTITIES> powerupdata;
     //Events
     extern std::queue<CollisionEvent> colevents;
 

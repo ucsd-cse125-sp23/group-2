@@ -33,6 +33,7 @@ namespace GameData
   AllPlayerData playerdata;
   std::array<AOEAttackModule, MAX_ENTITIES> AOEattackmodules;
   std::array<Upgradeable, MAX_ENTITIES> upgradedata;
+  std::array<Powerup, MAX_ENTITIES> powerupdata;
 }
 
 //Call all systems each update
