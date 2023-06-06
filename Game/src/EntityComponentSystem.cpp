@@ -123,6 +123,8 @@ void EntityComponentSystem::sysEnemyAI()
                 changeState(e, enemyState::Pathing);
                 rePath(e);
             }
+            glm::vec3 dir = glm::normalize(GameData::velocities[e].velocity);
+            GameData::models[e].modelOrientation = (dir.z < 0) ? -glm::degrees(glm::acos(dir.x)) : glm::degrees(glm::acos(dir.x));
         }
         else if ((GameData::tags[e] & ComponentTags::Hunter) == ComponentTags::Hunter)
         {
@@ -905,6 +907,8 @@ Entity EntityComponentSystem::createEntity(int begin, int end)
             GameData::tags[i] = 0;
             GameData::hostilities[i].team = 0;
             GameData::hostilities[i].hostileTo = 0;
+            GameData::models[i].modelOrientation = 0;
+            GameData::models[i].scale = 1;
             return i;
         }
     }
