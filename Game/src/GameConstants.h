@@ -61,7 +61,7 @@ const int ACTION_COOLDOWN = TICK_RATE;
 const float ENEMY_GND_MVSPD_PERSEC = 5;
 
 //How many seconds until first wave spawns
-const float ENEMY_SPAWNDELAY_SEC = 60;
+const float ENEMY_SPAWNDELAY_SEC = 0;
 
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;
@@ -104,6 +104,9 @@ const float STOMP_RANGE = 5;
 
 //Player safe area
 const float SAFE_AREA = 80;
+
+//Powerup spawn chance
+const float POWERUP_CHANCE = 1;
 
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 30
@@ -152,10 +155,11 @@ const float TOWER_PLACEMENT_RANGE = 15;
 #define MODEL_ID_BEAR_LLEG 21
 #define MODEL_ID_BEAR_RLEG 22
 
+#define MODEL_ID_POWERUP_RAPID 23
+#define MODEL_ID_POWERUP_SPREAD 24
 
 
-
-#define NUM_MODELS 23
+#define NUM_MODELS 25
 
 //animation states
 #define ANIM_IDLE 0

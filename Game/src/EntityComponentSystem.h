@@ -45,6 +45,7 @@ namespace Teams {
     constexpr TeamID Towers = 0x1 << 2;
     constexpr TeamID Environment = 0x1 << 3;
     constexpr TeamID Projectile = 0x1 << 4;
+    constexpr TeamID Powerup = 0x1 << 5;
 }
 
 namespace ResourceType {
@@ -58,6 +59,7 @@ namespace CollisionLayer {
     constexpr TeamID UIObj = 0x1 << 1;
     constexpr TeamID StaticObj = 0x1 << 2;
     constexpr TeamID Boss = 0x1 << 3;
+    constexpr TeamID Powerup = 0x1 << 4;
 }
 
 struct Hostility {
@@ -213,7 +215,9 @@ struct Upgradeable {
     Prefab upgrade;
 };
 
-
+struct Powerup {
+    Prefab newAttack;
+};
 
 namespace ComponentTags
 {
@@ -247,7 +251,7 @@ namespace ComponentTags
     constexpr Tag Upgradeable = 0x1 << 27;
     constexpr Tag Upgrading = 0x1 << 28;
     constexpr Tag PAttackInRangeAI = 0x1 << 29;
-
+    constexpr Tag Powerup = 0x1 << 30;
 }
 
 namespace enemyState {

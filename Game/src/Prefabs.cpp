@@ -227,7 +227,7 @@ std::list<Entity> createProjectileRandom() {
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 30.0f;
     GameData::lifespans[e] = 0.5;
-    GameData::spawnrates[e] = PROJ_SPAWN_RATE/2;
+    GameData::spawnrates[e] = PROJ_SPAWN_RATE/8;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Boss;
     GameData::hostilities[e].team = Teams::Projectile;
@@ -917,7 +917,7 @@ std::list<Entity> createPlayers() {
         GameData::models[i].renderCollider = true;
         GameData::healths[e].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
         GameData::hostilities[e].team = Teams::Players;
-        GameData::hostilities[e].hostileTo = Teams::Environment + Teams::Martians;
+        GameData::hostilities[e].hostileTo = Teams::Environment + Teams::Martians + Teams::Powerup;
         GameData::pattackmodules[e].attack = Prefabs::ProjectileBasic;
         GameData::pattackmodules[e].targetPos = glm::vec3(0, 0, 0);
         GameData::pattackmodules[e].cooldown = 0;
@@ -928,7 +928,7 @@ std::list<Entity> createPlayers() {
         GameData::retplaces[e].place = false;
         GameData::retplaces[e].validTarget = false;
         GameData::colliders[e].colteam = CollisionLayer::WorldObj;
-        GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Boss;
+        GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Boss + CollisionLayer::Powerup;
         GameData::playerdata.spawntimers[e] = -2;
         Collision::updateColTable(e);
 
@@ -1020,7 +1020,7 @@ std::list<Entity> createBossLArm()
     GameData::rigidbodies[e].grounded = false;
     GameData::coldmg[e].cooldown = 0;
     GameData::coldmg[e].damageRate = ENEMY_BASE_DAMAGE_RATE;
-    GameData::pattackmodules[e].attack = Prefabs::ProjectileBasic;
+    GameData::pattackmodules[e].attack = Prefabs::ProjectileSpread5;
     GameData::turrets[e].attackState = ComponentTags::AttackerProjectile;
     GameData::turrets[e].range = ATTACK_RANGE;
 
@@ -1341,6 +1341,68 @@ std::list<Entity> createStoneResourceBasic()
         ComponentTags::ResourceContainer;
 
     return createdEntities;
+}
+
+std::list<Entity> createPowerupSpread()
+{
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::colliders[e].AABB = glm::vec3(1, 1, 1);
+    GameData::models[e].asciiRep = 'P';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = 1;
+    GameData::hostilities[e].team = Teams::Powerup;
+    GameData::hostilities[e].hostileTo = 0;
+    GameData::models[e].modelID = MODEL_ID_POWERUP_SPREAD;
+    GameData::colliders[e].colteam = CollisionLayer::Powerup;
+    GameData::colliders[e].colwith = 0;
+    GameData::models[e].renderCollider = true;
+
+    GameData::tags[e] =
+        ComponentTags::RigidBody +
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::Health;
+
+    return createdEntities;
+}
+
+std::list<Entity> createPowerupRapid()
+{
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::positions[e] = glm::vec3(0, 0, 0);
+    GameData::colliders[e].AABB = glm::vec3(1, 1, 1);
+    GameData::models[e].asciiRep = 'P';
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = 1;
+    GameData::hostilities[e].team = Teams::Powerup;
+    GameData::hostilities[e].hostileTo = 0;
+    GameData::models[e].modelID = MODEL_ID_POWERUP_RAPID;
+    GameData::colliders[e].colteam = CollisionLayer::Powerup;
+    GameData::colliders[e].colwith = 0;
+    GameData::models[e].renderCollider = true;
+
+    GameData::tags[e] =
+        ComponentTags::RigidBody +
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Collidable +
+        ComponentTags::Health;
+
+    return createdEntities;
+}
+
+std::list<Entity> createPowerupRandom() {
+    return rand() % 2 == 0 ? createPowerupSpread() : createPowerupRapid(); //only works if we have 2 types of powerups
 }
 
 

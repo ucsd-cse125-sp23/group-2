@@ -12,7 +12,7 @@ void GameWorld::init() {
 
 	models[MODEL_ID_MOB] = new ObjectModel("../assets/martian/martian.obj");
 	models[MODEL_ID_MOB_TANK] = new ObjectModel("../assets/martian/martian_tank.obj");
-	models[MODEL_ID_MOB_MINI] = new ObjectModel("../assets/martian/martian_fast.obj"); //TODO: make smol
+	models[MODEL_ID_MOB_MINI] = new ObjectModel("../assets/martian/martian_fast.obj");
 	models[MODEL_ID_MOB_FLYING] = new ObjectModel("../assets/ufo/ufo_v2.obj");
 	models[MODEL_ID_MOB_TRACTOR] = new ObjectModel("../assets/ufo/ufo_v2.obj");
 
@@ -34,6 +34,10 @@ void GameWorld::init() {
 	models[MODEL_ID_BEAR_LLEG] = new ObjectModel("../assets/bear/lleg.obj");
 	models[MODEL_ID_BEAR_RLEG] = new ObjectModel("../assets/bear/rleg.obj");
 	models[MODEL_ID_BEAR_BODY] = new ObjectModel("../assets/bear/body.obj");
+
+	models[MODEL_ID_POWERUP_RAPID] = new ObjectModel("../assets/cube/cube.obj"); //TODO: add proper models
+	models[MODEL_ID_POWERUP_SPREAD] = new ObjectModel("../assets/cube/cube.obj");
+
 
 	//models[MODEL_ID_SUNGOD] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
 
@@ -65,6 +69,9 @@ void GameWorld::init() {
 	shaders[MODEL_ID_BEAR_RLEG] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_BEAR_BODY] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	//shaders[MODEL_ID_SUNGOD] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
+
+	shaders[MODEL_ID_POWERUP_SPREAD] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_POWERUP_RAPID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
 	healthShader = new Shader("../shaders/shader.vert", "../shaders/shader.frag");
 	ObjectModel* healthModel = new ObjectModel("../assets/cube/cube.obj");

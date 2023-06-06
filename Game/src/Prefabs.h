@@ -80,7 +80,7 @@ std::list<Entity> createBossRLeg();
 std::list<Entity> createBossLLeg();
 std::list<Entity> createBoss();
 
-
+std::list<Entity> createPowerupRandom();
 
 
 
@@ -133,12 +133,12 @@ namespace Prefabs {
 		TowerReticleRailgun,
 		TowerReticleTesla,
 		TowerReticleBarrier,
-
 		PathColliders,
 		UI_MARKER,
 		Home = UI_MARKER,
 		EnemyBoss,
 		Players,
+		PowerupRandom,
 		NUM_PREFAB
 
 	};
@@ -192,7 +192,8 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createPathColliders,
 	&createHome,
 	&createBoss,
-	&createPlayers
+	&createPlayers,
+	&createPowerupRandom,
 };
 
 namespace PlayerSpawns {

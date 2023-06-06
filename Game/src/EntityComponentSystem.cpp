@@ -585,7 +585,6 @@ void EntityComponentSystem::resolveCollisions()
 
         }
 
-
         //Check if dies on Collision
         if ((GameData::tags[e] & (ComponentTags::DiesOnCollision)) == ComponentTags::DiesOnCollision) {
             causeDeath(e, e);
@@ -619,8 +618,8 @@ void EntityComponentSystem::sysDeathStatus()
         //set to inactive if dying flag
         if ((GameData::tags[e] & ComponentTags::Dead) == ComponentTags::Dead)
         {
-            if (GameData::hostilities[e].team == Teams::Players) {
-                //printf("%d should be player\n", e);
+            switch (GameData::hostilities[e].team) {
+            case Teams::Players:
                 if (GameData::playerdata.spawntimers[e] < -1.0f) {
                     GameData::playerdata.spawntimers[e] = RESPAWN_TIMER;
                     GameData::rigidbodies[e].fixed = true;
@@ -634,15 +633,20 @@ void EntityComponentSystem::sysDeathStatus()
                     Collision::updateColTable(e);
                 }
                 else {
-                    GameData::playerdata.spawntimers[e] = GameData::playerdata.spawntimers[e] - 1.0f/TICK_RATE;
+                    GameData::playerdata.spawntimers[e] = GameData::playerdata.spawntimers[e] - 1.0f / TICK_RATE;
                 }
-            }
-            else {
-                //TEST OUTPUT FOR VISUALIZER
+                break;
+            case Teams::Martians:
+                if (rand() / ((float)RAND_MAX) <= POWERUP_CHANCE) {
+                    Entity p = prefabMap[PowerupRandom]().front();
+                    if (p != INVALID_ENTITY) {
+                        GameData::positions[p] = GameData::positions[e];
+                    }
+                }
+            default:
                 GameData::models[e].asciiRep = 'X';
                 GameData::activity[e] = false;
-
-                //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
+                break;
             }
         }
 
