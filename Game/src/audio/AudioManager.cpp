@@ -18,11 +18,11 @@ AudioManager::AudioManager() {
     musicChannel = nullptr;
 
     AudioManager::loadSound("../assets/sounds/Bluezone_BC0254_wood_falling_log_002_006.wav", MODEL_ID_RESOURCE, SOUND_ID_DEATH);
-    AudioManager::loadSound("../assets/sounds/Bluezone_BC0254_wood_falling_log_002_006.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DEATH); //TODO Make stone sounds
+    AudioManager::loadSound("../assets/sounds/PM_RI_Designed_7 Rocks Impact Hit Big LFE Heavy Designed.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DEATH); //TODO Make stone sounds
 
     AudioManager::loadSound("../assets/sounds/Alarm_Fast_DDM23.wav", MODEL_ID_BASE, SOUND_ID_DAMAGE);
     AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_RESOURCE, SOUND_ID_DAMAGE);
-    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DAMAGE); //TODO make stone sound
+    AudioManager::loadSound("../assets/sounds/PM_RI_Source_92 Rocks Impact Hit Single Stone.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DAMAGE); //TODO make stone sound
 
     AudioManager::loadSound("../assets/sounds/Big Blast 4.wav", MODEL_ID_ROVER, SOUND_ID_ATTACK);
     AudioManager::loadSound("../assets/sounds/HeavyGun_Experimental_3.wav", MODEL_ID_TOWER, SOUND_ID_ATTACK);
