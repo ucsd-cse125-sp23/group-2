@@ -35,8 +35,8 @@ void GameWorld::init() {
 	models[MODEL_ID_BEAR_RLEG] = new ObjectModel("../assets/bear/rleg.obj");
 	models[MODEL_ID_BEAR_BODY] = new ObjectModel("../assets/bear/body.obj");
 
-	models[MODEL_ID_POWERUP_RAPID] = new ObjectModel("../assets/cube/cube.obj"); //TODO: add proper models
-	models[MODEL_ID_POWERUP_SPREAD] = new ObjectModel("../assets/cube/cube.obj");
+	models[MODEL_ID_POWERUP_RAPID] = new ObjectModel("../assets/powerups/rapidfire_icon.obj"); //TODO: add proper models
+	models[MODEL_ID_POWERUP_SPREAD] = new ObjectModel("../assets/powerups/spreadshot_icon.obj");
 
 
 	//models[MODEL_ID_SUNGOD] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");

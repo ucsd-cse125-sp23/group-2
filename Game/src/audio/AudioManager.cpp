@@ -47,7 +47,7 @@ AudioManager::AudioManager() {
 
     AudioManager::loadMusic("../assets/sounds/Free Video Game Music - HeatleyBros - Game On.mp3");
     AudioManager::playMusic();
-    AudioManager::setMusicVolume(0.4);
+    AudioManager::setMusicVolume(0.05);
     AudioManager::errorCheck(audioSystem->set3DSettings(1, 1, 0.5));
 }
 
