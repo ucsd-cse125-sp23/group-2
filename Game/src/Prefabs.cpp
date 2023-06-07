@@ -1481,7 +1481,7 @@ std::list<Entity> createPathColliders()
 
 
             }
-            pathvecprev = pathvec;
+            pathvecprev = pathvec*-1.0f;
         }
     }
 
