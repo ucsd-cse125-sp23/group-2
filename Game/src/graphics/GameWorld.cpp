@@ -148,7 +148,7 @@ void GameWorld::GUI_Init() {
 	health_Bar->SetHidden(false);
 	health_Bar->SetName("health");
 	health_Bar->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-	health_Bar->SetSize(glm::vec2(1.0f, 1.0f));
+	health_Bar->SetSize(glm::vec2(0.5f, 0.5f));
 	health_Bar->SetTexture("../assets/gui/Buttons/crosshair.jpg");
 	health_Bar->SetTransparency(1.0);
 	guis[7] = health_Bar;
@@ -234,11 +234,11 @@ void GameWorld::GUI_Init() {
 
 
 	gui = guis[17];
-	gui->SetHidden(true);
+	gui->SetHidden(false);
 	gui->SetName("gui");
-	gui->SetPosition(glm::vec3(0.0f, -0.70f, 0.3f));
+	gui->SetPosition(glm::vec3(0.0f, 0.90f, 0.3f));
 	gui->SetSize(glm::vec2(2.0f, 0.2f));
-	gui->SetTexture("../assets/gui/Buttons/hud.jpg");
+	gui->SetTexture("../assets/gui/Buttons/hud_top.jpg");
 	gui->SetTransparency(1.0);
 	guis[17] = gui;
 
@@ -255,9 +255,7 @@ void GameWorld::GUI_Init() {
 }
 
 void updateLabels() {
-	sprintf(str, "%d", spawntimer);
-	strcat(str, " seconds");
-	spawntimerT->RenderText(str, 1000.0f, 1350.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	
 	
 	sprintf(str, "%d", moneyRes);
 	moneyResT->RenderText(str, 2040.0f, 35.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
@@ -267,18 +265,22 @@ void updateLabels() {
 	
 	sprintf(str, "%d", stoneRes);
 	stoneResT->RenderText(str, 770.0f, 35.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+
+	sprintf(str, "%d", spawntimer);
+	strcat(str, " seconds");
+	spawntimerT->RenderText(str, 1300.0f, 1330.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
 	
 	sprintf(str, "%d", points);
 	strcat(str, " points");
-	pointsT->RenderText(str, 2100.0f, 150.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	pointsT->RenderText(str, 2050.0f, 1330.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
 	
 	sprintf(str, "%d", enemiesKilled);
 	strcat(str, " kills");
-	enemiesKilledT->RenderText(str, 1100.0f, 150.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	enemiesKilledT->RenderText(str, 800.0f, 1330.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
 	
 	sprintf(str, "%d", towersBuilt);
 	strcat(str, " towers");
-	towersBuiltT->RenderText(str, 70.0f, 150.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	towersBuiltT->RenderText(str, 70.0f, 1330.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
 	
 	}
 
