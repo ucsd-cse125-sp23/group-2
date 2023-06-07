@@ -1386,6 +1386,7 @@ std::list<Entity> createPathColliders()
 {
     std::list<Entity> createdEntities;
     for (int p = 0; p < Paths::pathCount; ++p) {
+        glm::vec3 pathvecprev = glm::vec3(0, 0, 0);
         for (int i = 0; (i < PATH_LENGTH - 1); i++) {
             if (Paths::path[p][i] == Paths::path[p][i + 1]) {
                 break;
@@ -1393,7 +1394,59 @@ std::list<Entity> createPathColliders()
             float currdiff = glm::distance(Paths::path[p][i + 1], Paths::path[p][i]);
             float progress = 0;
             glm::vec3 pathvec = glm::normalize(Paths::path[p][i + 1] - Paths::path[p][i]);
-            printf("Curdiif is init %f\n", currdiff);
+            //printf("Curdiif is init %f\n", currdiff);
+
+            //Do first one, which could be a corner
+            Entity e = createEntity();
+            createdEntities.push_back(e);
+            if (e == INVALID_ENTITY) {
+                return createdEntities;
+            }
+
+            //printf("Curdiif is now %f creating entity %d\n", currdiff, e);
+
+
+            GameData::activity[e] = true;
+
+            GameData::positions[e] = Paths::path[p][i] + progress * pathvec;
+            GameData::positions[e].y = GROUND_HEIGHT + 0.01;
+
+            GameData::colliders[e].AABB = glm::vec3(PATH_WIDTH / 2, 0.01, PATH_WIDTH / 2);
+
+            GameData::models[e].modelID = MODEL_ID_PATH_STRAIGHT;
+            GameData::models[e].asciiRep = 'P';
+            GameData::models[e].renderCollider = true;
+            GameData::models[e].modelOrientation = glm::degrees(glm::acos(pathvec.x));
+            GameData::colliders[e].colteam = CollisionLayer::UIObj;
+            GameData::colliders[e].colwith = 0;
+
+            GameData::tags[e] =
+                ComponentTags::Position +
+                ComponentTags::Model +
+                ComponentTags::Collidable;
+
+            if (glm::dot(pathvecprev, pathvec) != 0) {
+                //printf("New path is in sam direction as old\n");
+            }
+            else if ((pathvecprev + pathvec) == glm::vec3(1, 0, 1)) {
+                GameData::models[e].modelID = MODEL_ID_PATH_CORNER;
+                GameData::models[e].modelOrientation = 180;
+            }
+            else if ((pathvecprev + pathvec) == glm::vec3(-1, 0, 1)) {
+                GameData::models[e].modelID = MODEL_ID_PATH_CORNER;
+                GameData::models[e].modelOrientation = 270;
+            }
+            else if ((pathvecprev + pathvec) == glm::vec3(-1, 0, -1)) {
+                GameData::models[e].modelID = MODEL_ID_PATH_CORNER;
+                GameData::models[e].modelOrientation = 0;
+            }
+            else if ((pathvecprev + pathvec) == glm::vec3(1, 0, -1)) {
+                GameData::models[e].modelID = MODEL_ID_PATH_CORNER;
+                GameData::models[e].modelOrientation = 90;
+            }
+
+            progress += PATH_WIDTH;
+
             while (currdiff > progress) {
 
                 Entity e = createEntity();
@@ -1402,7 +1455,7 @@ std::list<Entity> createPathColliders()
                     return createdEntities;
                 }
 
-                printf("Curdiif is now %f creating entity %d\n", currdiff, e);
+                //printf("Curdiif is now %f creating entity %d\n", currdiff, e);
 
 
                 GameData::activity[e] = true;
@@ -1423,9 +1476,12 @@ std::list<Entity> createPathColliders()
                     ComponentTags::Position +
                     ComponentTags::Model +
                     ComponentTags::Collidable;
+
                 progress += PATH_WIDTH;
 
+
             }
+            pathvecprev = pathvec;
         }
     }
 
