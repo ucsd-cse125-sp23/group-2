@@ -1430,19 +1430,19 @@ std::list<Entity> createPathColliders()
             }
             else if ((pathvecprev + pathvec) == glm::vec3(1, 0, 1)) {
                 GameData::models[e].modelID = MODEL_ID_PATH_CORNER;
-                GameData::models[e].modelOrientation = 180;
+                GameData::models[e].modelOrientation = 90;
             }
             else if ((pathvecprev + pathvec) == glm::vec3(-1, 0, 1)) {
                 GameData::models[e].modelID = MODEL_ID_PATH_CORNER;
-                GameData::models[e].modelOrientation = 270;
+                GameData::models[e].modelOrientation = 180;
             }
             else if ((pathvecprev + pathvec) == glm::vec3(-1, 0, -1)) {
                 GameData::models[e].modelID = MODEL_ID_PATH_CORNER;
-                GameData::models[e].modelOrientation = 0;
+                GameData::models[e].modelOrientation = 270;
             }
             else if ((pathvecprev + pathvec) == glm::vec3(1, 0, -1)) {
                 GameData::models[e].modelID = MODEL_ID_PATH_CORNER;
-                GameData::models[e].modelOrientation = 90;
+                GameData::models[e].modelOrientation = 0;
             }
 
             progress += PATH_WIDTH;
