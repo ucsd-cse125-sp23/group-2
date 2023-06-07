@@ -386,7 +386,6 @@ void ServerGame::update()
 }
 
 const int NUM_PLAYER_ATTACK = 3;
-const Prefab playerWeaponArray[NUM_PLAYER_ATTACK] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectilePierce };
 const Prefab playerReticleArray[NUM_TOWER_PREFAB] = { Prefabs::TowerReticleBasic, Prefabs::TowerReticleRailgun, Prefabs::TowerReticleTesla, Prefabs::TowerReticleBarrier };
 const Prefab playerBuildingArray[NUM_TOWER_PREFAB] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerTesla, Prefabs::TowerBarrier };
 
@@ -454,14 +453,7 @@ void ServerGame::handleInputs()
                 }
             }
             else {
-                if (in.selected > NUM_PLAYER_ATTACK) {
-                    in.selected = NUM_PLAYER_ATTACK - 1;
-                }
-                if (in.selected < 0) {
-                    in.selected = 0; //BAD BAD CODE
-                }
                 changeState(i, PlayerState::Default); //May be slow
-                //GameData::pattackmodules[i].attack = playerWeaponArray[in.selected];
 
                 if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
                     ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
