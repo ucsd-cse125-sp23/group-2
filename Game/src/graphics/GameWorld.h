@@ -24,6 +24,8 @@ private:
     Camera* cam;
     static float prevX, prevY, currX, currY, scrollY;
 
+
+   
     Text* text;
 
     //static int mouseDX, mouseDY;

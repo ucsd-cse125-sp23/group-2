@@ -5,14 +5,22 @@
 	int selected;
 	int depth;
 	bool menuOn;
-	float spawntimer;
-	float moneyRes;
-	float woodRes;
-	float stoneRes;
-	float points;
-	float enemiesKilled;
-	float towersBuilt;
+	int spawntimer=0;
+	int moneyRes=0;
+	int woodRes=0;
+	int stoneRes=0;
+	int points=0;
+	int enemiesKilled=0;
+	int towersBuilt=0;
 
+	Text* spawntimerT;
+	Text* moneyResT;
+	Text* woodResT;
+	Text* stoneResT;
+	Text* pointsT;
+	Text* enemiesKilledT;
+	Text* towersBuiltT;
+	char str[65536];
 
 void GameWorld::init() {
 
@@ -22,6 +30,13 @@ void GameWorld::init() {
 	env->setEnvShader(new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag"));
 
 	text = new Text("../assets/font.ttf");
+	spawntimerT = new Text("../assets/font.ttf");
+	moneyResT = new Text("../assets/font.ttf");
+	woodResT = new Text("../assets/font.ttf");
+	stoneResT = new Text("../assets/font.ttf");
+	pointsT = new Text("../assets/font.ttf");
+	enemiesKilledT = new Text("../assets/font.ttf");
+	towersBuiltT = new Text("../assets/font.ttf");
 
 	models[MODEL_ID_CUBE] = new ObjectModel("../assets/cube/cube.obj");
 	models[MODEL_ID_ROVER] = new ObjectModel("../assets/rover/rover.obj");
@@ -217,6 +232,16 @@ void GameWorld::GUI_Init() {
 	quit_Btn1->SetTransparency(1.0);
 	guis[16] = quit_Btn1;
 
+
+	gui = guis[17];
+	gui->SetHidden(true);
+	gui->SetName("gui");
+	gui->SetPosition(glm::vec3(0.0f, -0.70f, 0.3f));
+	gui->SetSize(glm::vec2(2.0f, 0.2f));
+	gui->SetTexture("../assets/gui/Buttons/hud.jpg");
+	gui->SetTransparency(1.0);
+	guis[17] = gui;
+
 	/*= guis[];
 	->SetHidden(true);
 	->SetName("black");
@@ -229,8 +254,36 @@ void GameWorld::GUI_Init() {
 	
 }
 
-void GameWorld::update(ServertoClientData& incomingData, int id) {
+void updateLabels() {
+	sprintf(str, "%d", spawntimer);
+	strcat(str, " seconds");
+	spawntimerT->RenderText(str, 1000.0f, 1350.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	
+	sprintf(str, "%d", moneyRes);
+	moneyResT->RenderText(str, 2040.0f, 35.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	
+	sprintf(str, "%d", woodRes);
+	woodResT->RenderText(str, 1400.0f, 35.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	
+	sprintf(str, "%d", stoneRes);
+	stoneResT->RenderText(str, 770.0f, 35.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	
+	sprintf(str, "%d", points);
+	strcat(str, " points");
+	pointsT->RenderText(str, 2100.0f, 150.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	
+	sprintf(str, "%d", enemiesKilled);
+	strcat(str, " kills");
+	enemiesKilledT->RenderText(str, 1100.0f, 150.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	
+	sprintf(str, "%d", towersBuilt);
+	strcat(str, " towers");
+	towersBuiltT->RenderText(str, 70.0f, 150.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	
+	}
 
+void GameWorld::update(ServertoClientData& incomingData, int id) {
+	updateLabels();
 	for (int i = 0; i < incomingData.activity.size(); i++) {
 		if (incomingData.activity[i] && incomingData.models[i].renderCollider) {
 			AABBs[i]->setActive(true);
@@ -294,8 +347,8 @@ void GameWorld::draw(Shader* guiShader, float wWidth, float wHeight) {
 	const glm::mat4& viewProjMtx = cam->GetViewProjectMtx();
 	env->draw(viewProjMtx);
 
-	text->RenderText("Hello World", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
-
+	//text->RenderText("Hello World", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+	updateLabels();
 	for (RenderEntity* e : entities) {
 
 		if (e->getActive()) {

@@ -9,13 +9,13 @@ extern int selected;
 extern	std::array <GUIElement*, NUM_GUI> guis;
 extern int depth;
 extern bool menuOn;
-extern float spawntimer;
-extern float moneyRes;
-extern float woodRes;
-extern float stoneRes;
-extern float points;
-extern float enemiesKilled;
-extern float towersBuilt;
+extern int spawntimer;
+extern int moneyRes;
+extern int woodRes;
+extern int stoneRes;
+extern int points;
+extern int enemiesKilled;
+extern int towersBuilt;
 
 
 
