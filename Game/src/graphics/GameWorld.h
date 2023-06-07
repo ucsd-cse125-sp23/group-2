@@ -57,6 +57,7 @@ public:
     GUIElement* you_lose;
     GUIElement* quit_Btn1;
     GUIElement* new_game;
+    GUIElement* crosshair;
     //
     void GUI_Init();
     void update(ServertoClientData& incomingData, int id);
