@@ -44,6 +44,9 @@ AudioManager::AudioManager() {
     AudioManager::loadSound("../assets/sounds/4B8NZTJ-tractor-beam.wav", MODEL_ID_MOB_TRACTOR, SOUND_ID_ATTACK);
     AudioManager::loadSound("../assets/sounds/Robotic Lifeforms 2 - Impacts Source - Metal Tool Drawer Punch 03.wav", MODEL_ID_ROVER, SOUND_ID_LAND);
     AudioManager::loadSound("../assets/sounds/PM_FSSF2_EXOSKELETON_11_SERVO_MOVEMENT_ROTATION.wav", MODEL_ID_ROVER, SOUND_ID_JUMP);
+    AudioManager::loadSound("../assets/sounds/PowerUp01.wav", MODEL_ID_POWERUP_SPREAD, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/PowerUp01.wav", MODEL_ID_POWERUP_RAPID, SOUND_ID_DEATH);
+
 
     AudioManager::loadMusic("../assets/sounds/Free Video Game Music - HeatleyBros - Game On.mp3");
     AudioManager::playMusic();
