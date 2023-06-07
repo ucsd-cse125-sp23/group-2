@@ -8,8 +8,8 @@ FMOD_VECTOR vecConvert(glm::vec3 inVec) {
 }
 
 AudioManager::AudioManager() {
-    musicvol = 1.0f;
-    sfxvol = 1.0f;
+    musicvol = 0.7f;
+    sfxvol = 0.7f;
     audioSystem = nullptr;
     // Create the main system object.
     AudioManager::errorCheck(FMOD::System_Create(&audioSystem));      
@@ -20,11 +20,13 @@ AudioManager::AudioManager() {
     musicChannel = nullptr;
 
     AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_RESOURCE, SOUND_ID_DEATH);
-    AudioManager::loadSound("../assets/sounds/PM_RI_Designed_7 Rocks Impact Hit Big LFE Heavy Designed.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DEATH); //TODO Make stone sounds
-
+    AudioManager::loadSound("../assets/sounds/PM_RI_Designed_7 Rocks Impact Hit Big LFE Heavy Designed.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DEATH);
     AudioManager::loadSound("../assets/sounds/Alarm_Fast_DDM23.wav", MODEL_ID_BASE, SOUND_ID_DAMAGE);
     AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_RESOURCE, SOUND_ID_DAMAGE);
-    AudioManager::loadSound("../assets/sounds/PM_RI_Source_92 Rocks Impact Hit Single Stone.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DAMAGE); //TODO make stone sound
+    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_BARRIER, SOUND_ID_DAMAGE); //TODO: Change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_BARRIER, SOUND_ID_DEATH);
+
+    AudioManager::loadSound("../assets/sounds/PM_RI_Source_92 Rocks Impact Hit Single Stone.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DAMAGE);
 
     AudioManager::loadSound("../assets/sounds/Big Blast 4.wav", MODEL_ID_ROVER, SOUND_ID_ATTACK);
     AudioManager::loadSound("../assets/sounds/HeavyGun_Experimental_3.wav", MODEL_ID_TOWER, SOUND_ID_ATTACK);
@@ -102,12 +104,12 @@ void AudioManager::stopSound(Entity e) {
 
 // Load music track
 void AudioManager::loadMusic(const char* path) {
-    AudioManager::errorCheck(audioSystem->createSound(path, FMOD_LOOP_NORMAL, nullptr, &music));
+    AudioManager::errorCheck(audioSystem->createSound(path, FMOD_LOOP_NORMAL | FMOD_CREATESTREAM, nullptr, &music));
 }
 
 void AudioManager::playMusic() {
     AudioManager::errorCheck(audioSystem->playSound(music, nullptr, false, &musicChannel));
-    AudioManager::errorCheck(musicChannel->setVolume(musicvol * 0.5));
+    AudioManager::errorCheck(musicChannel->setVolume(musicvol * 0.05));
 }
 
 void AudioManager::setMusicVolume(float vol) {
