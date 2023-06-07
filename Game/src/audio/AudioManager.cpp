@@ -8,6 +8,8 @@ FMOD_VECTOR vecConvert(glm::vec3 inVec) {
 }
 
 AudioManager::AudioManager() {
+    musicvol = 1.0f;
+    sfxvol = 1.0f;
     audioSystem = nullptr;
     // Create the main system object.
     AudioManager::errorCheck(FMOD::System_Create(&audioSystem));      
@@ -50,7 +52,6 @@ AudioManager::AudioManager() {
 
     AudioManager::loadMusic("../assets/sounds/Free Video Game Music - HeatleyBros - Game On.mp3");
     AudioManager::playMusic();
-    AudioManager::setMusicVolume(0.05);
     AudioManager::errorCheck(audioSystem->set3DSettings(1, 1, 0.5));
 }
 
@@ -73,6 +74,7 @@ void AudioManager::playSound(int model, int soundType, glm::vec3 pos, Entity e) 
             AudioManager::errorCheck(audioSystem->playSound(soundArray[model][soundType], nullptr, false, &channelArray[e]));
             AudioManager::errorCheck(channelArray[e]->set3DAttributes(&vecConvert(pos), &zeroVec));
             AudioManager::errorCheck(channelArray[e]->setPaused(false));
+            AudioManager::errorCheck(channelArray[e]->setVolume(sfxvol));
         }
     }
     else {
@@ -80,6 +82,7 @@ void AudioManager::playSound(int model, int soundType, glm::vec3 pos, Entity e) 
         AudioManager::errorCheck(audioSystem->playSound(soundArray[model][soundType], nullptr, false, &newChannel));
         AudioManager::errorCheck(newChannel->set3DAttributes(&vecConvert(pos), &zeroVec));
         AudioManager::errorCheck(newChannel->setPaused(false));
+        AudioManager::errorCheck(newChannel->setVolume(sfxvol));
     }
 }
 
@@ -104,10 +107,23 @@ void AudioManager::loadMusic(const char* path) {
 
 void AudioManager::playMusic() {
     AudioManager::errorCheck(audioSystem->playSound(music, nullptr, false, &musicChannel));
+    AudioManager::errorCheck(musicChannel->setVolume(musicvol * 0.5));
 }
 
 void AudioManager::setMusicVolume(float vol) {
-    musicChannel->setVolume(vol);
+    if (vol < 0 || vol > 1) {
+        printf("Trying to set music volume out of range!\n");
+        return;
+    }
+    musicvol = vol;
+}
+
+void AudioManager::setSFXVolume(float vol) {
+    if (vol < 0 || vol > 1) {
+        printf("Trying to set SFX volume out of range!\n");
+        return;
+    }
+    sfxvol = vol;
 }
 
 // Helper function to check for FMOD errors
