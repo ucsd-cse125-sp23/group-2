@@ -681,7 +681,11 @@ void EntityComponentSystem::sysAttacks()
                 glm::vec3 normTarget = glm::normalize(targetVec);
                 float angleY = glm::acos(glm::dot(normXZ, normTarget));
                 glm::vec3 axisXZ = glm::cross(normXZ, normTarget);
-                glm::mat4 transform = glm::translate(GameData::positions[e]) * glm::rotate(angleY, axisXZ) * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
+                glm::mat4 yrot = glm::mat4(1);
+                if (angleY != 0) {
+                    glm::mat4 yrot = glm::rotate(angleY, axisXZ);
+                }
+                glm::mat4 transform = glm::translate(GameData::positions[e]) * yrot * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
 
                 //Create entities representing attack (projectiles)
                 std::list<Entity> attacks = prefabMap[GameData::pattackmodules[e].attack]();
