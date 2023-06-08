@@ -51,6 +51,7 @@ void Particle::draw(const glm::mat4& viewProjMtx, Camera* cam) {
     // get the locations and send the uniforms to the shader
     shader->setMat4("viewProj", viewProjMtx);
     shader->setMat4("model", modelMtx);
+    shader->setVec3("DiffuseColor", color);
     shader->setVec3("viewPos", cam->getCameraPosition());
 
     model->Draw(*shader);
@@ -62,7 +63,7 @@ void Particle::draw(const glm::mat4& viewProjMtx, Camera* cam) {
 }
 EffectSystem::EffectSystem() {
     models.push_back(new ObjectModel("../assets/cube/cube.obj"));
-    shader = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+    shader = new Shader("../shaders/particleShader.vert", "../shaders/particleShader.frag");
     PositionX = 0.0f;
     PositionY = 5.0f;
     PositionZ = 0.0f;
@@ -132,16 +133,23 @@ void EffectSystem::draw(const glm::mat4& viewProjMtx, Camera* cam) {
 void EffectSystem::resourceEffect(glm::vec3& location, int model_id) {
     glm::vec3 loc = location;
     for (int i = 0; i < 10; i++) {
-        spawnParticle(location, models[0]);
+        glm::vec3 c;
+        if (model_id == MODEL_ID_RESOURCE) {
+            c = glm::vec3(0.4, 0.2, 0.1);
+        }
+        else {
+            c = glm::vec3(0.5, 0.5, 0.5);
+        }
+        spawnParticle(location, models[0], c);
     }
 }
 void EffectSystem::playerJumpEffect(glm::vec3& location) {
     glm::vec3 loc = location;
     for (int i = 0; i < 15; i++) {
-        spawnParticle(location, models[0]);
+        spawnParticle(location, models[0], glm::vec3(0.6, 0.3, 0.2));
     }
 }
-void EffectSystem::spawnParticle(glm::vec3 & location, ObjectModel * m) {
+void EffectSystem::spawnParticle(glm::vec3 & location, ObjectModel * m, glm::vec3 color) {
     //apply randomness
     std::uniform_real_distribution<double> pdisx(-PVarianceX, PVarianceX);
     std::uniform_real_distribution<double> pdisy(-PVarianceY, PVarianceY);
@@ -155,6 +163,7 @@ void EffectSystem::spawnParticle(glm::vec3 & location, ObjectModel * m) {
     glm::vec3 v = glm::vec3(VelocityX + vdisx(gen), VelocityY + vdisy(gen), VelocityZ + vdisz(gen));
     glm::vec3 p = glm::vec3(location.x + pdisx(gen), std::max(0.001, location.y + pdisy(gen) - 0.5f), location.z + pdisz(gen));
     Particle* newP = new Particle(0.01, v, p, ParticleRadius, std::max(0.0, LifeSpan + ldis(gen)), m, shader);
+    newP->setColor(color);
     if (lastIndex.empty()) {
         particles.push_back(newP);
     }

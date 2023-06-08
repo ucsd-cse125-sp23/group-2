@@ -162,6 +162,7 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		currWaveTimer = incomingData.waveTimer;
 	}
 	while (!newCLogs.empty()) {
+		std::cout << "KILLED\n";
 		int target = newCLogs.top().target;
 		newCLogs.pop();
 		effect->resourceEffect(entities[target]->getPosition(), entities[target]->getModelID());
@@ -171,6 +172,7 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		int sound = newSLogs.top().sound;
 		newSLogs.pop();
 		if (sound == SOUND_ID_JUMP) {
+			std::cout << "JUMPED\n";
 			effect->playerJumpEffect(entities[source]->getPosition());
 		}
 	}

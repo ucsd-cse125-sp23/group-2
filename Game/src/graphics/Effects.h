@@ -10,8 +10,10 @@ class Particle {
 private:
 	glm::vec3 position, velocity, force, normal;
 	glm::mat4 modelMtx;
+	glm::vec3 color;
 	ObjectModel* model;
 	Shader* shader;
+
 	float mass;
 	float bounces;
 	float radius;
@@ -25,6 +27,7 @@ public:
 	void applyImpulse(glm::vec3& imp);
 	void integrate(float deltaTime);
 	void draw(const glm::mat4& viewProjMtx, Camera* cam);
+	void setColor(glm::vec3& c) { color = c; }
 	glm::vec3 getPosition() { return position; };
 	glm::vec3 getVelocity() { return velocity; };
 	glm::vec3 getNormal() { return normal; };
@@ -59,7 +62,7 @@ public:
 	EffectSystem();
 	bool load();
 	void update(float dt);
-	void spawnParticle(glm::vec3& location, ObjectModel* m);
+	void spawnParticle(glm::vec3& location, ObjectModel* m, glm::vec3 color);
 	void draw(const glm::mat4& viewProjMtx, Camera* cam);
 	void playerJumpEffect(glm::vec3& location);
 	void resourceEffect(glm::vec3& location, int model_id);
