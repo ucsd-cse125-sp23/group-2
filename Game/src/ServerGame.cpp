@@ -36,7 +36,7 @@ void ServerGame::initPlayers()
 
 void ServerGame::initWaves()
 {
-    WaveData::currentWave = 5;
+    WaveData::currentWave = START_WAVE;
     WaveData::waveTick = ENEMY_SPAWNDELAY_TICKS;
 
     enemy e;
