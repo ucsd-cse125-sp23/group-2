@@ -13,7 +13,7 @@ std::list<Entity> createProjectileBasic() {
     GameData::positions[e] = glm::vec3(0, 0, -2);
     GameData::velocities[e].velocity = glm::vec3(0, 0, -1)*PROJ_MVSPD;
     GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
-    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE_ROVER;
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 40.0f;
     GameData::lifespans[e] = 5;
@@ -46,7 +46,7 @@ std::list<Entity> createProjectileSpread5() {
         GameData::positions[e] = glm::vec3(2 - i, 0, -2);
         GameData::velocities[e].velocity = glm::normalize(glm::vec3((float)(2 - i) * 0.1, 0, -0.5)) * (PROJ_MVSPD/2);
         GameData::colliders[e].AABB =  glm::vec3(.25, .25, .25);
-        GameData::models[e].modelID = MODEL_ID_PROJECTILE;
+        GameData::models[e].modelID = MODEL_ID_PROJECTILE_SPREAD;
         GameData::models[e].asciiRep = 'J';
         GameData::coldmg[e].damage = 60.0f;
         GameData::lifespans[e] = 1;
@@ -79,7 +79,7 @@ std::list<Entity> createProjectilePierce() {
     GameData::positions[e] = glm::vec3(0, 0, -1);
     GameData::velocities[e].velocity = glm::vec3(0, 0, -5) * PROJ_MVSPD;
     GameData::colliders[e].AABB = glm::vec3(1, 1, 1);
-    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE_ROVER;
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 20.0f;
     GameData::lifespans[e] = 5;
@@ -109,7 +109,7 @@ std::list<Entity> createProjectilePierce1() {
         return createdEntities;
     }
     //distinguishing factors
-    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE_ROVER;
     GameData::spawnrates[e] /= 1.2;
 
 
@@ -124,7 +124,7 @@ std::list<Entity> createProjectilePierce2() {
         return createdEntities;
     }
     //distinguishing factors
-    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE_ROVER;
     GameData::spawnrates[e] /= 1.5;
 
 
@@ -139,7 +139,7 @@ std::list<Entity> createProjectilePierce3() {
         return createdEntities;
     }
     //distinguishing factors
-    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE_ROVER;
     GameData::spawnrates[e] /= 2;
 
 
@@ -156,7 +156,7 @@ std::list<Entity> createProjectileSpray() {
     GameData::positions[e] = glm::vec3(0, 0, -1);
     GameData::velocities[e].velocity = glm::normalize(glm::vec3(rand() % 64 - 32, rand() % 64 - 32, -256)) * PROJ_MVSPD;
     GameData::colliders[e].AABB = glm::vec3(.25, .25, .25);
-    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE_RAPID;
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 10.0f;
     GameData::lifespans[e] = 0.25;
@@ -187,7 +187,7 @@ std::list<Entity> createProjectileChaos() {
     GameData::positions[e] = glm::vec3(0, 0, -4);
     GameData::velocities[e].velocity = glm::vec3(0, 0, -0.1);
     GameData::colliders[e].AABB =  glm::vec3(.25, .25, .25);
-    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE_MARTIAN;
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 30.0f;
     GameData::lifespans[e] = 10;
@@ -223,7 +223,7 @@ std::list<Entity> createProjectileRandom() {
     GameData::positions[e] = randvec * 4.0f;
     GameData::velocities[e].velocity = randvec * 0.5f;
     GameData::colliders[e].AABB =  glm::vec3(.25, .25, .25);
-    GameData::models[e].modelID = MODEL_ID_PROJECTILE;
+    GameData::models[e].modelID = MODEL_ID_PROJECTILE_MARTIAN;
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 30.0f;
     GameData::lifespans[e] = 0.5;

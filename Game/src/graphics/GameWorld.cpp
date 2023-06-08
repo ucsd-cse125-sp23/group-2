@@ -28,7 +28,11 @@ void GameWorld::init() {
 	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/tree/tree.obj");
 	models[MODEL_ID_RESOURCE_STONE] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
 
-	models[MODEL_ID_PROJECTILE] = new ObjectModel("../assets/laser_projectile/laser_projectile.obj");
+	models[MODEL_ID_PROJECTILE_ROVER] = new ObjectModel("../assets/projectiles/projectile_rover.obj");
+	models[MODEL_ID_PROJECTILE_MARTIAN] = new ObjectModel("../assets/projectiles/projectile_martian.obj");
+	models[MODEL_ID_PROJECTILE_SPREAD] = new ObjectModel("../assets/projectiles/projectile_spreadshot.obj");
+	models[MODEL_ID_PROJECTILE_RAPID] = new ObjectModel("../assets/projectiles/projectile_rapidfire.obj");
+
 
 	models[MODEL_ID_BASE] = new ObjectModel("../assets/bear/bear.obj");
 	models[MODEL_ID_BEAR] = new ObjectModel("../assets/bear/bear.obj");
@@ -69,7 +73,10 @@ void GameWorld::init() {
 	shaders[MODEL_ID_RESOURCE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_RESOURCE_STONE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
-	shaders[MODEL_ID_PROJECTILE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PROJECTILE_ROVER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PROJECTILE_MARTIAN] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PROJECTILE_SPREAD] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PROJECTILE_RAPID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
 	shaders[MODEL_ID_BASE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_BEAR] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
@@ -114,7 +121,6 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		//if active and should render health bar
 		if (incomingData.activity[i]
 			&& i != id
-			&& incomingData.models[i].modelID != MODEL_ID_PROJECTILE
 			&& incomingData.healths[i].curHealth / incomingData.healths[i].maxHealth < 1) {
 			healths[i]->setActive(true);
 			healths[i]->update(cam->getCameraPosition(), incomingData.positions[i] +  glm::vec3(0.0f,incomingData.colliders[i].AABB.y, 0.0f), 
