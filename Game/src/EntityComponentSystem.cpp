@@ -854,7 +854,7 @@ void EntityComponentSystem::sysBuild()
                             for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
                                 GameData::playerdata.resources[i] -= buildcosts[GameData::retplaces[e].buildingPrefab][i];
                             }
-                            printf("Orientation is %f\n", GameData::retplaces[e].targetOrientation);
+                            //printf("Orientation is %f\n", GameData::retplaces[e].targetOrientation);
                             GameData::models[b].modelOrientation = GameData::retplaces[e].targetOrientation;
                             /**/
                             if ((glm::abs((GameData::models[b].modelOrientation - 90.0f)) < 0.01f) || (glm::abs(GameData::models[b].modelOrientation - 270.0f) < 0.01f)) {
