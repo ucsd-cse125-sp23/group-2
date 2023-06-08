@@ -850,7 +850,6 @@ void EntityComponentSystem::sysBuild()
                         else {
                             //Transform positions and velocity relative to attacker
                             GameData::positions[b] = transform * glm::vec4(GameData::positions[b], 1);
-                            GameData::velocities[b].velocity = transform * glm::vec4(GameData::velocities[b].velocity, 0);
                             //Set creator
                             GameData::tags[b] |= ComponentTags::Created;
                             GameData::creators[b] = e;
@@ -911,8 +910,6 @@ void EntityComponentSystem::sysBuild()
                 //Transform positions and velocity relative to attacker
                 GameData::positions[r] = glm::vec3(0, 0, 0);
                 GameData::positions[r] = transform * glm::vec4(GameData::positions[r], 1);
-                GameData::velocities[r].velocity = transform * glm::vec4(GameData::velocities[r].velocity, 0);
-                GameData::tags[r] ^= ComponentTags::Velocity;
                 //if (GameData::retplaces[e].targetOrientation != 0) {
                 GameData::models[r].modelOrientation = GameData::retplaces[e].targetOrientation;
                 //}
