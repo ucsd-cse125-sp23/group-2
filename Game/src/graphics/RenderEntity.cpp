@@ -3,7 +3,6 @@
 RenderEntity::RenderEntity(int i) {
     // Model matrix.
     active = false;
-    id = i;
     orientation = 0;
     model = glm::mat4(1.0f);
     std::random_device rd;

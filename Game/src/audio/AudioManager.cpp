@@ -100,7 +100,7 @@ void AudioManager::loadMusic(const char* path) {
 }
 
 void AudioManager::playMusic() {
-    AudioManager::errorCheck(audioSystem->playSound(music, nullptr, false, &musicChannel));
+    //AudioManager::errorCheck(audioSystem->playSound(music, nullptr, false, &musicChannel));
 }
 
 void AudioManager::setMusicVolume(float vol) {

@@ -9,7 +9,7 @@
 class RenderEntity {
 private:
     bool active;
-    int id;
+    int modelID;
     glm::vec3 position;
     float orientation;
     float offset;
@@ -31,7 +31,9 @@ public:
 
     void setShader(Shader* s) { shader = s; }
     void setModel(ObjectModel* m) { ourModel = m; }
+    void setModelID(int id) { modelID = id; }
 
+    int getModelID(){ return modelID; }
     glm::vec3 getPosition() { return position; };
 };
 

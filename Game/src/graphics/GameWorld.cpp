@@ -26,7 +26,7 @@ void GameWorld::init() {
 
 	models[MODEL_ID_PROJECTILE] = new ObjectModel("../assets/green_projectile/green_projectile.obj");
 
-	models[MODEL_ID_BASE] = new ObjectModel("../assets/bear/bear.obj");
+	models[MODEL_ID_BASE] = new ObjectModel("../assets/base/base.obj");
 	models[MODEL_ID_BEAR] = new ObjectModel("../assets/bear/bear.obj");
 	models[MODEL_ID_BEAR_HEAD] = new ObjectModel("../assets/bear/head.obj");
 	models[MODEL_ID_BEAR_LARM] = new ObjectModel("../assets/bear/larm.obj");
@@ -78,6 +78,7 @@ void GameWorld::init() {
 	shakeScreen = false;
 	screenShakeOn = false;
 	startTime = 0;
+	effect = new EffectSystem();
 }
 
 void GameWorld::update(ServertoClientData& incomingData, int id) {
@@ -106,14 +107,16 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		if (incomingData.activity[i] && incomingData.models[i].modelID != MODEL_ID_NO_MODEL) {
 			entities[i]->setActive(true);
 			entities[i]->setModel(models[incomingData.models[i].modelID]);
+			entities[i]->setModelID(incomingData.models[i].modelID);
 			entities[i]->setShader(shaders[incomingData.models[i].modelID]);
 			entities[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation, incomingData.models[i].scale);
 		}
 		else {
 			entities[i]->setActive(false);
 		}
-		}
+	}
 
+	//camera stuff
 	int maxDelta = 100;
 	int dx = glm::clamp((int)(currX - prevX), -maxDelta, maxDelta);
 	int dy = glm::clamp(-((int)(currY - prevY)), -maxDelta, maxDelta);
@@ -142,16 +145,44 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		shakeScreen = false;
 	}
 	cam->update(entities[id]->getPosition(), dx, dy, scrollY, screenShakeOn, currTime);
+
+
+	//effects
+	if (currWaveTimer != incomingData.waveTimer) {
+		for (int i = 0; i < incomingData.clogsize; i++) {
+			if (incomingData.combatLogs[i].killed)
+				newCLogs.push(incomingData.combatLogs[i]);
+		}
+
+		for (int i = 0; i < incomingData.slogsize; i++) {
+			if (!incomingData.soundLogs[i].stop) {
+				newSLogs.push(incomingData.soundLogs[i]);
+			}
+		}
+		currWaveTimer = incomingData.waveTimer;
+	}
+	while (!newCLogs.empty()) {
+		int target = newCLogs.top().target;
+		newCLogs.pop();
+		effect->resourceEffect(entities[target]->getPosition(), entities[target]->getModelID());
+	}
+	while (!newSLogs.empty()) {
+		int source = newSLogs.top().source;
+		int sound = newSLogs.top().sound;
+		newSLogs.pop();
+		if (sound == SOUND_ID_JUMP) {
+			effect->playerJumpEffect(entities[source]->getPosition());
+		}
+	}
+	effect->update(currTime);
 }
 
 //render all active entities
 void GameWorld::draw() {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	float currTime = float(glfwGetTime());
 	const glm::mat4& viewProjMtx = cam->GetViewProjectMtx();
 	env->draw(viewProjMtx);
-
+	effect->draw(viewProjMtx, cam);
 	for (RenderEntity* e : entities) {
 
 		if (e->getActive()) {

@@ -24,5 +24,6 @@ public:
 	void draw(const glm::mat4& viewProjMtx);
     void setActive(bool a) { active = a; };
     bool getActive() { return active; };
+    float getCurrHealth() { return currHealth; }
 
 };

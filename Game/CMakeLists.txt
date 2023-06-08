@@ -24,6 +24,7 @@ set(
     src/Prefabs.cpp
     src/PoissonDisk.cpp
     src/audio/AudioManager.cpp
+    src/graphics/Effects.cpp
 )
 
 # Add header files
@@ -52,6 +53,7 @@ set(
     src/PoissonDisk.h
     src/audio/AudioManager.h
     src/graphics/Health.h
+    src/graphics/Effects.h
 )
 
 # Require GL

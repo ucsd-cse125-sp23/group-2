@@ -3,9 +3,11 @@
 #include "Skybox.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "Effects.h"
 #include "Health.h"
 #include "../GameConstants.h"
 #include "../NetworkData.h"
+#include <stack>
 class GameWorld {
 
 private:
@@ -16,13 +18,17 @@ private:
     std::array <Cube*, MAX_ENTITIES> AABBs;
     std::array <RenderEntity*, MAX_ENTITIES> entities;
     std::array <HealthBar*, MAX_ENTITIES> healths;
+    std::stack <CombatLog> newCLogs;
+    std::stack <SoundLog> newSLogs;
 
+    EffectSystem* effect;
     Skybox* env;
 
     Camera* cam;
+    float currWaveTimer;
     static float prevX, prevY, currX, currY, scrollY;
     float playerHealth;
-    bool shakeScreen, screenShakeOn;
+    bool shakeScreen, screenShakeOn, playerJumped;
     float startTime;
     //static int mouseDX, mouseDY;
 
