@@ -34,6 +34,8 @@ void GameWorld::init() {
 	models[MODEL_ID_TESLA_L4] = new ObjectModel("../assets/tesla/tower_tesla_L4.obj");
 	models[MODEL_ID_RAILGUN_L4] = new ObjectModel("../assets/railgun/tower_railgun_L4.obj");
 	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/tree/tree.obj");
+	models[MODEL_ID_RESOURCE_1] = new ObjectModel("../assets/tree/tree1.obj");
+	models[MODEL_ID_RESOURCE_2] = new ObjectModel("../assets/tree/tree2.obj");
 	models[MODEL_ID_RESOURCE_STONE] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
 
 	models[MODEL_ID_PROJECTILE_ROVER] = new ObjectModel("../assets/projectiles/projectile_rover.obj");
@@ -88,6 +90,10 @@ void GameWorld::init() {
 	shaders[MODEL_ID_BARRIER_INVALID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
 	shaders[MODEL_ID_RESOURCE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_RESOURCE_1] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+
+	shaders[MODEL_ID_RESOURCE_2] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+
 	shaders[MODEL_ID_RESOURCE_STONE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
 	shaders[MODEL_ID_PROJECTILE_ROVER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");

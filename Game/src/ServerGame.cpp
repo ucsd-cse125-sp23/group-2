@@ -308,7 +308,7 @@ void ServerGame::initResources()
 
     for (glm::vec3 pos : positions) {
         Entity e;
-        float scaleFactor = (rand() % 32) / ((float)32) + 1.0;
+        float scaleFactor = (rand() % 32) / ((float)32)*1 + 0.75f;
         float woodratio = 0.7;
         if (std::rand() > (RAND_MAX * woodratio)) {
             e = prefabMap[Prefabs::BASIC_STONE_RESOURCE]().front();

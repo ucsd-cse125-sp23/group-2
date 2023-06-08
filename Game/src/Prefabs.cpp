@@ -1359,7 +1359,7 @@ std::list<Entity> createWoodResourceBasic()
     GameData::models[e].asciiRep = 'R';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
     GameData::hostilities[e].team = Teams::Environment;
-    GameData::models[e].modelID = MODEL_ID_RESOURCE;
+    GameData::models[e].modelID = MODEL_ID_RESOURCE_2;
     GameData::hostilities[e].hostileTo = 0;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = 0;
