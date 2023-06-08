@@ -323,9 +323,8 @@ void ServerGame::initResources()
     }
     for (Entity e : resources) {
         float scaleFactor = (rand() % 32) / ((float)32) + 0.5;
-        GameData::colliders[e].AABB.x *= scaleFactor;
-        GameData::colliders[e].AABB.y *= scaleFactor;
-        GameData::colliders[e].AABB.z *= scaleFactor;
+        GameData::colliders[e].AABB = GameData::colliders[e].AABB*scaleFactor;
+
         for (Entity p : Paths::pathlist) {
             ECS::colCheck(e, p);
         }
@@ -334,6 +333,11 @@ void ServerGame::initResources()
         }
         ECS::colCheck(e, MAX_ENTITIES_NOBASE);
         ECS::resolveCollisions();
+
+        for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+            GameData::resources[e].resources[i] *= scaleFactor*scaleFactor*scaleFactor;
+        }
+        GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= scaleFactor * scaleFactor * scaleFactor;
         GameData::tags[e] ^= ComponentTags::DiesOnCollision;
         GameData::colliders[e].colwith ^= CollisionLayer::UIObj + CollisionLayer::StaticObj;
         GameData::models[e].modelOrientation = rand() % 360;
