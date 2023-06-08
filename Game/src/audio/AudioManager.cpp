@@ -45,6 +45,27 @@ AudioManager::AudioManager() {
     AudioManager::loadSound("../assets/sounds/Vehicle5_BlastOff1.wav", MODEL_ID_MOB_FLYING, SOUND_ID_DEATH);
     AudioManager::loadSound("../assets/sounds/Vehicle5_BlastOff1.wav", MODEL_ID_MOB_TRACTOR, SOUND_ID_DEATH); //Maybe change?
     AudioManager::loadSound("../assets/sounds/Big Blast 4.wav", MODEL_ID_MOB_FLYING, SOUND_ID_ATTACK); //Maybe change
+    AudioManager::loadSound("../assets/sounds/PM_SFG_VOL1_WEAPON_8_2_GUN_GUNSHOT_FUTURISTIC.wav", MODEL_ID_BEAR_LARM, SOUND_ID_ATTACK); //Maybe change
+    AudioManager::loadSound("../assets/sounds/PM_AG_20_3_ABSTRACT_GUNS.wav", MODEL_ID_BEAR_RARM, SOUND_ID_ATTACK); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0286_invader_weapon_scifi_shot_002.wav", MODEL_ID_BEAR_HEAD, SOUND_ID_ATTACK); //Maybe change
+
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0286_invader_debris_impact_011.wav", MODEL_ID_BEAR_LARM, SOUND_ID_DAMAGE); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0286_invader_debris_impact_011.wav", MODEL_ID_BEAR_RARM, SOUND_ID_DAMAGE); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0286_invader_debris_impact_011.wav", MODEL_ID_BEAR_LLEG, SOUND_ID_DAMAGE); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0286_invader_debris_impact_011.wav", MODEL_ID_BEAR_RLEG, SOUND_ID_DAMAGE); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0286_invader_debris_impact_011.wav", MODEL_ID_BEAR_HEAD, SOUND_ID_DAMAGE); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0286_invader_debris_impact_011.wav", MODEL_ID_BEAR_BODY, SOUND_ID_DAMAGE); //Maybe change
+
+
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0290_demolisher_debris_rubble_texture_004.wav", MODEL_ID_BEAR_LARM, SOUND_ID_DEATH); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0290_demolisher_debris_rubble_texture_004.wav", MODEL_ID_BEAR_RARM, SOUND_ID_DEATH); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0290_demolisher_debris_rubble_texture_004.wav", MODEL_ID_BEAR_LLEG, SOUND_ID_DEATH); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0290_demolisher_debris_rubble_texture_004.wav", MODEL_ID_BEAR_RLEG, SOUND_ID_DEATH); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0290_demolisher_debris_rubble_texture_004.wav", MODEL_ID_BEAR_HEAD, SOUND_ID_DEATH); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0275_building_collapse_debris_falling_rock_rubble_008.wav", MODEL_ID_BEAR_BODY, SOUND_ID_DEATH); //Maybe change
+
+
+
     AudioManager::loadSound("../assets/sounds/4B8NZTJ-tractor-beam.wav", MODEL_ID_MOB_TRACTOR, SOUND_ID_ATTACK);
     AudioManager::loadSound("../assets/sounds/Robotic Lifeforms 2 - Impacts Source - Metal Tool Drawer Punch 03.wav", MODEL_ID_ROVER, SOUND_ID_LAND);
     AudioManager::loadSound("../assets/sounds/PM_FSSF2_EXOSKELETON_11_SERVO_MOVEMENT_ROTATION.wav", MODEL_ID_ROVER, SOUND_ID_JUMP);
