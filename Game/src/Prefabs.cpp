@@ -946,7 +946,7 @@ std::list<Entity> createHome() {
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = HOME_BASE_HEALTH;
-    GameData::colliders[e].AABB =  glm::vec3(20, 15.5, 20);
+    GameData::colliders[e].AABB =  glm::vec3(35, 15, 30);
     GameData::rigidbodies[e].fixed = true;
     GameData::models[e].renderCollider = true;
     GameData::rigidbodies[e].grounded = false;
@@ -1346,6 +1346,8 @@ std::list<Entity> createBoss()
     return boss;
 }
 
+std::array<MODEL_ID, 3> treetypes = { MODEL_ID_RESOURCE, MODEL_ID_RESOURCE_1, MODEL_ID_RESOURCE_2 };
+
 std::list<Entity> createWoodResourceBasic()
 {
     std::list<Entity> createdEntities;
@@ -1359,7 +1361,8 @@ std::list<Entity> createWoodResourceBasic()
     GameData::models[e].asciiRep = 'R';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
     GameData::hostilities[e].team = Teams::Environment;
-    GameData::models[e].modelID = MODEL_ID_RESOURCE_2;
+    int tre_type = (rand() % 3);
+    GameData::models[e].modelID = treetypes[tre_type];
     GameData::hostilities[e].hostileTo = 0;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = 0;
