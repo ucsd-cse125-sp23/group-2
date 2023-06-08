@@ -408,10 +408,9 @@ std::list<Entity> createTowerReticleBasic() {
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Hostility +
-        ComponentTags::Collidable +
-        ComponentTags::DiesOnCollision;
+        ComponentTags::Collidable;
     GameData::models[e].renderCollider = true;
-    GameData::colliders[e].colteam = CollisionLayer::UIObj;
+    GameData::colliders[e].colteam = 0;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::UIObj + CollisionLayer::Boss;
 
     return createdEntities;
@@ -434,8 +433,7 @@ std::list<Entity> createTowerReticleRailgun() {
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Hostility +
-        ComponentTags::Collidable +
-        ComponentTags::DiesOnCollision;
+        ComponentTags::Collidable;
     GameData::models[e].renderCollider = true;
     
     return createdEntities;
@@ -456,8 +454,7 @@ std::list<Entity> createTowerReticleTesla() {
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Hostility +
-        ComponentTags::Collidable +
-        ComponentTags::DiesOnCollision;
+        ComponentTags::Collidable;
     GameData::models[e].renderCollider = true;
 
     return createdEntities;
@@ -485,10 +482,9 @@ std::list<Entity> createTowerReticleBarrier()
         ComponentTags::Model +
         ComponentTags::Hostility +
         ComponentTags::Collidable +
-        ComponentTags::DiesOnCollision +
         ComponentTags::BarrierReticle;
     GameData::models[e].renderCollider = true;
-    GameData::colliders[e].colteam = CollisionLayer::UIObj;
+    GameData::colliders[e].colteam = 0;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Boss;
 
     return createdEntities;
