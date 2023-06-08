@@ -55,7 +55,7 @@ const float TURRET_BASE_FIRE_RATE = 0.25;
 const float TURRET_BASE_RANGE = 10;
 
 //Snap range barrier
-const float SNAP_RANGE = 5;
+const float SNAP_RANGE = 8;
 
 //Number of levels for of upgrades
 constexpr size_t NUM_UP_LEVELS = 3;
