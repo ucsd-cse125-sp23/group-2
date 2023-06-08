@@ -35,7 +35,7 @@ uniform Material material;
 
 const int numLights = 1;
 uniform vec4 lightPos[numLights] = {
-    vec4(0.0f, 30.0f, 60.0f, 0.0f),
+    vec4(0.0f, 30.0f, 60.0f, 0.0f)
 };
 uniform vec4 lightColor[numLights] = {
     vec4(1.0f, 0.9f, 0.8f, 1.0f)
@@ -66,7 +66,7 @@ void main()
     }
     ambientColor  = diffuseColor;
     if(material.emision.x != 0 || material.emision.y != 0 || material.emision.z != 0){
-        FragColor += vec4(material.emision, 0.8f);
+        FragColor += vec4(material.emision, 1.0f);
     }
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
@@ -79,12 +79,19 @@ void main()
 
         vec3 reflectDir = reflect(-lightDir, norm);  
         vec3 halfway = normalize(lightDir + viewDir);
-        float spec = pow(max(dot(norm, reflectDir), 0.0), shine);
+        float spec = pow(max(dot(norm, reflectDir), 0.0), (shine / 2.0f));
         vec4 specular = lightColor[i] * (spec * specColor);
 
                                      
         // FragColor += 0.13f * ambient + diffuse + 0.1f* specular;
-        FragColor += (0.3f * ambient + 0.7f * diffuse + 0.05f * specular);
+        // FragColor += (0.3f * ambient + 0.7f * diffuse + 0.05f * specular);
+        diffuse *= 0.7f;
+        ambient *= 0.3f;
+        specular *= 0.05f;
+        diffuse = vec4(clamp(diffuse.r, 0.0f, 1.0f), clamp(diffuse.g, 0.0f, 1.0f), clamp(diffuse.b, 0.0f, 1.0f), diffuse.a);
+        specular = vec4(clamp(specular.r, 0.0f, 1.0f), clamp(specular.g, 0.0f, 1.0f), clamp(specular.b, 0.0f, 1.0f), specular.a);
+        ambient = vec4(clamp(ambient.r, 0.0f, 1.0f), clamp(ambient.g, 0.0f, 1.0f), clamp(ambient.b, 0.0f, 1.0f), ambient.a);
+        FragColor += ambient + diffuse + specular;
     }
 
 }

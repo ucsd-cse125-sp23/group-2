@@ -103,10 +103,10 @@ void Skybox::draw(const glm::mat4& viewProjMtx) {
 	envShader->setMat4("viewProj", viewProjMtx);
 	envShader->setMat4("model", model);
 	envModel->Draw(*envShader);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	domeModel->Draw(*envShader);
-	glDisable(GL_BLEND);
+	//glDisable(GL_BLEND);
 	glUseProgram(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }

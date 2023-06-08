@@ -255,7 +255,7 @@ private:
             material.specular = glm::vec3(color.r, color.g, color.b);
         }
 
-        if (AI_SUCCESS == mat->Get(AI_MATKEY_SHININESS, shininess)) {
+        if (AI_SUCCESS == mat->Get(AI_MATKEY_SPECULAR_FACTOR, shininess)) {
             material.shininess = shininess;
         }
 

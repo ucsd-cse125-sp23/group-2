@@ -34,3 +34,4 @@ public:
 
     glm::vec3 getPosition() { return position; };
 };
+

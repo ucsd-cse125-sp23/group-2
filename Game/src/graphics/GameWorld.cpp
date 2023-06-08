@@ -24,7 +24,7 @@ void GameWorld::init() {
 	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/tree/tree.obj");
 	models[MODEL_ID_RESOURCE_STONE] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
 
-	models[MODEL_ID_PROJECTILE] = new ObjectModel("../assets/laser_projectile/laser_projectile.obj");
+	models[MODEL_ID_PROJECTILE] = new ObjectModel("../assets/green_projectile/green_projectile.obj");
 
 	models[MODEL_ID_BASE] = new ObjectModel("../assets/bear/bear.obj");
 	models[MODEL_ID_BEAR] = new ObjectModel("../assets/bear/bear.obj");
@@ -146,6 +146,8 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 
 //render all active entities
 void GameWorld::draw() {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	float currTime = float(glfwGetTime());
 	const glm::mat4& viewProjMtx = cam->GetViewProjectMtx();
 	env->draw(viewProjMtx);
