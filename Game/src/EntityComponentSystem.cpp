@@ -101,7 +101,7 @@ void EntityComponentSystem::sysEnemyAI()
                 //check if players nearby
                 for (int p = 0; p < NUM_PLAYERS; p++)
                 {
-                    if (glm::distance(GameData::positions[p], GameData::positions[e]) <= AGRO_RANGE)
+                    if (glm::distance(GameData::positions[p], GameData::positions[e]) <= AGRO_RANGE && ((GameData::tags[p] & ComponentTags::Dead) != ComponentTags::Dead))
                     {
                         changeState(e, enemyState::Homing);
                         GameData::homingStructs[e].trackedEntity = p;
@@ -137,6 +137,8 @@ void EntityComponentSystem::sysEnemyAI()
             {
                 //Check if enemy is active
                 if (!GameData::activity[i]) { continue; }
+                //Check if enemy is not dead
+                if ((GameData::tags[i] & ComponentTags::Dead) == ComponentTags::Dead) { continue; }
                 //Check if hostileto
                 if (!(GameData::hostilities[e].hostileTo & GameData::hostilities[i].team)) { continue; }
                 //Check if enemy is in range
