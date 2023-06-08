@@ -26,7 +26,8 @@ void main()
 {
 
     mat4 m = model;
-    m *= scaleMatrix(2 * time, 2 * time, 2 * time);
+    float mult = 5;
+    m *= scaleMatrix(mult * time, mult * time, mult * time);
     // OpenGL maintains the D matrix so you only need to multiply by P, V (aka C inverse), and M
     gl_Position = viewProj * m * vec4(position, 1.0);
 
