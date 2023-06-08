@@ -329,6 +329,9 @@ void ServerGame::initResources()
         for (Entity p : Paths::pathlist) {
             ECS::colCheck(e, p);
         }
+        for (Entity b : Boundry::boundlist) {
+            ECS::colCheck(e, b);
+        }
         ECS::colCheck(e, MAX_ENTITIES_NOBASE);
         ECS::resolveCollisions();
         GameData::tags[e] ^= ComponentTags::DiesOnCollision;
