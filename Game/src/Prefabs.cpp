@@ -305,7 +305,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players + CollisionLayer::Boss;
-    GameData::resources[e].resources[ResourceType::Money] = 20;
+    GameData::resources[e].resources = { 20, 0, 0 };
     GameData::pointvalues[e] = 20;
     GameData::models[e].renderCollider = true;
     GameData::rigidbodies[e].fixed = false;
