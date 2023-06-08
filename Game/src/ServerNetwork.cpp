@@ -236,7 +236,7 @@ int ServerNetwork::insertClient(SOCKET & ClientSocket)
 {
     for (int i = 0; i < NUM_CLIENTS; ++i) {
         if (sessions[i] == INVALID_SOCKET) {
-            printf("Inserting new client with id %d", i);
+            printf("Inserting new client with id %d\n", i);
             sessions[i] = ClientSocket;
             return i;
         }

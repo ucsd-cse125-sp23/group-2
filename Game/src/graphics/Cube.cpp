@@ -1,6 +1,6 @@
 #include "Cube.h"
 
-Cube::Cube(glm::vec3 cubeMin, glm::vec3 cubeMax) {
+Cube::Cube(Shader * s, ObjectModel * m) {
 
     model = glm::mat4(1.0f);
     color = glm::vec3(0.0f, 0.2f, 0.8f);

@@ -143,4 +143,5 @@ void Text::RenderText(std::string text, float x, float y, float scale, glm::vec3
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_CULL_FACE);
+    glDisable(GL_BLEND);
 }

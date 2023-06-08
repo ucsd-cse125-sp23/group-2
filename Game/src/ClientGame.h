@@ -15,6 +15,9 @@ private:
     static bool playerattacking;
     static bool jumping;
     static int build; //Normally 0, otherwise is an int representing the tower to build (from their build meny)
+    static int selected; //Default 0, which weapon/tower is currently selected to use/build
+    static bool upgrade; //If in upgrade mode
+    static bool renderColliders;
 public:
 
     ServertoClientData incomingData;

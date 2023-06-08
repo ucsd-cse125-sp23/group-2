@@ -144,5 +144,6 @@ void GUIElement::draw(const glm::mat4& viewProjMtx, Shader* shader) {
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_BLEND);
 }
 

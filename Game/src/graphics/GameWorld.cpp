@@ -1,34 +1,111 @@
 
-	#include "GameWorld.h"
-	float GameWorld::prevX, GameWorld::prevY, GameWorld::currX, GameWorld::currY, GameWorld::scrollY = 0;
-	std::array <GUIElement*, NUM_GUI> guis;
-	int selected;
-	int depth;
-	bool menuOn;
-	int spawntimer=0;
-	int moneyRes=0;
-	int woodRes=0;
-	int stoneRes=0;
-	int points=0;
-	int enemiesKilled=0;
-	int towersBuilt=0;
+#include "GameWorld.h"
+float GameWorld::prevX, GameWorld::prevY, GameWorld::currX, GameWorld::currY, GameWorld::scrollY = 0;
+std::array <GUIElement*, NUM_GUI> guis;
+int selected;
+int depth;
+bool menuOn;
+int spawntimer=0;
+int moneyRes=0;
+int woodRes=0;
+int stoneRes=0;
+int points=0;
+int enemiesKilled=0;
+int towersBuilt=0;
 
-	Text* spawntimerT;
-	Text* moneyResT;
-	Text* woodResT;
-	Text* stoneResT;
-	Text* pointsT;
-	Text* enemiesKilledT;
-	Text* towersBuiltT;
-	char str[65536];
+Text* spawntimerT;
+Text* moneyResT;
+Text* woodResT;
+Text* stoneResT;
+Text* pointsT;
+Text* enemiesKilledT;
+Text* towersBuiltT;
+char str[65536];
 
 void GameWorld::init() {
-
 	currID = 0;
 	env = new Skybox();
 	env->setSkyShader(new Shader("../shaders/skybox.vert", "../shaders/skybox.frag"));
 	env->setEnvShader(new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag"));
 
+	models[MODEL_ID_CUBE] = new ObjectModel("../assets/cube/cube.obj");
+	models[MODEL_ID_ROVER] = new ObjectModel("../assets/rover/rover.obj");
+
+	models[MODEL_ID_MOB] = new ObjectModel("../assets/martian/martian.obj");
+	models[MODEL_ID_MOB_TANK] = new ObjectModel("../assets/martian/martian_tank.obj");
+	models[MODEL_ID_MOB_MINI] = new ObjectModel("../assets/martian/martian_fast.obj"); //TODO: make smol
+	models[MODEL_ID_MOB_FLYING] = new ObjectModel("../assets/ufo/ufo_v2.obj");
+	models[MODEL_ID_MOB_TRACTOR] = new ObjectModel("../assets/ufo/ufo_v2.obj");
+
+	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/tower.obj");
+	models[MODEL_ID_TESLA] = new ObjectModel("../assets/tesla/tower_tesla.obj");
+	models[MODEL_ID_RAILGUN] = new ObjectModel("../assets/railgun/tower_railgun.obj");
+	models[MODEL_ID_BARRIER] = new ObjectModel("../assets/barricade/barricade_wood.obj");
+
+	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/tree/tree.obj");
+	models[MODEL_ID_RESOURCE_STONE] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
+
+	models[MODEL_ID_PROJECTILE] = new ObjectModel("../assets/laser_projectile/laser_projectile.obj");
+
+	models[MODEL_ID_BASE] = new ObjectModel("../assets/bear/bear.obj");
+	models[MODEL_ID_BEAR] = new ObjectModel("../assets/bear/bear.obj");
+	models[MODEL_ID_BEAR_HEAD] = new ObjectModel("../assets/bear/head.obj");
+	models[MODEL_ID_BEAR_LARM] = new ObjectModel("../assets/bear/larm.obj");
+	models[MODEL_ID_BEAR_RARM] = new ObjectModel("../assets/bear/rarm.obj");
+	models[MODEL_ID_BEAR_LLEG] = new ObjectModel("../assets/bear/lleg.obj");
+	models[MODEL_ID_BEAR_RLEG] = new ObjectModel("../assets/bear/rleg.obj");
+	models[MODEL_ID_BEAR_BODY] = new ObjectModel("../assets/bear/body.obj");
+
+	//models[MODEL_ID_SUNGOD] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
+
+	shaders[MODEL_ID_CUBE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_ROVER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+
+	shaders[MODEL_ID_MOB] = new Shader("../shaders/martian_shader.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_MOB_TANK] = new Shader("../shaders/martian_shader.vert", "../shaders/model_loading.frag"); //dunno if we want new shading for the tank and minis
+	shaders[MODEL_ID_MOB_MINI] = new Shader("../shaders/martian_shader.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_MOB_FLYING] = new Shader("../shaders/ufo_shader.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_MOB_TRACTOR] = new Shader("../shaders/ufo_shader.vert", "../shaders/model_loading.frag");
+
+	shaders[MODEL_ID_TOWER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_RAILGUN] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_TESLA] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_BARRIER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+
+	shaders[MODEL_ID_RESOURCE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_RESOURCE_STONE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+
+	shaders[MODEL_ID_PROJECTILE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+
+	shaders[MODEL_ID_BASE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_BEAR] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_BEAR_HEAD] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_BEAR_LARM] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_BEAR_RARM] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_BEAR_LLEG] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_BEAR_RLEG] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_BEAR_BODY] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	//shaders[MODEL_ID_SUNGOD] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
+
+	healthShader = new Shader("../shaders/shader.vert", "../shaders/shader.frag");
+	ObjectModel* healthModel = new ObjectModel("../assets/cube/cube.obj");
+	playerHealth = 1.0f;
+	for (int i = 0; i < MAX_ENTITIES; i++) {
+		entities[i] = new RenderEntity(i);
+		AABBs[i] = new Cube(shaders[MODEL_ID_CUBE], models[MODEL_ID_CUBE]);
+		healths[i] = new HealthBar(healthShader, healthModel);
+	}
+	cam = new Camera();
+	shakeScreen = false;
+	screenShakeOn = false;
+	startTime = 0;
+
+	for (int i = 0; i < NUM_GUI; i++) {
+		guis[i] = new GUIElement();
+	}
+	GUI_Init();
+}
+void GameWorld::GUI_Init() {
 	text = new Text("../assets/font.ttf");
 	spawntimerT = new Text("../assets/font.ttf");
 	moneyResT = new Text("../assets/font.ttf");
@@ -37,44 +114,6 @@ void GameWorld::init() {
 	pointsT = new Text("../assets/font.ttf");
 	enemiesKilledT = new Text("../assets/font.ttf");
 	towersBuiltT = new Text("../assets/font.ttf");
-
-	models[MODEL_ID_CUBE] = new ObjectModel("../assets/cube/cube.obj");
-	models[MODEL_ID_ROVER] = new ObjectModel("../assets/rover/rover.obj");
-	models[MODEL_ID_MOB] = new ObjectModel("../assets/martian/martian.obj");
-	models[MODEL_ID_MOB_FLYING] = new ObjectModel("../assets/ufo/ufo_v2.obj");
-	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/tower.obj");
-	models[MODEL_ID_BASE] = new ObjectModel("../assets/cube/cube.obj");
-	//replace once models are done
-	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/tree/tree.obj");
-	models[MODEL_ID_PROJECTILE] = new ObjectModel("../assets/laser_projectile/laser_projectile.obj");
-
-	shaders[MODEL_ID_CUBE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
-	shaders[MODEL_ID_ROVER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
-	shaders[MODEL_ID_MOB] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
-	shaders[MODEL_ID_MOB_FLYING] = new Shader("../shaders/ufo_shader.vert", "../shaders/model_loading.frag");
-	shaders[MODEL_ID_TOWER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
-	shaders[MODEL_ID_BASE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
-	//replace once models are done
-	shaders[MODEL_ID_RESOURCE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
-	shaders[MODEL_ID_PROJECTILE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
-
-	healthShader = new Shader("../shaders/shader.vert", "../shaders/shader.frag");
-	ObjectModel* healthModel = new ObjectModel("../assets/cube/cube.obj");
-
-	for (int i = 0; i < MAX_ENTITIES; i++) {
-		entities[i] = new RenderEntity(i);
-		AABBs[i] = new Cube();
-		healths[i] = new HealthBar(healthShader, healthModel);
-	}
-
-	for (int i = 0; i < NUM_GUI; i++) {
-		guis[i] = new GUIElement();
-	}
-	cam = new Camera();
-	GUI_Init();
-}
-
-void GameWorld::GUI_Init() {
 	selected = 0;
 	depth = 0;
 	menuOn = false;
@@ -264,8 +303,6 @@ void GameWorld::GUI_Init() {
 }
 
 void updateLabels() {
-	
-	
 	sprintf(str, "%d", moneyRes);
 	moneyResT->RenderText(str, 2040.0f, 35.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
 	
@@ -290,12 +327,10 @@ void updateLabels() {
 	sprintf(str, "%d", towersBuilt);
 	strcat(str, " towers");
 	towersBuiltT->RenderText(str, 70.0f, 1330.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
-	
-	}
-
+}
 void GameWorld::update(ServertoClientData& incomingData, int id) {
-	updateLabels();
 	for (int i = 0; i < incomingData.activity.size(); i++) {
+
 		if (incomingData.activity[i] && incomingData.models[i].renderCollider) {
 			AABBs[i]->setActive(true);
 			AABBs[i]->update(incomingData.positions[i], incomingData.colliders[i].AABB);
@@ -303,11 +338,14 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		else {
 			AABBs[i]->setActive(false);
 		}
-
 		//if active and should render health bar
-		if (incomingData.activity[i]) {
+		if (incomingData.activity[i]
+			&& i != id
+			&& incomingData.models[i].modelID != MODEL_ID_PROJECTILE
+			&& incomingData.healths[i].curHealth / incomingData.healths[i].maxHealth < 1) {
 			healths[i]->setActive(true);
-			healths[i]->update(incomingData.positions[id], incomingData.positions[i], incomingData.healths[i].curHealth, incomingData.healths[i].maxHealth);
+			healths[i]->update(cam->getCameraPosition(), incomingData.positions[i] + glm::vec3(0.0f, incomingData.colliders[i].AABB.y, 0.0f),
+				incomingData.healths[i].curHealth, incomingData.healths[i].maxHealth);
 		}
 		else {
 			healths[i]->setActive(false);
@@ -316,7 +354,7 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 			entities[i]->setActive(true);
 			entities[i]->setModel(models[incomingData.models[i].modelID]);
 			entities[i]->setShader(shaders[incomingData.models[i].modelID]);
-			entities[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation);
+			entities[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation, incomingData.models[i].scale);
 		}
 		else {
 			entities[i]->setActive(false);
@@ -328,32 +366,34 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 	int dy = glm::clamp(-((int)(currY - prevY)), -maxDelta, maxDelta);
 	prevX = (int)currX;
 	prevY = (int)currY;
-	bool shakeScreen = false;
-	bool screenShakeOn = false;
-	float startTime = 0;
+
+	//screen shake
+	float currHealth = incomingData.healths[id].curHealth / incomingData.healths[id].maxHealth;
+	if (currHealth < playerHealth) {
+		shakeScreen = true;
+		playerHealth = currHealth;
+	}
+	else {
+		shakeScreen = false;
+	}
+
 	float currTime = glfwGetTime();
 
-	//should be bool from server
 	if (shakeScreen) {
 		screenShakeOn = true;
 		startTime = glfwGetTime();
 	}
-	if (screenShakeOn && currTime < (startTime + 3)) {
 
-	}
-	else {
+	if (currTime > (startTime + 0.3f)) {
 		screenShakeOn = false;
 		shakeScreen = false;
 	}
 	cam->update(entities[id]->getPosition(), dx, dy, scrollY, screenShakeOn, currTime);
 }
 
-//render all active entities
 void GameWorld::draw(Shader* guiShader, float wWidth, float wHeight) {
-
 	width = wWidth;
 	height = wHeight;
-
 	float currTime = float(glfwGetTime());
 	const glm::mat4& viewProjMtx = cam->GetViewProjectMtx();
 	env->draw(viewProjMtx);
@@ -361,7 +401,7 @@ void GameWorld::draw(Shader* guiShader, float wWidth, float wHeight) {
 	for (RenderEntity* e : entities) {
 
 		if (e->getActive()) {
-			e->draw(viewProjMtx, currTime);
+			e->draw(viewProjMtx, currTime, cam);
 		}
 	}
 	for (HealthBar* h : healths) {
@@ -376,24 +416,18 @@ void GameWorld::draw(Shader* guiShader, float wWidth, float wHeight) {
 		}
 	}
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 	for (GUIElement* gui : guis) {
 		if (!gui->IsHidden()) {
 			gui->draw(viewProjMtx, guiShader);
 		}
-
 	}
 	updateLabels();
 
 }
-
 void GameWorld::cursor_callback(GLFWwindow* window, double cX, double cY) {
-	if (menuOn) {
-
-	}
-	else {
-
+	if (!menuOn) {
 		currX = cX;
 		currY = cY;
 	}
-
 }

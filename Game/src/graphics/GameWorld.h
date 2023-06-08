@@ -24,10 +24,10 @@ private:
     Camera* cam;
     static float prevX, prevY, currX, currY, scrollY;
 
-
-   
     Text* text;
-
+    float playerHealth;
+    bool shakeScreen, screenShakeOn;
+    float startTime;
     //static int mouseDX, mouseDY;
 
 public:

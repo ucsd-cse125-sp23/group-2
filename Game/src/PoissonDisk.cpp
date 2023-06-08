@@ -12,7 +12,7 @@ std::vector<glm::vec3> PoissonDisk::genPoints()
 			pgrid[i][j] = -1;
 		}
 	}
-	glm::vec3 init = glm::vec3((std::rand() / (RAND_MAX+1.0)) * WORLD_X, 0, (std::rand() / (RAND_MAX + 1.0)) * WORLD_Z);
+	glm::vec3 init = glm::vec3((std::rand() / (RAND_MAX+1.0)) * WORLD_X, 0, ((std::rand() / (RAND_MAX + 1.0)) * (WORLD_Z - SAFE_AREA)));
 
 	std::vector<glm::vec3> active;
 
@@ -71,7 +71,7 @@ std::vector<glm::vec3> PoissonDisk::genPoints()
 
 bool PoissonDisk::validPoint(glm::vec3& point, std::vector<glm::vec3> & final)
 {
-	if (point.x >= WORLD_X || point.z >= WORLD_Z || point.x <= 0 || point.z <= 0) {
+	if (point.x >= WORLD_X || point.z >= (WORLD_Z - SAFE_AREA) || point.x <= 0 || point.z <= 0) {
 		return false;
 	}
 	int xpos = (int)(point.x / side);

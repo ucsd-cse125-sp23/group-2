@@ -6,7 +6,7 @@
 #include "GameConstants.h"
 
 #define MAX_PACKET_SIZE 10000000
-#define NUM_CLIENTS 4
+#define NUM_CLIENTS NUM_PLAYERS
 
 enum PacketTypes {
 
@@ -23,8 +23,9 @@ struct ClienttoServerData {
     bool moveForward, moveBack, moveLeft, moveRight;
     bool shoot;
     bool jump;
+    bool upgrade;
     int build;
-
+    int selected;
     void print(char * buf) {
         sprintf(buf, "Moveforward: %d, Moveback: %d, MoveLeft: %d, MoveRight: %d\n", moveForward, moveBack, moveLeft, moveRight);
     }
@@ -44,7 +45,7 @@ struct ServertoClientData {
     int numWaves;
     std::array<Collider, MAX_ENTITIES> colliders;
     AllPlayerData playerData;
-    std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_PREFAB> buildcosts;
+    std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_TYPES> buildcosts;
     int serverStatus;
     float waveTimer;
 };

@@ -57,6 +57,7 @@ namespace CollisionLayer {
     constexpr TeamID WorldObj = 0x1;
     constexpr TeamID UIObj = 0x1 << 1;
     constexpr TeamID StaticObj = 0x1 << 2;
+    constexpr TeamID Boss = 0x1 << 3;
 }
 
 struct Hostility {
@@ -73,6 +74,7 @@ struct PathData //Data for entity pathing
 struct HomingData //Data for tracking another entity
 {
     Entity trackedEntity; //The entity to follow (player, tower, enemy, etc...)
+    glm::vec3 offset; //A 3d offset to track
 };
 
 struct Model //3D Model to render for the entity
@@ -81,21 +83,24 @@ struct Model //3D Model to render for the entity
     char asciiRep;
     glm::vec3 dirNorm;
     bool renderCollider;
-    //TODO: Other Model Data
+    bool upgradeSelected;
+
 
     //degrees
     float modelOrientation;
+
+    float scale = 1;
 };
 
 struct Turret //Component of Towers
 {
     float range; //The range of the tower
-    float damage; //The damage that the turret deals per second
+    State attackState;
 };
 
 namespace Collision {
     //Side should be bigger than the greatest sidelength of any AABB in the game
-    constexpr float side = 3.0;
+    constexpr float side = 8.0;
     static constexpr size_t gridx = (WORLD_X / side) + 1l;
     static constexpr size_t gridz = (WORLD_Z / side) + 1l;
     extern std::unordered_set<Entity> cgrid[gridx][gridz];
@@ -109,14 +114,18 @@ struct Collider //Information for collisions
     TeamID colwith;
     int xpos;
     int zpos;
-
-    //TODO: Pointer to a mesh for narrow phase
 };
 
 struct RigidBodyInfo //Information for physical objects;
 {
     bool fixed;
     bool grounded; //If object can be treated as being on groun (used for player jumping for now)
+};
+
+struct AbductionData
+{
+    float abductionTimeLeft;
+    Entity captive;
 };
 
 struct CollisionEvent {
@@ -132,12 +141,29 @@ struct Health {
 
 struct CollisionDmg {
     float damage;
+    float cooldown;
+    float damageRate;
 };
 
 struct ProjectileAttackModule {
     Prefab attack;
     float cooldown; //Remaining coooldown in seconds
     glm::vec3 targetPos;
+};
+
+struct HitscanAttackModule {
+    Entity target;
+    float damage; //The damage that the dealt per second
+    float cooldown;
+    float fireRate;
+};
+
+struct AOEAttackModule {
+    glm::vec3 source;
+    float range;
+    float damage; //The damage that the dealt per aoe blast
+    float cooldown; //Cooldown between AOEs
+    float fireRate;
 };
 
 struct ReticlePlacement {
@@ -147,6 +173,7 @@ struct ReticlePlacement {
     Entity reticle = INVALID_ENTITY;
     bool validTarget;
     glm::vec3 targetPos;
+    float targetOrientation;
 };
 
 struct CombatLog {
@@ -159,6 +186,7 @@ struct CombatLog {
 struct SoundLog {
     Entity source;
     int sound;
+    bool stop = false;
 };
 
 struct ScoreCard {
@@ -172,10 +200,17 @@ struct AllPlayerData {
     std::array<ScoreCard, NUM_PLAYERS> scores;
     std::array<int, NUM_RESOURCE_TYPES> resources;
     std::array<float, NUM_PLAYERS> spawntimers;
+    std::array<int, NUM_PLAYERS> actioncooldown;
+    std::array<State, NUM_PLAYERS> playerStates;
 };
 
 struct ResourceContainer {
     std::array<int, NUM_RESOURCE_TYPES> resources;
+};
+
+struct Upgradeable {
+    std::array<int, NUM_RESOURCE_TYPES> cost;
+    Prefab upgrade;
 };
 
 
@@ -193,22 +228,39 @@ namespace ComponentTags
     constexpr Tag CollisionDmg = 0x1 << 8;
     constexpr Tag Turret = 0x1 << 9;
     constexpr Tag Hostility = 0x1 << 10;
-    constexpr Tag Attacker = 0x1 << 11;
-    constexpr Tag LifeSpan = 0x1 << 12;
-    constexpr Tag Created = 0x1 << 13;
-    constexpr Tag Builder = 0x1 << 14;
-    constexpr Tag HomingData = 0x1 << 15;
-    constexpr Tag Dead = 0x1 << 16;
-    constexpr Tag ResourceContainer = 0x1 << 17;
-    constexpr Tag WorthPoints = 0x1 << 18;
+    constexpr Tag AttackerProjectile = 0x1 << 11;
+    constexpr Tag AttackerHitscan = 0x1 << 12;
+    constexpr Tag AttackerAOE = 0x1 << 13;
+    constexpr Tag LifeSpan = 0x1 << 14;
+    constexpr Tag Created = 0x1 << 15;
+    constexpr Tag Builder = 0x1 << 16;
+    constexpr Tag Abductor = 0x1 << 17;
+    constexpr Tag Abducted = 0x1 << 18;
+    constexpr Tag HomingData = 0x1 << 19;
+    constexpr Tag Dead = 0x1 << 20;
+    constexpr Tag ResourceContainer = 0x1 << 21;
+    constexpr Tag WorthPoints = 0x1 << 22;
+    constexpr Tag Stalker = 0x1 << 23;
+    constexpr Tag Hunter = 0x1 << 24;
+    constexpr Tag Trapper = 0x1 << 25;
+    constexpr Tag BarrierReticle = 0x1 << 26;
+    constexpr Tag Upgradeable = 0x1 << 27;
+    constexpr Tag Upgrading = 0x1 << 28;
+    constexpr Tag PAttackInRangeAI = 0x1 << 29;
+
 }
 
 namespace enemyState {
     constexpr State Pathing = ComponentTags::PathData;
     constexpr State Homing = ComponentTags::HomingData;
+    constexpr State ShootingProjectile = ComponentTags::AttackerProjectile | ComponentTags::HomingData;
 };
 
-
+namespace towerStates {
+    constexpr State Idle = 0;
+    constexpr State AttackingHitscan = ComponentTags::AttackerHitscan;
+    constexpr State AttackingProjectile = ComponentTags::AttackerProjectile;
+};
 
 namespace GameData
 {
@@ -228,15 +280,18 @@ namespace GameData
     extern std::array<CollisionDmg, MAX_ENTITIES> coldmg;
     extern std::array<Hostility, MAX_ENTITIES> hostilities;
     extern std::array<ProjectileAttackModule, MAX_ENTITIES> pattackmodules;
+    extern std::array<HitscanAttackModule, MAX_ENTITIES> hattackmodules;
+    extern std::array<AOEAttackModule, MAX_ENTITIES> AOEattackmodules;
     extern std::array<LifeSpan, MAX_ENTITIES> lifespans;
     extern std::array<Creator, MAX_ENTITIES> creators;
     extern std::array<SpawnRate, MAX_ENTITIES> spawnrates;
     extern std::array<State, MAX_ENTITIES> states;
     extern std::array<ReticlePlacement, MAX_ENTITIES> retplaces;
     extern std::array<HomingData, MAX_ENTITIES> homingStructs;
+    extern std::array<AbductionData, MAX_ENTITIES> abductionStructs;
     extern std::array<ResourceContainer, MAX_ENTITIES> resources;
     extern std::array<Points, MAX_ENTITIES> pointvalues;
-
+    extern std::array<Upgradeable, MAX_ENTITIES> upgradedata;
     //Events
     extern std::queue<CollisionEvent> colevents;
 
@@ -269,9 +324,8 @@ namespace EntityComponentSystem
     //Handle&Resolve Collisions
     void resolveCollisions();
 
-
     //All automated turret / tower firing
-    void sysTurretFire();
+    void sysTurret();
 
     //Check the status of entity's HP
     void sysDeathStatus();
@@ -288,13 +342,16 @@ namespace EntityComponentSystem
     //tracking entities
     void sysHoming();
 
-    void sysStateMachine();
+    //abducting entities
+    void sysAbduction();
+
+    void sysEnemyAI();
 
     //Helper functions
     Entity createEntity(int begin = 0, int end = MAX_ENTITIES);
 
     //Find the position of inte rsection with first rigid body (uses Peter Shirley's method at http://psgraphics.blogspot.com/2016/02/new-simple-ray-box-test-from-andrew.html)
-    glm::vec3 computeRaycast(glm::vec3& pos, glm::vec3& dir, float tmin, float tmax);
+    glm::vec3 computeRaycast(glm::vec3& pos, glm::vec3& dir, float tmin, float tmax, Entity * out = 0);
 
     //Deals damage (And will eventuall call death functions)
     void dealDamage(Entity source, Entity target, float damage);
@@ -308,4 +365,15 @@ namespace EntityComponentSystem
     void rePath(Entity e);
 
     void changeState(Entity e, State post);
+
+    void logSound(Entity source, int sound_id, bool stop = false);
+
+    //Get all Entitis is range
+    std::list<Entity> getTargetsInRange(glm::vec3 & source, float & range, TeamID & hostileTo);
+
+    //Finds closes path collider
+    Entity findClosestPathCollider(glm::vec3 origin);
+
+    //Applies an Upgrade if possible
+    bool applyUpgrade(Entity play, Entity target);
 };

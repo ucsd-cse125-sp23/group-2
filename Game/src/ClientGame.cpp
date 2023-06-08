@@ -25,6 +25,9 @@ float sfx_Volume;
 float music_Volume;
 bool ClientGame::jumping = 0;
 int ClientGame::build = 0;
+int ClientGame::selected = 0;
+bool ClientGame::upgrade = 0;
+bool ClientGame::renderColliders = 0;
 
 ClientGame::ClientGame(void)
 {
@@ -62,8 +65,11 @@ void ClientGame::update()
     
     //Render
     if (initData.id != INVALID_CLIENT_ID && incomingData.serverStatus != UNKNOWN_SERVER_STATUS) {
+        for (int i = 0; i < MAX_ENTITIES; ++i) {
+            incomingData.models[i].renderCollider = renderColliders;
+        }
         gameWindow->update(incomingData, initData.id);
-        audioManager->update(gameWindow->getCamPosition(), glm::normalize(gameWindow->getCamDirectionVector()), glm::normalize(gameWindow->getCamUpVector()));
+        audioManager->update(gameWindow->getCamPosition(), glm::normalize(gameWindow->getCamDirectionVector()), glm::normalize(gameWindow->getCamUpVector()), incomingData);
     }
     
     //Process combat logs
@@ -79,8 +85,13 @@ void ClientGame::update()
     //Process sound logs
     for (int i = 0; i < incomingData.slogsize; ++i) {
         Entity source = incomingData.soundLogs[i].source;
-        glm::vec3 position = incomingData.positions[source];
-        audioManager->playSound(incomingData.models[source].modelID, incomingData.soundLogs[i].sound, position);
+        if (!incomingData.soundLogs[i].stop) {
+            glm::vec3 position = incomingData.positions[source];
+            audioManager->playSound(incomingData.models[source].modelID, incomingData.soundLogs[i].sound, position, source);
+        }
+        else {
+            audioManager->stopSound(source);
+        }
     }
     incomingData.slogsize = 0;
 
@@ -113,9 +124,11 @@ void ClientGame::packageData(ClienttoServerData& data) {
     data.shoot = playerattacking;
     data.jump = jumping;
     data.build = build;
+    data.selected = selected;
     data.camAngleAroundPlayer = gameWindow->getCamAngle();
     data.camDirectionVector = gameWindow->getCamDirectionVector();
     data.camPosition = gameWindow->getCamPosition();
+    data.upgrade = upgrade;
 }
 
 void handle_win(GLFWwindow* window) {
@@ -516,11 +529,44 @@ void ClientGame::keyCallback(GLFWwindow* window, int key, int scancode, int acti
             if (!menuOn) {
                 if (build != 0) {
                     build = 0;
+                    upgrade = 0;
                 }
                 else {
+                    upgrade = 0;
                     build = 1;
                 }
+                selected = 0;
             }
+            break;
+        case GLFW_KEY_C:
+            if (renderColliders) {
+                renderColliders = 0;
+            }
+            else {
+                renderColliders = 1;
+            } //Fancy one line flip
+            break;
+        case GLFW_KEY_R:
+            if (upgrade != 0) {
+                build = 0;
+                upgrade = 0;
+            }
+            else {
+                build = 0;
+                upgrade = 1;
+            }
+            break;
+        case GLFW_KEY_1:
+            selected = 0;
+            break;
+        case GLFW_KEY_2:
+            selected = 1;
+            break;
+        case GLFW_KEY_3:
+            selected = 2;
+            break;
+        case GLFW_KEY_4:
+            selected = 3;
             break;
         case GLFW_KEY_ENTER:
             handle_enter(window);

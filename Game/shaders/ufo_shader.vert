@@ -4,11 +4,13 @@ layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
 
 out vec2 TexCoords;
+out vec3 Normal;
+out vec3 FragPos;
 
 uniform mat4 model;
 uniform mat4 viewProj;
 uniform float time;
-
+uniform float rand;   
 mat4 rotationMatrix(vec3 axis, float angle)
 {
     axis = normalize(axis);
@@ -25,8 +27,13 @@ mat4 rotationMatrix(vec3 axis, float angle)
 void main()
 {
     TexCoords = aTexCoords;
-    float y_pos = 1.5*sin(3*time) + model[3][1];
+    float y_pos = 1.2*sin(3*time + rand) + model[3][1];
     mat4 m = model;
-    m[3][1] = y_pos;   
-    gl_Position = viewProj * m * rotationMatrix(vec3(0,1,0), time) * vec4(aPos, 1.0);
+    m[3][1] = y_pos;
+    vec3 newPos = aPos;
+    newPos[1] = y_pos;
+    FragPos = vec3(model * vec4(newPos, 1.0));
+    m *= rotationMatrix(vec3(0,1,0), time);
+    Normal = mat3(transpose(inverse(m))) * aNormal;
+    gl_Position = viewProj * m  * vec4(aPos, 1.0);
 }

@@ -6,7 +6,7 @@
 #include <tuple>
 
 namespace PoissonDisk {
-	constexpr float radius = 15;
+	constexpr float radius = 5;
 	constexpr float samples = 30;
 	constexpr float side = (radius / 1.5);
 	static constexpr size_t gridx = WORLD_X / side +1l;

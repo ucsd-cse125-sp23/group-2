@@ -259,6 +259,10 @@ private:
             material.shininess = shininess;
         }
 
+        if (AI_SUCCESS == mat->Get(AI_MATKEY_COLOR_EMISSIVE, color)) {
+            material.emision = glm::vec3(color.r, color.g, color.b);
+        }
+
         return material;
     }
 

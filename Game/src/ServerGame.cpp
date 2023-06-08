@@ -28,6 +28,9 @@ void ServerGame::initializeGame()
 void ServerGame::initPlayers()
 {
     prefabMap[Prefab::Players]();
+    for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+        GameData::playerdata.resources[i] = 1000;
+    }
 
 }
 
@@ -37,13 +40,201 @@ void ServerGame::initWaves()
     WaveData::waveTick = ENEMY_SPAWNDELAY_TICKS;
 
     //Temp Nested for loop to populate wave vectors
-    for (int i = 0; i < WAVE_COUNT; i++)
+    //TODO: Manually set up waves
+
+    //Intro wave (16 basic enemies), random paths
+    for (int i = 0; i < 32; i++)
     {
-        for (int j = 0; j < 15; j++)
+        enemy e = { Prefabs::EnemyGroundBasic, rand() % (Paths::pathCount), 1 * TICK_RATE };
+        WaveData::waves[0].push(e);
+    }
+
+    //Wave 2 (Introduce basic flying)
+    //Randomly placed flying enemies
+    for (int i = 0; i < 32; i++)
+    {
+        enemy e = { Prefabs::EnemyFlyingBasic, rand() % (Paths::pathCount), 1 * TICK_RATE };
+        WaveData::waves[1].push(e);
+    }
+    WaveData::waves[1].back().cooldown = 10 * TICK_RATE;
+    //eight basics on each path
+    for (int i = 0; i < 8; i++)
+    {
+        for (int p = 0; p < Paths::pathCount; p++)
         {
-            enemy e = { WaveData::enemyTypes[rand() % NUM_ENEMY_TYPES], rand() % Paths::pathCount, 1 * TICK_RATE };
-            WaveData::waves[i].push(e);
+            enemy e = { Prefabs::EnemyGroundBasic, p, 0 };
+            WaveData::waves[1].push(e);
         }
+        WaveData::waves[1].back().cooldown = 1 * TICK_RATE;
+    }
+    //Wave 3 (Introduce mini and tank)
+    //Randomly placed tanks
+    for (int i = 0; i < 16; i++)
+    {
+        enemy e = { Prefabs::EnemyGroundTank, rand() % (Paths::pathCount), 1 * TICK_RATE };
+        WaveData::waves[2].push(e);
+    }
+    WaveData::waves[2].back().cooldown = 15 * TICK_RATE;
+    //four mini, four flying on each path
+    for (int i = 0; i < 8; i++)
+    {
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyGroundMini, p, 0 };
+            WaveData::waves[2].push(e);
+        }
+        WaveData::waves[2].back().cooldown = 2 * TICK_RATE;
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyFlyingBasic, p, 0 };
+            WaveData::waves[2].push(e);
+        }
+        WaveData::waves[2].back().cooldown = 2 * TICK_RATE;
+    }
+    //Wave 4 (Introduce abductors)
+    //Eight basics on each path
+    for (int i = 0; i < 16; i++)
+    {
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyGroundBasic, p, 0 };
+            WaveData::waves[3].push(e);
+        }
+        WaveData::waves[3].back().cooldown = 1 * TICK_RATE;
+    }
+    //Randomly placed tractors
+    for (int i = 0; i < 4; i++)
+    {
+        enemy e = { Prefabs::EnemyFlyingTractor, rand() % (Paths::pathCount), 1 * TICK_RATE };
+        WaveData::waves[3].push(e);
+    }
+    //Eight fliers on each path
+    for (int i = 0; i < 16; i++)
+    {
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyFlyingBasic, p, 0 };
+            WaveData::waves[3].push(e);
+        }
+        WaveData::waves[3].back().cooldown = 1 * TICK_RATE;
+    }
+    //Wave 5 (Random Wave)
+    //60 entirely random enemies
+    for (int i = 0; i < 60; i++)
+    {
+        enemy e = {WaveData::enemyTypes[rand()%NUM_ENEMY_TYPES], rand() % (Paths::pathCount), 1 * TICK_RATE};
+        WaveData::waves[4].push(e);
+    }
+    //Wave 6 (Challenge Wave)
+    //Basic - Flying - Tank - Mini times 4 on each path
+    for (int i = 0; i < 4; i++)
+    {
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyGroundBasic, p, 0 };
+            WaveData::waves[5].push(e);
+        }
+        WaveData::waves[5].back().cooldown = 1 * TICK_RATE;
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyFlyingBasic, p, 0 };
+            WaveData::waves[5].push(e);
+        }
+        WaveData::waves[5].back().cooldown = 1 * TICK_RATE;
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyGroundTank, p, 0 };
+            WaveData::waves[5].push(e);
+        }
+        WaveData::waves[5].back().cooldown = 1 * TICK_RATE;
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyGroundMini, p, 0 };
+            WaveData::waves[5].push(e);
+        }
+        WaveData::waves[5].back().cooldown = 1 * TICK_RATE;
+    }
+    //Tractor on each path
+    for (int p = 0; p < Paths::pathCount; p++)
+    {
+        enemy e = { Prefabs::EnemyFlyingTractor, p, 0 };
+        WaveData::waves[5].push(e);
+    }
+    //Small break
+    WaveData::waves[5].back().cooldown = 5 * TICK_RATE;
+    //MINIs EVERYWHERE
+    for (int i = 0; i < 16; i++)
+    {
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyGroundMini, p, 0 };
+            WaveData::waves[5].push(e);
+        }
+        WaveData::waves[5].back().cooldown = 1 * TICK_RATE;
+    }
+    //Buncha tanks now
+    for (int i = 0; i < 16; i++)
+    {
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyGroundTank, p, 0 };
+            WaveData::waves[5].push(e);
+        }
+        WaveData::waves[5].back().cooldown = 1 * TICK_RATE;
+    }
+    //Tractors and fliers
+    for (int i = 0; i < 16; i++)
+    {
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyFlyingBasic, p, 0 };
+            WaveData::waves[5].push(e);
+        }
+        WaveData::waves[5].back().cooldown = 1 * TICK_RATE;
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyFlyingTractor, p, 0 };
+            WaveData::waves[5].push(e);
+        }
+    }
+
+    //Boss wave
+    enemy boss = { Prefabs::EnemyBoss, Paths::bossPath, 15 * TICK_RATE};
+    WaveData::waves[WAVE_COUNT - 1].push(boss);
+    //Suplement with a little bit of everything
+    //Basic - Flying - Tank - Mini times 4 on each path
+    for (int i = 0; i < 8; i++)
+    {
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyGroundBasic, p, 0 };
+            WaveData::waves[WAVE_COUNT - 1].push(e);
+        }
+        WaveData::waves[WAVE_COUNT - 1].back().cooldown = 1 * TICK_RATE;
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyFlyingBasic, p, 0 };
+            WaveData::waves[WAVE_COUNT - 1].push(e);
+        }
+        WaveData::waves[WAVE_COUNT - 1].back().cooldown = 1 * TICK_RATE;
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyGroundTank, p, 0 };
+            WaveData::waves[WAVE_COUNT - 1].push(e);
+        }
+        WaveData::waves[WAVE_COUNT - 1].back().cooldown = 1 * TICK_RATE;
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyGroundMini, p, 0 };
+            WaveData::waves[WAVE_COUNT - 1].push(e);
+        }
+        WaveData::waves[WAVE_COUNT - 1].back().cooldown = 1 * TICK_RATE;
+        for (int p = 0; p < Paths::pathCount; p++)
+        {
+            enemy e = { Prefabs::EnemyFlyingTractor, p, 0 };
+            WaveData::waves[WAVE_COUNT - 1].push(e);
+        }
+        WaveData::waves[WAVE_COUNT - 1].back().cooldown = 1 * TICK_RATE;
     }
 }
 
@@ -56,13 +247,13 @@ void ServerGame::waveSpawner()
 {
     static int spawnCooldown = 0;
 
+    
     if (WaveData::waveTick <= 0)
     {
         WaveData::currentWave++;
         if (WaveData::currentWave < WAVE_COUNT)
         {
             WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave];
-            spawnCooldown = WaveData::waves[WaveData::currentWave].front().cooldown;
         }
     }
 
@@ -90,6 +281,7 @@ void ServerGame::waveSpawner()
     }
 
     WaveData::waveTick--;
+    
 }
 
 //Spawn Initial assortment of resources
@@ -117,6 +309,10 @@ void ServerGame::initResources()
         //printf("Pos is %f, %f, %f\n", pos.x, pos.y, pos.z);
     }
     for (Entity e : resources) {
+        float scaleFactor = (rand() % 32) / ((float)32) + 0.5;
+        GameData::colliders[e].AABB.x *= scaleFactor;
+        GameData::colliders[e].AABB.y *= scaleFactor;
+        GameData::colliders[e].AABB.z *= scaleFactor;
         for (Entity p : Paths::pathlist) {
             ECS::colCheck(e, p);
         }
@@ -124,6 +320,8 @@ void ServerGame::initResources()
         ECS::resolveCollisions();
         GameData::tags[e] ^= ComponentTags::DiesOnCollision;
         GameData::colliders[e].colwith ^= CollisionLayer::UIObj + CollisionLayer::StaticObj;
+        GameData::models[e].modelOrientation = rand() % 360;
+        GameData::models[e].scale = scaleFactor;
     }
 
 
@@ -174,7 +372,7 @@ void ServerGame::update()
     case win:
         break;
     default:
-        printf("Invalid server state!");
+        printf("Invalid server state!\n");
     }
 
 
@@ -187,6 +385,12 @@ void ServerGame::update()
 
 }
 
+const int NUM_PLAYER_ATTACK = 3;
+const Prefab playerWeaponArray[NUM_PLAYER_ATTACK] = { Prefabs::ProjectileBasic, Prefabs::ProjectileSpread5, Prefabs::ProjectilePierce };
+const Prefab playerReticleArray[NUM_TOWER_PREFAB] = { Prefabs::TowerReticleBasic, Prefabs::TowerReticleRailgun, Prefabs::TowerReticleTesla, Prefabs::TowerReticleBarrier };
+const Prefab playerBuildingArray[NUM_TOWER_PREFAB] = { Prefabs::TowerBasic, Prefabs::TowerRailgun, Prefabs::TowerTesla, Prefabs::TowerBarrier };
+
+
 void ServerGame::handleInputs()
 {
 
@@ -195,9 +399,13 @@ void ServerGame::handleInputs()
 
     for(int i = 0; i < NUM_CLIENTS; i++)
     {
+        //Decrement cooldown
+        GameData::playerdata.actioncooldown[i]--;
         glm::vec3 camDirection;
         glm::vec3 camPosition;
         bool target = false;
+        bool jump = false;
+        Entity choose = INVALID_ENTITY;
         while (!incomingDataLists[i].empty())
         {
             if ((GameData::tags[i] & ComponentTags::Dead) == ComponentTags::Dead) {
@@ -206,48 +414,93 @@ void ServerGame::handleInputs()
                 continue;
             }
             ClienttoServerData in = incomingDataLists[i].front();
-            GameData::velocities[i].velocity = glm::vec3(0,GameData::velocities[i].velocity.y,0);
+            GameData::velocities[i].velocity = glm::vec3(0, GameData::velocities[i].velocity.y, 0);
             camDirection = in.camDirectionVector;
             camPosition = in.camPosition;
-            if ( ((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
+            if (((in.moveLeft ^ in.moveRight)) || ((in.moveForward ^ in.moveBack))) {
                 float camAngle = in.camAngleAroundPlayer;
                 glm::vec3 moveDirection = glm::normalize(glm::rotate(glm::radians(camAngle), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(in.moveLeft - in.moveRight, 0.0f, in.moveForward - in.moveBack, 0.0f)));
                 GameData::models[i].modelOrientation = -camAngle + glm::degrees(glm::acos(moveDirection.y));
                 GameData::velocities[i].velocity += PLAYER_MVSPD * moveDirection;
             }
+
             if (in.shoot) {
                 target = in.shoot;
             }
 
             if (in.build) {
                 changeState(i, PlayerState::Build);
+                if (in.selected > NUM_TOWER_TYPES) {
+                    in.selected = NUM_TOWER_TYPES - 1;
+                }
+                if (in.selected < 0) {
+                    in.selected = 0; //BAD BAD CODE
+                }
+                if (GameData::retplaces[i].reticlePrefab != playerReticleArray[in.selected]) {
+                    if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
+                        ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
+                    }
+                }
+                GameData::retplaces[i].buildingPrefab = playerBuildingArray[in.selected];
+                GameData::retplaces[i].reticlePrefab = playerReticleArray[in.selected];
+                choose = INVALID_ENTITY;
             }
-            else {
-                changeState(i, PlayerState::Default); //May be slow
+            else if (in.upgrade) {
+                changeState(i, PlayerState::Upgrading);
+                choose = playerUpgrade(i, camDirection, camPosition, TOWER_PLACEMENT_RANGE);
                 if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
                     ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
                     GameData::retplaces[i].reticle = INVALID_ENTITY;
                 }
             }
+            else {
+                if (in.selected > NUM_PLAYER_ATTACK) {
+                    in.selected = NUM_PLAYER_ATTACK - 1;
+                }
+                if (in.selected < 0) {
+                    in.selected = 0; //BAD BAD CODE
+                }
+                changeState(i, PlayerState::Default); //May be slow
+                GameData::pattackmodules[i].attack = playerWeaponArray[in.selected];
 
-            if (in.jump && GameData::rigidbodies[i].grounded) {
-                GameData::velocities[i].velocity.y = PLAYER_JPSPD;
-                // Add jumping sound to sound log
-                GameData::soundLogs[GameData::slogpos].source = i;
-                GameData::soundLogs[GameData::slogpos].sound = SOUND_ID_JUMP;
-                GameData::slogpos++;
+                if (GameData::retplaces[i].reticle != INVALID_ENTITY) {
+                    ECS::causeDeath(GameData::retplaces[i].reticle, GameData::retplaces[i].reticle);
+                    GameData::retplaces[i].reticle = INVALID_ENTITY;
+                }
+                choose = INVALID_ENTITY;
+
+            }
+
+            if (in.jump){
+                jump = true;
             }
             incomingDataLists[i].pop();
         }
+
+        
+
 
         if (GameData::states[i] == PlayerState::Build) {
             //printf("Calling Player build\n");
             playerBuild(i, camDirection, camPosition, TOWER_PLACEMENT_RANGE);
         }
+        else if (GameData::states[i] == PlayerState::Upgrading) {
+            if (choose != INVALID_ENTITY) {
+                GameData::models[choose].upgradeSelected = true;
+            }
+        }
 
         if (target) {
             if (GameData::states[i] == PlayerState::Build) {
                 GameData::retplaces[i].place = true;
+            }
+            else if (GameData::states[i] == PlayerState::Upgrading) {
+                if (GameData::playerdata.actioncooldown[i] < 0) {
+                    if (choose != INVALID_ENTITY) {
+                        ECS::applyUpgrade(i, choose);
+                        GameData::playerdata.actioncooldown[i] = ACTION_COOLDOWN;
+                    }
+                }
             }
             else {
                 changeState(i, PlayerState::Attack);
@@ -257,6 +510,12 @@ void ServerGame::handleInputs()
         }
         else if(GameData::states[i] == PlayerState::Attack){
             changeState(i, PlayerState::Default);
+        }
+
+        if (jump && GameData::rigidbodies[i].grounded) {
+            GameData::velocities[i].velocity.y = PLAYER_JPSPD;
+            // Add jumping sound to sound log
+            EntityComponentSystem::logSound(i, SOUND_ID_JUMP);
         }
         //in.print(msg);
     }
@@ -318,6 +577,9 @@ void ServerGame::packageData(ServertoClientData& data)
     data.serverStatus = currentStatus;
     data.colliders = GameData::colliders;
     data.waveTimer = WaveData::waveTick / TICK_RATE;
+    for (int i = 0; i < NUM_PLAYERS; ++i) {
+        data.playerData.playerStates[i] = GameData::states[i];
+    }
 }
 
 const int GRID_X = 32;
@@ -376,6 +638,20 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
     }
     glm::vec3 dirYNorm = camdir / (camdir.y*-1);
     glm::vec3 targetpos = glm::vec3(campos.x + dirYNorm.x * campos.y, 0, campos.z + dirYNorm.z * campos.y);
+    float angle = 0;
+    if(GameData::retplaces[i].reticlePrefab == Prefabs::TowerReticleBarrier){
+        Entity p = ECS::findClosestPathCollider(targetpos);
+        if (p == INVALID_ENTITY) {
+            GameData::retplaces[i].validTarget = false;
+            return;
+        }
+        if (glm::distance(targetpos, GameData::positions[p]) > SNAP_RANGE) {
+            GameData::retplaces[i].validTarget = false;
+            return;
+        }
+        targetpos = GameData::positions[p];
+        angle = GameData::models[p].modelOrientation;
+    }
     if (glm::distance(targetpos, GameData::positions[i]) > range) {
         //printf("Out of range\n");
 
@@ -384,6 +660,7 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
     }
     GameData::retplaces[i].targetPos = targetpos;
     GameData::retplaces[i].validTarget = true;
+    GameData::retplaces[i].targetOrientation = angle;
     //printf("Valid Target\n");
 }
 
@@ -396,4 +673,17 @@ void ServerGame::checkStatus() {
         printf("LOSE! :(\n");
         currentStatus = loss;
     }
+}
+
+Entity ServerGame::playerUpgrade(Entity e, glm::vec3& camdir, glm::vec3& campos, float range)
+{
+    Entity target = INVALID_ENTITY;
+    ECS::computeRaycast(campos, camdir, glm::distance(campos, GameData::positions[e]) + glm::length(GameData::colliders[e].AABB), FLT_MAX, &target);
+    if (target == INVALID_ENTITY) {
+        return target;
+    }
+    if (GameData::tags[target] & ComponentTags::Upgradeable) {
+        return target;
+    }
+    return INVALID_ENTITY;
 }

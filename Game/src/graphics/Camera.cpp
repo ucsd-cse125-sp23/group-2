@@ -68,19 +68,19 @@ void Camera::calcCameraPosition(float hDist, float vDist, bool screenShake, floa
 
     if (screenShake) {
         srand(time);
-        position.x += glm::sin(time * 20 + 1) * (rand() % 100 + 1) / 75.0f;
-        position.y += glm::sin(time * 20 + 2) * (rand() % 100 + 1) / 75.0f;
-        position.z += glm::sin(time * 20 + 3) * (rand() % 100 + 1) / 75.0f;
+        position.x += 0.4f * glm::sin(time * 20 + 1);
+        position.y += 0.4f * glm::sin(time * 20 + 2);
+        position.z += 0.4f * glm::sin(time * 20 + 3);
     }
 }
 
 void Camera::calcViewProjectMtx() {
-    glm::mat4 vm(1);
-    vm *= glm::rotate(glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f)) *
+    view = glm::mat4(1);
+    view *= glm::rotate(glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f)) *
         glm::rotate(glm::radians(yaw), glm::vec3(0.0f, 1.0f, 0.0f)) *
         glm::translate(-position);
     glm::mat4 project = glm::perspective(glm::radians(FOV), Aspect, NearClip, FarClip);
-    ViewProjectMtx = project * vm;
+    ViewProjectMtx = project * view;
     
 }
 
