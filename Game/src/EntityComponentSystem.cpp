@@ -512,6 +512,12 @@ void EntityComponentSystem::sysDetectCollisions()
                 GameData::colliders[e].collided |= true;
             }
             colCheck(MAX_ENTITIES_NOBASE, e);
+
+            for (Entity b : Boundry::boundlist) {
+                if (colCheck(e, b)) {
+                    GameData::colliders[e].collided |= true;
+                }
+            }
         }
 
 
@@ -846,7 +852,6 @@ void EntityComponentSystem::sysBuild()
                         else {
                             //Transform positions and velocity relative to attacker
                             GameData::positions[b] = transform * glm::vec4(GameData::positions[b], 1);
-                            GameData::velocities[b].velocity = transform * glm::vec4(GameData::velocities[b].velocity, 0);
                             //Set creator
                             GameData::tags[b] |= ComponentTags::Created;
                             GameData::creators[b] = e;
@@ -907,8 +912,6 @@ void EntityComponentSystem::sysBuild()
                 //Transform positions and velocity relative to attacker
                 GameData::positions[r] = glm::vec3(0, 0, 0);
                 GameData::positions[r] = transform * glm::vec4(GameData::positions[r], 1);
-                GameData::velocities[r].velocity = transform * glm::vec4(GameData::velocities[r].velocity, 0);
-                GameData::tags[r] ^= ComponentTags::Velocity;
                 //if (GameData::retplaces[e].targetOrientation != 0) {
                 GameData::models[r].modelOrientation = GameData::retplaces[e].targetOrientation;
                 //}
@@ -944,6 +947,7 @@ Entity EntityComponentSystem::createEntity(int begin, int end)
     for (int i = begin; i < end; ++i) {
         if (!GameData::activity[i]) {
             GameData::activity[i] = true;
+            GameData::velocities[i].velocity = glm::vec3(0, 0, 0);
             GameData::states[i] = 0;
             GameData::tags[i] = 0;
             GameData::hostilities[i].team = 0;
