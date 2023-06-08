@@ -17,7 +17,7 @@ const float ENEMY_SPAWNDELAY_SEC = 60;
 const float START_WAVE = -1;
 
 //World Length and Width
-constexpr float WORLD_X = 150;
+constexpr float WORLD_X = 200;
 constexpr float WORLD_Z = 180;
 
 //Speed of movement in units per second
@@ -55,7 +55,7 @@ const float TURRET_BASE_FIRE_RATE = 0.25;
 const float TURRET_BASE_RANGE = 10;
 
 //Snap range barrier
-const float SNAP_RANGE = 5;
+const float SNAP_RANGE = 8;
 
 //Number of levels for of upgrades
 constexpr size_t NUM_UP_LEVELS = 3;
@@ -131,7 +131,6 @@ const float PATH_WIDTH = 10;
 const float TOWER_PLACEMENT_RANGE = 15;
 
 //Model ID's (For Cory/Will to decide)
-#define MODEL_ID_NO_MODEL -1
 enum MODEL_ID {
 	MODEL_ID_CUBE,
 	MODEL_ID_ROVER,
@@ -176,7 +175,9 @@ enum MODEL_ID {
  MODEL_ID_PATH_CORNER,
  MODEL_ID_POWERUP_RAPID,
  MODEL_ID_POWERUP_SPREAD,
- NUM_MODELS
+
+ NUM_MODELS,
+ MODEL_ID_NO_MODEL = NUM_MODELS
 };
 
 

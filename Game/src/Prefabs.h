@@ -75,7 +75,7 @@ std::list<Entity> createBossLLeg();
 std::list<Entity> createBoss();
 
 std::list<Entity> createPowerupRandom();
-
+std::list<Entity> createBounds();
 
 
 
@@ -133,6 +133,8 @@ namespace Prefabs {
 		EnemyBoss,
 		Players,
 		PowerupRandom,
+		Bounds,
+
 		NUM_PREFAB
 
 	};
@@ -189,6 +191,7 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createBoss,
 	&createPlayers,
 	&createPowerupRandom,
+	&createBounds
 };
 
 namespace PlayerSpawns {
@@ -202,6 +205,10 @@ namespace Paths {
 	extern const glm::vec3 path[pathCount][PATH_LENGTH];
 	extern std::list<Entity> pathlist;
 };
+
+namespace Boundry {
+	extern std::list<Entity> boundlist;
+}
 
 struct enemy {
 	int id;

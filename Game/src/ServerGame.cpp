@@ -308,8 +308,18 @@ void ServerGame::initResources()
 
     for (glm::vec3 pos : positions) {
         Entity e;
-        if(std::rand() > RAND_MAX/2)
+        float scaleFactor = (rand() % 32) / ((float)32) + 1.0;
+        float woodratio = 0.7;
+        if (std::rand() > (RAND_MAX * woodratio)) {
             e = prefabMap[Prefabs::BASIC_STONE_RESOURCE]().front();
+            for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+                GameData::resources[e].resources[i] *= scaleFactor * scaleFactor * scaleFactor;
+            }
+            GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= scaleFactor * scaleFactor;
+            GameData::colliders[e].AABB = GameData::colliders[e].AABB * scaleFactor;
+            GameData::models[e].scale = scaleFactor;
+
+        }
         else
             e = prefabMap[Prefabs::BASIC_WOOD_RESOURCE]().front();
         if (e != INVALID_ENTITY) {
@@ -322,19 +332,20 @@ void ServerGame::initResources()
         //printf("Pos is %f, %f, %f\n", pos.x, pos.y, pos.z);
     }
     for (Entity e : resources) {
-        float scaleFactor = (rand() % 32) / ((float)32) + 0.5;
-        GameData::colliders[e].AABB.x *= scaleFactor;
-        GameData::colliders[e].AABB.y *= scaleFactor;
-        GameData::colliders[e].AABB.z *= scaleFactor;
+
         for (Entity p : Paths::pathlist) {
             ECS::colCheck(e, p);
         }
+        for (Entity b : Boundry::boundlist) {
+            ECS::colCheck(e, b);
+        }
         ECS::colCheck(e, MAX_ENTITIES_NOBASE);
         ECS::resolveCollisions();
+
+
         GameData::tags[e] ^= ComponentTags::DiesOnCollision;
         GameData::colliders[e].colwith ^= CollisionLayer::UIObj + CollisionLayer::StaticObj;
         GameData::models[e].modelOrientation = rand() % 360;
-        GameData::models[e].scale = scaleFactor;
     }
     //Clear the sound and combat logs to remove data from the resource spawning
     GameData::clogpos = 0;
@@ -542,6 +553,7 @@ void ServerGame::sendPackets()
 void ServerGame::initPrefabs()
 {
     Paths::pathlist = prefabMap[Prefabs::PathColliders]();
+    Boundry::boundlist = prefabMap[Prefabs::Bounds]();
     /*
     for (Entity e : pathlist) {
         if (e != INVALID_ENTITY) {
