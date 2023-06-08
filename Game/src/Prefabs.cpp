@@ -538,7 +538,7 @@ std::list<Entity> createTowerBasic1() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_TOWER;
+    GameData::models[e].modelID = MODEL_ID_TOWER_L2;
     GameData::upgradedata[e].cost = { 20, 20, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerBasic2;
     GameData::hattackmodules[e].damage *= 1.20;
@@ -555,7 +555,7 @@ std::list<Entity> createTowerBasic2() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_TOWER;
+    GameData::models[e].modelID = MODEL_ID_TOWER_L3;
     GameData::upgradedata[e].cost = { 100, 100, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerBasic3;
     GameData::hattackmodules[e].damage *= 2.00;
@@ -572,7 +572,7 @@ std::list<Entity> createTowerBasic3() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_TOWER;
+    GameData::models[e].modelID = MODEL_ID_TOWER_L4;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
@@ -630,7 +630,7 @@ std::list<Entity> createTowerRailgun1() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_RAILGUN;
+    GameData::models[e].modelID = MODEL_ID_RAILGUN_L2;
     GameData::upgradedata[e].cost = { 20, 20, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerRailgun2;
     GameData::pattackmodules[e].attack = Prefabs::ProjectilePierce1;
@@ -647,7 +647,7 @@ std::list<Entity> createTowerRailgun2() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_RAILGUN;
+    GameData::models[e].modelID = MODEL_ID_RAILGUN_L3;
     GameData::upgradedata[e].cost = { 100, 100, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerRailgun3;
     GameData::pattackmodules[e].attack = Prefabs::ProjectilePierce2;
@@ -664,7 +664,7 @@ std::list<Entity> createTowerRailgun3() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_RAILGUN;
+    GameData::models[e].modelID = MODEL_ID_RAILGUN_L4;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
@@ -722,7 +722,7 @@ std::list<Entity> createTowerTesla1() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_TESLA;
+    GameData::models[e].modelID = MODEL_ID_TESLA_L2;
     GameData::upgradedata[e].cost = { 20, 20, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerTesla2;
     GameData::AOEattackmodules[e].range *= 1.2;
@@ -739,7 +739,7 @@ std::list<Entity> createTowerTesla2() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_TESLA;
+    GameData::models[e].modelID = MODEL_ID_TESLA_L3;
     GameData::upgradedata[e].cost = { 100, 100, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerTesla3;
     GameData::AOEattackmodules[e].range *= 2; 
@@ -756,7 +756,7 @@ std::list<Entity> createTowerTesla3() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_TESLA;
+    GameData::models[e].modelID = MODEL_ID_TESLA_L4;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +

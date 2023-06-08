@@ -24,7 +24,15 @@ void GameWorld::init() {
 	models[MODEL_ID_TESLA_INVALID] = new ObjectModel("../assets/tesla/tower_tesla_invalid.obj");
 	models[MODEL_ID_RAILGUN_INVALID] = new ObjectModel("../assets/railgun/tower_railgun_invalid.obj");
 	models[MODEL_ID_BARRIER_INVALID] = new ObjectModel("../assets/barricade/barricade_wood.obj");
-
+	models[MODEL_ID_TOWER_L2] = new ObjectModel("../assets/tower/Tower_L2.obj");
+	models[MODEL_ID_TESLA_L2] = new ObjectModel("../assets/tesla/tower_tesla_L2.obj");
+	models[MODEL_ID_RAILGUN_L2] = new ObjectModel("../assets/railgun/tower_railgun_L2.obj");
+	models[MODEL_ID_TOWER_L3] = new ObjectModel("../assets/tower/Tower_L3.obj");
+	models[MODEL_ID_TESLA_L3] = new ObjectModel("../assets/tesla/tower_tesla_L3.obj");
+	models[MODEL_ID_RAILGUN_L3] = new ObjectModel("../assets/railgun/tower_railgun_L3.obj");
+	models[MODEL_ID_TOWER_L4] = new ObjectModel("../assets/tower/Tower_L4.obj");
+	models[MODEL_ID_TESLA_L4] = new ObjectModel("../assets/tesla/tower_tesla_L4.obj");
+	models[MODEL_ID_RAILGUN_L4] = new ObjectModel("../assets/railgun/tower_railgun_L4.obj");
 	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/tree/tree.obj");
 	models[MODEL_ID_RESOURCE_STONE] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
 
@@ -64,7 +72,16 @@ void GameWorld::init() {
 	shaders[MODEL_ID_RAILGUN] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_TESLA] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_BARRIER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
-
+	shaders[MODEL_ID_TOWER_L2] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_RAILGUN_L2] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_TESLA_L2] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");	
+	shaders[MODEL_ID_TOWER_L3] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	
+	shaders[MODEL_ID_RAILGUN_L3] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_TESLA_L3] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");	
+	shaders[MODEL_ID_TOWER_L4] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_RAILGUN_L4] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_TESLA_L4] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_TOWER_INVALID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_RAILGUN_INVALID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_TESLA_INVALID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
