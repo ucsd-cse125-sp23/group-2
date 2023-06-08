@@ -1496,6 +1496,10 @@ namespace Paths {
     };
     std::list<Entity> pathlist;
 }
+
+namespace Boundry {
+    std::list<Entity> boundlist;
+}
 namespace WaveData {
     int currentWave;
 
@@ -1624,3 +1628,117 @@ std::list<Entity> createPathColliders()
 
     return createdEntities;
 };
+
+std::list<Entity> createBounds()
+{
+
+    //Bottom left corner
+    std::list<Entity> createdEntities;
+    Entity e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::positions[e] = glm::vec3(-100, 0 ,70);
+    GameData::colliders[e].AABB = glm::vec3(15, 10, 55);
+    GameData::models[e].asciiRep = 'P';
+    GameData::models[e].modelID = MODEL_ID_NO_MODEL;
+    GameData::colliders[e].colteam = CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = 0;
+    GameData::rigidbodies[e].fixed = true;
+    GameData::models[e].renderCollider = true;
+    GameData::positions[e].y = GameData::colliders[e].AABB.y + GROUND_HEIGHT;
+    GameData::tags[e] =
+        ComponentTags::RigidBody +
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Collidable; 
+    ;
+
+    //Top left corner
+    e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::positions[e] = glm::vec3(-110, 0, -90);
+    GameData::colliders[e].AABB = glm::vec3(25, 10, 10);
+    GameData::models[e].asciiRep = 'P';
+    GameData::models[e].modelID = MODEL_ID_NO_MODEL;
+    GameData::colliders[e].colteam = CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = 0;
+    GameData::rigidbodies[e].fixed = true;
+    GameData::models[e].renderCollider = true;
+    GameData::positions[e].y = GameData::colliders[e].AABB.y + GROUND_HEIGHT;
+    GameData::tags[e] =
+        ComponentTags::RigidBody +
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Collidable;
+
+    //Bottom right corner
+    e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::positions[e] = glm::vec3(80, 0, 80);
+    GameData::colliders[e].AABB = glm::vec3(20, 10, 10);
+    GameData::models[e].asciiRep = 'P';
+    GameData::models[e].modelID = MODEL_ID_NO_MODEL;
+    GameData::colliders[e].colteam = CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = 0;
+    GameData::rigidbodies[e].fixed = true;
+    GameData::models[e].renderCollider = true;
+    GameData::positions[e].y = GameData::colliders[e].AABB.y + GROUND_HEIGHT;
+    GameData::tags[e] =
+        ComponentTags::RigidBody +
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Collidable;
+    ;
+
+    //Top right corner
+    e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::positions[e] = glm::vec3(90, 0, -90);
+    GameData::colliders[e].AABB = glm::vec3(22, 10, 17);
+    GameData::models[e].asciiRep = 'P';
+    GameData::models[e].modelID = MODEL_ID_NO_MODEL;
+    GameData::colliders[e].colteam = CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = 0;
+    GameData::rigidbodies[e].fixed = true;
+    GameData::models[e].renderCollider = true;
+    GameData::positions[e].y = GameData::colliders[e].AABB.y + GROUND_HEIGHT;
+    GameData::tags[e] =
+        ComponentTags::RigidBody +
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Collidable;
+
+    //Middle right corner
+    e = createEntity();
+    createdEntities.push_back(e);
+    if (e == INVALID_ENTITY) {
+        return createdEntities;
+    }
+    GameData::positions[e] = glm::vec3(100, 0, 0);
+    GameData::colliders[e].AABB = glm::vec3(10, 10, 75);
+    GameData::models[e].asciiRep = 'P';
+    GameData::models[e].modelID = MODEL_ID_NO_MODEL;
+    GameData::colliders[e].colteam = CollisionLayer::StaticObj;
+    GameData::colliders[e].colwith = 0;
+    GameData::rigidbodies[e].fixed = true;
+    GameData::models[e].renderCollider = true;
+    GameData::positions[e].y = GameData::colliders[e].AABB.y + GROUND_HEIGHT;
+    GameData::tags[e] =
+        ComponentTags::RigidBody +
+        ComponentTags::Position +
+        ComponentTags::Model +
+        ComponentTags::Collidable;
+
+    return createdEntities;
+}

@@ -542,6 +542,7 @@ void ServerGame::sendPackets()
 void ServerGame::initPrefabs()
 {
     Paths::pathlist = prefabMap[Prefabs::PathColliders]();
+    Boundry::boundlist = prefabMap[Prefabs::Bounds]();
     /*
     for (Entity e : pathlist) {
         if (e != INVALID_ENTITY) {

@@ -510,6 +510,12 @@ void EntityComponentSystem::sysDetectCollisions()
                 GameData::colliders[e].collided |= true;
             }
             colCheck(MAX_ENTITIES_NOBASE, e);
+
+            for (Entity b : Boundry::boundlist) {
+                if (colCheck(e, b)) {
+                    GameData::colliders[e].collided |= true;
+                }
+            }
         }
 
 
