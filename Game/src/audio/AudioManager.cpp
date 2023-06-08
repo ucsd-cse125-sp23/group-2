@@ -75,7 +75,9 @@ AudioManager::AudioManager() {
 
     AudioManager::loadMusic("../assets/sounds/Free Video Game Music - HeatleyBros - Game On.mp3");
     AudioManager::playMusic();
-    AudioManager::errorCheck(audioSystem->set3DSettings(1, 1, 0.5));
+    AudioManager::errorCheck(audioSystem->set3DSettings(1, 10, 0.5));
+    
+
 }
 
 // Loads a sound into the sound map
