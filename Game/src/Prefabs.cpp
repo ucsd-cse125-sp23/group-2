@@ -401,15 +401,14 @@ std::list<Entity> createTowerReticleBasic() {
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
-    GameData::colliders[e].AABB =  glm::vec3(1.2, 1, 1.2);
+    GameData::colliders[e].AABB = glm::vec3(2, 1, 2);
     GameData::positions[e].y = GameData::colliders[e].AABB.y;
 
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Hostility +
-        ComponentTags::Collidable +
-        ComponentTags::DiesOnCollision;
+        ComponentTags::Collidable;
     GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::UIObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::UIObj + CollisionLayer::Players + CollisionLayer::Boss;
@@ -428,14 +427,13 @@ std::list<Entity> createTowerReticleRailgun() {
     
     GameData::models[e].modelID = MODEL_ID_RAILGUN;
     
-    GameData::colliders[e].AABB = glm::vec3(2, 2, 2);
+    GameData::colliders[e].AABB = glm::vec3(2.5, 2.6, 2.5);
     GameData::positions[e].y = GameData::colliders[e].AABB.y;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Hostility +
-        ComponentTags::Collidable +
-        ComponentTags::DiesOnCollision;
+        ComponentTags::Collidable;
     GameData::models[e].renderCollider = true;
     
     return createdEntities;
@@ -449,15 +447,14 @@ std::list<Entity> createTowerReticleTesla() {
         return createdEntities;
     }
     GameData::models[e].modelID = MODEL_ID_TESLA;
-    GameData::colliders[e].AABB = glm::vec3(1.8, 6.5, 1.8);
+    GameData::colliders[e].AABB = glm::vec3(1.2, 3.8, 1.2);
     GameData::positions[e].y = GameData::colliders[e].AABB.y;
 
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
         ComponentTags::Hostility +
-        ComponentTags::Collidable +
-        ComponentTags::DiesOnCollision;
+        ComponentTags::Collidable;
     GameData::models[e].renderCollider = true;
 
     return createdEntities;
@@ -485,7 +482,6 @@ std::list<Entity> createTowerReticleBarrier()
         ComponentTags::Model +
         ComponentTags::Hostility +
         ComponentTags::Collidable +
-        ComponentTags::DiesOnCollision +
         ComponentTags::BarrierReticle;
     GameData::models[e].renderCollider = true;
     GameData::colliders[e].colteam = CollisionLayer::UIObj;
@@ -512,7 +508,7 @@ std::list<Entity> createTowerBasic() {
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
-    GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
+    GameData::colliders[e].AABB = glm::vec3(2, 1, 2);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
     GameData::upgradedata[e].cost = { 20, 20, 0 };
@@ -604,7 +600,7 @@ std::list<Entity> createTowerRailgun() {
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
-    GameData::colliders[e].AABB = glm::vec3(2, 2, 2);
+    GameData::colliders[e].AABB = glm::vec3(2.5, 2.6, 2.5);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
     GameData::upgradedata[e].cost = { 20, 20, 0 };
@@ -692,7 +688,7 @@ std::list<Entity> createTowerTesla() {
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians + Teams::Environment;
-    GameData::colliders[e].AABB = glm::vec3(1.8, 6.5, 1.8);
+    GameData::colliders[e].AABB = glm::vec3(1.2, 3.8, 1.2);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
     GameData::AOEattackmodules[e].cooldown = 0;
@@ -1456,6 +1452,7 @@ std::list<Entity> createPathColliders()
 {
     std::list<Entity> createdEntities;
     for (int p = 0; p < Paths::pathCount; ++p) {
+        glm::vec3 pathvecprev = glm::vec3(0, 0, 0);
         for (int i = 0; (i < PATH_LENGTH - 1); i++) {
             if (Paths::path[p][i] == Paths::path[p][i + 1]) {
                 break;
@@ -1463,7 +1460,59 @@ std::list<Entity> createPathColliders()
             float currdiff = glm::distance(Paths::path[p][i + 1], Paths::path[p][i]);
             float progress = 0;
             glm::vec3 pathvec = glm::normalize(Paths::path[p][i + 1] - Paths::path[p][i]);
-            printf("Curdiif is init %f\n", currdiff);
+            //printf("Curdiif is init %f\n", currdiff);
+
+            //Do first one, which could be a corner
+            Entity e = createEntity();
+            createdEntities.push_back(e);
+            if (e == INVALID_ENTITY) {
+                return createdEntities;
+            }
+
+            //printf("Curdiif is now %f creating entity %d\n", currdiff, e);
+
+
+            GameData::activity[e] = true;
+
+            GameData::positions[e] = Paths::path[p][i] + progress * pathvec;
+            GameData::positions[e].y = GROUND_HEIGHT + 0.01;
+
+            GameData::colliders[e].AABB = glm::vec3(PATH_WIDTH / 2, 0.01, PATH_WIDTH / 2);
+
+            GameData::models[e].modelID = MODEL_ID_PATH_STRAIGHT;
+            GameData::models[e].asciiRep = 'P';
+            GameData::models[e].renderCollider = true;
+            GameData::models[e].modelOrientation = glm::degrees(glm::acos(pathvec.x));
+            GameData::colliders[e].colteam = CollisionLayer::UIObj;
+            GameData::colliders[e].colwith = 0;
+
+            GameData::tags[e] =
+                ComponentTags::Position +
+                ComponentTags::Model +
+                ComponentTags::Collidable;
+
+            if (glm::dot(pathvecprev, pathvec) != 0) {
+                //printf("New path is in sam direction as old\n");
+            }
+            else if ((pathvecprev + pathvec) == glm::vec3(1, 0, 1)) {
+                GameData::models[e].modelID = MODEL_ID_PATH_CORNER;
+                GameData::models[e].modelOrientation = 90;
+            }
+            else if ((pathvecprev + pathvec) == glm::vec3(-1, 0, 1)) {
+                GameData::models[e].modelID = MODEL_ID_PATH_CORNER;
+                GameData::models[e].modelOrientation = 180;
+            }
+            else if ((pathvecprev + pathvec) == glm::vec3(-1, 0, -1)) {
+                GameData::models[e].modelID = MODEL_ID_PATH_CORNER;
+                GameData::models[e].modelOrientation = 270;
+            }
+            else if ((pathvecprev + pathvec) == glm::vec3(1, 0, -1)) {
+                GameData::models[e].modelID = MODEL_ID_PATH_CORNER;
+                GameData::models[e].modelOrientation = 0;
+            }
+
+            progress += PATH_WIDTH;
+
             while (currdiff > progress) {
 
                 Entity e = createEntity();
@@ -1472,17 +1521,17 @@ std::list<Entity> createPathColliders()
                     return createdEntities;
                 }
 
-                progress += PATH_WIDTH;
-                printf("Curdiif is now %f creating entity %d\n", currdiff, e);
+                //printf("Curdiif is now %f creating entity %d\n", currdiff, e);
 
 
                 GameData::activity[e] = true;
 
                 GameData::positions[e] = Paths::path[p][i] + progress*pathvec;
+                GameData::positions[e].y = GROUND_HEIGHT + 0.01;
                 
-                GameData::colliders[e].AABB = glm::vec3(PATH_WIDTH/2, 1, PATH_WIDTH/2);
+                GameData::colliders[e].AABB = glm::vec3(PATH_WIDTH / 2, 0.01 , PATH_WIDTH / 2);
 
-                GameData::models[e].modelID = MODEL_ID_NO_MODEL;
+                GameData::models[e].modelID = MODEL_ID_PATH_STRAIGHT;
                 GameData::models[e].asciiRep = 'P';
                 GameData::models[e].renderCollider = true;
                 GameData::models[e].modelOrientation = glm::degrees(glm::acos(pathvec.x));
@@ -1493,7 +1542,12 @@ std::list<Entity> createPathColliders()
                     ComponentTags::Position +
                     ComponentTags::Model +
                     ComponentTags::Collidable;
+
+                progress += PATH_WIDTH;
+
+
             }
+            pathvecprev = pathvec*-1.0f;
         }
     }
 

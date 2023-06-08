@@ -82,7 +82,7 @@ struct HomingData //Data for tracking another entity
 
 struct Model //3D Model to render for the entity
 {
-    int modelID;
+    MODEL_ID modelID;
     char asciiRep;
     glm::vec3 dirNorm;
     bool renderCollider;
@@ -117,6 +117,7 @@ struct Collider //Information for collisions
     TeamID colwith;
     int xpos;
     int zpos;
+    bool collided; //If has collided with anything this tick
 };
 
 struct RigidBodyInfo //Information for physical objects;
@@ -177,6 +178,7 @@ struct ReticlePlacement {
     bool validTarget;
     glm::vec3 targetPos;
     float targetOrientation;
+    bool renderRet;
 };
 
 struct CombatLog {

@@ -1,6 +1,6 @@
 # Blender v2.82 (sub 7) OBJ File: 'TOWER.blend'
 # www.blender.org
-mtllib Tower.mtl
+mtllib Tower_invalid.mtl
 o Barrel_Cylinder.001
 v 0.818360 0.473868 -0.356755
 v 1.182475 0.538239 -0.428072

@@ -16,10 +16,14 @@ void GameWorld::init() {
 	models[MODEL_ID_MOB_FLYING] = new ObjectModel("../assets/ufo/ufo_v2.obj");
 	models[MODEL_ID_MOB_TRACTOR] = new ObjectModel("../assets/ufo/ufo_v2.obj");
 
-	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/tower.obj");
+	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/Tower.obj");
 	models[MODEL_ID_TESLA] = new ObjectModel("../assets/tesla/tower_tesla.obj");
 	models[MODEL_ID_RAILGUN] = new ObjectModel("../assets/railgun/tower_railgun.obj");
 	models[MODEL_ID_BARRIER] = new ObjectModel("../assets/barricade/barricade_wood.obj");
+	models[MODEL_ID_TOWER_INVALID] = new ObjectModel("../assets/tower/Tower_invalid.obj");
+	models[MODEL_ID_TESLA_INVALID] = new ObjectModel("../assets/tesla/tower_tesla_invalid.obj");
+	models[MODEL_ID_RAILGUN_INVALID] = new ObjectModel("../assets/railgun/tower_railgun_invalid.obj");
+	models[MODEL_ID_BARRIER_INVALID] = new ObjectModel("../assets/barricade/barricade_wood.obj");
 
 	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/tree/tree.obj");
 	models[MODEL_ID_RESOURCE_STONE] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
@@ -34,6 +38,8 @@ void GameWorld::init() {
 	models[MODEL_ID_BEAR_LLEG] = new ObjectModel("../assets/bear/lleg.obj");
 	models[MODEL_ID_BEAR_RLEG] = new ObjectModel("../assets/bear/rleg.obj");
 	models[MODEL_ID_BEAR_BODY] = new ObjectModel("../assets/bear/body.obj");
+	models[MODEL_ID_PATH_STRAIGHT] = new ObjectModel("../assets/paths/path_straight.obj");
+	models[MODEL_ID_PATH_CORNER] = new ObjectModel("../assets/paths/path_corner.obj");
 
 	models[MODEL_ID_POWERUP_RAPID] = new ObjectModel("../assets/powerups/rapid_fire.obj"); //TODO: add proper models
 	models[MODEL_ID_POWERUP_SPREAD] = new ObjectModel("../assets/powerups/spreadshot.obj");
@@ -55,6 +61,11 @@ void GameWorld::init() {
 	shaders[MODEL_ID_TESLA] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_BARRIER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
+	shaders[MODEL_ID_TOWER_INVALID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_RAILGUN_INVALID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_TESLA_INVALID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_BARRIER_INVALID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+
 	shaders[MODEL_ID_RESOURCE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_RESOURCE_STONE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
@@ -68,6 +79,8 @@ void GameWorld::init() {
 	shaders[MODEL_ID_BEAR_LLEG] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_BEAR_RLEG] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_BEAR_BODY] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PATH_STRAIGHT] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PATH_CORNER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	//shaders[MODEL_ID_SUNGOD] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
 
 	shaders[MODEL_ID_POWERUP_SPREAD] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");

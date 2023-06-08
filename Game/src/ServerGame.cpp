@@ -472,7 +472,7 @@ void ServerGame::handleInputs()
 
         if (GameData::states[i] == PlayerState::Build) {
             //printf("Calling Player build\n");
-            playerBuild(i, camDirection, camPosition, TOWER_PLACEMENT_RANGE);
+            playerBuild(i, camDirection, camPosition);
         }
         else if (GameData::states[i] == PlayerState::Upgrading) {
             if (choose != INVALID_ENTITY) {
@@ -619,11 +619,14 @@ void ServerGame::changeState(Entity e, State post)
     GameData::tags[e] |= post;
 }
 
-void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, float range)
+void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos)
 {
+    GameData::retplaces[i].renderRet = true;
+    GameData::retplaces[i].validTarget = true;
     if (camdir.y >= 0) {
         //printf("You're looking up\n");
         GameData::retplaces[i].validTarget = false;
+        GameData::retplaces[i].renderRet = false;
         return;
     }
     glm::vec3 dirYNorm = camdir / (camdir.y*-1);
@@ -631,25 +634,23 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, flo
     float angle = 0;
     if(GameData::retplaces[i].reticlePrefab == Prefabs::TowerReticleBarrier){
         Entity p = ECS::findClosestPathCollider(targetpos);
-        if (p == INVALID_ENTITY) {
-            GameData::retplaces[i].validTarget = false;
-            return;
+        if (p != INVALID_ENTITY && (glm::distance(targetpos, GameData::positions[p]) <= SNAP_RANGE)) {
+            targetpos = GameData::positions[p];
         }
-        if (glm::distance(targetpos, GameData::positions[p]) > SNAP_RANGE) {
+        else {
             GameData::retplaces[i].validTarget = false;
-            return;
         }
-        targetpos = GameData::positions[p];
-        angle = GameData::models[p].modelOrientation;
     }
-    if (glm::distance(targetpos, GameData::positions[i]) > range) {
+
+    if (glm::distance(targetpos, GameData::positions[i]) > TOWER_PLACEMENT_RANGE) {
         //printf("Out of range\n");
 
         GameData::retplaces[i].validTarget = false;
+        GameData::retplaces[i].renderRet = false;
         return;
     }
+
     GameData::retplaces[i].targetPos = targetpos;
-    GameData::retplaces[i].validTarget = true;
     GameData::retplaces[i].targetOrientation = angle;
     //printf("Valid Target\n");
 }

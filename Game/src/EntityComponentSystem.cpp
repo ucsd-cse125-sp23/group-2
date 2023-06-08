@@ -473,7 +473,7 @@ void EntityComponentSystem::sysDetectCollisions()
         //check if this entity can can collide
         if ((GameData::tags[e] & collides) == collides)
         {
-
+            GameData::colliders[e].collided = false; //Initiall set collided to false
             int xpos = GameData::colliders[e].xpos;
             int zpos = GameData::colliders[e].zpos;
             neighbors.clear();
@@ -492,15 +492,23 @@ void EntityComponentSystem::sysDetectCollisions()
             //Check collisions with everything else
             for (Entity o : neighbors)
             {
-                colCheck(e, o);
+                if (colCheck(e, o)) {
+                    GameData::colliders[e].collided |= true;
+                }
+                
                 
             }
 
             //Check base and path collision seperatley
             for (Entity p : Paths::pathlist) {
-                colCheck(e, p);
+                if (colCheck(e, p)) {
+                    GameData::colliders[e].collided |= true;
+                }
             }
-            colCheck(e, MAX_ENTITIES_NOBASE);
+
+            if (colCheck(e, MAX_ENTITIES_NOBASE)) {
+                GameData::colliders[e].collided |= true;
+            }
             colCheck(MAX_ENTITIES_NOBASE, e);
         }
 
@@ -658,6 +666,8 @@ void EntityComponentSystem::sysDeathStatus()
     }
 }
 
+
+
 void EntityComponentSystem::sysAttacks()
 {
 
@@ -778,6 +788,8 @@ void EntityComponentSystem::sysPowerup()
     }
 }
 
+const MODEL_ID playerInvalidReticleArray[NUM_TOWER_PREFAB] = { MODEL_ID_TOWER_INVALID, MODEL_ID_RAILGUN_INVALID, MODEL_ID_TESLA_INVALID, MODEL_ID_BARRIER };
+const MODEL_ID playerValidReticleArray[NUM_TOWER_PREFAB] = { MODEL_ID_TOWER, MODEL_ID_RAILGUN, MODEL_ID_TESLA, MODEL_ID_BARRIER };
 void EntityComponentSystem::sysBuild()
 {
     for (Entity e = 0; e < MAX_ENTITIES; e++)
@@ -789,25 +801,32 @@ void EntityComponentSystem::sysBuild()
         if ((GameData::tags[e] & ComponentTags::Builder) == ComponentTags::Builder)
         {
 
-            if (!GameData::retplaces[e].validTarget) {
-
+            //If not render, kill reticle and continue
+            if (!GameData::retplaces[e].renderRet) {
                 if (GameData::retplaces[e].reticle != INVALID_ENTITY) {
                     //printf("Deleting reticle entity %d\n", GameData::retplaces[e].reticle);
                     causeDeath(GameData::retplaces[e].reticle, GameData::retplaces[e].reticle);
-                    GameData::retplaces[e].reticle = INVALID_ENTITY;
+                    GameData::retplaces[e].reticle == INVALID_ENTITY;
                 }
-
-
                 continue;
             }
+
+
+            if (GameData::retplaces[e].reticle != INVALID_ENTITY) {
+                if (GameData::colliders[GameData::retplaces[e].reticle].collided) {
+                    GameData::retplaces[e].validTarget = false;
+                }
+            }
+
             glm::vec3 targetVec = GameData::retplaces[e].targetPos - GameData::positions[e];
             glm::vec3 normXZ = glm::normalize(glm::vec3(targetVec.x, 0, targetVec.z));
             float angleXZ = glm::acos(-normXZ.z);
             glm::vec3 normTarget = glm::normalize(targetVec);
             glm::mat4 transform = glm::translate(GameData::retplaces[e].targetPos) * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
 
+
             if (GameData::retplaces[e].place) {
-                if ( (GameData::retplaces[e].reticle !=INVALID_ENTITY) && (GameData::activity[GameData::retplaces[e].reticle]) && ((GameData::tags[GameData::retplaces[e].reticle] & ComponentTags::Dead) != ComponentTags::Dead)) {
+                if ( (GameData::retplaces[e].reticle !=INVALID_ENTITY) && (GameData::activity[GameData::retplaces[e].reticle]) && ((GameData::tags[GameData::retplaces[e].reticle] & ComponentTags::Dead) != ComponentTags::Dead) && GameData::retplaces[e].validTarget) {
                     //Check build costs
                     bool hasenough = true;
                     for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
@@ -856,6 +875,7 @@ void EntityComponentSystem::sysBuild()
             }
 
 
+
             Entity r;
             if ((GameData::retplaces[e].reticle == INVALID_ENTITY) || (!GameData::activity[GameData::retplaces[e].reticle]) || ((GameData::tags[GameData::retplaces[e].reticle] & ComponentTags::Dead) == ComponentTags::Dead)) {
 
@@ -896,6 +916,19 @@ void EntityComponentSystem::sysBuild()
 
                 Collision::updateColTable(r);
             }
+
+
+
+            if (!GameData::retplaces[e].validTarget) {
+                if (GameData::retplaces[e].reticle != INVALID_ENTITY) {
+                    //printf("Deleting reticle entity %d\n", GameData::retplaces[e].reticle);
+                    GameData::models[GameData::retplaces[e].reticle].modelID = playerInvalidReticleArray[GameData::retplaces[e].buildingPrefab];
+                }
+            }
+            else {
+                GameData::models[GameData::retplaces[e].reticle].modelID = playerValidReticleArray[GameData::retplaces[e].buildingPrefab];
+            }
+            
         }
     }
 }
