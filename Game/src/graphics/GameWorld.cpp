@@ -42,7 +42,7 @@ void GameWorld::init() {
 	models[MODEL_ID_PROJECTILE_RAPID] = new ObjectModel("../assets/projectiles/projectile_rapidfire.obj");
 
 
-	models[MODEL_ID_BASE] = new ObjectModel("../assets/bear/bear.obj");
+	models[MODEL_ID_BASE] = new ObjectModel("../assets/base/base.obj");
 	models[MODEL_ID_BEAR] = new ObjectModel("../assets/bear/bear.obj");
 	models[MODEL_ID_BEAR_HEAD] = new ObjectModel("../assets/bear/head.obj");
 	models[MODEL_ID_BEAR_LARM] = new ObjectModel("../assets/bear/larm.obj");
