@@ -1489,11 +1489,11 @@ namespace PlayerSpawns {
 namespace Paths {
     const glm::vec3 path[pathCount][PATH_LENGTH] =
     {
-        { glm::vec3(-70,0,-85),glm::vec3(-70,0,-45), glm::vec3(-50,0,-45),glm::vec3(-50,0,-5),glm::vec3(-70,0,-5), glm::vec3(-70,0,35), glm::vec3(-50,0,35), glm::vec3(-50,0,85), glm::vec3(-50,0,85)},
+        { glm::vec3(-60,0,-85),glm::vec3(-60,0,-45), glm::vec3(-80,0,-45),glm::vec3(-80,0,-5),glm::vec3(-60,0,-5), glm::vec3(-60,0,35), glm::vec3(-60,0,85), glm::vec3(-20,0,85), glm::vec3(-20,0,85)},
         { glm::vec3(-40,0,-85), glm::vec3(-40,0,-45), glm::vec3(-20,0,-45),glm::vec3(-20,0,-5), glm::vec3(-40,0,-5),glm::vec3(-40,0,35), glm::vec3(-20,0,35), glm::vec3(-20,0,85), glm::vec3(-20,0,85) },
         { glm::vec3(0,0,-85), glm::vec3(0,0,85), glm::vec3(0,0,85), baseLoc, baseLoc, baseLoc, baseLoc, baseLoc  },
         { glm::vec3(40,0,-85), glm::vec3(40,0,-45), glm::vec3(20,0,-45),glm::vec3(20,0,-5), glm::vec3(40,0,-5),glm::vec3(40,0,35), glm::vec3(20,0,35), glm::vec3(20,0,85), glm::vec3(20,0,85) },
-        { glm::vec3(70,0,-85),glm::vec3(70,0,-45), glm::vec3(50,0,-45),glm::vec3(50,0,-5),glm::vec3(70,0,-5), glm::vec3(70,0,35), glm::vec3(50,0,35), glm::vec3(50,0,85), glm::vec3(50,0,85)},
+        { glm::vec3(60,0,-85),glm::vec3(60,0,-45), glm::vec3(50,0,-45),glm::vec3(50,0,-5),glm::vec3(70,0,-5), glm::vec3(70,0,35), glm::vec3(50,0,35), glm::vec3(50,0,85), glm::vec3(50,0,85)},
     };
     std::list<Entity> pathlist;
 }
