@@ -106,7 +106,7 @@ const float STOMP_RANGE = 5;
 const float SAFE_AREA = 80;
 
 //Powerup spawn chance
-const float POWERUP_CHANCE = .05;
+const float POWERUP_CHANCE = 1;
 
 //Powerup duration
 const float POWERUP_DURATION_SEC = 10;

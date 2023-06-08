@@ -1361,7 +1361,6 @@ std::list<Entity> createPowerupSpread()
     GameData::colliders[e].colwith = CollisionLayer::Players;
     GameData::rigidbodies[e].fixed = false;
     GameData::models[e].renderCollider = true;
-    GameData::models[e].scale = 5;
     GameData::powerupdata[e].newAttack = Prefabs::ProjectileSpread5;
 
     GameData::tags[e] =
@@ -1393,7 +1392,6 @@ std::list<Entity> createPowerupRapid()
     GameData::colliders[e].colwith = CollisionLayer::Players;
     GameData::rigidbodies[e].fixed = false;
     GameData::models[e].renderCollider = true;
-    GameData::models[e].scale = 250;
     GameData::powerupdata[e].newAttack = Prefabs::ProjectileSpray;
 
     GameData::tags[e] =
