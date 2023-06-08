@@ -18,6 +18,7 @@
 using Entity = uint32_t;
 
 std::list<Entity> createProjectileBasic();
+std::list<Entity> createProjectileMartian();
 std::list<Entity> createProjectileSpread5();
 std::list<Entity> createProjectileChaos();
 std::list<Entity> createProjectileRandom();
@@ -42,27 +43,20 @@ std::list<Entity> createTowerBasic1();
 std::list<Entity> createTowerBasic2();
 std::list<Entity> createTowerBasic3();
 
-
-
 std::list<Entity> createTowerRailgun();
 std::list<Entity> createTowerRailgun1();
 std::list<Entity> createTowerRailgun2();
 std::list<Entity> createTowerRailgun3();
-
 
 std::list<Entity> createTowerTesla();
 std::list<Entity> createTowerTesla1();
 std::list<Entity> createTowerTesla2();
 std::list<Entity> createTowerTesla3();
 
-
-
 std::list<Entity> createTowerBarrier();
 std::list<Entity> createTowerBarrier1();
 std::list<Entity> createTowerBarrier2();
 std::list<Entity> createTowerBarrier3();
-
-
 
 std::list<Entity> createEnemyGroundTank();
 std::list<Entity> createEnemyFlyingBasic();
@@ -106,6 +100,7 @@ namespace Prefabs {
 
 		TOWER_MARKER,//Put Towers Above this marker
 		ProjectileBasic = TOWER_MARKER,
+		ProjectileMartian,
 		ProjectileSpread5,
 		ProjectileChaos,
 		ProjectileRandom,
@@ -113,7 +108,6 @@ namespace Prefabs {
 		ProjectilePierce1,
 		ProjectilePierce2,
 		ProjectilePierce3,
-
 		ProjectileSpray,
 
 
@@ -168,8 +162,9 @@ const PrefabFunction prefabMap[NUM_PREFAB] = {
 	&createTowerBasic3,
 	&createTowerRailgun3,
 	&createTowerTesla3,
-	& createTowerBarrier3,
+	&createTowerBarrier3,
 	&createProjectileBasic,
+	&createProjectileMartian,
 	&createProjectileSpread5,
 	&createProjectileChaos,
 	&createProjectileRandom,
