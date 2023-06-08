@@ -573,8 +573,9 @@ std::list<Entity> createTowerBasic1() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
+    GameData::colliders[e].AABB = glm::vec3(2.2, 1.1, 2.2);
 
-    GameData::models[e].modelID = MODEL_ID_TOWER;
+    GameData::models[e].modelID = MODEL_ID_TOWER_L2;
     GameData::upgradedata[e].cost = { 20, 20, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerBasic2;
     GameData::hattackmodules[e].damage *= 1.20;
@@ -590,8 +591,9 @@ std::list<Entity> createTowerBasic2() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
+    GameData::colliders[e].AABB = glm::vec3(2.4, 1.2, 2.4);
 
-    GameData::models[e].modelID = MODEL_ID_TOWER;
+    GameData::models[e].modelID = MODEL_ID_TOWER_L3;
     GameData::upgradedata[e].cost = { 100, 100, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerBasic3;
     GameData::hattackmodules[e].damage *= 2.00;
@@ -607,8 +609,9 @@ std::list<Entity> createTowerBasic3() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
+    GameData::colliders[e].AABB = glm::vec3(2.6, 1.3, 2.6);
 
-    GameData::models[e].modelID = MODEL_ID_TOWER;
+    GameData::models[e].modelID = MODEL_ID_TOWER_L4;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
@@ -666,7 +669,9 @@ std::list<Entity> createTowerRailgun1() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_RAILGUN;
+    GameData::models[e].modelID = MODEL_ID_RAILGUN_L2;
+    GameData::colliders[e].AABB = glm::vec3(2.7, 2.9, 2.7);
+
     GameData::upgradedata[e].cost = { 20, 20, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerRailgun2;
     GameData::pattackmodules[e].attack = Prefabs::ProjectilePierce1;
@@ -682,8 +687,9 @@ std::list<Entity> createTowerRailgun2() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
+    GameData::colliders[e].AABB = glm::vec3(2.9, 3.2, 2.9);
 
-    GameData::models[e].modelID = MODEL_ID_RAILGUN;
+    GameData::models[e].modelID = MODEL_ID_RAILGUN_L3;
     GameData::upgradedata[e].cost = { 100, 100, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerRailgun3;
     GameData::pattackmodules[e].attack = Prefabs::ProjectilePierce2;
@@ -699,8 +705,9 @@ std::list<Entity> createTowerRailgun3() {
     if (e == INVALID_ENTITY) {
         return createdEntities;
     }
+    GameData::colliders[e].AABB = glm::vec3(3.1, 3.5, 3.1);
 
-    GameData::models[e].modelID = MODEL_ID_RAILGUN;
+    GameData::models[e].modelID = MODEL_ID_RAILGUN_L4;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
@@ -725,7 +732,7 @@ std::list<Entity> createTowerTesla() {
     GameData::models[e].modelID = MODEL_ID_TESLA;
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
-    GameData::hostilities[e].hostileTo = Teams::Martians + Teams::Environment;
+    GameData::hostilities[e].hostileTo = Teams::Martians;
     GameData::colliders[e].AABB = glm::vec3(1.2, 3.8, 1.2);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
@@ -734,6 +741,8 @@ std::list<Entity> createTowerTesla() {
     GameData::AOEattackmodules[e].damage = TURRET_BASE_DMG;
     GameData::AOEattackmodules[e].range = TURRET_BASE_RANGE;
     GameData::AOEattackmodules[e].source = GameData::positions[e];
+    GameData::upgradedata[e].cost = { 20, 20, 0 };
+    GameData::upgradedata[e].upgrade = Prefabs::TowerTesla1;
 
     GameData::tags[e] =
         ComponentTags::Position +
@@ -758,7 +767,8 @@ std::list<Entity> createTowerTesla1() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_TESLA;
+    GameData::models[e].modelID = MODEL_ID_TESLA_L2;
+    GameData::colliders[e].AABB = glm::vec3(1.4, 4.1, 1.4);
     GameData::upgradedata[e].cost = { 20, 20, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerTesla2;
     GameData::AOEattackmodules[e].range *= 1.2;
@@ -775,10 +785,12 @@ std::list<Entity> createTowerTesla2() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_TESLA;
+    GameData::models[e].modelID = MODEL_ID_TESLA_L3;
     GameData::upgradedata[e].cost = { 100, 100, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerTesla3;
     GameData::AOEattackmodules[e].range *= 2; 
+    GameData::colliders[e].AABB = glm::vec3(1.6, 4.4, 1.6);
+
 
 
     return createdEntities;
@@ -792,7 +804,9 @@ std::list<Entity> createTowerTesla3() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_TESLA;
+    GameData::models[e].modelID = MODEL_ID_TESLA_L4;
+    GameData::colliders[e].AABB = glm::vec3(1.8, 4.7, 1.8);
+
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +

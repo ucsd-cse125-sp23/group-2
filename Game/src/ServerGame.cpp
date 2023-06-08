@@ -653,6 +653,7 @@ void ServerGame::playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos)
         Entity p = ECS::findClosestPathCollider(targetpos);
         if (p != INVALID_ENTITY && (glm::distance(targetpos, GameData::positions[p]) <= SNAP_RANGE)) {
             targetpos = GameData::positions[p];
+            angle = GameData::models[p].modelOrientation;
         }
         else {
             GameData::retplaces[i].validTarget = false;
