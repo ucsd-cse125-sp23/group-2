@@ -14,6 +14,8 @@ private:
 	FMOD::Sound* music;
 	FMOD::Channel* musicChannel;
 	FMOD::Channel* channelArray[MAX_ENTITIES]{};
+	float sfxvol;
+	float musicvol;
 public:
 	AudioManager();
 	void loadSound(const char* path, int model, int soundType);
@@ -24,4 +26,5 @@ public:
 	void loadMusic(const char* path);
 	void playMusic();
 	void setMusicVolume(float vol);
+	void setSFXVolume(float vol);
 };
