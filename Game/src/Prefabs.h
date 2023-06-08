@@ -226,4 +226,4 @@ namespace WaveData {
 extern const std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_TYPES> buildcosts;
 
 //Define Base Location
-const glm::vec3 baseLoc = glm::vec3(0, 0, 90);
+const glm::vec3 baseLoc = glm::vec3(0, 0, 100);
