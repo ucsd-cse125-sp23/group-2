@@ -401,7 +401,7 @@ std::list<Entity> createTowerReticleBasic() {
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
-    GameData::colliders[e].AABB =  glm::vec3(1.2, 1, 1.2);
+    GameData::colliders[e].AABB = glm::vec3(2, 1, 2);
     GameData::positions[e].y = GameData::colliders[e].AABB.y;
 
     GameData::tags[e] =
@@ -427,7 +427,7 @@ std::list<Entity> createTowerReticleRailgun() {
     
     GameData::models[e].modelID = MODEL_ID_RAILGUN;
     
-    GameData::colliders[e].AABB = glm::vec3(2, 2, 2);
+    GameData::colliders[e].AABB = glm::vec3(2.5, 2.6, 2.5);
     GameData::positions[e].y = GameData::colliders[e].AABB.y;
     GameData::tags[e] =
         ComponentTags::Position +
@@ -447,7 +447,7 @@ std::list<Entity> createTowerReticleTesla() {
         return createdEntities;
     }
     GameData::models[e].modelID = MODEL_ID_TESLA;
-    GameData::colliders[e].AABB = glm::vec3(1.8, 6.5, 1.8);
+    GameData::colliders[e].AABB = glm::vec3(1.2, 3.8, 1.2);
     GameData::positions[e].y = GameData::colliders[e].AABB.y;
 
     GameData::tags[e] =
@@ -508,7 +508,7 @@ std::list<Entity> createTowerBasic() {
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
-    GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
+    GameData::colliders[e].AABB = glm::vec3(2, 1, 2);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
     GameData::upgradedata[e].cost = { 20, 20, 0 };
@@ -600,7 +600,7 @@ std::list<Entity> createTowerRailgun() {
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
-    GameData::colliders[e].AABB = glm::vec3(2, 2, 2);
+    GameData::colliders[e].AABB = glm::vec3(2.5, 2.6, 2.5);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
     GameData::upgradedata[e].cost = { 20, 20, 0 };
@@ -688,7 +688,7 @@ std::list<Entity> createTowerTesla() {
     GameData::models[e].asciiRep = 'T';
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians + Teams::Environment;
-    GameData::colliders[e].AABB = glm::vec3(1.8, 6.5, 1.8);
+    GameData::colliders[e].AABB = glm::vec3(1.2, 3.8, 1.2);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
     GameData::AOEattackmodules[e].cooldown = 0;
