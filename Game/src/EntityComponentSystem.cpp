@@ -469,7 +469,7 @@ void EntityComponentSystem::sysDetectCollisions()
         //check if this entity can can collide
         if ((GameData::tags[e] & collides) == collides)
         {
-
+            GameData::colliders[e].collided = false; //Initiall set collided to false
             int xpos = GameData::colliders[e].xpos;
             int zpos = GameData::colliders[e].zpos;
             neighbors.clear();
@@ -488,15 +488,23 @@ void EntityComponentSystem::sysDetectCollisions()
             //Check collisions with everything else
             for (Entity o : neighbors)
             {
-                colCheck(e, o);
+                if (colCheck(e, o)) {
+                    GameData::colliders[e].collided |= true;
+                }
+                
                 
             }
 
             //Check base and path collision seperatley
             for (Entity p : Paths::pathlist) {
-                colCheck(e, p);
+                if (colCheck(e, p)) {
+                    GameData::colliders[e].collided |= true;
+                }
             }
-            colCheck(e, MAX_ENTITIES_NOBASE);
+
+            if (colCheck(e, MAX_ENTITIES_NOBASE)) {
+                GameData::colliders[e].collided |= true;
+            }
             colCheck(MAX_ENTITIES_NOBASE, e);
         }
 

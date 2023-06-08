@@ -114,6 +114,7 @@ struct Collider //Information for collisions
     TeamID colwith;
     int xpos;
     int zpos;
+    bool collided; //If has collided with anything this tick
 };
 
 struct RigidBodyInfo //Information for physical objects;
