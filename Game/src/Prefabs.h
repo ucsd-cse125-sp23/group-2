@@ -206,7 +206,7 @@ namespace Paths {
 struct enemy {
 	int id;
 	int path;
-	int cooldown;
+	float cooldown;
 };
 
 namespace WaveData {

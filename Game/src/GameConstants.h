@@ -58,10 +58,10 @@ constexpr size_t NUM_UP_LEVELS = 3;
 const int ACTION_COOLDOWN = TICK_RATE;
 
 //ground enemy base movespeed in units/sec
-const float ENEMY_GND_MVSPD_PERSEC = 5;
+const float ENEMY_GND_MVSPD_PERSEC = 7;
 
 //How many seconds until first wave spawns
-const float ENEMY_SPAWNDELAY_SEC = 0;
+const float ENEMY_SPAWNDELAY_SEC = 60;
 
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;
