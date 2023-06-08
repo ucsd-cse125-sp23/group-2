@@ -319,7 +319,9 @@ void ServerGame::initResources()
         GameData::models[e].modelOrientation = rand() % 360;
         GameData::models[e].scale = scaleFactor;
     }
-
+    //Clear the sound and combat logs to remove data from the resource spawning
+    GameData::clogpos = 0;
+    GameData::slogpos = 0;
 
 }
 

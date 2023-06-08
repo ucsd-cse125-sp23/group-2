@@ -913,6 +913,7 @@ Entity EntityComponentSystem::createEntity(int begin, int end)
             GameData::hostilities[i].hostileTo = 0;
             GameData::models[i].modelOrientation = 0;
             GameData::models[i].scale = 1;
+            GameData::healths[i].curHealth = GameData::healths[i].maxHealth = 0;
             return i;
         }
     }
