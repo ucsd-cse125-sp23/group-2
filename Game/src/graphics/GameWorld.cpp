@@ -188,7 +188,7 @@ void GameWorld::GUI_Init() {
 	health_Bar->SetName("health");
 	health_Bar->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	health_Bar->SetSize(glm::vec2(0.5f, 0.5f));
-	health_Bar->SetTexture("../assets/gui/Buttons/crosshair.jpg");
+	health_Bar->SetTexture("../assets/gui/Buttons/crosshair.png");
 	health_Bar->SetTransparency(1.0);
 	guis[7] = health_Bar;
 	health_Bar_Back = guis[7];
@@ -295,8 +295,8 @@ void GameWorld::GUI_Init() {
 	crosshair->SetName("black");
 	crosshair->SetPosition(glm::vec3(0.0f, 0.0f, -0.8f));
 	crosshair->SetSize(glm::vec2(0.05f, 0.08f));
-	crosshair->SetTexture("../assets/gui/Buttons/crosshair.jpg");
-	crosshair->SetTransparency(0.5);
+	crosshair->SetTexture("../assets/gui/Buttons/crosshair.png");
+	crosshair->SetTransparency(0.5f);
 	guis[18] = crosshair;
 
 	
