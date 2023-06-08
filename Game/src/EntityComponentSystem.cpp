@@ -945,6 +945,7 @@ Entity EntityComponentSystem::createEntity(int begin, int end)
     for (int i = begin; i < end; ++i) {
         if (!GameData::activity[i]) {
             GameData::activity[i] = true;
+            GameData::velocities[i].velocity = glm::vec3(0, 0, 0);
             GameData::states[i] = 0;
             GameData::tags[i] = 0;
             GameData::hostilities[i].team = 0;
