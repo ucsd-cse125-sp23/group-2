@@ -1366,6 +1366,7 @@ std::list<Entity> createPowerupSpread()
     GameData::tags[e] =
         ComponentTags::RigidBody +
         ComponentTags::Position +
+        ComponentTags::Velocity +
         ComponentTags::Model +
         ComponentTags::Collidable +
         ComponentTags::DiesOnCollision +
@@ -1397,6 +1398,7 @@ std::list<Entity> createPowerupRapid()
     GameData::tags[e] =
         ComponentTags::RigidBody +
         ComponentTags::Position +
+        ComponentTags::Velocity +
         ComponentTags::Model +
         ComponentTags::Collidable +
         ComponentTags::DiesOnCollision +
