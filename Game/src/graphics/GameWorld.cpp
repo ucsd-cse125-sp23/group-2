@@ -150,7 +150,6 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 	//effects
 	if (currWaveTimer != incomingData.waveTimer) {
 		for (int i = 0; i < incomingData.clogsize; i++) {
-			if (incomingData.combatLogs[i].killed)
 				newCLogs.push(incomingData.combatLogs[i]);
 		}
 
@@ -162,10 +161,19 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		currWaveTimer = incomingData.waveTimer;
 	}
 	while (!newCLogs.empty()) {
-		std::cout << "KILLED\n";
-		int target = newCLogs.top().target;
-		newCLogs.pop();
-		effect->resourceEffect(entities[target]->getPosition(), entities[target]->getModelID());
+		if (newCLogs.top().killed) {
+			std::cout << "KILLED\n";
+			int target = newCLogs.top().target;
+			newCLogs.pop();
+			effect->resourceEffect(entities[target]->getPosition(), entities[target]->getModelID());
+		}
+		else if (newCLogs.top().damage) {
+			int source = newCLogs.top().source;
+			newCLogs.pop();
+			if (entities[source]->getModelID() == MODEL_ID_TESLA) {
+				effect->teslaAttackEffect(entities[source]->getPosition());
+			}
+		}
 	}
 	while (!newSLogs.empty()) {
 		int source = newSLogs.top().source;
@@ -173,7 +181,7 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		newSLogs.pop();
 		if (sound == SOUND_ID_JUMP) {
 			std::cout << "JUMPED\n";
-			effect->playerJumpEffect(entities[source]->getPosition());
+			effect->teslaAttackEffect(entities[source]->getPosition());
 		}
 	}
 	effect->update(currTime);

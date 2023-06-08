@@ -61,7 +61,7 @@ const int ACTION_COOLDOWN = TICK_RATE;
 const float ENEMY_GND_MVSPD_PERSEC = 5;
 
 //How many seconds until first wave spawns
-const float ENEMY_SPAWNDELAY_SEC = 60;
+const float ENEMY_SPAWNDELAY_SEC = 5;
 
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;

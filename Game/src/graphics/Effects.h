@@ -54,7 +54,7 @@ private:
 	int maxParticles = 500;
 	std::stack<size_t> lastIndex;
 	std::vector<ObjectModel*> models;
-	Shader* shader;
+	std::vector<Shader*> shader;
 
 	//effect maps
 	std::map<int, bool> playerJumpActive;
@@ -65,5 +65,6 @@ public:
 	void spawnParticle(glm::vec3& location, ObjectModel* m, glm::vec3 color);
 	void draw(const glm::mat4& viewProjMtx, Camera* cam);
 	void playerJumpEffect(glm::vec3& location);
+	void teslaAttackEffect(glm::vec3& location);
 	void resourceEffect(glm::vec3& location, int model_id);
 };

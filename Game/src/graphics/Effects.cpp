@@ -52,6 +52,7 @@ void Particle::draw(const glm::mat4& viewProjMtx, Camera* cam) {
     shader->setMat4("viewProj", viewProjMtx);
     shader->setMat4("model", modelMtx);
     shader->setVec3("DiffuseColor", color);
+    shader->setFloat("time", timeAlive);
     shader->setVec3("viewPos", cam->getCameraPosition());
 
     model->Draw(*shader);
@@ -63,7 +64,8 @@ void Particle::draw(const glm::mat4& viewProjMtx, Camera* cam) {
 }
 EffectSystem::EffectSystem() {
     models.push_back(new ObjectModel("../assets/cube/cube.obj"));
-    shader = new Shader("../shaders/particleShader.vert", "../shaders/particleShader.frag");
+    shader.push_back(new Shader("../shaders/particleShader.vert", "../shaders/particleShader.frag"));
+    shader.push_back(new Shader("../shaders/teslaEffectShader.vert", "../shaders/particleShader.frag"));
     PositionX = 0.0f;
     PositionY = 5.0f;
     PositionZ = 0.0f;
@@ -130,6 +132,20 @@ void EffectSystem::draw(const glm::mat4& viewProjMtx, Camera* cam) {
         }
     }
 }
+void EffectSystem::teslaAttackEffect(glm::vec3& location) {
+    glm::vec3 v = glm::vec3(0, 0, 0);
+    glm::vec3 p = location;
+    Particle* newP = new Particle(0.01, v, p, ParticleRadius, 2, models[0], shader[1]);
+    newP->setColor(glm::vec3(0.0, 0.4, 0.7));
+    if (lastIndex.empty()) {
+        particles.push_back(newP);
+    }
+    else {
+        particles.at(lastIndex.top()) = newP;
+        lastIndex.pop();
+    }
+    particleCount++;
+}
 void EffectSystem::resourceEffect(glm::vec3& location, int model_id) {
     glm::vec3 loc = location;
     for (int i = 0; i < 10; i++) {
@@ -145,7 +161,7 @@ void EffectSystem::resourceEffect(glm::vec3& location, int model_id) {
 }
 void EffectSystem::playerJumpEffect(glm::vec3& location) {
     glm::vec3 loc = location;
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 20; i++) {
         spawnParticle(location, models[0], glm::vec3(0.6, 0.3, 0.2));
     }
 }
@@ -162,7 +178,7 @@ void EffectSystem::spawnParticle(glm::vec3 & location, ObjectModel * m, glm::vec
     std::mt19937 gen(rd());
     glm::vec3 v = glm::vec3(VelocityX + vdisx(gen), VelocityY + vdisy(gen), VelocityZ + vdisz(gen));
     glm::vec3 p = glm::vec3(location.x + pdisx(gen), std::max(0.001, location.y + pdisy(gen) - 0.5f), location.z + pdisz(gen));
-    Particle* newP = new Particle(0.01, v, p, ParticleRadius, std::max(0.0, LifeSpan + ldis(gen)), m, shader);
+    Particle* newP = new Particle(0.01, v, p, ParticleRadius, std::max(0.0, LifeSpan + ldis(gen)), m, shader[0]);
     newP->setColor(color);
     if (lastIndex.empty()) {
         particles.push_back(newP);
