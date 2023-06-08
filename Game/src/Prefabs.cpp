@@ -12,7 +12,7 @@ std::list<Entity> createProjectileBasic() {
     }
     GameData::positions[e] = glm::vec3(0, 0, -2);
     GameData::velocities[e].velocity = glm::vec3(0, 0, -1)*PROJ_MVSPD;
-    GameData::colliders[e].AABB =  glm::vec3(1, 1, 1);
+    GameData::colliders[e].AABB =  glm::vec3(.5, .5, .5);
     GameData::models[e].modelID = MODEL_ID_PROJECTILE_ROVER;
     GameData::models[e].asciiRep = 'J';
     GameData::coldmg[e].damage = 40.0f;
@@ -43,11 +43,12 @@ std::list<Entity> createProjectileSpread5() {
         if (e == INVALID_ENTITY) {
             return createdEntities;
         }
-        GameData::positions[e] = glm::vec3(2 - i, 0, -2);
+        GameData::positions[e] = glm::vec3(4 - 2 * i, 0, -2);
         GameData::velocities[e].velocity = glm::normalize(glm::vec3((float)(2 - i) * 0.1, 0, -0.5)) * (PROJ_MVSPD/2);
-        GameData::colliders[e].AABB =  glm::vec3(.25, .25, .25);
+        GameData::colliders[e].AABB =  glm::vec3(.75, .75, .75);
         GameData::models[e].modelID = MODEL_ID_PROJECTILE_SPREAD;
         GameData::models[e].asciiRep = 'J';
+        GameData::models[e].scale = 1.5;
         GameData::coldmg[e].damage = 60.0f;
         GameData::lifespans[e] = 1;
         GameData::spawnrates[e] = PROJ_SPAWN_RATE;
@@ -158,8 +159,9 @@ std::list<Entity> createProjectileSpray() {
     GameData::colliders[e].AABB = glm::vec3(.25, .25, .25);
     GameData::models[e].modelID = MODEL_ID_PROJECTILE_RAPID;
     GameData::models[e].asciiRep = 'J';
-    GameData::coldmg[e].damage = 10.0f;
-    GameData::lifespans[e] = 0.25;
+    GameData::models[e].scale = 0.5;
+    GameData::coldmg[e].damage = 20.0f;
+    GameData::lifespans[e] = 0.5;
     GameData::spawnrates[e] = PROJ_SPAWN_RATE/10;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players + CollisionLayer::Boss;
