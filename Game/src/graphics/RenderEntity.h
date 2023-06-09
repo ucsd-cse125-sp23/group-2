@@ -10,6 +10,7 @@ class RenderEntity {
 private:
     bool active;
     int id;
+    int model_id;
     glm::vec3 position;
     float orientation;
     float offset;
@@ -33,4 +34,6 @@ public:
     void setModel(ObjectModel* m) { ourModel = m; }
 
     glm::vec3 getPosition() { return position; };
+    void setModelID(int m) { model_id = m; }
+    int getModelID() { return model_id; }
 };
