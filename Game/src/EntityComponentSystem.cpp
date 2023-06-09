@@ -838,14 +838,14 @@ void EntityComponentSystem::sysBuild()
             glm::vec3 normTarget = glm::normalize(targetVec);
             glm::mat4 transform = glm::translate(GameData::retplaces[e].targetPos) * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
 
+            bool hasenough = true;
+            for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+                hasenough &= buildcosts[GameData::retplaces[e].buildingPrefab][i] <= GameData::playerdata.resources[i];
+            }
 
             if (GameData::retplaces[e].place) {
                 if ( (GameData::retplaces[e].reticle !=INVALID_ENTITY) && (GameData::activity[GameData::retplaces[e].reticle]) && ((GameData::tags[GameData::retplaces[e].reticle] & ComponentTags::Dead) != ComponentTags::Dead) && GameData::retplaces[e].validTarget) {
                     //Check build costs
-                    bool hasenough = true;
-                    for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
-                        hasenough &= buildcosts[GameData::retplaces[e].buildingPrefab][i] <= GameData::playerdata.resources[i];
-                    }
 
                     if (!hasenough) {
                         //printf("Not enough resoruces\n");
@@ -934,7 +934,7 @@ void EntityComponentSystem::sysBuild()
 
 
 
-            if (!GameData::retplaces[e].validTarget) {
+            if (!GameData::retplaces[e].validTarget || !hasenough) {
                 if (GameData::retplaces[e].reticle != INVALID_ENTITY) {
                     //printf("Deleting reticle entity %d\n", GameData::retplaces[e].reticle);
                     GameData::models[GameData::retplaces[e].reticle].modelID = playerInvalidReticleArray[GameData::retplaces[e].buildingPrefab];
