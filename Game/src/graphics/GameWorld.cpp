@@ -217,6 +217,7 @@ void GameWorld::loading(GLFWwindow* window, char* path) {
 
 	glfwPollEvents();
 	glfwSwapBuffers(window);
+	stbi_set_flip_vertically_on_load(false);
 	// Loading Screen
 }
 

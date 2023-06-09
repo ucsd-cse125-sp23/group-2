@@ -49,6 +49,7 @@ GUIElement::GUIElement(glm::vec3 position, glm::vec2 size, float transparency, c
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // load image, create texture and generate mipmaps
     int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(true);
     // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
     unsigned char *data = stbi_load(texturePath, &width, &height, &nrChannels, STBI_rgb_alpha);
     if (data)
@@ -61,6 +62,7 @@ GUIElement::GUIElement(glm::vec3 position, glm::vec2 size, float transparency, c
         std::cout << "Failed to load texture" << std::endl;
     }
     stbi_image_free(data);
+    stbi_set_flip_vertically_on_load(false);
 
 }
 
@@ -87,6 +89,7 @@ void GUIElement::SetTexture(char* path) {
     texturePath = path;
     // load image, create texture and generate mipmaps
     int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(true);
     // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
     unsigned char* data = stbi_load(texturePath, &width, &height, &nrChannels, STBI_rgb_alpha);
     if (data)
@@ -102,6 +105,7 @@ void GUIElement::SetTexture(char* path) {
         std::cout << "Failed to set texture, texture link" << path  << std::endl;
     }
     stbi_image_free(data);
+    stbi_set_flip_vertically_on_load(false);
 }
 
 void GUIElement::SetSize(glm::vec2 newSize) {
