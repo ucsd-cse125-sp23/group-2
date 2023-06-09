@@ -1,6 +1,6 @@
 //The max number of each entity type (CAN BE MODIFIED - Currently Arbitrary)
 #pragma once
-#define NUM_PLAYERS 1
+#define NUM_PLAYERS 4
 #define NUM_ENEMIES 64
 #define NUM_TOWERS 64
 #define NUM_RESOURCES 1024
@@ -110,7 +110,7 @@ const float STOMP_RANGE = 5;
 const float SAFE_AREA = 80;
 
 //Powerup spawn chance
-const float POWERUP_CHANCE = 1;
+const float POWERUP_CHANCE = 0.10f;
 
 //Powerup duration
 const float POWERUP_DURATION_SEC = 5;
