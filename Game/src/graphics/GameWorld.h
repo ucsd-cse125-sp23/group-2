@@ -8,6 +8,8 @@
 #include "gui/GUIElement.h"
 #include "../GameConstants.h"
 #include "../NetworkData.h"
+#include <stack>
+#include "Effects.h"
 class GameWorld {
 
 private:
@@ -31,6 +33,12 @@ private:
     bool shakeScreen, screenShakeOn;
     float startTime;
     //static int mouseDX, mouseDY;
+
+    //effect stuff
+    std::stack <CombatLog> newCLogs;
+    std::stack <SoundLog> newSLogs;
+    float currWaveTimer;
+    EffectSystem* effect;
 
 public:
     void init(GLFWwindow* window);

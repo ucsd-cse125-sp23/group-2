@@ -214,7 +214,7 @@ void GameWorld::init(GLFWwindow* window) {
 	shakeScreen = false;
 	screenShakeOn = false;
 	startTime = 0;
-
+	effect = new EffectSystem();
 	for (int i = 0; i < NUM_GUI; i++) {
 		guis[i] = new GUIElement();
 	}
@@ -470,6 +470,7 @@ void updateLabels() {
 	towersBuiltT->RenderText(str, 40.0f, 1000.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
 }
 void GameWorld::update(ServertoClientData& incomingData, int id) {
+
 	for (int i = 0; i < incomingData.activity.size(); i++) {
 
 		if (incomingData.activity[i] && incomingData.models[i].renderCollider) {
@@ -494,6 +495,7 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 			entities[i]->setActive(true);
 			entities[i]->setModel(models[incomingData.models[i].modelID]);
 			entities[i]->setShader(shaders[incomingData.models[i].modelID]);
+			entities[i]->setModelID(incomingData.models[i].modelID);
 			entities[i]->update(incomingData.positions[i], incomingData.models[i].modelOrientation, incomingData.models[i].scale);
 		}
 		else {
@@ -529,6 +531,44 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		shakeScreen = false;
 	}
 	cam->update(entities[id]->getPosition(), dx, dy, scrollY, screenShakeOn, currTime);
+
+	//effects 
+	//effects
+	if (currWaveTimer != incomingData.waveTimer) {
+		for (int i = 0; i < incomingData.clogsize; i++) {
+			newCLogs.push(incomingData.combatLogs[i]);
+		}
+
+		for (int i = 0; i < incomingData.slogsize; i++) {
+			if (!incomingData.soundLogs[i].stop) {
+				newSLogs.push(incomingData.soundLogs[i]);
+			}
+		}
+		currWaveTimer = incomingData.waveTimer;
+	}
+	while (!newCLogs.empty()) {
+		if (newCLogs.top().killed) {
+			std::cout << "KILLED\n";
+			int target = newCLogs.top().target;
+			effect->killEffect(entities[target]->getPosition(), entities[target]->getModelID());
+		}
+		newCLogs.pop();
+	}
+	while (!newSLogs.empty()) {
+		int source = newSLogs.top().source;
+		int sound = newSLogs.top().sound;
+		if (sound == SOUND_ID_JUMP) {
+			std::cout << "JUMPED\n";
+			effect->playerJumpEffect(entities[source]->getPosition());
+		}
+		else if (sound == SOUND_ID_ATTACK && !newSLogs.top().stop) {
+			if (entities[source]->getModelID() == MODEL_ID_TESLA) {
+				effect->teslaAttackEffect(entities[source]->getPosition());
+			}
+		}
+		newSLogs.pop();
+	}
+	effect->update(currTime);
 }
 
 void GameWorld::draw(Shader* guiShader, float wWidth, float wHeight) {
@@ -552,6 +592,7 @@ void GameWorld::draw(Shader* guiShader, float wWidth, float wHeight) {
 	}
 
 	env->drawPortals(viewProjMtx, currTime);
+	effect->draw(viewProjMtx, cam);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	for (Cube* c : AABBs) {
 		if (c->getActive()) {
