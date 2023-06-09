@@ -756,7 +756,7 @@ void EntityComponentSystem::sysAttacks()
 
                 if (!targets.empty()) {
                     GameData::AOEattackmodules[e].cooldown = GameData::AOEattackmodules[e].fireRate; 
-                    printf("Non empty targets\n");
+                    //printf("Non empty targets\n");
                     // Add attack sound to sound log
                     logSound(e, SOUND_ID_ATTACK);
                     for (Entity t : targets) {

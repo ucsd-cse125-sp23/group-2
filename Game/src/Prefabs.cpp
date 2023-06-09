@@ -946,7 +946,7 @@ std::list<Entity> createHome() {
     GameData::models[e].asciiRep = 'B';
     GameData::models[e].modelID = MODEL_ID_BASE;
     GameData::models[e].scale = 1.5;
-    GameData::hostilities[e].team = Teams::Towers;
+    GameData::hostilities[e].team = Teams::Players;
     GameData::hostilities[e].hostileTo = Teams::Martians;
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = HOME_BASE_HEALTH;
     GameData::colliders[e].AABB =  glm::vec3(40, 15, 30);
