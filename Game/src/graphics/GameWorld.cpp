@@ -219,7 +219,7 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		int sound = newSLogs.top().sound;
 		if (sound == SOUND_ID_JUMP) {
 			std::cout << "JUMPED\n";
-			effect->playerJumpEffect(entities[source]->getPosition());
+			effect->teslaAttackEffect(entities[source]->getPosition());
 		}
 		else if (sound == SOUND_ID_ATTACK && !newSLogs.top().stop) {
 			if (entities[source]->getModelID() == MODEL_ID_TESLA) {

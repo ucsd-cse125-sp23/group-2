@@ -162,6 +162,7 @@ void EffectSystem::draw(const glm::mat4& viewProjMtx, Camera* cam) {
 void EffectSystem::teslaAttackEffect(glm::vec3& location) {
     glm::vec3 v = glm::vec3(0, 0, 0);
     glm::vec3 p = location;
+    p.y -= 3.0f;
     Particle* newP = new Particle(0.01, v, p, ParticleRadius, 2, models[2], shader[1], false);
     newP->setColor(glm::vec3(0.0, 0.4, 0.7));
     if (lastIndex.empty()) {
