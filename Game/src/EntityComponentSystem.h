@@ -45,6 +45,7 @@ namespace Teams {
     constexpr TeamID Towers = 0x1 << 2;
     constexpr TeamID Environment = 0x1 << 3;
     constexpr TeamID Projectile = 0x1 << 4;
+    constexpr TeamID Powerup = 0x1 << 5;
 }
 
 namespace ResourceType {
@@ -57,7 +58,9 @@ namespace CollisionLayer {
     constexpr TeamID WorldObj = 0x1;
     constexpr TeamID UIObj = 0x1 << 1;
     constexpr TeamID StaticObj = 0x1 << 2;
-    constexpr TeamID Boss = 0x1 << 3;
+    constexpr TeamID Players = 0x1 << 3;
+    constexpr TeamID Boss = 0x1 << 4;
+    constexpr TeamID Powerup = 0x1 << 5;
 }
 
 struct Hostility {
@@ -79,7 +82,7 @@ struct HomingData //Data for tracking another entity
 
 struct Model //3D Model to render for the entity
 {
-    int modelID;
+    MODEL_ID modelID;
     char asciiRep;
     glm::vec3 dirNorm;
     bool renderCollider;
@@ -114,6 +117,7 @@ struct Collider //Information for collisions
     TeamID colwith;
     int xpos;
     int zpos;
+    bool collided; //If has collided with anything this tick
 };
 
 struct RigidBodyInfo //Information for physical objects;
@@ -174,6 +178,7 @@ struct ReticlePlacement {
     bool validTarget;
     glm::vec3 targetPos;
     float targetOrientation;
+    bool renderRet;
 };
 
 struct CombatLog {
@@ -202,6 +207,7 @@ struct AllPlayerData {
     std::array<float, NUM_PLAYERS> spawntimers;
     std::array<int, NUM_PLAYERS> actioncooldown;
     std::array<State, NUM_PLAYERS> playerStates;
+    std::array<float, NUM_PLAYERS> powerupTimers;
 };
 
 struct ResourceContainer {
@@ -213,7 +219,9 @@ struct Upgradeable {
     Prefab upgrade;
 };
 
-
+struct Powerup {
+    Prefab newAttack;
+};
 
 namespace ComponentTags
 {
@@ -247,7 +255,7 @@ namespace ComponentTags
     constexpr Tag Upgradeable = 0x1 << 27;
     constexpr Tag Upgrading = 0x1 << 28;
     constexpr Tag PAttackInRangeAI = 0x1 << 29;
-
+    constexpr Tag Powerup = 0x1 << 30;
 }
 
 namespace enemyState {
@@ -292,6 +300,7 @@ namespace GameData
     extern std::array<ResourceContainer, MAX_ENTITIES> resources;
     extern std::array<Points, MAX_ENTITIES> pointvalues;
     extern std::array<Upgradeable, MAX_ENTITIES> upgradedata;
+    extern std::array<Powerup, MAX_ENTITIES> powerupdata;
     //Events
     extern std::queue<CollisionEvent> colevents;
 
@@ -346,6 +355,8 @@ namespace EntityComponentSystem
     void sysAbduction();
 
     void sysEnemyAI();
+
+    void sysPowerup();
 
     //Helper functions
     Entity createEntity(int begin = 0, int end = MAX_ENTITIES);

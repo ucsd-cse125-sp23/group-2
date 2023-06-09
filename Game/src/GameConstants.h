@@ -1,6 +1,6 @@
 //The max number of each entity type (CAN BE MODIFIED - Currently Arbitrary)
 #pragma once
-#define NUM_PLAYERS 1
+#define NUM_PLAYERS 4
 #define NUM_ENEMIES 50
 #define NUM_TOWERS 50
 #define NUM_RESOURCES 750
@@ -11,8 +11,14 @@
 const float TICK_RATE = 64;
 #define NUM_GUI 19
 
+//How many seconds until first wave spawns
+const float ENEMY_SPAWNDELAY_SEC = 60;
+
+//What wave to start at (prep is -1)
+const float START_WAVE = -1;
+
 //World Length and Width
-constexpr float WORLD_X = 150;
+constexpr float WORLD_X = 200;
 constexpr float WORLD_Z = 180;
 
 //Speed of movement in units per second
@@ -36,9 +42,9 @@ const float GROUND_HEIGHT = -1.0;
 //Base health values of different game entities
 const float PLAYER_BASE_HEALTH = 100;
 const float ENEMY_BASE_HEALTH = 200;
-const float HOME_BASE_HEALTH = 1;
+const float HOME_BASE_HEALTH = 1000;
 const float RESOURCE_BASE_HEALTH = 200;
-const float BARRIER_BASE_HEALTH = 100;
+const float BARRIER_BASE_HEALTH = 400;
 
 //Base damage per second dealt by towers
 const float TURRET_BASE_DPS = 400;
@@ -47,10 +53,10 @@ const float TURRET_BASE_DPS = 400;
 const float TURRET_BASE_FIRE_RATE = 0.25;
 
 //How often turrets fire (seconds between damages)
-const float TURRET_BASE_RANGE = 10;
+const float TURRET_BASE_RANGE = 20;
 
 //Snap range barrier
-const float SNAP_RANGE = 5;
+const float SNAP_RANGE = 8;
 
 //Number of levels for of upgrades
 constexpr size_t NUM_UP_LEVELS = 3;
@@ -60,9 +66,6 @@ const int ACTION_COOLDOWN = TICK_RATE;
 
 //ground enemy base movespeed in units/sec
 const float ENEMY_GND_MVSPD_PERSEC = 10;
-
-//How many seconds until first wave spawns
-const float ENEMY_SPAWNDELAY_SEC = 0;
 
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;
@@ -106,6 +109,12 @@ const float STOMP_RANGE = 5;
 //Player safe area
 const float SAFE_AREA = 80;
 
+//Powerup spawn chance
+const float POWERUP_CHANCE = 0.05;
+
+//Powerup duration
+const float POWERUP_DURATION_SEC = 5;
+
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 30
 
@@ -123,40 +132,72 @@ const float PATH_WIDTH = 10;
 const float TOWER_PLACEMENT_RANGE = 15;
 
 //Model ID's (For Cory/Will to decide)
-#define MODEL_ID_NO_MODEL -1
-#define MODEL_ID_CUBE 0
-#define MODEL_ID_ROVER 1
+enum MODEL_ID {
+	MODEL_ID_CUBE,
+	MODEL_ID_ROVER_RED,
+	MODEL_ID_ROVER_BLUE,
 
-#define MODEL_ID_MOB 2
-#define MODEL_ID_MOB_TANK 3
-#define MODEL_ID_MOB_MINI 4
-#define MODEL_ID_MOB_FLYING 5
-#define MODEL_ID_MOB_TRACTOR 6
+	MODEL_ID_ROVER_GREEN,
 
-#define MODEL_ID_TOWER 7
-#define MODEL_ID_RAILGUN 8
-#define MODEL_ID_TESLA 9
-#define MODEL_ID_BARRIER 10
+	MODEL_ID_ROVER_PURPLE,
 
-#define MODEL_ID_RESOURCE 11
-#define MODEL_ID_RESOURCE_STONE 12
+ MODEL_ID_MOB,
+ MODEL_ID_MOB_TANK,
+ MODEL_ID_MOB_MINI,
+ MODEL_ID_MOB_FLYING,
+ MODEL_ID_MOB_TRACTOR,
+ MODEL_ID_TOWER,
+ MODEL_ID_TOWER_L2,
+ MODEL_ID_TOWER_L3,
+ MODEL_ID_TOWER_L4,
+ MODEL_ID_TOWER_INVALID,
+ MODEL_ID_RAILGUN,
+ MODEL_ID_RAILGUN_L2,
+ MODEL_ID_RAILGUN_L3,
+ MODEL_ID_RAILGUN_L4,
+ MODEL_ID_RAILGUN_INVALID,
+ MODEL_ID_TESLA,
+ MODEL_ID_TESLA_L2,
+ MODEL_ID_TESLA_L3,
+ MODEL_ID_TESLA_L4,
+ MODEL_ID_TESLA_INVALID,
+ MODEL_ID_BARRIER,
+ MODEL_ID_BARRIER_L2,
+ MODEL_ID_BARRIER_L3,
+ MODEL_ID_BARRIER_L4,
+ MODEL_ID_BARRIER_INVALID,
+ MODEL_ID_RESOURCE,
+ MODEL_ID_RESOURCE_1,
+ MODEL_ID_RESOURCE_2,
+ MODEL_ID_RESOURCE_STONE,
+ MODEL_ID_PROJECTILE_ROVER,
+ MODEL_ID_PROJECTILE_MARTIAN,
+ MODEL_ID_PROJECTILE_SPREAD,
+ MODEL_ID_PROJECTILE_RAPID,
+ MODEL_ID_BASE,
+ MODEL_ID_BEAR,
+ MODEL_ID_SUNGOD,
+ MODEL_ID_BEAR_BODY,
+ MODEL_ID_BEAR_HEAD,
+ MODEL_ID_BEAR_LARM,
+ MODEL_ID_BEAR_RARM,
+ MODEL_ID_BEAR_LLEG,
+ MODEL_ID_BEAR_RLEG,
+ MODEL_ID_PATH_STRAIGHT,
+ MODEL_ID_PATH_CORNER,
+ MODEL_ID_POWERUP_RAPID,
+ MODEL_ID_POWERUP_SPREAD,
 
-#define MODEL_ID_PROJECTILE 13
-
-#define MODEL_ID_BASE 14
-#define MODEL_ID_BEAR 15
-#define MODEL_ID_SUNGOD 16
-#define MODEL_ID_BEAR_BODY 17
-#define MODEL_ID_BEAR_HEAD 18
-#define MODEL_ID_BEAR_LARM 19
-#define MODEL_ID_BEAR_RARM 20
-#define MODEL_ID_BEAR_LLEG 21
-#define MODEL_ID_BEAR_RLEG 22
+ NUM_MODELS,
+ MODEL_ID_NO_MODEL = NUM_MODELS
+};
 
 
 
 
-#define NUM_MODELS 23
+
+
+
 
 //animation states
 #define ANIM_IDLE 0
