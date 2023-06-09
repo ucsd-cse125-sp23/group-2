@@ -201,7 +201,7 @@ void ClientGame::update()
                 woodCost = 0;
             }
             
-            if (spawntimer > 0) {
+            if (spawntimer >= 0) {
                 handle_death(false);
             }
             else {
