@@ -826,7 +826,7 @@ void EntityComponentSystem::sysBuild()
                 if (GameData::retplaces[e].reticle != INVALID_ENTITY) {
                     //printf("Deleting reticle entity %d\n", GameData::retplaces[e].reticle);
                     causeDeath(GameData::retplaces[e].reticle, GameData::retplaces[e].reticle);
-                    GameData::retplaces[e].reticle == INVALID_ENTITY;
+                    GameData::retplaces[e].reticle = INVALID_ENTITY;
                 }
                 continue;
             }
