@@ -302,7 +302,7 @@ std::list<Entity> createEnemyGroundBasic() {
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Home;
     GameData::colliders[e].colteam = CollisionLayer::WorldObj;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players + CollisionLayer::Boss;
     GameData::resources[e].resources = { 20, 0, 0 };
@@ -850,7 +850,7 @@ std::list<Entity> createTowerBarrier()
     GameData::positions[e] = glm::vec3(0, 0, 0);
     GameData::models[e].modelID = MODEL_ID_BARRIER;
     GameData::models[e].asciiRep = 'T';
-    GameData::hostilities[e].team = Teams::Towers;
+    GameData::hostilities[e].team = Teams::Home;
     GameData::hostilities[e].hostileTo = 0;
     GameData::colliders[e].AABB = glm::vec3(2, 2, 5);
     GameData::rigidbodies[e].fixed = true;
@@ -946,7 +946,7 @@ std::list<Entity> createHome() {
     GameData::models[e].asciiRep = 'B';
     GameData::models[e].modelID = MODEL_ID_BASE;
     GameData::models[e].scale = 1.5;
-    GameData::hostilities[e].team = Teams::Towers;
+    GameData::hostilities[e].team = Teams::Home;
     GameData::hostilities[e].hostileTo = Teams::Martians;
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = HOME_BASE_HEALTH;
     GameData::colliders[e].AABB =  glm::vec3(40, 15, 30);

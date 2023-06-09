@@ -604,7 +604,7 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 	}
 	while (!newCLogs.empty()) {
 		if (newCLogs.top().killed) {
-			std::cout << "KILLED\n";
+			//std::cout << "KILLED\n";
 			int target = newCLogs.top().target;
 			effect->killEffect(entities[target]->getPosition(), entities[target]->getModelID());
 		}
@@ -614,7 +614,7 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		int source = newSLogs.top().source;
 		int sound = newSLogs.top().sound;
 		if (sound == SOUND_ID_JUMP) {
-			std::cout << "JUMPED\n";
+			//std::cout << "JUMPED\n";
 			effect->playerJumpEffect(entities[source]->getPosition());
 		}
 		else if (sound == SOUND_ID_ATTACK && !newSLogs.top().stop) {
