@@ -263,6 +263,9 @@ void ServerGame::waveSpawner()
         if (WaveData::currentWave < WAVE_COUNT)
         {
             WaveData::waveTick = WaveData::waveTimers[WaveData::currentWave];
+            if (WaveData::currentWave > 0) {
+                initResources();
+            }
         }
     }
 
