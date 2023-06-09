@@ -248,7 +248,7 @@ void EffectSystem::particleEffect(glm::vec3& location, int model_id) {
 			c = glm::vec3(3.0f, 2.86f, 0.0f);
 		}
 		else {
-			c = glm::vec3(0.0f, 0.0f, 0.0f);
+			c = glm::vec3(0.000000f, 4.567174f, 0.107004f);
 		}
 		spawnParticle(location, models[0], c, shader[0], false);
 	}

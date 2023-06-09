@@ -12,7 +12,7 @@ const float TICK_RATE = 64;
 #define NUM_GUI 24
 
 //How many seconds until first wave spawns
-const float ENEMY_SPAWNDELAY_SEC = 30;
+const float ENEMY_SPAWNDELAY_SEC = 0;
 
 //What wave to start at (prep is -1)
 const float START_WAVE = -1;
@@ -110,7 +110,7 @@ const float STOMP_RANGE = 5;
 const float SAFE_AREA = 80;
 
 //Powerup spawn chance
-const float POWERUP_CHANCE = 0.05;
+const float POWERUP_CHANCE = 1;
 
 //Powerup duration
 const float POWERUP_DURATION_SEC = 5;
