@@ -710,10 +710,14 @@ void ServerGame::checkStatus() {
     if (WaveData::currentWave == WAVE_COUNT && WaveData::waveTick <= 0) {
         printf("WIN! :D\n");
         currentStatus = win;
+        GameData::slogpos = 0;
+        GameData::clogpos = 0;
     }
     if (!GameData::activity[home]) {
         printf("LOSE! :(\n");
         currentStatus = loss;
+        GameData::slogpos = 0;
+        GameData::clogpos = 0;
     }
 }
 
