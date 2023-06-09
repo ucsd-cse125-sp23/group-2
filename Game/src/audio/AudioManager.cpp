@@ -8,6 +8,8 @@ FMOD_VECTOR vecConvert(glm::vec3 inVec) {
 }
 
 AudioManager::AudioManager() {
+    musicvol = 0.7f;
+    sfxvol = 0.7f;
     audioSystem = nullptr;
     // Create the main system object.
     AudioManager::errorCheck(FMOD::System_Create(&audioSystem));      
@@ -17,17 +19,32 @@ AudioManager::AudioManager() {
     music = nullptr;
     musicChannel = nullptr;
 
-    AudioManager::loadSound("../assets/sounds/Bluezone_BC0254_wood_falling_log_002_006.wav", MODEL_ID_RESOURCE, SOUND_ID_DEATH);
-    AudioManager::loadSound("../assets/sounds/Bluezone_BC0254_wood_falling_log_002_006.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DEATH); //TODO Make stone sounds
-
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_RESOURCE, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/PM_RI_Designed_7 Rocks Impact Hit Big LFE Heavy Designed.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DEATH);
     AudioManager::loadSound("../assets/sounds/Alarm_Fast_DDM23.wav", MODEL_ID_BASE, SOUND_ID_DAMAGE);
     AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_RESOURCE, SOUND_ID_DAMAGE);
-    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DAMAGE); //TODO make stone sound
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_BARRIER, SOUND_ID_DEATH);
+
+    AudioManager::loadSound("../assets/sounds/PM_RI_Source_92 Rocks Impact Hit Single Stone.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DAMAGE);
 
     AudioManager::loadSound("../assets/sounds/Big Blast 4.wav", MODEL_ID_ROVER, SOUND_ID_ATTACK);
     AudioManager::loadSound("../assets/sounds/HeavyGun_Experimental_3.wav", MODEL_ID_TOWER, SOUND_ID_ATTACK);
+    AudioManager::loadSound("../assets/sounds/HeavyGun_Experimental_3.wav", MODEL_ID_TOWER_L2, SOUND_ID_ATTACK);
+    AudioManager::loadSound("../assets/sounds/HeavyGun_Experimental_3.wav", MODEL_ID_TOWER_L3, SOUND_ID_ATTACK);
+    AudioManager::loadSound("../assets/sounds/HeavyGun_Experimental_3.wav", MODEL_ID_TOWER_L4, SOUND_ID_ATTACK);
+
     AudioManager::loadSound("../assets/sounds/PM_SFG_VOL1_WEAPON_4_4_GUN_GUNSHOT_FUTURISTIC.wav", MODEL_ID_RAILGUN, SOUND_ID_ATTACK);
+    AudioManager::loadSound("../assets/sounds/PM_SFG_VOL1_WEAPON_4_4_GUN_GUNSHOT_FUTURISTIC.wav", MODEL_ID_RAILGUN_L2, SOUND_ID_ATTACK);
+    AudioManager::loadSound("../assets/sounds/PM_SFG_VOL1_WEAPON_4_4_GUN_GUNSHOT_FUTURISTIC.wav", MODEL_ID_RAILGUN_L3, SOUND_ID_ATTACK);
+    AudioManager::loadSound("../assets/sounds/PM_SFG_VOL1_WEAPON_4_4_GUN_GUNSHOT_FUTURISTIC.wav", MODEL_ID_RAILGUN_L4, SOUND_ID_ATTACK);
+
     AudioManager::loadSound("../assets/sounds/Magic_Spells_CastLong_Electricity11.wav", MODEL_ID_TESLA, SOUND_ID_ATTACK);
+    AudioManager::loadSound("../assets/sounds/Magic_Spells_CastLong_Electricity11.wav", MODEL_ID_TESLA_L2, SOUND_ID_ATTACK);
+    AudioManager::loadSound("../assets/sounds/Magic_Spells_CastLong_Electricity11.wav", MODEL_ID_TESLA_L3, SOUND_ID_ATTACK);
+    AudioManager::loadSound("../assets/sounds/Magic_Spells_CastLong_Electricity11.wav", MODEL_ID_TESLA_L4, SOUND_ID_ATTACK);
+
+    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_BARRIER, SOUND_ID_DAMAGE); //TODO: Change
+
     AudioManager::loopSound(MODEL_ID_TESLA, SOUND_ID_ATTACK, 1400, 2400);
     AudioManager::loadSound("../assets/sounds/MINE Placing 01.wav", MODEL_ID_ROVER, SOUND_ID_BUILD);
     AudioManager::loadSound("../assets/sounds/Screeching Monster 2-1.wav", MODEL_ID_MOB, SOUND_ID_DEATH);
@@ -41,14 +58,39 @@ AudioManager::AudioManager() {
     AudioManager::loadSound("../assets/sounds/Vehicle5_BlastOff1.wav", MODEL_ID_MOB_FLYING, SOUND_ID_DEATH);
     AudioManager::loadSound("../assets/sounds/Vehicle5_BlastOff1.wav", MODEL_ID_MOB_TRACTOR, SOUND_ID_DEATH); //Maybe change?
     AudioManager::loadSound("../assets/sounds/Big Blast 4.wav", MODEL_ID_MOB_FLYING, SOUND_ID_ATTACK); //Maybe change
+    AudioManager::loadSound("../assets/sounds/PM_SFG_VOL1_WEAPON_8_2_GUN_GUNSHOT_FUTURISTIC.wav", MODEL_ID_BEAR_LARM, SOUND_ID_ATTACK); //Maybe change
+    AudioManager::loadSound("../assets/sounds/PM_AG_20_3_ABSTRACT_GUNS.wav", MODEL_ID_BEAR_RARM, SOUND_ID_ATTACK); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0286_invader_weapon_scifi_shot_002.wav", MODEL_ID_BEAR_HEAD, SOUND_ID_ATTACK); //Maybe change
+
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0286_invader_debris_impact_011.wav", MODEL_ID_BEAR_LARM, SOUND_ID_DAMAGE); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0286_invader_debris_impact_011.wav", MODEL_ID_BEAR_RARM, SOUND_ID_DAMAGE); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0286_invader_debris_impact_011.wav", MODEL_ID_BEAR_LLEG, SOUND_ID_DAMAGE); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0286_invader_debris_impact_011.wav", MODEL_ID_BEAR_RLEG, SOUND_ID_DAMAGE); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0286_invader_debris_impact_011.wav", MODEL_ID_BEAR_HEAD, SOUND_ID_DAMAGE); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0286_invader_debris_impact_011.wav", MODEL_ID_BEAR_BODY, SOUND_ID_DAMAGE); //Maybe change
+
+
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0290_demolisher_debris_rubble_texture_004.wav", MODEL_ID_BEAR_LARM, SOUND_ID_DEATH); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0290_demolisher_debris_rubble_texture_004.wav", MODEL_ID_BEAR_RARM, SOUND_ID_DEATH); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0290_demolisher_debris_rubble_texture_004.wav", MODEL_ID_BEAR_LLEG, SOUND_ID_DEATH); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0290_demolisher_debris_rubble_texture_004.wav", MODEL_ID_BEAR_RLEG, SOUND_ID_DEATH); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0290_demolisher_debris_rubble_texture_004.wav", MODEL_ID_BEAR_HEAD, SOUND_ID_DEATH); //Maybe change
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0275_building_collapse_debris_falling_rock_rubble_008.wav", MODEL_ID_BEAR_BODY, SOUND_ID_DEATH); //Maybe change
+
+
+
     AudioManager::loadSound("../assets/sounds/4B8NZTJ-tractor-beam.wav", MODEL_ID_MOB_TRACTOR, SOUND_ID_ATTACK);
     AudioManager::loadSound("../assets/sounds/Robotic Lifeforms 2 - Impacts Source - Metal Tool Drawer Punch 03.wav", MODEL_ID_ROVER, SOUND_ID_LAND);
     AudioManager::loadSound("../assets/sounds/PM_FSSF2_EXOSKELETON_11_SERVO_MOVEMENT_ROTATION.wav", MODEL_ID_ROVER, SOUND_ID_JUMP);
+    AudioManager::loadSound("../assets/sounds/PowerUp01.wav", MODEL_ID_POWERUP_SPREAD, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/PowerUp01.wav", MODEL_ID_POWERUP_RAPID, SOUND_ID_DEATH);
+
 
     AudioManager::loadMusic("../assets/sounds/Free Video Game Music - HeatleyBros - Game On.mp3");
     AudioManager::playMusic();
-    AudioManager::setMusicVolume(0.4);
-    AudioManager::errorCheck(audioSystem->set3DSettings(1, 1, 0.5));
+    AudioManager::errorCheck(audioSystem->set3DSettings(1, 10, 0.5));
+    
+
 }
 
 // Loads a sound into the sound map
@@ -70,6 +112,7 @@ void AudioManager::playSound(int model, int soundType, glm::vec3 pos, Entity e) 
             AudioManager::errorCheck(audioSystem->playSound(soundArray[model][soundType], nullptr, false, &channelArray[e]));
             AudioManager::errorCheck(channelArray[e]->set3DAttributes(&vecConvert(pos), &zeroVec));
             AudioManager::errorCheck(channelArray[e]->setPaused(false));
+            AudioManager::errorCheck(channelArray[e]->setVolume(sfxvol));
         }
     }
     else {
@@ -77,6 +120,7 @@ void AudioManager::playSound(int model, int soundType, glm::vec3 pos, Entity e) 
         AudioManager::errorCheck(audioSystem->playSound(soundArray[model][soundType], nullptr, false, &newChannel));
         AudioManager::errorCheck(newChannel->set3DAttributes(&vecConvert(pos), &zeroVec));
         AudioManager::errorCheck(newChannel->setPaused(false));
+        AudioManager::errorCheck(newChannel->setVolume(sfxvol));
     }
 }
 
@@ -96,15 +140,28 @@ void AudioManager::stopSound(Entity e) {
 
 // Load music track
 void AudioManager::loadMusic(const char* path) {
-    AudioManager::errorCheck(audioSystem->createSound(path, FMOD_LOOP_NORMAL, nullptr, &music));
+    AudioManager::errorCheck(audioSystem->createSound(path, FMOD_LOOP_NORMAL | FMOD_CREATESTREAM, nullptr, &music));
 }
 
 void AudioManager::playMusic() {
-    //AudioManager::errorCheck(audioSystem->playSound(music, nullptr, false, &musicChannel));
+    AudioManager::errorCheck(audioSystem->playSound(music, nullptr, false, &musicChannel));
+    AudioManager::errorCheck(musicChannel->setVolume(musicvol * 0.05));
 }
 
 void AudioManager::setMusicVolume(float vol) {
-    musicChannel->setVolume(vol);
+    if (vol < 0 || vol > 1) {
+        printf("Trying to set music volume out of range!\n");
+        return;
+    }
+    musicvol = vol;
+}
+
+void AudioManager::setSFXVolume(float vol) {
+    if (vol < 0 || vol > 1) {
+        printf("Trying to set SFX volume out of range!\n");
+        return;
+    }
+    sfxvol = vol;
 }
 
 // Helper function to check for FMOD errors

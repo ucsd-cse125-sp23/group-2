@@ -12,19 +12,35 @@ void GameWorld::init() {
 
 	models[MODEL_ID_MOB] = new ObjectModel("../assets/martian/martian.obj");
 	models[MODEL_ID_MOB_TANK] = new ObjectModel("../assets/martian/martian_tank.obj");
-	models[MODEL_ID_MOB_MINI] = new ObjectModel("../assets/martian/martian_fast.obj"); //TODO: make smol
+	models[MODEL_ID_MOB_MINI] = new ObjectModel("../assets/martian/martian_fast.obj");
 	models[MODEL_ID_MOB_FLYING] = new ObjectModel("../assets/ufo/ufo_v2.obj");
 	models[MODEL_ID_MOB_TRACTOR] = new ObjectModel("../assets/ufo/ufo_v2.obj");
 
-	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/tower.obj");
+	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/Tower.obj");
 	models[MODEL_ID_TESLA] = new ObjectModel("../assets/tesla/tower_tesla.obj");
 	models[MODEL_ID_RAILGUN] = new ObjectModel("../assets/railgun/tower_railgun.obj");
 	models[MODEL_ID_BARRIER] = new ObjectModel("../assets/barricade/barricade_wood.obj");
-
+	models[MODEL_ID_TOWER_INVALID] = new ObjectModel("../assets/tower/Tower_invalid.obj");
+	models[MODEL_ID_TESLA_INVALID] = new ObjectModel("../assets/tesla/tower_tesla_invalid.obj");
+	models[MODEL_ID_RAILGUN_INVALID] = new ObjectModel("../assets/railgun/tower_railgun_invalid.obj");
+	models[MODEL_ID_BARRIER_INVALID] = new ObjectModel("../assets/barricade/barricade_wood.obj");
+	models[MODEL_ID_TOWER_L2] = new ObjectModel("../assets/tower/Tower_L2.obj");
+	models[MODEL_ID_TESLA_L2] = new ObjectModel("../assets/tesla/tower_tesla_L2.obj");
+	models[MODEL_ID_RAILGUN_L2] = new ObjectModel("../assets/railgun/tower_railgun_L2.obj");
+	models[MODEL_ID_TOWER_L3] = new ObjectModel("../assets/tower/Tower_L3.obj");
+	models[MODEL_ID_TESLA_L3] = new ObjectModel("../assets/tesla/tower_tesla_L3.obj");
+	models[MODEL_ID_RAILGUN_L3] = new ObjectModel("../assets/railgun/tower_railgun_L3.obj");
+	models[MODEL_ID_TOWER_L4] = new ObjectModel("../assets/tower/Tower_L4.obj");
+	models[MODEL_ID_TESLA_L4] = new ObjectModel("../assets/tesla/tower_tesla_L4.obj");
+	models[MODEL_ID_RAILGUN_L4] = new ObjectModel("../assets/railgun/tower_railgun_L4.obj");
 	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/tree/tree.obj");
 	models[MODEL_ID_RESOURCE_STONE] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
 
-	models[MODEL_ID_PROJECTILE] = new ObjectModel("../assets/green_projectile/green_projectile.obj");
+	models[MODEL_ID_PROJECTILE_ROVER] = new ObjectModel("../assets/projectiles/projectile_rover.obj");
+	models[MODEL_ID_PROJECTILE_MARTIAN] = new ObjectModel("../assets/projectiles/projectile_martian.obj");
+	models[MODEL_ID_PROJECTILE_SPREAD] = new ObjectModel("../assets/projectiles/projectile_spreadshot.obj");
+	models[MODEL_ID_PROJECTILE_RAPID] = new ObjectModel("../assets/projectiles/projectile_rapidfire.obj");
+
 
 	models[MODEL_ID_BASE] = new ObjectModel("../assets/base/base.obj");
 	models[MODEL_ID_BEAR] = new ObjectModel("../assets/bear/bear.obj");
@@ -34,6 +50,12 @@ void GameWorld::init() {
 	models[MODEL_ID_BEAR_LLEG] = new ObjectModel("../assets/bear/lleg.obj");
 	models[MODEL_ID_BEAR_RLEG] = new ObjectModel("../assets/bear/rleg.obj");
 	models[MODEL_ID_BEAR_BODY] = new ObjectModel("../assets/bear/body.obj");
+	models[MODEL_ID_PATH_STRAIGHT] = new ObjectModel("../assets/paths/path_straight.obj");
+	models[MODEL_ID_PATH_CORNER] = new ObjectModel("../assets/paths/path_corner.obj");
+
+	models[MODEL_ID_POWERUP_RAPID] = new ObjectModel("../assets/powerups/rapid_fire.obj"); //TODO: add proper models
+	models[MODEL_ID_POWERUP_SPREAD] = new ObjectModel("../assets/powerups/spreadshot.obj");
+
 
 	//models[MODEL_ID_SUNGOD] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
 
@@ -50,11 +72,28 @@ void GameWorld::init() {
 	shaders[MODEL_ID_RAILGUN] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_TESLA] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_BARRIER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_TOWER_L2] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_RAILGUN_L2] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_TESLA_L2] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");	
+	shaders[MODEL_ID_TOWER_L3] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	
+	shaders[MODEL_ID_RAILGUN_L3] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_TESLA_L3] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");	
+	shaders[MODEL_ID_TOWER_L4] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_RAILGUN_L4] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_TESLA_L4] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_TOWER_INVALID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_RAILGUN_INVALID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_TESLA_INVALID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_BARRIER_INVALID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
 	shaders[MODEL_ID_RESOURCE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_RESOURCE_STONE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
-	shaders[MODEL_ID_PROJECTILE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PROJECTILE_ROVER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PROJECTILE_MARTIAN] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PROJECTILE_SPREAD] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PROJECTILE_RAPID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
 	shaders[MODEL_ID_BASE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_BEAR] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
@@ -64,7 +103,12 @@ void GameWorld::init() {
 	shaders[MODEL_ID_BEAR_LLEG] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_BEAR_RLEG] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_BEAR_BODY] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PATH_STRAIGHT] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_PATH_CORNER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	//shaders[MODEL_ID_SUNGOD] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
+
+	shaders[MODEL_ID_POWERUP_SPREAD] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_POWERUP_RAPID] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
 	healthShader = new Shader("../shaders/shader.vert", "../shaders/shader.frag");
 	ObjectModel* healthModel = new ObjectModel("../assets/cube/cube.obj");
@@ -95,7 +139,6 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		//if active and should render health bar
 		if (incomingData.activity[i]
 			&& i != id
-			&& incomingData.models[i].modelID != MODEL_ID_PROJECTILE
 			&& incomingData.healths[i].curHealth / incomingData.healths[i].maxHealth < 1) {
 			healths[i]->setActive(true);
 			healths[i]->update(cam->getCameraPosition(), incomingData.positions[i] +  glm::vec3(0.0f,incomingData.colliders[i].AABB.y, 0.0f), 
