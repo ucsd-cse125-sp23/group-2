@@ -613,8 +613,14 @@ void EntityComponentSystem::resolveCollisions()
 
         //Check if dies on Collision
         if ((GameData::tags[e] & (ComponentTags::DiesOnCollision)) == ComponentTags::DiesOnCollision) {
-            causeDeath(o, e);
-            GameData::tags[e] ^= ComponentTags::Collidable;
+
+            if ((GameData::tags[e] & ComponentTags::Created) && GameData::creators[e] == o) {
+
+            }
+            else {
+                causeDeath(o, e);
+                GameData::tags[e] ^= ComponentTags::Collidable;
+            }
         }
 
         //Do on collision damage
