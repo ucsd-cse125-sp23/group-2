@@ -43,7 +43,7 @@ void ServerGame::initWaves()
     //Intro wave (32 basic enemies), random paths
     for (int i = 0; i < 32; i++)
     {
-        e = { Prefabs::EnemyFlyingBasic, rand() % (Paths::pathCount), 1.0f };
+        e = { Prefabs::EnemyGroundBasic, rand() % (Paths::pathCount), 1.0f };
         WaveData::waves[0].push(e);
     }
     
