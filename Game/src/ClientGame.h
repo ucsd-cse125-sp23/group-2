@@ -38,4 +38,11 @@ public:
     static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
     static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+
+    enum ServerStatus {
+        init,
+        game,
+        win,
+        loss
+    };
 };

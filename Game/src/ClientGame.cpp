@@ -65,11 +65,31 @@ void ClientGame::update()
     
     //Render
     if (initData.id != INVALID_CLIENT_ID && incomingData.serverStatus != UNKNOWN_SERVER_STATUS) {
-        for (int i = 0; i < MAX_ENTITIES; ++i) {
-            incomingData.models[i].renderCollider = renderColliders;
+        switch (incomingData.serverStatus) {
+        case ServerStatus::init:
+            //waiting for other player
+            break;
+        case ServerStatus::game:
+            for (int i = 0; i < MAX_ENTITIES; ++i) {
+                incomingData.models[i].renderCollider = renderColliders;
+            }
+            gameWindow->update(incomingData, initData.id);
+            audioManager->update(gameWindow->getCamPosition(), glm::normalize(gameWindow->getCamDirectionVector()), glm::normalize(gameWindow->getCamUpVector()), incomingData);
+            break;
+        case ServerStatus::loss:
+            printf("You lose\n");
+            gameWindow->loss();
+            break;
+        case ServerStatus::win:
+            printf("You won\n");
+            gameWindow->win();
+            break;
+        default:
+            printf("WTF");
+            break;
         }
-        gameWindow->update(incomingData, initData.id);
-        audioManager->update(gameWindow->getCamPosition(), glm::normalize(gameWindow->getCamDirectionVector()), glm::normalize(gameWindow->getCamUpVector()), incomingData);
+
+
     }
     
     //Process combat logs

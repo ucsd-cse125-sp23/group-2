@@ -28,11 +28,13 @@ public:
 	int height;
 	GameWindow(int width, int height);
 	~GameWindow();
-	void setup();
+	void setup(GLFWwindow* window);
 	bool initializeProgram();
-	bool initializeObjects();
-	void loadingScreen();
+	bool initializeObjects(GLFWwindow* window);
 	void cleanUp();
+
+	void win();
+	void loss();
 
 
 	// update and draw functions

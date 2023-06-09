@@ -21,6 +21,8 @@ private:
 
     Skybox* env;
 
+    Shader* guiProgram;
+
     Camera* cam;
     static float prevX, prevY, currX, currY, scrollY;
 
@@ -31,7 +33,7 @@ private:
     //static int mouseDX, mouseDY;
 
 public:
-    void init();
+    void init(GLFWwindow* window);
     
     int width;
     int height;
@@ -61,6 +63,7 @@ public:
     //
     void GUI_Init();
     void update(ServertoClientData& incomingData, int id);
+    void loading(GLFWwindow* window, char* path);
 
     //render all active entities
     void draw(Shader* guiShader, float width, float height);

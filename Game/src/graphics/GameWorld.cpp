@@ -22,7 +22,11 @@ Text* enemiesKilledT;
 Text* towersBuiltT;
 char str[65536];
 
-void GameWorld::init() {
+void GameWorld::init(GLFWwindow* window) {
+
+	guiProgram = new Shader("../shaders/gui.vert", "shaders/gui.frag");
+	loading(window, "../assets/screens/Title0.png");
+
 	currID = 0;
 	env = new Skybox();
 	env->setSkyShader(new Shader("../shaders/skybox.vert", "../shaders/skybox.frag"));
@@ -31,21 +35,29 @@ void GameWorld::init() {
 	models[MODEL_ID_CUBE] = new ObjectModel("../assets/cube/cube.obj");
 	models[MODEL_ID_ROVER] = new ObjectModel("../assets/rover/rover.obj");
 
+	loading(window, "../assets/screens/Title10.png");
+
 	models[MODEL_ID_MOB] = new ObjectModel("../assets/martian/martian.obj");
 	models[MODEL_ID_MOB_TANK] = new ObjectModel("../assets/martian/martian_tank.obj");
 	models[MODEL_ID_MOB_MINI] = new ObjectModel("../assets/martian/martian_fast.obj"); //TODO: make smol
 	models[MODEL_ID_MOB_FLYING] = new ObjectModel("../assets/ufo/ufo_v2.obj");
 	models[MODEL_ID_MOB_TRACTOR] = new ObjectModel("../assets/ufo/ufo_v2.obj");
 
+	loading(window, "../assets/screens/Title20.png");
+
 	models[MODEL_ID_TOWER] = new ObjectModel("../assets/tower/tower.obj");
 	models[MODEL_ID_TESLA] = new ObjectModel("../assets/tesla/tower_tesla.obj");
 	models[MODEL_ID_RAILGUN] = new ObjectModel("../assets/railgun/tower_railgun.obj");
 	models[MODEL_ID_BARRIER] = new ObjectModel("../assets/barricade/barricade_wood.obj");
 
+	loading(window, "../assets/screens/Title30.png");
+
 	models[MODEL_ID_RESOURCE] = new ObjectModel("../assets/tree/tree.obj");
 	models[MODEL_ID_RESOURCE_STONE] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
 
 	models[MODEL_ID_PROJECTILE] = new ObjectModel("../assets/laser_projectile/laser_projectile.obj");
+
+	loading(window, "../assets/screens/Title40.png");
 
 	models[MODEL_ID_BASE] = new ObjectModel("../assets/bear/bear.obj");
 	models[MODEL_ID_BEAR] = new ObjectModel("../assets/bear/bear.obj");
@@ -55,6 +67,8 @@ void GameWorld::init() {
 	models[MODEL_ID_BEAR_LLEG] = new ObjectModel("../assets/bear/lleg.obj");
 	models[MODEL_ID_BEAR_RLEG] = new ObjectModel("../assets/bear/rleg.obj");
 	models[MODEL_ID_BEAR_BODY] = new ObjectModel("../assets/bear/body.obj");
+
+	loading(window, "../assets/screens/Title50.png");
 
 	//models[MODEL_ID_SUNGOD] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
 
@@ -67,6 +81,8 @@ void GameWorld::init() {
 	shaders[MODEL_ID_MOB_FLYING] = new Shader("../shaders/ufo_shader.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_MOB_TRACTOR] = new Shader("../shaders/ufo_shader.vert", "../shaders/model_loading.frag");
 
+	loading(window, "../assets/screens/Title60.png");
+
 	shaders[MODEL_ID_TOWER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_RAILGUN] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_TESLA] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
@@ -76,6 +92,8 @@ void GameWorld::init() {
 	shaders[MODEL_ID_RESOURCE_STONE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
 	shaders[MODEL_ID_PROJECTILE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+
+	loading(window, "../assets/screens/Title70.png");
 
 	shaders[MODEL_ID_BASE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_BEAR] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
@@ -87,6 +105,8 @@ void GameWorld::init() {
 	shaders[MODEL_ID_BEAR_BODY] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 	//shaders[MODEL_ID_SUNGOD] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
 
+	loading(window, "../assets/screens/Title80.png");
+
 	healthShader = new Shader("../shaders/shader.vert", "../shaders/shader.frag");
 	ObjectModel* healthModel = new ObjectModel("../assets/cube/cube.obj");
 	playerHealth = 1.0f;
@@ -95,6 +115,8 @@ void GameWorld::init() {
 		AABBs[i] = new Cube(shaders[MODEL_ID_CUBE], models[MODEL_ID_CUBE]);
 		healths[i] = new HealthBar(healthShader, healthModel);
 	}
+
+	loading(window, "../assets/screens/Title90.png");
 	cam = new Camera();
 	shakeScreen = false;
 	screenShakeOn = false;
@@ -103,8 +125,33 @@ void GameWorld::init() {
 	for (int i = 0; i < NUM_GUI; i++) {
 		guis[i] = new GUIElement();
 	}
+
+	loading(window, "../assets/screens/Title100.png");
 	GUI_Init();
+
+	loading(window, "../assets/screens/waiting.png");
 }
+
+void GameWorld::loading(GLFWwindow* window, char* path) {
+
+	glfwMakeContextCurrent(window);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	stbi_set_flip_vertically_on_load(true);
+	GUIElement* loadingScreen = new GUIElement();
+	loadingScreen->SetHidden(false);
+	loadingScreen->SetName("loading screen");
+	loadingScreen->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	loadingScreen->SetSize(glm::vec2(2.0f, 1.6f));
+	loadingScreen->SetTexture(path);
+	loadingScreen->SetTransparency(1.0);
+	loadingScreen->draw(glm::mat4(1.0), guiProgram);
+
+	glfwPollEvents();
+	glfwSwapBuffers(window);
+	// Loading Screen
+}
+
 void GameWorld::GUI_Init() {
 	text = new Text("../assets/font.ttf");
 	spawntimerT = new Text("../assets/font.ttf");

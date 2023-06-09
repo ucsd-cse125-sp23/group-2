@@ -36,7 +36,7 @@ const float GROUND_HEIGHT = -1.0;
 //Base health values of different game entities
 const float PLAYER_BASE_HEALTH = 100;
 const float ENEMY_BASE_HEALTH = 200;
-const float HOME_BASE_HEALTH = 1000;
+const float HOME_BASE_HEALTH = 1;
 const float RESOURCE_BASE_HEALTH = 200;
 const float BARRIER_BASE_HEALTH = 100;
 
@@ -59,10 +59,10 @@ constexpr size_t NUM_UP_LEVELS = 3;
 const int ACTION_COOLDOWN = TICK_RATE;
 
 //ground enemy base movespeed in units/sec
-const float ENEMY_GND_MVSPD_PERSEC = 5;
+const float ENEMY_GND_MVSPD_PERSEC = 10;
 
 //How many seconds until first wave spawns
-const float ENEMY_SPAWNDELAY_SEC = 60;
+const float ENEMY_SPAWNDELAY_SEC = 0;
 
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;
