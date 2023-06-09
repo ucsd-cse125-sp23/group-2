@@ -12,21 +12,27 @@ int stoneRes=0;
 int points=0;
 int enemiesKilled=0;
 int towersBuilt=0;
-int wavetimer=0; //Do not render as a bar (render as a number)
+int wavetimer=0; //Do not render as a bar (render as a number since waves have incosistent timings)
 int maxwavetimer=0;
+
+int curWave = 0;
+int numWaves = WAVE_COUNT;
+
 float basehealth = 0;
 float maxbasehealth = 0;
 
-//Nice to render but not required (only render when non-zero) should be a hidden element otherwise
+//Nice to render but not required (only render when non-zero) should be a hidden element otherwise (This is the timer for the current power up, maybe display as a temporary icon using power
+//up icons that are already made?
 int poweruptimer = 0;
 
 
-//Only render when one of these three is non-zero should be a hidden element otherwise
+//Only render when one of these three is non-zero should be a hidden element otherwise (These are the costs of building/upgrading and are only non-zero when the player has selected a
+//tower to build or upgrade
 int moneyCost = 0;
 int woodCost = 0;
 int stoneCost = 0;
 
-//not necessary to render
+//not necessary to render (is the time before player is allowed to complete another build or upgrade action)
 int actionCooldown = 0;
 
 //Change crosshair based on state values in playerstate struct

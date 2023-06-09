@@ -20,6 +20,8 @@ extern int wavetimer; //Do not render as a bar (render as a number)
 extern int maxwavetimer;
 extern float basehealth;
 extern float maxbasehealth;
+extern int curWave;
+extern int numWaves;
 
 //Nice to render but not required (only render when non-zero) should be a hidden element otherwise
 extern int poweruptimer;
@@ -171,6 +173,8 @@ void ClientGame::update()
             poweruptimer = incomingData.playerData.powerupTimers[initData.id];
             state = incomingData.playerData.playerStates[initData.id];
             actionCooldown = incomingData.playerData.actioncooldown[initData.id];
+            curWave = incomingData.currentWave;
+            numWaves = incomingData.numWaves;
 
             if (incomingData.playerData.playerStates[initData.id] == PlayerState::Build) {
                 if (selected < NUM_TOWER_PREFAB && selected >= 0) {
