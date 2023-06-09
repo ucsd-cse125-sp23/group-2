@@ -68,6 +68,10 @@ public:
     GUIElement* quit_Btn1;
     GUIElement* new_game;
     GUIElement* crosshair;
+    GUIElement* towerH;
+    GUIElement* baseH;
+    GUIElement* tower_health;
+    GUIElement* base_health;
     //
     void GUI_Init();
     void update(ServertoClientData& incomingData, int id);

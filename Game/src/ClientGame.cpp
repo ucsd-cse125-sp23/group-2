@@ -43,8 +43,8 @@ extern State state;
 
 float health = 0.8;
 float master_Volume = 1.0;
-float sfx_Volume;
-float music_Volume;
+float sfx_Volume=1.0;
+float music_Volume=1.0;
 bool ClientGame::jumping = 0;
 int ClientGame::build = 0;
 int ClientGame::selected = 0;
@@ -74,6 +74,7 @@ int ClientGame::recieveData()
 
 void ClientGame::update()
 {
+    guis[6]->SetSize(glm::vec2(0.6f * master_Volume, 0.1f));
     if (!connectionAttempted) {
         glfwPollEvents();       
         if (jumping) {
@@ -251,13 +252,13 @@ void handle_down() {
     case 0:
         switch (selected) {
         case 0:
-            guis[0]->SetTexture("../assets/gui/Buttons/continue.jpg");
+            guis[0]->SetTexture("../assets/gui/Buttons/continue.png");
             break;
         case 1:
-            guis[1]->SetTexture("../assets/gui/Buttons/options.jpg");
+            guis[1]->SetTexture("../assets/gui/Buttons/options.png");
             break;
         case 2:
-            guis[2]->SetTexture("../assets/gui/Buttons/quit.jpg");
+            guis[2]->SetTexture("../assets/gui/Buttons/quit.png");
             break;
         }
         selected++;
@@ -266,23 +267,23 @@ void handle_down() {
         }
         switch (selected) {
         case 0:
-            guis[0]->SetTexture("../assets/gui/Buttons/continueH.jpg");
+            guis[0]->SetTexture("../assets/gui/Buttons/continueH.png");
             break;
         case 1:
-            guis[1]->SetTexture("../assets/gui/Buttons/optionsH.jpg");
+            guis[1]->SetTexture("../assets/gui/Buttons/optionsH.png");
             break;
         case 2:
-            guis[2]->SetTexture("../assets/gui/Buttons/quitH.jpg");
+            guis[2]->SetTexture("../assets/gui/Buttons/quitH.png");
             break;
         }
     break;
     case 1:
         switch (selected) {
             case 3:
-                guis[3]->SetTexture("../assets/gui/Buttons/back.jpg");
+                guis[3]->SetTexture("../assets/gui/Buttons/back.png");
                 break;
             case 4:
-                guis[4]->SetTexture("../assets/gui/Buttons/volume.jpg");
+                guis[4]->SetTexture("../assets/gui/Buttons/volume.png");
                 break;
         }
         selected++;
@@ -292,20 +293,20 @@ void handle_down() {
         }
         switch (selected) {
             case 3:
-                guis[3]->SetTexture("../assets/gui/Buttons/backH.jpg");
+                guis[3]->SetTexture("../assets/gui/Buttons/backH.png");
                 break;
             case 4:
-                guis[4]->SetTexture("../assets/gui/Buttons/volumeH.jpg");
+                guis[4]->SetTexture("../assets/gui/Buttons/volumeH.png");
                 break;
         }
         break;
     case 2:
         switch (selected) {
         case 5:
-            guis[15]->SetTexture("../assets/gui/Buttons/new_game.jpg");
+            guis[15]->SetTexture("../assets/gui/Buttons/new_game.png");
             break;
         case 6:
-            guis[16]->SetTexture("../assets/gui/Buttons/quit.jpg");
+            guis[16]->SetTexture("../assets/gui/Buttons/quit.png");
             break;
         }
         selected++;
@@ -315,10 +316,10 @@ void handle_down() {
         }
         switch (selected) {
         case 5:
-            guis[15]->SetTexture("../assets/gui/Buttons/new_gameH.jpg");
+            guis[15]->SetTexture("../assets/gui/Buttons/new_gameH.png");
             break;
         case 6:
-            guis[16]->SetTexture("../assets/gui/Buttons/quitH.jpg");
+            guis[16]->SetTexture("../assets/gui/Buttons/quitH.png");
             break;
         }
         break;
@@ -332,13 +333,13 @@ void handle_up() {
     case 0:
         switch (selected) {
         case 0:
-            guis[0]->SetTexture("../assets/gui/Buttons/continue.jpg");
+            guis[0]->SetTexture("../assets/gui/Buttons/continue.png");
             break;
         case 1:
-            guis[1]->SetTexture("../assets/gui/Buttons/options.jpg");
+            guis[1]->SetTexture("../assets/gui/Buttons/options.png");
             break;
         case 2:
-            guis[2]->SetTexture("../assets/gui/Buttons/quit.jpg");
+            guis[2]->SetTexture("../assets/gui/Buttons/quit.png");
             break;
         }
         selected--;
@@ -347,23 +348,23 @@ void handle_up() {
         }
         switch (selected) {
         case 0:
-            guis[0]->SetTexture("../assets/gui/Buttons/continueH.jpg");
+            guis[0]->SetTexture("../assets/gui/Buttons/continueH.png");
             break;
         case 1:
-            guis[1]->SetTexture("../assets/gui/Buttons/optionsH.jpg");
+            guis[1]->SetTexture("../assets/gui/Buttons/optionsH.png");
             break;
         case 2:
-            guis[2]->SetTexture("../assets/gui/Buttons/quitH.jpg");
+            guis[2]->SetTexture("../assets/gui/Buttons/quitH.png");
             break;
         }
         break;
     case 1:
         switch (selected) {
             case 3:
-                guis[3]->SetTexture("../assets/gui/Buttons/back.jpg");
+                guis[3]->SetTexture("../assets/gui/Buttons/back.png");
                 break;
             case 4:
-                guis[4]->SetTexture("../assets/gui/Buttons/volume.jpg");
+                guis[4]->SetTexture("../assets/gui/Buttons/volume.png");
                 break;
         }
         selected--;
@@ -372,20 +373,20 @@ void handle_up() {
         }
         switch (selected) {
             case 3:
-                guis[3]->SetTexture("../assets/gui/Buttons/backH.jpg");
+                guis[3]->SetTexture("../assets/gui/Buttons/backH.png");
                 break;
             case 4:
-                guis[4]->SetTexture("../assets/gui/Buttons/volumeH.jpg");
+                guis[4]->SetTexture("../assets/gui/Buttons/volumeH.png");
                 break;
             }
         break;
     case 2:
         switch (selected) {
         case 5:
-            guis[15]->SetTexture("../assets/gui/Buttons/new_game.jpg");
+            guis[15]->SetTexture("../assets/gui/Buttons/new_game.png");
             break;
         case 6:
-            guis[16]->SetTexture("../assets/gui/Buttons/quit.jpg");
+            guis[16]->SetTexture("../assets/gui/Buttons/quit.png");
             break;
         }
         selected--;
@@ -395,10 +396,10 @@ void handle_up() {
         }
         switch (selected) {
         case 5:
-            guis[15]->SetTexture("../assets/gui/Buttons/new_gameH.jpg");
+            guis[15]->SetTexture("../assets/gui/Buttons/new_gameH.png");
             break;
         case 6:
-            guis[16]->SetTexture("../assets/gui/Buttons/quitH.jpg");
+            guis[16]->SetTexture("../assets/gui/Buttons/quitH.png");
             break;
         }
         break;
@@ -414,13 +415,13 @@ void show_options() {
     for (int i = 0; i < 3; i++) {
         guis[i]->SetHidden(true);
     }
-    for (int i = 3; i < 6; i++) {
+    for (int i = 3; i < 7; i++) {
         guis[i]->SetHidden(false);
     }
     guis[10]->SetHidden(false);
     guis[10]->SetPosition(glm::vec3(0.5f, 0.0f, 0.0f));
-    guis[3]->SetTexture("../assets/gui/Buttons/back.jpg");
-    guis[4]->SetTexture("../assets/gui/Buttons/volumeH.jpg");
+    guis[3]->SetTexture("../assets/gui/Buttons/back.png");
+    guis[4]->SetTexture("../assets/gui/Buttons/volumeH.png");
 
   
 }
@@ -431,15 +432,15 @@ void hide_options() {
     for (int i = 0; i < 3; i++) {
         guis[i]->SetHidden(false);
     }
-    for (int i = 3; i < 6; i++) {
+    for (int i = 3; i < 7; i++) {
         guis[i]->SetHidden(true);
     }
     guis[10]->SetHidden(true);
-    guis[0]->SetTexture("../assets/gui/Buttons/continueH.jpg");
-    guis[1]->SetTexture("../assets/gui/Buttons/options.jpg");
-    guis[2]->SetTexture("../assets/gui/Buttons/quit.jpg");
-    guis[3]->SetTexture("../assets/gui/Buttons/back.jpg");
-    guis[4]->SetTexture("../assets/gui/Buttons/volumeH.jpg");
+    guis[0]->SetTexture("../assets/gui/Buttons/continueH.png");
+    guis[1]->SetTexture("../assets/gui/Buttons/options.png");
+    guis[2]->SetTexture("../assets/gui/Buttons/quit.png");
+    guis[3]->SetTexture("../assets/gui/Buttons/back.png");
+    guis[4]->SetTexture("../assets/gui/Buttons/volumeH.png");
     
 
 }
@@ -463,7 +464,7 @@ void handle_escp(GLFWwindow* window) {
         for (int i = 0; i < 3; i++) {
             guis[i]->SetHidden(false);
         }
-        guis[0]->SetTexture("../assets/gui/Buttons/continueH.jpg");
+        guis[0]->SetTexture("../assets/gui/Buttons/continueH.png");
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }

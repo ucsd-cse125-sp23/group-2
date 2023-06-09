@@ -9,7 +9,7 @@
 #define CLOG_MAXSIZE 50
 #define SLOG_MAXSIZE 100
 const float TICK_RATE = 64;
-#define NUM_GUI 19
+#define NUM_GUI 23
 
 //How many seconds until first wave spawns
 const float ENEMY_SPAWNDELAY_SEC = 1;

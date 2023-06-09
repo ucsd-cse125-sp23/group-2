@@ -63,6 +63,7 @@ Text* pointsT;
 Text* enemiesKilledT;
 Text* towersBuiltT;
 char str[65536];
+char tmp_str[65536];
 
 void GameWorld::init(GLFWwindow* window) {
 
@@ -280,8 +281,8 @@ void GameWorld::GUI_Init() {
 	continue_Btn->SetHidden(true);
 	continue_Btn->SetName("continue");
 	continue_Btn->SetPosition(glm::vec3(0.0f, 0.30f, -0.2f));
-	continue_Btn->SetSize(glm::vec2(0.75f, 0.25f));
-	continue_Btn->SetTexture("../assets/gui/Buttons/continue.jpg");
+	continue_Btn->SetSize(glm::vec2(0.75f, 0.4f));
+	continue_Btn->SetTexture("../assets/gui/Buttons/continue.png");
 	continue_Btn->SetTransparency(1.0);
 	guis[0] = continue_Btn;
 	//options
@@ -289,8 +290,8 @@ void GameWorld::GUI_Init() {
 	options_Btn->SetHidden(true);
 	options_Btn->SetName("options");
 	options_Btn->SetPosition(glm::vec3(0.0f, 0.0f, -0.2f));
-	options_Btn->SetSize(glm::vec2(0.75f, 0.25f));
-	options_Btn->SetTexture("../assets/gui/Buttons/options.jpg");
+	options_Btn->SetSize(glm::vec2(0.75f, 0.4f));
+	options_Btn->SetTexture("../assets/gui/Buttons/options.png");
 	options_Btn->SetTransparency(1.0);
 	guis[1] = options_Btn;
 	//quit
@@ -298,8 +299,8 @@ void GameWorld::GUI_Init() {
 	quit_Btn->SetHidden(true);
 	quit_Btn->SetName("quit");
 	quit_Btn->SetPosition(glm::vec3(0.0f, -0.30f, -0.2f));
-	quit_Btn->SetSize(glm::vec2(0.75f, 0.25f));
-	quit_Btn->SetTexture("../assets/gui/Buttons/quit.jpg");
+	quit_Btn->SetSize(glm::vec2(0.75f, 0.4f));
+	quit_Btn->SetTexture("../assets/gui/Buttons/quit.png");
 	quit_Btn->SetTransparency(1.0);
 	guis[2] = quit_Btn;
 
@@ -308,8 +309,8 @@ void GameWorld::GUI_Init() {
 	back_Btn->SetHidden(true);
 	back_Btn->SetName("back");
 	back_Btn->SetPosition(glm::vec3(0.0f, -0.3f, 0.03f));
-	back_Btn->SetSize(glm::vec2(0.75f, 0.25f));
-	back_Btn->SetTexture("../assets/gui/Buttons/back.jpg");
+	back_Btn->SetSize(glm::vec2(0.75f, 0.4f));
+	back_Btn->SetTexture("../assets/gui/Buttons/back.png");
 	back_Btn->SetTransparency(1.0);
 	guis[3] = back_Btn;
 
@@ -318,8 +319,8 @@ void GameWorld::GUI_Init() {
 	volume_Sldr->SetHidden(true);
 	volume_Sldr->SetName("volume");
 	volume_Sldr->SetPosition(glm::vec3(-0.5f, 0.0f, 0.0f));
-	volume_Sldr->SetSize(glm::vec2(0.75f, 0.25f));
-	volume_Sldr->SetTexture("../assets/gui/Buttons/volume.jpg");
+	volume_Sldr->SetSize(glm::vec2(0.75f, 0.4f));
+	volume_Sldr->SetTexture("../assets/gui/Buttons/volume.png");
 	volume_Sldr->SetTransparency(1.0);
 	guis[4] = volume_Sldr;
 
@@ -334,7 +335,7 @@ void GameWorld::GUI_Init() {
 	volume_Sldr_Front = guis[6];
 	volume_Sldr_Front->SetHidden(true);
 	volume_Sldr_Front->SetName("volume_Sldr_Front");
-	volume_Sldr_Front->SetPosition(glm::vec3(0.5f, 0.0f	, -0.2f));
+	volume_Sldr_Front->SetPosition(glm::vec3(0.5f, 0.0f	, -0.4f));
 	volume_Sldr_Front->SetSize(glm::vec2(0.60f, 0.1f));
 	volume_Sldr_Front->SetTexture("../assets/gui/Buttons/volume_Sldr_Front.jpg");
 	volume_Sldr_Front->SetTransparency(1.0);
@@ -370,8 +371,8 @@ void GameWorld::GUI_Init() {
 	blank->SetHidden(true);
 	blank->SetName("blank");
 	blank->SetPosition(glm::vec3(0.5f, 0.0f, 0.0f));
-	blank->SetSize(glm::vec2(0.75f, 0.25f));
-	blank->SetTexture("../assets/gui/Buttons/blank.jpg");
+	blank->SetSize(glm::vec2(0.75f, 0.4f));
+	blank->SetTexture("../assets/gui/Buttons/blank.png");
 	blank->SetTransparency(1.0);
 	guis[10] = blank;
 
@@ -397,8 +398,8 @@ void GameWorld::GUI_Init() {
 	you_win->SetHidden(true);
 	you_win->SetName("you_win");
 	you_win->SetPosition(glm::vec3(0.0f, 0.5f, -0.8f));
-	you_win->SetSize(glm::vec2(0.75f, 0.25f));
-	you_win->SetTexture("../assets/gui/Buttons/victory.jpg");
+	you_win->SetSize(glm::vec2(0.75f, 0.4f));
+	you_win->SetTexture("../assets/gui/Buttons/victory.png");
 	you_win->SetTransparency(1.0);
 	guis[13] = you_win;
 	
@@ -406,8 +407,8 @@ void GameWorld::GUI_Init() {
 	you_lose->SetHidden(true);
 	you_lose->SetName("black");
 	you_lose->SetPosition(glm::vec3(0.0f, 0.5f, -0.8f));
-	you_lose->SetSize(glm::vec2(0.75f, 0.25f));	
-	you_lose->SetTexture("../assets/gui/Buttons/you_died.jpg");
+	you_lose->SetSize(glm::vec2(0.75f, 0.4f));	
+	you_lose->SetTexture("../assets/gui/Buttons/you_died.png");
 	you_lose->SetTransparency(1.0);
 	guis[14] = you_lose;
 
@@ -415,8 +416,8 @@ void GameWorld::GUI_Init() {
 	new_game->SetHidden(true);
 	new_game->SetName("new_game");
 	new_game->SetPosition(glm::vec3(0.0f, 0.0f, -0.8f));
-	new_game->SetSize(glm::vec2(0.75f, 0.25f));
-	new_game->SetTexture("../assets/gui/Buttons/new_game.jpg");
+	new_game->SetSize(glm::vec2(0.75f, 0.4f));
+	new_game->SetTexture("../assets/gui/Buttons/new_game.png");
 	new_game->SetTransparency(1.0);
 	guis[15] = new_game;
 
@@ -424,8 +425,8 @@ void GameWorld::GUI_Init() {
 	quit_Btn1->SetHidden(true);
 	quit_Btn1->SetName("quit");
 	quit_Btn1->SetPosition(glm::vec3(0.0f, -0.30f, -0.8f));
-	quit_Btn1->SetSize(glm::vec2(0.75f, 0.25f));
-	quit_Btn1->SetTexture("../assets/gui/Buttons/quit.jpg");
+	quit_Btn1->SetSize(glm::vec2(0.75f, 0.4f));
+	quit_Btn1->SetTexture("../assets/gui/Buttons/quit.png");
 	quit_Btn1->SetTransparency(1.0);
 	guis[16] = quit_Btn1;
 
@@ -433,9 +434,9 @@ void GameWorld::GUI_Init() {
 	gui = guis[17];
 	gui->SetHidden(false);
 	gui->SetName("gui");
-	gui->SetPosition(glm::vec3(0.0f, 0.90f, 0.3f));
-	gui->SetSize(glm::vec2(2.0f, 0.2f));
-	gui->SetTexture("../assets/gui/Buttons/bar.jpg");
+	gui->SetPosition(glm::vec3(0.0f, 0.80f, 0.3f));
+	gui->SetSize(glm::vec2(2.0f, 0.4f));
+	gui->SetTexture("../assets/gui/Buttons/hud_top.png");
 	gui->SetTransparency(1.0);
 	guis[17] = gui;
 
@@ -443,8 +444,8 @@ void GameWorld::GUI_Init() {
 	->SetHidden(true);
 	->SetName("black");
 	->SetPosition(glm::vec3(0.0f, 0.0f, -0.8f));
-	->SetSize(glm::vec2(0.75f, 0.25f));
-	->SetTexture("../assets/gui/Buttons/.jpg");
+	->SetSize(glm::vec2(0.75f, 0.4f));
+	->SetTexture("../assets/gui/Buttons/.png");
 	->SetTransparency(1.0);
 	guis[] = ;*/
 
@@ -457,10 +458,46 @@ void GameWorld::GUI_Init() {
 	crosshair->SetTransparency(0.5f);
 	guis[18] = crosshair;
 
+	towerH = guis[19];
+	towerH->SetHidden(true);
+	towerH->SetName("tower");
+	towerH->SetPosition(glm::vec3(0.425f, 0.96f, -0.1f));
+	towerH->SetSize(glm::vec2(0.05f, 0.06f));
+	towerH->SetTexture("../assets/gui/Buttons/towers.png");
+	towerH->SetTransparency(1.0);
+	guis[19] = towerH;
+	baseH= guis[20];
+	baseH->SetHidden(false);
+	baseH->SetName("baseH");
+	baseH->SetPosition(glm::vec3(0.425f, 0.94f, -0.1f));
+	baseH->SetSize(glm::vec2(0.10f, 0.12f));
+	baseH->SetTexture("../assets/gui/Buttons/base.png");
+	baseH->SetTransparency(1.0);
+	guis[20] = baseH;
+	base_health = guis[21];
+	base_health->SetHidden(false);
+	base_health->SetName("base_health");
+	base_health->SetPosition(glm::vec3(0.575f, 0.94f, -0.1f));
+	base_health->SetSize(glm::vec2(0.2f, 0.04f));
+	base_health->SetTexture("../assets/gui/Buttons/health_front.jpg");
+	base_health->SetTransparency(1.0);
+	guis[21] = base_health;
+	tower_health= guis[22];
+	tower_health->SetHidden(true);
+	tower_health->SetName("tower_health");
+	tower_health->SetPosition(glm::vec3(0.55f, 0.96f, -0.1f));
+	tower_health->SetSize(glm::vec2(0.2f, 0.03f));
+	tower_health->SetTexture("../assets/gui/Buttons/health_front.jpg");
+	tower_health->SetTransparency(1.0);
+	guis[22] = tower_health;
+
 	
 }
 
 void updateLabels() {
+
+	guis[21]->SetSize(glm::vec2(0.2f*basehealth/maxbasehealth, 0.04f));
+
 	sprintf(str, "%d", moneyRes);
 	moneyResT->RenderText(str, 1600.0f, 20.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
 	
@@ -470,21 +507,23 @@ void updateLabels() {
 	sprintf(str, "%d", stoneRes);
 	stoneResT->RenderText(str, 600.0f, 20.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
 
-	sprintf(str, "%d", spawntimer);
-	strcat(str, " seconds");
-	spawntimerT->RenderText(str, 970.0f, 1000.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
+	sprintf(str, "%d", (60-wavetimer));
+	strcat(str, "/");
+	sprintf(tmp_str, "%d", maxwavetimer);
+	strcat(str, tmp_str);
+	spawntimerT->RenderText(str, 890.0f, 980.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
 	
 	sprintf(str, "%d", points);
 	strcat(str, " points");
-	pointsT->RenderText(str, 1500.0f, 1000.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
+	pointsT->RenderText(str, 1650.0f, 1030.0f, 0.8f, glm::vec3(10.0, 10.0f, 10.0f));
 	
 	sprintf(str, "%d", enemiesKilled);
 	strcat(str, " kills");
-	enemiesKilledT->RenderText(str, 600.0f, 1000.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
+	enemiesKilledT->RenderText(str, 370.0f, 1030.0f, 0.8f, glm::vec3(10.0, 10.0f, 10.0f));
 	
 	sprintf(str, "%d", towersBuilt);
 	strcat(str, " towers");
-	towersBuiltT->RenderText(str, 40.0f, 1000.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
+	towersBuiltT->RenderText(str, 20.0f, 1030.0f, 0.8f, glm::vec3(10.0, 10.0f, 10.0f));
 }
 void GameWorld::update(ServertoClientData& incomingData, int id) {
 
