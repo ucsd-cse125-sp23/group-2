@@ -753,7 +753,7 @@ std::list<Entity> createTowerTesla() {
     GameData::AOEattackmodules[e].cooldown = 0;
     GameData::AOEattackmodules[e].fireRate = TURRET_BASE_FIRE_RATE * 2;
     GameData::AOEattackmodules[e].damage = TURRET_BASE_DMG;
-    GameData::AOEattackmodules[e].range = TURRET_BASE_RANGE;
+    GameData::AOEattackmodules[e].range = TURRET_BASE_RANGE / 2;
     GameData::AOEattackmodules[e].source = GameData::positions[e];
     GameData::upgradedata[e].cost = { 40, 40, 20 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerTesla1;
