@@ -552,7 +552,7 @@ std::list<Entity> createTowerBasic() {
     GameData::colliders[e].AABB = glm::vec3(2, 1, 2);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
-    GameData::upgradedata[e].cost = { 20, 20, 0 };
+    GameData::upgradedata[e].cost = { 40, 20, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerBasic1;
     GameData::positions[e].y = GameData::colliders[e].AABB.y +GROUND_HEIGHT;
 
@@ -581,7 +581,7 @@ std::list<Entity> createTowerBasic1() {
     GameData::colliders[e].AABB = glm::vec3(2.2, 1.1, 2.2);
 
     GameData::models[e].modelID = MODEL_ID_TOWER_L2;
-    GameData::upgradedata[e].cost = { 20, 20, 0 };
+    GameData::upgradedata[e].cost = { 40, 20, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerBasic2;
     GameData::positions[e].y = GameData::colliders[e].AABB.y + GROUND_HEIGHT;
 
@@ -601,7 +601,7 @@ std::list<Entity> createTowerBasic2() {
     GameData::colliders[e].AABB = glm::vec3(2.4, 1.2, 2.4);
 
     GameData::models[e].modelID = MODEL_ID_TOWER_L3;
-    GameData::upgradedata[e].cost = { 100, 100, 0 };
+    GameData::upgradedata[e].cost = { 200, 100, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerBasic3;
     GameData::positions[e].y = GameData::colliders[e].AABB.y + GROUND_HEIGHT;
 
@@ -654,7 +654,7 @@ std::list<Entity> createTowerRailgun() {
     GameData::colliders[e].AABB = glm::vec3(2.5, 2.6, 2.5);
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
-    GameData::upgradedata[e].cost = { 20, 20, 0 };
+    GameData::upgradedata[e].cost = { 40, 20, 40 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerRailgun1;
     GameData::tags[e] =
         ComponentTags::Position +
@@ -683,7 +683,7 @@ std::list<Entity> createTowerRailgun1() {
     GameData::models[e].modelID = MODEL_ID_RAILGUN_L2;
     GameData::colliders[e].AABB = glm::vec3(2.7, 2.9, 2.7);
 
-    GameData::upgradedata[e].cost = { 20, 20, 0 };
+    GameData::upgradedata[e].cost = { 40, 20, 40 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerRailgun2;
     GameData::pattackmodules[e].attack = Prefabs::ProjectilePierce1;
 
@@ -702,7 +702,7 @@ std::list<Entity> createTowerRailgun2() {
     GameData::colliders[e].AABB = glm::vec3(2.9, 3.2, 2.9);
 
     GameData::models[e].modelID = MODEL_ID_RAILGUN_L3;
-    GameData::upgradedata[e].cost = { 100, 100, 0 };
+    GameData::upgradedata[e].cost = { 200, 100, 200 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerRailgun3;
     GameData::pattackmodules[e].attack = Prefabs::ProjectilePierce2;
     GameData::positions[e].y = GameData::colliders[e].AABB.y + GROUND_HEIGHT;
@@ -755,7 +755,7 @@ std::list<Entity> createTowerTesla() {
     GameData::AOEattackmodules[e].damage = TURRET_BASE_DMG;
     GameData::AOEattackmodules[e].range = TURRET_BASE_RANGE;
     GameData::AOEattackmodules[e].source = GameData::positions[e];
-    GameData::upgradedata[e].cost = { 20, 20, 0 };
+    GameData::upgradedata[e].cost = { 40, 40, 20 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerTesla1;
 
     GameData::tags[e] =
@@ -784,7 +784,7 @@ std::list<Entity> createTowerTesla1() {
 
     GameData::models[e].modelID = MODEL_ID_TESLA_L2;
     GameData::colliders[e].AABB = glm::vec3(1.4, 4.1, 1.4);
-    GameData::upgradedata[e].cost = { 20, 20, 0 };
+    GameData::upgradedata[e].cost = { 40, 20, 20 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerTesla2;
     GameData::AOEattackmodules[e].range *= 1.2;
 
@@ -802,7 +802,7 @@ std::list<Entity> createTowerTesla2() {
     }
 
     GameData::models[e].modelID = MODEL_ID_TESLA_L3;
-    GameData::upgradedata[e].cost = { 100, 100, 0 };
+    GameData::upgradedata[e].cost = { 200, 100, 100 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerTesla3;
     GameData::AOEattackmodules[e].range *= 2; 
     GameData::colliders[e].AABB = glm::vec3(1.6, 4.4, 1.6);
@@ -856,7 +856,7 @@ std::list<Entity> createTowerBarrier()
     GameData::rigidbodies[e].fixed = true;
     GameData::rigidbodies[e].grounded = false;
     GameData::healths[e].curHealth = GameData::healths[e].maxHealth = BARRIER_BASE_HEALTH;
-    GameData::upgradedata[e].cost = { 0, 0, 0 };
+    GameData::upgradedata[e].cost = { 40, 0, 40 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerBarrier1;
     GameData::tags[e] =
         ComponentTags::Position +
@@ -883,7 +883,7 @@ std::list<Entity> createTowerBarrier1() {
     }
 
     GameData::models[e].modelID = MODEL_ID_BARRIER_L2;
-    GameData::upgradedata[e].cost = { 20, 20, 0 };
+    GameData::upgradedata[e].cost = { 40, 0, 40 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerBarrier2;
     GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= 2;
     GameData::positions[e].y = GameData::colliders[e].AABB.y + GROUND_HEIGHT;
@@ -901,7 +901,7 @@ std::list<Entity> createTowerBarrier2() {
     }
 
     GameData::models[e].modelID = MODEL_ID_BARRIER_L3;
-    GameData::upgradedata[e].cost = { 100, 100, 0 };
+    GameData::upgradedata[e].cost = { 200, 0, 200 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerBarrier3;
     GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= 5;
     GameData::positions[e].y = GameData::colliders[e].AABB.y + GROUND_HEIGHT;
