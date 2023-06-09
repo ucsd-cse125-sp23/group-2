@@ -194,7 +194,7 @@ void ClientGame::update()
 
 
             if (moneyCost != 0 || stoneCost != 0 || woodCost != 0) {
-                printf("This costs (%d, %d,%d)\n", moneyCost, stoneCost, woodCost);
+                //printf("This costs (%d, %d,%d)\n", moneyCost, stoneCost, woodCost);
             }
         }
     }
