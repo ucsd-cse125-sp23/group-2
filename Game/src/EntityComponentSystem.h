@@ -46,6 +46,7 @@ namespace Teams {
     constexpr TeamID Environment = 0x1 << 3;
     constexpr TeamID Projectile = 0x1 << 4;
     constexpr TeamID Powerup = 0x1 << 5;
+    constexpr TeamID Home = 0x1 << 6;
 }
 
 namespace ResourceType {
