@@ -40,7 +40,6 @@ ClientGame::ClientGame(void)
     initData.id = INVALID_CLIENT_ID;
     incomingData.serverStatus = UNKNOWN_SERVER_STATUS;
 
-    network = new ClientNetwork();
     
 }
 
@@ -56,6 +55,7 @@ void ClientGame::update()
     if (!connectionAttempted) {
         glfwPollEvents();       
         if (jumping) {
+            network = new ClientNetwork();
             ClienttoServerData newPackage;
             packageData(newPackage);
             network->sendActionPackets(newPackage);
