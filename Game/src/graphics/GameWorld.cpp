@@ -296,7 +296,7 @@ void GameWorld::GUI_Init() {
 	crosshair->SetPosition(glm::vec3(0.0f, 0.0f, -0.8f));
 	crosshair->SetSize(glm::vec2(0.05f, 0.08f));
 	crosshair->SetTexture("../assets/gui/Buttons/crosshair.png");
-	crosshair->SetTransparency(0.5);
+	crosshair->SetTransparency(0.5f);
 	guis[18] = crosshair;
 
 	
