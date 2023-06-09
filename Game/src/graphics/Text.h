@@ -24,7 +24,7 @@ public:
 
 	Text(std::string font_name);
 	void setShader(Shader* s) { shader = s; }
-	void RenderText(std::string text, float x, float y, float scale, glm::vec3 color);
+	glm::vec2 RenderText(std::string text, float x, float y, float scale, glm::vec3 color);
 
 
 };

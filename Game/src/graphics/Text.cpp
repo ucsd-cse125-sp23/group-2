@@ -91,9 +91,11 @@ Text::Text(std::string font_name) {
 
 // render line of text
 // -------------------
-void Text::RenderText(std::string text, float x, float y, float scale, glm::vec3 color)
+glm::vec2 Text::RenderText(std::string text, float x, float y, float scale, glm::vec3 color)
 {
    
+    float width = 0;
+    float height = 0;
     glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -118,6 +120,13 @@ void Text::RenderText(std::string text, float x, float y, float scale, glm::vec3
 
         float w = ch.Size.x * scale;
         float h = ch.Size.y * scale;
+
+        width += w;
+
+        if (h > height) {
+            height = h;
+        }
+
         // update VBO for each character
         float vertices[6][4] = {
             { xpos,     ypos + h,   0.0f, 0.0f },
@@ -144,4 +153,6 @@ void Text::RenderText(std::string text, float x, float y, float scale, glm::vec3
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_CULL_FACE);
     glDisable(GL_BLEND);
+
+    return glm::vec2(width, height);
 }
