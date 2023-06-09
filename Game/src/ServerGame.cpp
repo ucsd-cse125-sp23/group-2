@@ -317,7 +317,7 @@ void ServerGame::initResources()
             }
             GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= scaleFactor * scaleFactor;
             GameData::colliders[e].AABB = GameData::colliders[e].AABB * scaleFactor;
-            GameData::models[e].scale = scaleFactor;
+            GameData::models[e].scale = scaleFactor *2.4;
 
         }
         else
