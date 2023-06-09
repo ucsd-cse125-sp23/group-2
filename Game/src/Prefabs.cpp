@@ -79,10 +79,10 @@ std::list<Entity> createProjectileSpread5() {
         }
         GameData::positions[e] = glm::vec3(4 - 2 * i, 0, -2);
         GameData::velocities[e].velocity = glm::normalize(glm::vec3((float)(2 - i) * 0.1, 0, -0.5)) * (PROJ_MVSPD/2);
-        GameData::colliders[e].AABB =  glm::vec3(.75, .75, .75);
+        GameData::colliders[e].AABB =  glm::vec3(.625, .625, .625);
         GameData::models[e].modelID = MODEL_ID_PROJECTILE_SPREAD;
         GameData::models[e].asciiRep = 'J';
-        GameData::models[e].scale = 1.5;
+        GameData::models[e].scale = 1.25;
         GameData::coldmg[e].damage = 60.0f;
         GameData::lifespans[e] = 1;
         GameData::spawnrates[e] = PROJ_SPAWN_RATE;
