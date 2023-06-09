@@ -598,7 +598,7 @@ void updateLabels() {
 		p4->RenderText("", 1500.0f, 940.0f * (((float)score1) / ((float)(max_score))), 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
 	}
 	sprintf(str, "%d", (wavetimer));
-	spawntimerT->RenderText(str, 900.0f, 940.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
+	spawntimerT->RenderText(str, 930.0f, 940.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
 
 
 	sprintf(str, "Wave %d", (curWave));
