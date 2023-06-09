@@ -62,6 +62,8 @@ Text* stoneResT;
 Text* pointsT;
 Text* enemiesKilledT;
 Text* towersBuiltT;
+
+Text* buildCost;
 char str[65536];
 char tmp_str[65536];
 
@@ -511,7 +513,7 @@ void updateLabels() {
 	strcat(str, "/");
 	sprintf(tmp_str, "%d", maxwavetimer);
 	strcat(str, tmp_str);
-	spawntimerT->RenderText(str, 890.0f, 980.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
+	spawntimerT->RenderText(str, 900.0f, 980.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
 	
 	sprintf(str, "%d", points);
 	strcat(str, " points");
