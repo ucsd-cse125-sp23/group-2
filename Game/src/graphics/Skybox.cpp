@@ -86,8 +86,28 @@ Skybox::Skybox() {
 	glEnable(GL_DEPTH_TEST);
 	envModel = new ObjectModel("../assets/environment/environment.obj");
 	domeModel = new ObjectModel("../assets/dome/dome.obj");
+	portalModel = new ObjectModel("../assets/portal/portal.obj");
 }
+void Skybox::drawPortals(const glm::mat4& viewProjMtx, float time) {
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	for (int i = 0; i < 5; i++) {
+		portalShader->use();
+		glm::vec3 location = Paths::path[i][0];
+		location.y += 2.75f;
+		glm::mat4 model(1.0f);
+		model = glm::rotate(glm::half_pi<float>(), glm::vec3(0, 1, 0));
+		model[3] = glm::vec4(location, 1.0f);
+		portalShader->setMat4("viewProj", viewProjMtx);
+		portalShader->setMat4("model", model);
+		portalShader->setFloat("time", time);
+		portalModel->Draw(*portalShader);
+	}
+	glUseProgram(0);
+	glDisable(GL_BLEND);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
 void Skybox::draw(const glm::mat4& viewProjMtx) {
 	glDepthMask(GL_FALSE);
 	skyShader->use();
@@ -106,8 +126,8 @@ void Skybox::draw(const glm::mat4& viewProjMtx) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	domeModel->Draw(*envShader);
-	glDisable(GL_BLEND);
 	glUseProgram(0);
+	glDisable(GL_BLEND);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
