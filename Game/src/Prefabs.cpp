@@ -390,7 +390,7 @@ std::list<Entity> createEnemyFlyingBasic() {
         ComponentTags::WorthPoints +
         ComponentTags::ResourceContainer +
         ComponentTags::Hunter;
-
+    GameData::colliders[e].AABB = glm::vec3(3, 1.7, 3);
     return createdEntities;
 };
 
@@ -1560,7 +1560,7 @@ std::list<Entity> createPathColliders()
             GameData::positions[e] = Paths::path[p][i] + progress * pathvec;
             GameData::positions[e].y = GROUND_HEIGHT + 0.01;
 
-            GameData::colliders[e].AABB = glm::vec3(PATH_WIDTH / 2, 0.01, PATH_WIDTH / 2);
+            GameData::colliders[e].AABB = glm::vec3(PATH_WIDTH / 2, 10, PATH_WIDTH / 2);
 
             GameData::models[e].modelID = MODEL_ID_PATH_STRAIGHT;
             GameData::models[e].asciiRep = 'P';
@@ -1612,7 +1612,7 @@ std::list<Entity> createPathColliders()
                 GameData::positions[e] = Paths::path[p][i] + progress*pathvec;
                 GameData::positions[e].y = GROUND_HEIGHT + 0.01;
                 
-                GameData::colliders[e].AABB = glm::vec3(PATH_WIDTH / 2, 0.01 , PATH_WIDTH / 2);
+                GameData::colliders[e].AABB = glm::vec3(PATH_WIDTH / 2, 10 , PATH_WIDTH / 2);
 
                 GameData::models[e].modelID = MODEL_ID_PATH_STRAIGHT;
                 GameData::models[e].asciiRep = 'P';
