@@ -29,7 +29,7 @@ void ServerGame::initPlayers()
 {
     prefabMap[Prefab::Players]();
     for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
-        GameData::playerdata.resources[i] = 1000;
+        GameData::playerdata.resources[i] = 0;
     }
 
 }

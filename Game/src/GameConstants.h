@@ -1,6 +1,6 @@
 //The max number of each entity type (CAN BE MODIFIED - Currently Arbitrary)
 #pragma once
-#define NUM_PLAYERS 1
+#define NUM_PLAYERS 4
 #define NUM_ENEMIES 50
 #define NUM_TOWERS 50
 #define NUM_RESOURCES 750
@@ -43,7 +43,7 @@ const float PLAYER_BASE_HEALTH = 100;
 const float ENEMY_BASE_HEALTH = 200;
 const float HOME_BASE_HEALTH = 1000;
 const float RESOURCE_BASE_HEALTH = 200;
-const float BARRIER_BASE_HEALTH = 100;
+const float BARRIER_BASE_HEALTH = 400;
 
 //Base damage per second dealt by towers
 const float TURRET_BASE_DPS = 400;
@@ -52,7 +52,7 @@ const float TURRET_BASE_DPS = 400;
 const float TURRET_BASE_FIRE_RATE = 0.25;
 
 //How often turrets fire (seconds between damages)
-const float TURRET_BASE_RANGE = 10;
+const float TURRET_BASE_RANGE = 20;
 
 //Snap range barrier
 const float SNAP_RANGE = 8;
@@ -109,10 +109,10 @@ const float STOMP_RANGE = 5;
 const float SAFE_AREA = 80;
 
 //Powerup spawn chance
-const float POWERUP_CHANCE = 1;
+const float POWERUP_CHANCE = 0.05;
 
 //Powerup duration
-const float POWERUP_DURATION_SEC = 10;
+const float POWERUP_DURATION_SEC = 5;
 
 //Length of LONGEST path in-game (Final value will be determiend by world shape)
 #define PATH_LENGTH 30
