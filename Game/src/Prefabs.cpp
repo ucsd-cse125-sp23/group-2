@@ -403,6 +403,8 @@ std::list<Entity> createEnemyFlyingTractor() {
     }
     //distinguishing factors
     GameData::models[e].modelID = MODEL_ID_MOB_TRACTOR;
+    GameData::models[e].scale = 1.5;
+    GameData::colliders[e].AABB = GameData::colliders[e].AABB * 1.5f;
     GameData::abductionStructs[e].abductionTimeLeft = ABDUCT_TIMER;
     GameData::abductionStructs[e].captive = INVALID_ENTITY;
     GameData::homingStructs[e].trackedEntity = 0;
