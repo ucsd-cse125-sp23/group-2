@@ -390,7 +390,7 @@ void GameWorld::GUI_Init() {
 	black = guis[12];
 	black->SetHidden(true);
 	black->SetName("black");
-	black->SetPosition(glm::vec3(0.0f, 0.0f, -0.7f));
+	black->SetPosition(glm::vec3(0.0f, 0.0f, -0.6f));
 	black->SetSize(glm::vec2(2.0f, 2.0f));
 	black->SetTexture("../assets/gui/Buttons/black.jpg");
 	black->SetTransparency(1.0);
@@ -399,7 +399,7 @@ void GameWorld::GUI_Init() {
 	you_win = guis[13];
 	you_win->SetHidden(true);
 	you_win->SetName("you_win");
-	you_win->SetPosition(glm::vec3(0.0f, 0.5f, -0.8f));
+	you_win->SetPosition(glm::vec3(0.0f, 0.5f, -0.7f));
 	you_win->SetSize(glm::vec2(0.75f, 0.4f));
 	you_win->SetTexture("../assets/gui/Buttons/victory.png");
 	you_win->SetTransparency(1.0);
@@ -408,9 +408,9 @@ void GameWorld::GUI_Init() {
 	you_lose = guis[14];
 	you_lose->SetHidden(true);
 	you_lose->SetName("black");
-	you_lose->SetPosition(glm::vec3(0.0f, 0.5f, -0.8f));
+	you_lose->SetPosition(glm::vec3(0.0f, 0.5f, -0.7f));
 	you_lose->SetSize(glm::vec2(0.75f, 0.4f));	
-	you_lose->SetTexture("../assets/gui/Buttons/you_died.png");
+	you_lose->SetTexture("../assets/gui/Buttons/game_over.png");
 	you_lose->SetTransparency(1.0);
 	guis[14] = you_lose;
 
