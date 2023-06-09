@@ -1,13 +1,13 @@
 //The max number of each entity type (CAN BE MODIFIED - Currently Arbitrary)
 #pragma once
-#define NUM_PLAYERS 1
-#define NUM_ENEMIES 50
-#define NUM_TOWERS 50
-#define NUM_RESOURCES 750
-#define NUM_PROJECTILES 100
+#define NUM_PLAYERS 3
+#define NUM_ENEMIES 64
+#define NUM_TOWERS 64
+#define NUM_RESOURCES 1024
+#define NUM_PROJECTILES 1024
 #define NUM_BASES 1
-#define CLOG_MAXSIZE 50
-#define SLOG_MAXSIZE 100
+#define CLOG_MAXSIZE 128
+#define SLOG_MAXSIZE 256
 const float TICK_RATE = 64;
 #define NUM_GUI 23
 
@@ -42,7 +42,7 @@ const float GROUND_HEIGHT = -1.0;
 //Base health values of different game entities
 const float PLAYER_BASE_HEALTH = 100;
 const float ENEMY_BASE_HEALTH = 200;
-const float HOME_BASE_HEALTH = 1000;
+const float HOME_BASE_HEALTH = 4000;
 const float RESOURCE_BASE_HEALTH = 200;
 const float BARRIER_BASE_HEALTH = 400;
 
