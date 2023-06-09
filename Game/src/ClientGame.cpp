@@ -225,7 +225,7 @@ void ClientGame::packageData(ClienttoServerData& data) {
 void handle_win(GLFWwindow* window) {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     menuOn = 1;
-    guis[12]->SetHidden(false);
+    //guis[12]->SetHidden(false);
     guis[13]->SetHidden(false);
     guis[15]->SetHidden(false);
     guis[16]->SetHidden(false);
@@ -235,7 +235,7 @@ void handle_win(GLFWwindow* window) {
 void handle_lose(GLFWwindow* window) {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     menuOn = 1;
-    guis[12]->SetHidden(false);
+    //guis[12]->SetHidden(false);
     guis[14]->SetHidden(false);
     guis[15]->SetHidden(false);
     guis[16]->SetHidden(false);
