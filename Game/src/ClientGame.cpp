@@ -250,7 +250,7 @@ void handle_quit() {}
 
 void handle_death(boolean alive) {
 
-    //guis[24]->SetHidden(false);
+    guis[24]->SetHidden(alive);
 
 
 }

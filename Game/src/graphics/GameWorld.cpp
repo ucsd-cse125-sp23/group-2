@@ -492,7 +492,7 @@ void GameWorld::GUI_Init() {
 	tower_health->SetTexture("../assets/gui/Buttons/health_front.jpg");
 	tower_health->SetTransparency(1.0);
 	guis[22] = tower_health;
-
+	
 	death = guis[23];
 	death->SetHidden(true);
 	death->SetName("death");
@@ -500,7 +500,7 @@ void GameWorld::GUI_Init() {
 	death->SetSize(glm::vec2(0.2f, 0.03f));
 	death->SetTexture("../assets/gui/Buttons/death.jpg");
 	death->SetTransparency(1.0);
-	guis[23] = tower_health;
+	guis[23] = death;
 	
 }
 
