@@ -559,7 +559,7 @@ bool EntityComponentSystem::applyUpgrade(Entity play, Entity target)
         }
         causeDeath(target, target);
 
-
+        float mo = GameData::models[target].modelOrientation;
         //Subtract resources
         for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
             GameData::playerdata.resources[i] -= GameData::upgradedata[target].cost[i];
@@ -571,6 +571,12 @@ bool EntityComponentSystem::applyUpgrade(Entity play, Entity target)
         //Add to collision table
         Collision::updateColTable(up);
 
+        GameData::models[up].modelOrientation = mo;
+        if ((glm::abs((GameData::models[up].modelOrientation - 90.0f)) < 0.01f) || (glm::abs(GameData::models[up].modelOrientation - 270.0f) < 0.01f)) {
+            float temp = GameData::colliders[up].AABB.x;
+            GameData::colliders[up].AABB.x = GameData::colliders[up].AABB.z;
+            GameData::colliders[up].AABB.z = temp;
+        }
         return true;
 
     }
@@ -794,7 +800,7 @@ void EntityComponentSystem::sysPowerup()
     }
 }
 
-const MODEL_ID playerInvalidReticleArray[NUM_TOWER_PREFAB] = { MODEL_ID_TOWER_INVALID, MODEL_ID_RAILGUN_INVALID, MODEL_ID_TESLA_INVALID, MODEL_ID_BARRIER };
+const MODEL_ID playerInvalidReticleArray[NUM_TOWER_PREFAB] = { MODEL_ID_TOWER_INVALID, MODEL_ID_RAILGUN_INVALID, MODEL_ID_TESLA_INVALID, MODEL_ID_BARRIER_INVALID };
 const MODEL_ID playerValidReticleArray[NUM_TOWER_PREFAB] = { MODEL_ID_TOWER, MODEL_ID_RAILGUN, MODEL_ID_TESLA, MODEL_ID_BARRIER };
 void EntityComponentSystem::sysBuild()
 {
@@ -870,6 +876,8 @@ void EntityComponentSystem::sysBuild()
 
                             // Add sound to sound log
                             logSound(e, SOUND_ID_BUILD);
+
+                            GameData::positions[b].y = GameData::colliders[b].AABB.y + GROUND_HEIGHT;
                             Collision::updateColTable(b);
                         }
                     }

@@ -879,7 +879,7 @@ std::list<Entity> createTowerBarrier1() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_BARRIER;
+    GameData::models[e].modelID = MODEL_ID_BARRIER_L2;
     GameData::upgradedata[e].cost = { 20, 20, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerBarrier2;
     GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= 2;
@@ -897,7 +897,7 @@ std::list<Entity> createTowerBarrier2() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_BARRIER;
+    GameData::models[e].modelID = MODEL_ID_BARRIER_L3;
     GameData::upgradedata[e].cost = { 100, 100, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerBarrier3;
     GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= 5;
@@ -915,7 +915,7 @@ std::list<Entity> createTowerBarrier3() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_BARRIER;
+    GameData::models[e].modelID = MODEL_ID_BARRIER_L4;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
