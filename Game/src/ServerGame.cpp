@@ -316,15 +316,22 @@ void ServerGame::initResources()
         if (std::rand() > (RAND_MAX * woodratio)) {
             e = prefabMap[Prefabs::BASIC_STONE_RESOURCE]().front();
             for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
-                GameData::resources[e].resources[i] *= scaleFactor * scaleFactor * scaleFactor;
+                GameData::resources[e].resources[i] *= scaleFactor * scaleFactor;
             }
             GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= scaleFactor * scaleFactor;
             GameData::colliders[e].AABB = GameData::colliders[e].AABB * scaleFactor;
             GameData::models[e].scale = scaleFactor *2.4;
 
         }
-        else
+        else {
             e = prefabMap[Prefabs::BASIC_WOOD_RESOURCE]().front();
+            for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
+                GameData::resources[e].resources[i] *= scaleFactor * scaleFactor;
+            }
+            GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= scaleFactor * scaleFactor;
+            GameData::colliders[e].AABB = GameData::colliders[e].AABB * scaleFactor;
+            GameData::models[e].scale = scaleFactor;
+        }
         if (e != INVALID_ENTITY) {
             GameData::positions[e] = pos - glm::vec3(WORLD_X/2, 0, WORLD_Z/2);
             GameData::tags[e] |= ComponentTags::DiesOnCollision;
