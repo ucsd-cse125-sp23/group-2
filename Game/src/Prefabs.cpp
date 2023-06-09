@@ -390,7 +390,7 @@ std::list<Entity> createEnemyFlyingBasic() {
         ComponentTags::WorthPoints +
         ComponentTags::ResourceContainer +
         ComponentTags::Hunter;
-
+    GameData::colliders[e].AABB = glm::vec3(3, 1.7, 3);
     return createdEntities;
 };
 
