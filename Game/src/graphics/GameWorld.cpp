@@ -509,7 +509,7 @@ void GameWorld::GUI_Init() {
 	death->SetName("death");
 	death->SetPosition(glm::vec3(0.0f, 0.0f, -0.9f));
 	death->SetSize(glm::vec2(1.0f, 1.0f));
-	death->SetTexture("../assets/gui/Buttons/death.jpg");
+	death->SetTexture("../assets/gui/Buttons/death.png");
 	death->SetTransparency(1.0);
 	guis[23] = death;
 	
