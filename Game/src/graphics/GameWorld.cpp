@@ -127,6 +127,9 @@ void GameWorld::init() {
 
 void GameWorld::update(ServertoClientData& incomingData, int id) {
 
+	if (entities[id]->getPosition() != incomingData.positions[id]) {
+		effect->playerJumpEffect(entities[id]->getPosition());
+	}
 	for (int i = 0; i < incomingData.activity.size(); i++) {
 
 		if (incomingData.activity[i] && incomingData.models[i].renderCollider) {
@@ -207,25 +210,23 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 		if (newCLogs.top().killed) {
 			std::cout << "KILLED\n";
 			int target = newCLogs.top().target;
-			newCLogs.pop();
 			effect->resourceEffect(entities[target]->getPosition(), entities[target]->getModelID());
 		}
-		else if (newCLogs.top().damage) {
-			int source = newCLogs.top().source;
-			newCLogs.pop();
-			if (entities[source]->getModelID() == MODEL_ID_TESLA) {
-				effect->teslaAttackEffect(entities[source]->getPosition());
-			}
-		}
+		newCLogs.pop();
 	}
 	while (!newSLogs.empty()) {
 		int source = newSLogs.top().source;
 		int sound = newSLogs.top().sound;
-		newSLogs.pop();
 		if (sound == SOUND_ID_JUMP) {
 			std::cout << "JUMPED\n";
-			effect->teslaAttackEffect(entities[source]->getPosition());
+			effect->playerJumpEffect(entities[source]->getPosition());
 		}
+		else if (sound == SOUND_ID_ATTACK && !newSLogs.top().stop) {
+			if (entities[source]->getModelID() == MODEL_ID_TESLA) {
+				effect->teslaAttackEffect(entities[source]->getPosition());
+			}
+		}
+		newSLogs.pop();
 	}
 	effect->update(currTime);
 }
@@ -235,13 +236,14 @@ void GameWorld::draw() {
 	float currTime = float(glfwGetTime());
 	const glm::mat4& viewProjMtx = cam->GetViewProjectMtx();
 	env->draw(viewProjMtx);
-	effect->draw(viewProjMtx, cam);
 	for (RenderEntity* e : entities) {
 
 		if (e->getActive()) {
 			e->draw(viewProjMtx, currTime, cam);
 		}
 	}
+
+	effect->draw(viewProjMtx, cam);
 	for (HealthBar* h : healths) {
 		if (h->getActive()) {
 			h->draw(viewProjMtx);

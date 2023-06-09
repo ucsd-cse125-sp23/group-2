@@ -2,6 +2,7 @@
 #include "core.h"
 #include "Shader.h"
 #include "ObjectModel.h"
+#include <algorithm>
 #include <stack>
 #include <random>
 #include <map>
@@ -13,7 +14,8 @@ private:
 	glm::vec3 color;
 	ObjectModel* model;
 	Shader* shader;
-
+	bool rotate;
+	float distFromCam;
 	float mass;
 	float bounces;
 	float radius;
@@ -21,7 +23,7 @@ private:
 	float timeAlive;
 public:
 	Particle();
-	Particle(float m, glm::vec3 v, glm::vec3 p, float r, float t, ObjectModel* mod, Shader * s);
+	Particle(float m, glm::vec3 v, glm::vec3 p, float r, float t, ObjectModel* mod, Shader * s, bool rotate);
 	~Particle();
 	void applyForce(glm::vec3& f);
 	void applyImpulse(glm::vec3& imp);
@@ -35,6 +37,8 @@ public:
 	float getTTL() { return ttl; }
 	float getRadius() { return radius; };
 	float getMass() { return mass; };
+	float getDistFromCam() { return distFromCam; }
+	void setDistFromCam(float dist) { distFromCam = dist; }
 };
 
 class EffectSystem {
@@ -50,6 +54,7 @@ private:
 	float time;
 	float lastTime;
 	float timeOfLastParticleSpawn;
+
 	int particleCount;
 	int maxParticles = 500;
 	std::stack<size_t> lastIndex;
@@ -62,7 +67,7 @@ public:
 	EffectSystem();
 	bool load();
 	void update(float dt);
-	void spawnParticle(glm::vec3& location, ObjectModel* m, glm::vec3 color);
+	void spawnParticle(glm::vec3& location, ObjectModel* m, glm::vec3 color, Shader* s, bool rot);
 	void draw(const glm::mat4& viewProjMtx, Camera* cam);
 	void playerJumpEffect(glm::vec3& location);
 	void teslaAttackEffect(glm::vec3& location);

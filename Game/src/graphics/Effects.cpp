@@ -1,12 +1,13 @@
 #include "Effects.h"
 
+
 Particle::Particle() {
 	velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	force = glm::vec3(0.0f, 0.0f, 0.0f);
 	normal = glm::vec3(0.0f, 0.0f, 0.0f);
 	mass = 1;
 }
-Particle::Particle(float m, glm::vec3 v, glm::vec3 p, float r, float t, ObjectModel * mod, Shader * s) {
+Particle::Particle(float m, glm::vec3 v, glm::vec3 p, float r, float t, ObjectModel * mod, Shader * s, bool rot) {
 	bounces = 0;
 	velocity = v;
 	position = p;
@@ -18,6 +19,7 @@ Particle::Particle(float m, glm::vec3 v, glm::vec3 p, float r, float t, ObjectMo
 	model = mod;
     shader = s;
 	timeAlive = 0;
+    rotate = rot;
 }
 
 void Particle::applyForce(glm::vec3& f) {
@@ -44,7 +46,16 @@ void Particle::integrate(float deltaTime) {
 	}
 }
 void Particle::draw(const glm::mat4& viewProjMtx, Camera* cam) {
-    modelMtx = glm::scale(glm::vec3(0.2f, 0.2f, 0.2f));
+    //rotate to look at player
+    if (rotate) {
+        glm::vec3 toVec = glm::normalize(cam->getCameraPosition() - position);
+        float angle = glm::atan(toVec.z, toVec.x);
+        modelMtx = glm::rotate(-angle, glm::vec3(0, 1, 0));
+        modelMtx *= glm::scale(glm::vec3(0.4f, 0.4f, 0.4f));
+    }
+    else {
+        modelMtx = glm::scale(glm::vec3(0.1f, 0.1f, 0.1f));
+    }
     modelMtx[3] = glm::vec4(position, 1.0f);
     // actiavte the shader program
     shader->use();
@@ -64,8 +75,11 @@ void Particle::draw(const glm::mat4& viewProjMtx, Camera* cam) {
 }
 EffectSystem::EffectSystem() {
     models.push_back(new ObjectModel("../assets/cube/cube.obj"));
+    models.push_back(new ObjectModel("../assets/particles/particle_dust.obj"));
+    models.push_back(new ObjectModel("../assets/particle_tesla/particle_tesla.obj"));
     shader.push_back(new Shader("../shaders/particleShader.vert", "../shaders/particleShader.frag"));
-    shader.push_back(new Shader("../shaders/teslaEffectShader.vert", "../shaders/particleShader.frag"));
+    shader.push_back(new Shader("../shaders/teslaEffectShader.vert", "../shaders/smokeFrag.frag"));
+    shader.push_back(new Shader("../shaders/smokeVert.vert", "../shaders/smokeFrag.frag"));
     PositionX = 0.0f;
     PositionY = 5.0f;
     PositionZ = 0.0f;
@@ -75,11 +89,11 @@ EffectSystem::EffectSystem() {
     PVarianceX = 0.5f;
     VVarianceX = 1.5f;
     PVarianceY = 0.5f;
-    VVarianceY = 0.5f;
+    VVarianceY = 1.5f;
     PVarianceZ = 0.5f;
     VVarianceZ = 1.5f;
     LSVariance = 0.5f;
-    LifeSpan = 2;
+    LifeSpan = 1;
     Gravity = -0.4f;
 }
 void EffectSystem::update(float currTime) {
@@ -126,16 +140,29 @@ void EffectSystem::update(float currTime) {
 
 }
 void EffectSystem::draw(const glm::mat4& viewProjMtx, Camera* cam) {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    std::vector<Particle*> activeParticles;
     for (auto p : particles) {
         if (p) {
-            p->draw(viewProjMtx, cam);
+            p->setDistFromCam(glm::distance(cam->getCameraPosition(), p->getPosition()));
+            activeParticles.push_back(p);
         }
     }
+    std::sort(activeParticles.begin(), activeParticles.end(), [](Particle* a, Particle* b)
+        {
+            if (a->getDistFromCam() > b->getDistFromCam()) return true;
+            else return false;
+        });
+    for (auto p : activeParticles) {
+        p->draw(viewProjMtx, cam);
+    }
+    glDisable(GL_BLEND);
 }
 void EffectSystem::teslaAttackEffect(glm::vec3& location) {
     glm::vec3 v = glm::vec3(0, 0, 0);
     glm::vec3 p = location;
-    Particle* newP = new Particle(0.01, v, p, ParticleRadius, 2, models[0], shader[1]);
+    Particle* newP = new Particle(0.01, v, p, ParticleRadius, 2, models[2], shader[1], false);
     newP->setColor(glm::vec3(0.0, 0.4, 0.7));
     if (lastIndex.empty()) {
         particles.push_back(newP);
@@ -148,24 +175,38 @@ void EffectSystem::teslaAttackEffect(glm::vec3& location) {
 }
 void EffectSystem::resourceEffect(glm::vec3& location, int model_id) {
     glm::vec3 loc = location;
-    for (int i = 0; i < 10; i++) {
+    PVarianceX = 0.5f;
+    VVarianceX = 5.0f;
+    PVarianceY = 0.5f;
+    VVarianceY = 5.0f;
+    PVarianceZ = 0.5f;
+    VVarianceZ = 5.0f;
+    LSVariance = 0.5f;
+    for (int i = 0; i < 6; i++) {
         glm::vec3 c;
         if (model_id == MODEL_ID_RESOURCE) {
             c = glm::vec3(0.4, 0.2, 0.1);
         }
         else {
-            c = glm::vec3(0.5, 0.5, 0.5);
+            c = glm::vec3(1.0, 0.2, 0.0);
         }
-        spawnParticle(location, models[0], c);
+        spawnParticle(location, models[0], c, shader[0], false);
     }
 }
 void EffectSystem::playerJumpEffect(glm::vec3& location) {
+    PVarianceX = 0.5f;
+    VVarianceX = 1.5f;
+    PVarianceY = 0.5f;
+    VVarianceY = 0.5f;
+    PVarianceZ = 0.5f;
+    VVarianceZ = 1.5f;
+    LSVariance = 0.5f;
     glm::vec3 loc = location;
-    for (int i = 0; i < 20; i++) {
-        spawnParticle(location, models[0], glm::vec3(0.6, 0.3, 0.2));
+    for (int i = 0; i < 1; i++) {
+        spawnParticle(location, models[1], glm::vec3(0.6, 0.3, 0.2), shader[2], true);
     }
 }
-void EffectSystem::spawnParticle(glm::vec3 & location, ObjectModel * m, glm::vec3 color) {
+void EffectSystem::spawnParticle(glm::vec3 & location, ObjectModel * m, glm::vec3 color, Shader * s, bool rot) {
     //apply randomness
     std::uniform_real_distribution<double> pdisx(-PVarianceX, PVarianceX);
     std::uniform_real_distribution<double> pdisy(-PVarianceY, PVarianceY);
@@ -177,8 +218,8 @@ void EffectSystem::spawnParticle(glm::vec3 & location, ObjectModel * m, glm::vec
     std::random_device rd;
     std::mt19937 gen(rd());
     glm::vec3 v = glm::vec3(VelocityX + vdisx(gen), VelocityY + vdisy(gen), VelocityZ + vdisz(gen));
-    glm::vec3 p = glm::vec3(location.x + pdisx(gen), std::max(0.001, location.y + pdisy(gen) - 0.5f), location.z + pdisz(gen));
-    Particle* newP = new Particle(0.01, v, p, ParticleRadius, std::max(0.0, LifeSpan + ldis(gen)), m, shader[0]);
+    glm::vec3 p = glm::vec3(location.x + pdisx(gen), std::max(0.001, location.y + pdisy(gen) - 1.0f), location.z + pdisz(gen));
+    Particle* newP = new Particle(0.01, v, p, ParticleRadius, std::max(0.0, LifeSpan + ldis(gen)), m, s, rot);
     newP->setColor(color);
     if (lastIndex.empty()) {
         particles.push_back(newP);
