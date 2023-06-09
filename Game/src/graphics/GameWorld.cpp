@@ -620,7 +620,7 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 			effect->playerJumpEffect(entities[source]->getPosition());
 		}
 		else if (sound == SOUND_ID_ATTACK && !newSLogs.top().stop) {
-			if (entities[source]->getModelID() == MODEL_ID_TESLA) {
+			if (entities[source]->getModelID() == MODEL_ID_TESLA || entities[source]->getModelID() == MODEL_ID_TESLA_L2 || entities[source]->getModelID() == MODEL_ID_TESLA_L3 || entities[source]->getModelID() == MODEL_ID_TESLA_L4) {
 				effect->teslaAttackEffect(entities[source]->getPosition());
 			}
 		}
