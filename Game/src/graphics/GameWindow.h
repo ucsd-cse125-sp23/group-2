@@ -6,9 +6,7 @@
 class GameWindow {
 private:
 	//Window Properties
-	int width;
-	int height;
-	float lastTime;
+	
 	const char* windowTitle;
 
 	//objects to render
@@ -17,6 +15,7 @@ private:
 	// Shader Program
 	Shader* shaderProgram;
 	Shader* skyboxProgram;
+	Shader* guiProgram;
 
 	
 	//camera
@@ -25,13 +24,18 @@ private:
 	//static int mouseDX, mouseDY;
 public:
 	GLFWwindow* window;
-
+	int width;
+	int height;
 	GameWindow(int width, int height);
 	~GameWindow();
-	void setup();
+	void setup(GLFWwindow* window);
 	bool initializeProgram();
-	bool initializeObjects();
+	bool initializeObjects(GLFWwindow* window);
 	void cleanUp();
+
+	void win();
+	void loss();
+	void wait();
 
 
 	// update and draw functions
