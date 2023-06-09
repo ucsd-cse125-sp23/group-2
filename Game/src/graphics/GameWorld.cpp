@@ -12,6 +12,31 @@ int stoneRes=0;
 int points=0;
 int enemiesKilled=0;
 int towersBuilt=0;
+int wavetimer=0; //Do not render as a bar (render as a number)
+int maxwavetimer=0;
+float basehealth = 0;
+float maxbasehealth = 0;
+
+//Nice to render but not required (only render when non-zero) should be a hidden element otherwise
+int poweruptimer = 0;
+
+
+//Only render when one of these three is non-zero should be a hidden element otherwise
+int moneyCost = 0;
+int woodCost = 0;
+int stoneCost = 0;
+
+//not necessary to render
+int actionCooldown = 0;
+
+//Change crosshair based on state values in playerstate struct
+//If state == PlayerState::Upgrading vs if state == PlayerState::Build/PlayerState::Default/PlayerState::Attack
+State state = 0;
+
+
+
+
+
 
 Text* spawntimerT;
 Text* moneyResT;

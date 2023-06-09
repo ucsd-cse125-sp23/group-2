@@ -16,6 +16,26 @@ extern int stoneRes;
 extern int points;
 extern int enemiesKilled;
 extern int towersBuilt;
+extern int wavetimer; //Do not render as a bar (render as a number)
+extern int maxwavetimer;
+extern float basehealth;
+extern float maxbasehealth;
+
+//Nice to render but not required (only render when non-zero) should be a hidden element otherwise
+extern int poweruptimer;
+
+
+//Only render when one of these three is non-zero should be a hidden element otherwise
+extern int moneyCost;  
+extern int woodCost;
+extern int stoneCost;
+
+//not necessary to render
+extern int actionCooldown;
+
+//Change crosshair based on state values in playerstate struct
+//If state == PlayerState::Upgrading vs if state == PlayerState::Build/PlayerState::Default/PlayerState::Attack
+extern State state;
 
 
 
@@ -144,6 +164,38 @@ void ClientGame::update()
             }
             guis[9]->SetSize(glm::vec2(0.38f * health / incomingData.healths[initData.id].maxHealth, 0.05f));
 
+            wavetimer = incomingData.waveTimer;
+            maxwavetimer = incomingData.maxWaveTimer;
+            basehealth = incomingData.healths[MAX_ENTITIES_NOBASE].curHealth;
+            maxbasehealth = incomingData.healths[MAX_ENTITIES_NOBASE].maxHealth;
+            poweruptimer = incomingData.playerData.powerupTimers[initData.id];
+            state = incomingData.playerData.playerStates[initData.id];
+            actionCooldown = incomingData.playerData.actioncooldown[initData.id];
+
+            if (incomingData.playerData.playerStates[initData.id] == PlayerState::Build) {
+                if (selected < NUM_TOWER_PREFAB && selected >= 0) {
+                    moneyCost = incomingData.buildcosts[selected][ResourceType::Money];
+                    stoneCost = incomingData.buildcosts[selected][ResourceType::Wood];
+                    woodCost = incomingData.buildcosts[selected][ResourceType::Stone];
+                }
+            }
+            else if (incomingData.playerData.playerStates[initData.id] == PlayerState::Upgrading) {
+                if (incomingData.playerData.selectedTowerUpgrade[initData.id] != INVALID_ENTITY) {
+                    moneyCost = incomingData.playerData.selectedTowerUpgradeCost[initData.id][ResourceType::Money];
+                    stoneCost = incomingData.playerData.selectedTowerUpgradeCost[initData.id][ResourceType::Wood];
+                    woodCost = incomingData.playerData.selectedTowerUpgradeCost[initData.id][ResourceType::Stone];
+                }
+            }
+            else {
+                moneyCost = 0;
+                stoneCost = 0;
+                woodCost = 0;
+            }
+
+
+            if (moneyCost != 0 || stoneCost != 0 || woodCost != 0) {
+                printf("This costs (%d, %d,%d)\n", moneyCost, stoneCost, woodCost);
+            }
         }
     }
 

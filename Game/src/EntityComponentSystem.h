@@ -208,6 +208,8 @@ struct AllPlayerData {
     std::array<int, NUM_PLAYERS> actioncooldown;
     std::array<State, NUM_PLAYERS> playerStates;
     std::array<float, NUM_PLAYERS> powerupTimers;
+    std::array<Entity, NUM_PLAYERS> selectedTowerUpgrade;
+    std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_PLAYERS> selectedTowerUpgradeCost;
 };
 
 struct ResourceContainer {
@@ -268,6 +270,13 @@ namespace towerStates {
     constexpr State Idle = 0;
     constexpr State AttackingHitscan = ComponentTags::AttackerHitscan;
     constexpr State AttackingProjectile = ComponentTags::AttackerProjectile;
+};
+
+struct PlayerState {
+    static constexpr State Default = 0;
+    static constexpr State Attack = ComponentTags::AttackerProjectile;
+    static constexpr State Build = ComponentTags::Builder;
+    static constexpr State Upgrading = ComponentTags::Upgrading;
 };
 
 namespace GameData

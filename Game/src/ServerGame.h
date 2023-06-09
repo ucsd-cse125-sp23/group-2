@@ -40,12 +40,7 @@ public:
     void initPrefabs();
 
 private:
-    struct PlayerState {
-        static constexpr State Default = 0;
-        static constexpr State Attack = ComponentTags::AttackerProjectile;
-        static constexpr State Build = ComponentTags::Builder;
-        static constexpr State Upgrading = ComponentTags::Upgrading;
-    };
+
 
     // The ServerNetwork object 
     ServerNetwork* network;

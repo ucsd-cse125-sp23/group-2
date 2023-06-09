@@ -428,7 +428,9 @@ void ServerGame::handleInputs()
         glm::vec3 camPosition;
         bool target = false;
         bool jump = false;
-        Entity choose = INVALID_ENTITY;
+
+        Entity & choose = GameData::playerdata.selectedTowerUpgrade[i];
+        choose = INVALID_ENTITY;
         while (!incomingDataLists[i].empty())
         {
             if ((GameData::tags[i] & ComponentTags::Dead) == ComponentTags::Dead) {
@@ -594,6 +596,13 @@ void ServerGame::packageData(ServertoClientData& data)
     data.serverStatus = currentStatus;
     data.colliders = GameData::colliders;
     data.waveTimer = WaveData::waveTick / TICK_RATE;
+
+    if (WaveData::currentWave >= 0) {
+        data.maxWaveTimer = WaveData::waveTimers[WaveData::currentWave] / TICK_RATE;
+    }
+    else {
+        data.maxWaveTimer = ENEMY_SPAWNDELAY_SEC;
+    }
     for (int i = 0; i < NUM_PLAYERS; ++i) {
         data.playerData.playerStates[i] = GameData::states[i];
     }
@@ -702,6 +711,7 @@ Entity ServerGame::playerUpgrade(Entity e, glm::vec3& camdir, glm::vec3& campos,
         return target;
     }
     if (GameData::tags[target] & ComponentTags::Upgradeable) {
+        GameData::playerdata.selectedTowerUpgradeCost[e] = GameData::upgradedata[target].cost;
         return target;
     }
     return INVALID_ENTITY;

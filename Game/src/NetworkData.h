@@ -48,6 +48,7 @@ struct ServertoClientData {
     std::array<std::array<int, NUM_RESOURCE_TYPES>, NUM_TOWER_TYPES> buildcosts;
     int serverStatus;
     float waveTimer;
+    float maxWaveTimer;
 };
 
 //Struct for intializing the client id
