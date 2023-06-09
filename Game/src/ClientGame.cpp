@@ -185,12 +185,10 @@ void ClientGame::update()
                     woodCost = incomingData.buildcosts[selected][ResourceType::Wood];
                 }
             }
-            else if (incomingData.playerData.playerStates[initData.id] == PlayerState::Upgrading) {
-                if (incomingData.playerData.selectedTowerUpgrade[initData.id] != INVALID_ENTITY) {
+            else if (incomingData.playerData.playerStates[initData.id] == PlayerState::Upgrading && (incomingData.playerData.selectedTowerUpgrade[initData.id] != INVALID_ENTITY)) {
                     moneyCost = incomingData.playerData.selectedTowerUpgradeCost[initData.id][ResourceType::Money];
                     stoneCost = incomingData.playerData.selectedTowerUpgradeCost[initData.id][ResourceType::Stone];
                     woodCost = incomingData.playerData.selectedTowerUpgradeCost[initData.id][ResourceType::Wood];
-                }
             }
             else {
                 moneyCost = 0;
