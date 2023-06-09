@@ -408,6 +408,7 @@ std::list<Entity> createEnemyFlyingTractor() {
     GameData::homingStructs[e].trackedEntity = 0;
     GameData::states[e] = enemyState::Homing;
     GameData::coldmg[e].damage = 0.0f;
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 4;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Velocity +
@@ -1027,7 +1028,7 @@ std::list<Entity> createBossHead()
     GameData::colliders[e].AABB = glm::vec3(4, 2, 2);
     GameData::models[e].modelID = MODEL_ID_BEAR_HEAD;
     GameData::models[e].asciiRep = 'E';
-    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 4;
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 8;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
     GameData::hostilities[e].hostileTo = Teams::Players;
@@ -1076,7 +1077,7 @@ std::list<Entity> createBossLArm()
     GameData::colliders[e].AABB = glm::vec3(2, 3.5, 2.5);
     GameData::models[e].modelID = MODEL_ID_BEAR_LARM;
     GameData::models[e].asciiRep = 'E';
-    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 2;
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 6;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
@@ -1172,7 +1173,7 @@ std::list<Entity> createBossRArm()
     GameData::colliders[e].AABB = glm::vec3(2, 2, 3);
     GameData::models[e].modelID = MODEL_ID_BEAR_RARM;
     GameData::models[e].asciiRep = 'E';
-    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 2;
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 6;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
@@ -1220,7 +1221,7 @@ std::list<Entity> createBossRLeg()
     GameData::colliders[e].AABB = glm::vec3(2, 2.5, 3);
     GameData::models[e].modelID = MODEL_ID_BEAR_RLEG;
     GameData::models[e].asciiRep = 'E';
-    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 2;
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 8;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
@@ -1267,7 +1268,7 @@ std::list<Entity> createBossLLeg()
     GameData::colliders[e].AABB = glm::vec3(2, 2, 4);
     GameData::models[e].modelID = MODEL_ID_BEAR_LLEG;
     GameData::models[e].asciiRep = 'E';
-    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 2;
+    GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 8;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
     GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
