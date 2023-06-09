@@ -50,6 +50,7 @@ int ClientGame::build = 0;
 int ClientGame::selected = 0;
 bool ClientGame::upgrade = 0;
 bool ClientGame::renderColliders = 0;
+bool death_hiden = true;
 
 ClientGame::ClientGame(void)
 {
@@ -248,6 +249,10 @@ void handle_lose(GLFWwindow* window) {
 void handle_quit() {}
 
 void handle_death(boolean alive) {
+
+    //guis[24]->SetHidden(false);
+
+
 }
 
 void handle_down() {
