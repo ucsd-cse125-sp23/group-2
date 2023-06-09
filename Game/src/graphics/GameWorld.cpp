@@ -107,7 +107,7 @@ void GameWorld::init(GLFWwindow* window) {
 	models[MODEL_ID_MOB_TANK] = new ObjectModel("../assets/martian/martian_tank.obj");
 	models[MODEL_ID_MOB_MINI] = new ObjectModel("../assets/martian/martian_fast.obj");
 	models[MODEL_ID_MOB_FLYING] = new ObjectModel("../assets/ufo/ufo_v2.obj");
-	models[MODEL_ID_MOB_TRACTOR] = new ObjectModel("../assets/ufo/ufo_v2.obj");
+	models[MODEL_ID_MOB_TRACTOR] = new ObjectModel("../assets/ufo/ufo_abductor.obj");
 
 	loading(window, "../assets/screens/Title20.png");
 
@@ -177,7 +177,7 @@ void GameWorld::init(GLFWwindow* window) {
 	shaders[MODEL_ID_MOB_TANK] = new Shader("../shaders/martian_shader.vert", "../shaders/model_loading.frag"); //dunno if we want new shading for the tank and minis
 	shaders[MODEL_ID_MOB_MINI] = new Shader("../shaders/martian_shader.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_MOB_FLYING] = new Shader("../shaders/ufo_shader.vert", "../shaders/model_loading.frag");
-	shaders[MODEL_ID_MOB_TRACTOR] = new Shader("../shaders/ufo_shader.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_MOB_TRACTOR] = new Shader("../shaders/ufo_shader.vert", "../shaders/ufo_shader.frag");
 
 	loading(window, "../assets/screens/Title60.png");
 
@@ -523,7 +523,7 @@ void GameWorld::GUI_Init() {
 	death->SetName("death");
 	death->SetPosition(glm::vec3(0.0f, 0.0f, -0.9f));
 	death->SetSize(glm::vec2(1.0f, 1.0f));
-	death->SetTexture("../assets/gui/Buttons/death.jpg");
+	death->SetTexture("../assets/gui/Buttons/death.png");
 	death->SetTransparency(1.0);
 	guis[23] = death;
 
@@ -725,20 +725,37 @@ void GameWorld::draw(Shader* guiShader, float wWidth, float wHeight) {
 	float currTime = float(glfwGetTime());
 	const glm::mat4& viewProjMtx = cam->GetViewProjectMtx();
 	env->draw(viewProjMtx);
-
+	std::vector<RenderEntity*> transparentEntities;
 	for (RenderEntity* e : entities) {
 
 		if (e->getActive()) {
-			e->draw(viewProjMtx, currTime, cam);
+			if (e->getModelID() == MODEL_ID_MOB_TRACTOR) {
+				e->setDistFromCamera(glm::distance(cam->getCameraPosition(), e->getPosition()));
+				transparentEntities.push_back(e);
+			}
+			else{
+				e->draw(viewProjMtx, currTime, cam);
+			}
 		}
 	}
+	std::sort(transparentEntities.begin(), transparentEntities.end(), [](RenderEntity* a, RenderEntity* b)
+		{
+			if (a->getDistFromCamera() > b->getDistFromCamera()) return true;
+			else return false;
+		});
+
 	for (HealthBar* h : healths) {
 		if (h->getActive()) {
 			h->draw(viewProjMtx);
 		}
 	}
-
 	env->drawPortals(viewProjMtx, currTime);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	for (auto a : transparentEntities) {
+		a->draw(viewProjMtx, currTime, cam);
+	}
+	glDisable(GL_BLEND);
 	effect->draw(viewProjMtx, cam);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	for (Cube* c : AABBs) {

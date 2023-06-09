@@ -13,6 +13,7 @@ private:
     int model_id;
     glm::vec3 position;
     float orientation;
+    float distFromCam;
     float offset;
     glm::mat4 model;
     glm::vec3 color;
@@ -36,4 +37,6 @@ public:
     glm::vec3 getPosition() { return position; };
     void setModelID(int m) { model_id = m; }
     int getModelID() { return model_id; }
+    void setDistFromCamera(float dist) { distFromCam =dist; }
+    float getDistFromCamera() { return distFromCam; }
 };

@@ -59,6 +59,11 @@ bool ClientGame::upgrade = 0;
 bool ClientGame::renderColliders = 0;
 bool death_hiden = true;
 
+void handle_death(boolean alive) {
+
+    guis[23]->SetHidden(alive);
+}
+
 ClientGame::ClientGame(void)
 {
     connectionAttempted = false;
@@ -202,7 +207,13 @@ void ClientGame::update()
                 stoneCost = 0;
                 woodCost = 0;
             }
-
+            
+            if (spawntimer >= 0) {
+                handle_death(false);
+            }
+            else {
+                handle_death(true);
+            }
 
             if (moneyCost != 0 || stoneCost != 0 || woodCost != 0) {
                 //printf("This costs (%d, %d,%d)\n", moneyCost, stoneCost, woodCost);
@@ -269,14 +280,11 @@ void handle_score() {
 
 }
 
-void handle_quit() {}
-
-void handle_death(boolean alive) {
-
-    guis[24]->SetHidden(alive);
-
-
+void handle_quit() {
+    exit(0);
 }
+
+
 
 void handle_down() {
     std::cout << "depth"<< depth << std::endl;
