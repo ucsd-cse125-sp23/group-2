@@ -62,6 +62,7 @@ Text* stoneResT;
 Text* pointsT;
 Text* enemiesKilledT;
 Text* towersBuiltT;
+Text* waveCounter;
 
 Text* buildCost;
 char str[65536];
@@ -275,6 +276,8 @@ void GameWorld::GUI_Init() {
 	pointsT = new Text("../assets/font.ttf");
 	enemiesKilledT = new Text("../assets/font.ttf");
 	towersBuiltT = new Text("../assets/font.ttf");
+	waveCounter = new Text("../assets/font.ttf");
+
 	selected = 0;
 	depth = 0;
 	menuOn = false;
@@ -517,11 +520,18 @@ void updateLabels() {
 	sprintf(str, "%d", stoneRes);
 	stoneResT->RenderText(str, 600.0f, 20.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
 
-	sprintf(str, "%d", (60-wavetimer));
+	sprintf(str, "%d", (wavetimer));
+	//strcat(str, "/");
+	//sprintf(tmp_str, "%d", maxwavetimer);
+	//strcat(str, tmp_str);
+	spawntimerT->RenderText(str, 900.0f, 940.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
+
+
+	sprintf(str, "Wave %d", (curWave));
 	strcat(str, "/");
-	sprintf(tmp_str, "%d", maxwavetimer);
+	sprintf(tmp_str, "%d", numWaves);
 	strcat(str, tmp_str);
-	spawntimerT->RenderText(str, 900.0f, 980.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
+	waveCounter->RenderText(str, 800.0f, 1020.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
 	
 	sprintf(str, "%d", points);
 	strcat(str, " points");
