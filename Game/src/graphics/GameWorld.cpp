@@ -5,19 +5,30 @@ std::array <GUIElement*, NUM_GUI> guis;
 int selected;
 int depth;
 bool menuOn;
+
+//Render when dead
 int spawntimer=0;
+
+
+//High priority to render (esp when building/upgrrading)
 int moneyRes=0;
 int woodRes=0;
 int stoneRes=0;
+
+//Low priority to render
 int points=0;
 int enemiesKilled=0;
 int towersBuilt=0;
+
+//High prioritry to render
 int wavetimer=0; //Do not render as a bar (render as a number since waves have incosistent timings)
 int maxwavetimer=0;
 
+//High priority
 int curWave = 0;
 int numWaves = WAVE_COUNT;
 
+//Medium priority 
 float basehealth = 0;
 float maxbasehealth = 0;
 
@@ -27,7 +38,7 @@ int poweruptimer = 0;
 
 
 //Only render when one of these three is non-zero should be a hidden element otherwise (These are the costs of building/upgrading and are only non-zero when the player has selected a
-//tower to build or upgrade
+//tower to build or upgrade. Maybe a pop-up minus ressource symbol above the regular resource counters
 int moneyCost = 0;
 int woodCost = 0;
 int stoneCost = 0;
