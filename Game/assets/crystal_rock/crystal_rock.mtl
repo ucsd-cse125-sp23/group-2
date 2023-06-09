@@ -1,20 +1,23 @@
-# Blender MTL File: 'crystal_rock.blend'
-# Material Count: 2
+# Blender 3.5.1 MTL File: 'crystal_rock.blend'
+# www.blender.org
 
 newmtl Material.001
-Ns 323.999994
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.200000 0.400000 0.800000
+Kd 0.341921 0.304190 0.800000
 Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.400000 0.900000
-Ni 1.000000
+Ke 0.000000 0.076723 3.000000
+Ni 1.450000
 d 1.000000
 illum 2
 
-newmtl None
-Ns 500
-Ka 0.8 0.8 0.8
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
+newmtl Rock
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.617207 0.130136 0.057805
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
 illum 2
+map_Bump -bm 1.000000 Rock_Normal.png

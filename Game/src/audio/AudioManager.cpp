@@ -20,14 +20,31 @@ AudioManager::AudioManager() {
     musicChannel = nullptr;
 
     AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_RESOURCE, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_RESOURCE_1, SOUND_ID_DEATH);
+
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_RESOURCE_2, SOUND_ID_DEATH);
+
     AudioManager::loadSound("../assets/sounds/PM_RI_Designed_7 Rocks Impact Hit Big LFE Heavy Designed.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DEATH);
     AudioManager::loadSound("../assets/sounds/Alarm_Fast_DDM23.wav", MODEL_ID_BASE, SOUND_ID_DAMAGE);
     AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_RESOURCE, SOUND_ID_DAMAGE);
+    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_RESOURCE_1, SOUND_ID_DAMAGE);
+
+    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_RESOURCE_2, SOUND_ID_DAMAGE);
+
     AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_BARRIER, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_BARRIER_L2, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_BARRIER_L3, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_BARRIER_L4, SOUND_ID_DEATH);
 
     AudioManager::loadSound("../assets/sounds/PM_RI_Source_92 Rocks Impact Hit Single Stone.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DAMAGE);
 
-    AudioManager::loadSound("../assets/sounds/Big Blast 4.wav", MODEL_ID_ROVER, SOUND_ID_ATTACK);
+    AudioManager::loadSound("../assets/sounds/Big Blast 4.wav", MODEL_ID_ROVER_BLUE, SOUND_ID_ATTACK);
+    AudioManager::loadSound("../assets/sounds/Big Blast 4.wav", MODEL_ID_ROVER_RED, SOUND_ID_ATTACK);
+
+    AudioManager::loadSound("../assets/sounds/Big Blast 4.wav", MODEL_ID_ROVER_GREEN, SOUND_ID_ATTACK);
+
+    AudioManager::loadSound("../assets/sounds/Big Blast 4.wav", MODEL_ID_ROVER_PURPLE, SOUND_ID_ATTACK);
+
     AudioManager::loadSound("../assets/sounds/HeavyGun_Experimental_3.wav", MODEL_ID_TOWER, SOUND_ID_ATTACK);
     AudioManager::loadSound("../assets/sounds/HeavyGun_Experimental_3.wav", MODEL_ID_TOWER_L2, SOUND_ID_ATTACK);
     AudioManager::loadSound("../assets/sounds/HeavyGun_Experimental_3.wav", MODEL_ID_TOWER_L3, SOUND_ID_ATTACK);
@@ -44,9 +61,18 @@ AudioManager::AudioManager() {
     AudioManager::loadSound("../assets/sounds/Magic_Spells_CastLong_Electricity11.wav", MODEL_ID_TESLA_L4, SOUND_ID_ATTACK);
 
     AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_BARRIER, SOUND_ID_DAMAGE); //TODO: Change
+    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_BARRIER_L2, SOUND_ID_DAMAGE); //TODO: Change
+    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_BARRIER_L3, SOUND_ID_DAMAGE); //TODO: Change
+    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_BARRIER_L4, SOUND_ID_DAMAGE); //TODO: Change
 
     AudioManager::loopSound(MODEL_ID_TESLA, SOUND_ID_ATTACK, 1400, 2400);
-    AudioManager::loadSound("../assets/sounds/MINE Placing 01.wav", MODEL_ID_ROVER, SOUND_ID_BUILD);
+    AudioManager::loadSound("../assets/sounds/MINE Placing 01.wav", MODEL_ID_ROVER_BLUE, SOUND_ID_BUILD);
+    AudioManager::loadSound("../assets/sounds/MINE Placing 01.wav", MODEL_ID_ROVER_RED, SOUND_ID_BUILD);
+
+    AudioManager::loadSound("../assets/sounds/MINE Placing 01.wav", MODEL_ID_ROVER_GREEN, SOUND_ID_BUILD);
+
+    AudioManager::loadSound("../assets/sounds/MINE Placing 01.wav", MODEL_ID_ROVER_PURPLE, SOUND_ID_BUILD);
+
     AudioManager::loadSound("../assets/sounds/Screeching Monster 2-1.wav", MODEL_ID_MOB, SOUND_ID_DEATH);
     AudioManager::loadSound("../assets/sounds/Screeching Monster 2-1 Pitch Down.wav", MODEL_ID_MOB_TANK, SOUND_ID_DEATH);
     AudioManager::loadSound("../assets/sounds/Screeching Monster 2-1 Pitch Up.wav", MODEL_ID_MOB_MINI, SOUND_ID_DEATH);
@@ -80,8 +106,14 @@ AudioManager::AudioManager() {
 
 
     AudioManager::loadSound("../assets/sounds/4B8NZTJ-tractor-beam.wav", MODEL_ID_MOB_TRACTOR, SOUND_ID_ATTACK);
-    AudioManager::loadSound("../assets/sounds/Robotic Lifeforms 2 - Impacts Source - Metal Tool Drawer Punch 03.wav", MODEL_ID_ROVER, SOUND_ID_LAND);
-    AudioManager::loadSound("../assets/sounds/PM_FSSF2_EXOSKELETON_11_SERVO_MOVEMENT_ROTATION.wav", MODEL_ID_ROVER, SOUND_ID_JUMP);
+    AudioManager::loadSound("../assets/sounds/Robotic Lifeforms 2 - Impacts Source - Metal Tool Drawer Punch 03.wav", MODEL_ID_ROVER_BLUE, SOUND_ID_LAND);
+    AudioManager::loadSound("../assets/sounds/PM_FSSF2_EXOSKELETON_11_SERVO_MOVEMENT_ROTATION.wav", MODEL_ID_ROVER_BLUE, SOUND_ID_JUMP);
+    AudioManager::loadSound("../assets/sounds/Robotic Lifeforms 2 - Impacts Source - Metal Tool Drawer Punch 03.wav", MODEL_ID_ROVER_RED, SOUND_ID_LAND);
+    AudioManager::loadSound("../assets/sounds/PM_FSSF2_EXOSKELETON_11_SERVO_MOVEMENT_ROTATION.wav", MODEL_ID_ROVER_RED, SOUND_ID_JUMP);
+    AudioManager::loadSound("../assets/sounds/Robotic Lifeforms 2 - Impacts Source - Metal Tool Drawer Punch 03.wav", MODEL_ID_ROVER_GREEN, SOUND_ID_LAND);
+    AudioManager::loadSound("../assets/sounds/PM_FSSF2_EXOSKELETON_11_SERVO_MOVEMENT_ROTATION.wav", MODEL_ID_ROVER_GREEN, SOUND_ID_JUMP);
+    AudioManager::loadSound("../assets/sounds/Robotic Lifeforms 2 - Impacts Source - Metal Tool Drawer Punch 03.wav", MODEL_ID_ROVER_PURPLE, SOUND_ID_LAND);
+    AudioManager::loadSound("../assets/sounds/PM_FSSF2_EXOSKELETON_11_SERVO_MOVEMENT_ROTATION.wav", MODEL_ID_ROVER_PURPLE, SOUND_ID_JUMP);
     AudioManager::loadSound("../assets/sounds/PowerUp01.wav", MODEL_ID_POWERUP_SPREAD, SOUND_ID_DEATH);
     AudioManager::loadSound("../assets/sounds/PowerUp01.wav", MODEL_ID_POWERUP_RAPID, SOUND_ID_DEATH);
 

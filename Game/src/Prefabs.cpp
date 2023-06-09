@@ -879,7 +879,7 @@ std::list<Entity> createTowerBarrier1() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_BARRIER;
+    GameData::models[e].modelID = MODEL_ID_BARRIER_L2;
     GameData::upgradedata[e].cost = { 20, 20, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerBarrier2;
     GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= 2;
@@ -897,7 +897,7 @@ std::list<Entity> createTowerBarrier2() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_BARRIER;
+    GameData::models[e].modelID = MODEL_ID_BARRIER_L3;
     GameData::upgradedata[e].cost = { 100, 100, 0 };
     GameData::upgradedata[e].upgrade = Prefabs::TowerBarrier3;
     GameData::healths[e].curHealth = GameData::healths[e].maxHealth *= 5;
@@ -915,7 +915,7 @@ std::list<Entity> createTowerBarrier3() {
         return createdEntities;
     }
 
-    GameData::models[e].modelID = MODEL_ID_BARRIER;
+    GameData::models[e].modelID = MODEL_ID_BARRIER_L4;
     GameData::tags[e] =
         ComponentTags::Position +
         ComponentTags::Model +
@@ -946,7 +946,7 @@ std::list<Entity> createHome() {
     GameData::hostilities[e].team = Teams::Towers;
     GameData::hostilities[e].hostileTo = Teams::Martians;
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = HOME_BASE_HEALTH;
-    GameData::colliders[e].AABB =  glm::vec3(20, 15.5, 20);
+    GameData::colliders[e].AABB =  glm::vec3(40, 15, 30);
     GameData::rigidbodies[e].fixed = true;
     GameData::models[e].renderCollider = true;
     GameData::rigidbodies[e].grounded = false;
@@ -965,6 +965,7 @@ std::list<Entity> createHome() {
 }
 
 
+std::array<MODEL_ID, 4> playerModels = { MODEL_ID_ROVER_BLUE, MODEL_ID_ROVER_RED, MODEL_ID_ROVER_GREEN, MODEL_ID_ROVER_PURPLE };
 std::list<Entity> createPlayers() {
     std::list<Entity> createdEntities;
 
@@ -980,7 +981,7 @@ std::list<Entity> createPlayers() {
         GameData::velocities[e].velocity = glm::vec3(0, 0, 0);
         GameData::velocities[e].moveSpeed = PLAYER_MVSPD_PERSEC;
         GameData::colliders[e].AABB =  glm::vec3(1, 0.7, 1);
-        GameData::models[e].modelID = MODEL_ID_ROVER;
+        GameData::models[e].modelID = playerModels[i];
         GameData::models[e].asciiRep = 'P';
         GameData::models[i].renderCollider = true;
         GameData::healths[e].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
@@ -1346,6 +1347,8 @@ std::list<Entity> createBoss()
     return boss;
 }
 
+std::array<MODEL_ID, 3> treetypes = { MODEL_ID_RESOURCE, MODEL_ID_RESOURCE_1, MODEL_ID_RESOURCE_2 };
+
 std::list<Entity> createWoodResourceBasic()
 {
     std::list<Entity> createdEntities;
@@ -1359,7 +1362,8 @@ std::list<Entity> createWoodResourceBasic()
     GameData::models[e].asciiRep = 'R';
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = RESOURCE_BASE_HEALTH;
     GameData::hostilities[e].team = Teams::Environment;
-    GameData::models[e].modelID = MODEL_ID_RESOURCE;
+    int tre_type = (rand() % 3);
+    GameData::models[e].modelID = treetypes[tre_type];
     GameData::hostilities[e].hostileTo = 0;
     GameData::colliders[e].colteam = CollisionLayer::StaticObj;
     GameData::colliders[e].colwith = 0;
