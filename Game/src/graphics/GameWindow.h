@@ -35,6 +35,7 @@ public:
 
 	void win();
 	void loss();
+	void wait();
 
 
 	// update and draw functions

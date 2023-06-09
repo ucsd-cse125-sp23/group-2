@@ -18,6 +18,7 @@ private:
     static int selected; //Default 0, which weapon/tower is currently selected to use/build
     static bool upgrade; //If in upgrade mode
     static bool renderColliders;
+    bool connectionAttempted;
 public:
 
     ServertoClientData incomingData;

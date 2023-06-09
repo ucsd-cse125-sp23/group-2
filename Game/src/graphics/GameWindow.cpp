@@ -157,4 +157,22 @@ void GameWindow::loss() {
     glfwSwapBuffers(window);
 }
 
+void GameWindow::wait() {
+    glfwMakeContextCurrent(window);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    stbi_set_flip_vertically_on_load(true);
+    GUIElement* loadingScreen = new GUIElement();
+    loadingScreen->SetHidden(false);
+    loadingScreen->SetName("loading screen");
+    loadingScreen->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    loadingScreen->SetSize(glm::vec2(2.0f, 1.6f));
+    loadingScreen->SetTexture("../assets/screens/waiting.png");
+    loadingScreen->SetTransparency(1.0);
+    loadingScreen->draw(glm::mat4(1.0), guiProgram);
+
+    glfwPollEvents();
+    glfwSwapBuffers(window);
+}
+
 

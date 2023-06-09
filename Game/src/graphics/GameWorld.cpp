@@ -129,7 +129,7 @@ void GameWorld::init(GLFWwindow* window) {
 	loading(window, "../assets/screens/Title100.png");
 	GUI_Init();
 
-	loading(window, "../assets/screens/waiting.png");
+	loading(window, "../assets/screens/Space.png");
 }
 
 void GameWorld::loading(GLFWwindow* window, char* path) {

@@ -31,6 +31,7 @@ bool ClientGame::renderColliders = 0;
 
 ClientGame::ClientGame(void)
 {
+    connectionAttempted = false;
     //TODO Game Initialization
     gameWindow = new GameWindow(RES_WIDTH, RES_HEIGHT);
     setup_callbacks();
@@ -39,9 +40,7 @@ ClientGame::ClientGame(void)
     initData.id = INVALID_CLIENT_ID;
     incomingData.serverStatus = UNKNOWN_SERVER_STATUS;
 
-    //Network Initialization
     network = new ClientNetwork();
-    network->initConnection();
     
 }
 
@@ -54,85 +53,99 @@ int ClientGame::recieveData()
 
 void ClientGame::update()
 {
-    //Recieve Data
-    //Recieve incoming server data into gamestate
-    recieveData();
-
-    //Send Data to Server
-    ClienttoServerData newPackage;
-    packageData(newPackage);
-    network->sendActionPackets(newPackage);
-    
-    //Render
-    if (initData.id != INVALID_CLIENT_ID && incomingData.serverStatus != UNKNOWN_SERVER_STATUS) {
-        switch (incomingData.serverStatus) {
-        case ServerStatus::init:
-            //waiting for other player
-            break;
-        case ServerStatus::game:
-            for (int i = 0; i < MAX_ENTITIES; ++i) {
-                incomingData.models[i].renderCollider = renderColliders;
-            }
-            gameWindow->update(incomingData, initData.id);
-            audioManager->update(gameWindow->getCamPosition(), glm::normalize(gameWindow->getCamDirectionVector()), glm::normalize(gameWindow->getCamUpVector()), incomingData);
-            break;
-        case ServerStatus::loss:
-            printf("You lose\n");
-            gameWindow->loss();
-            break;
-        case ServerStatus::win:
-            printf("You won\n");
-            gameWindow->win();
-            break;
-        default:
-            printf("WTF");
-            break;
-        }
-
-
-    }
-    
-    //Process combat logs
-    for (int i = 0; i < incomingData.clogsize; ++i) {
-        Entity target = incomingData.combatLogs[i].target;
-        //printf("Recieved %d combat logs: Ent %d, attacked Ent %d, for dmg %f\n", incomingData.logsize, incomingData.combatLogs[i].source, incomingData.combatLogs[i].target, incomingData.combatLogs[i].damage);
-        if (incomingData.combatLogs[i].killed) {
-            //printf("And killed it\n");
-        }
-    }
-    incomingData.clogsize = 0;
-
-    //Process sound logs
-    for (int i = 0; i < incomingData.slogsize; ++i) {
-        Entity source = incomingData.soundLogs[i].source;
-        if (!incomingData.soundLogs[i].stop) {
-            glm::vec3 position = incomingData.positions[source];
-            audioManager->playSound(incomingData.models[source].modelID, incomingData.soundLogs[i].sound, position, source);
+    if (!connectionAttempted) {
+        glfwPollEvents();       
+        if (jumping) {
+            ClienttoServerData newPackage;
+            packageData(newPackage);
+            network->sendActionPackets(newPackage);
+            connectionAttempted = true;
+            gameWindow->wait();
         }
         else {
-            audioManager->stopSound(source);
+            return;
         }
     }
-    incomingData.slogsize = 0;
+    else {
+        //Recieve Data
+        //Recieve incoming server data into gamestate
+        recieveData();
 
-    //Update Gui
-    if (initData.id != INVALID_CLIENT_ID && incomingData.serverStatus != UNKNOWN_SERVER_STATUS) {
-        health = incomingData.healths[initData.id].curHealth;
-        ScoreCard myscore = incomingData.playerData.scores[initData.id];
-        spawntimer = incomingData.playerData.spawntimers[initData.id];
-        woodRes = incomingData.playerData.resources[ResourceType::Wood];
-        stoneRes = incomingData.playerData.resources[ResourceType::Stone];
-        moneyRes = incomingData.playerData.resources[ResourceType::Money];
-        enemiesKilled = myscore.enemiesKilled;
-        towersBuilt = myscore.towersBuilt;
-        points = myscore.points;
-        if (health < 0) {
-            health = 0;
+        //Send Data to Server
+        ClienttoServerData newPackage;
+        packageData(newPackage);
+        network->sendActionPackets(newPackage);
+
+        //Render
+        if (initData.id != INVALID_CLIENT_ID && incomingData.serverStatus != UNKNOWN_SERVER_STATUS) {
+            switch (incomingData.serverStatus) {
+            case ServerStatus::init:
+                //waiting for other player
+                break;
+            case ServerStatus::game:
+                for (int i = 0; i < MAX_ENTITIES; ++i) {
+                    incomingData.models[i].renderCollider = renderColliders;
+                }
+                gameWindow->update(incomingData, initData.id);
+                audioManager->update(gameWindow->getCamPosition(), glm::normalize(gameWindow->getCamDirectionVector()), glm::normalize(gameWindow->getCamUpVector()), incomingData);
+                break;
+            case ServerStatus::loss:
+                printf("You lose\n");
+                gameWindow->loss();
+                break;
+            case ServerStatus::win:
+                printf("You won\n");
+                gameWindow->win();
+                break;
+            default:
+                printf("WTF");
+                break;
+            }
+
+
         }
-        guis[9]->SetSize(glm::vec2(0.38f * health/ incomingData.healths[initData.id].maxHealth, 0.05f));
 
+        //Process combat logs
+        for (int i = 0; i < incomingData.clogsize; ++i) {
+            Entity target = incomingData.combatLogs[i].target;
+            //printf("Recieved %d combat logs: Ent %d, attacked Ent %d, for dmg %f\n", incomingData.logsize, incomingData.combatLogs[i].source, incomingData.combatLogs[i].target, incomingData.combatLogs[i].damage);
+            if (incomingData.combatLogs[i].killed) {
+                //printf("And killed it\n");
+            }
+        }
+        incomingData.clogsize = 0;
+
+        //Process sound logs
+        for (int i = 0; i < incomingData.slogsize; ++i) {
+            Entity source = incomingData.soundLogs[i].source;
+            if (!incomingData.soundLogs[i].stop) {
+                glm::vec3 position = incomingData.positions[source];
+                audioManager->playSound(incomingData.models[source].modelID, incomingData.soundLogs[i].sound, position, source);
+            }
+            else {
+                audioManager->stopSound(source);
+            }
+        }
+        incomingData.slogsize = 0;
+
+        //Update Gui
+        if (initData.id != INVALID_CLIENT_ID && incomingData.serverStatus != UNKNOWN_SERVER_STATUS) {
+            health = incomingData.healths[initData.id].curHealth;
+            ScoreCard myscore = incomingData.playerData.scores[initData.id];
+            spawntimer = incomingData.playerData.spawntimers[initData.id];
+            woodRes = incomingData.playerData.resources[ResourceType::Wood];
+            stoneRes = incomingData.playerData.resources[ResourceType::Stone];
+            moneyRes = incomingData.playerData.resources[ResourceType::Money];
+            enemiesKilled = myscore.enemiesKilled;
+            towersBuilt = myscore.towersBuilt;
+            points = myscore.points;
+            if (health < 0) {
+                health = 0;
+            }
+            guis[9]->SetSize(glm::vec2(0.38f * health / incomingData.healths[initData.id].maxHealth, 0.05f));
+
+        }
     }
-
 
 }
 
