@@ -277,7 +277,7 @@ void GameWorld::GUI_Init() {
 	gui->SetName("gui");
 	gui->SetPosition(glm::vec3(0.0f, 0.90f, 0.3f));
 	gui->SetSize(glm::vec2(2.0f, 0.2f));
-	gui->SetTexture("../assets/gui/Buttons/hud_top.jpg");
+	gui->SetTexture("../assets/gui/Buttons/bar.jpg");
 	gui->SetTransparency(1.0);
 	guis[17] = gui;
 
