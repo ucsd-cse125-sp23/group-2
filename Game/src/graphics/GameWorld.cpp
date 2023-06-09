@@ -59,9 +59,15 @@ Text* spawntimerT;
 Text* moneyResT;
 Text* woodResT;
 Text* stoneResT;
+
+Text* moneyCostT;
+Text* woodCostT;
+Text* stoneCostT;
+
 Text* pointsT;
 Text* enemiesKilledT;
 Text* towersBuiltT;
+Text* waveCounter;
 
 Text* buildCost;
 char str[65536];
@@ -272,9 +278,14 @@ void GameWorld::GUI_Init() {
 	moneyResT = new Text("../assets/font.ttf");
 	woodResT = new Text("../assets/font.ttf");
 	stoneResT = new Text("../assets/font.ttf");
+	moneyCostT = new Text("../assets/font.ttf");
+	woodCostT = new Text("../assets/font.ttf");
+	stoneCostT = new Text("../assets/font.ttf");
 	pointsT = new Text("../assets/font.ttf");
 	enemiesKilledT = new Text("../assets/font.ttf");
 	towersBuiltT = new Text("../assets/font.ttf");
+	waveCounter = new Text("../assets/font.ttf");
+
 	selected = 0;
 	depth = 0;
 	menuOn = false;
@@ -492,7 +503,15 @@ void GameWorld::GUI_Init() {
 	tower_health->SetTexture("../assets/gui/Buttons/health_front.jpg");
 	tower_health->SetTransparency(1.0);
 	guis[22] = tower_health;
-
+	
+	death = guis[23];
+	death->SetHidden(true);
+	death->SetName("death");
+	death->SetPosition(glm::vec3(0.0f, 0.0f, -0.9f));
+	death->SetSize(glm::vec2(1.0f, 1.0f));
+	death->SetTexture("../assets/gui/Buttons/death.jpg");
+	death->SetTransparency(1.0);
+	guis[23] = death;
 	
 }
 
@@ -501,19 +520,47 @@ void updateLabels() {
 	guis[21]->SetSize(glm::vec2(0.2f*basehealth/maxbasehealth, 0.04f));
 
 	sprintf(str, "%d", moneyRes);
-	moneyResT->RenderText(str, 1600.0f, 20.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	moneyResT->RenderText(str, 1550.0f, 20.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
 	
 	sprintf(str, "%d", woodRes);
-	woodResT->RenderText(str, 1100.0f, 20.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	woodResT->RenderText(str, 1050.0f, 20.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
 	
 	sprintf(str, "%d", stoneRes);
 	stoneResT->RenderText(str, 600.0f, 20.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
 
-	sprintf(str, "%d", (60-wavetimer));
+	if (stoneCost > 0 || woodCost > 0 || moneyCost > 0) {
+		sprintf(str, "-%d", moneyCost);
+		moneyCostT->RenderText(str, 1750.0f, 20.0f, 1.5f, glm::vec3(10.0, 0.0f, 0.0f));
+
+		sprintf(str, "-%d", woodCost);
+		woodCostT->RenderText(str, 1250.0f, 20.0f, 1.5f, glm::vec3(10.0, 0.0f, 0.0f));
+
+		sprintf(str, "-%d", stoneCost);
+		stoneCostT->RenderText(str, 800.0f, 20.0f, 1.5f, glm::vec3(10.0, 0.0f, 0.0f));
+	}
+	else {
+		sprintf(str, "", moneyCost);
+		moneyCostT->RenderText(str, 1700.0f, 20.0f, 1.5f, glm::vec3(10.0, 0.0f, 0.0f));
+
+		sprintf(str, "", woodCost);
+		woodCostT->RenderText(str, 1200.0f, 20.0f, 1.5f, glm::vec3(10.0, 0.0f, 0.0f));
+
+		sprintf(str, "", stoneCost);
+		stoneCostT->RenderText(str, 700.0f, 20.0f, 1.5f, glm::vec3(10.0, 0.0f, 0.0f));
+	}
+
+	sprintf(str, "%d", (wavetimer));
+	//strcat(str, "/");
+	//sprintf(tmp_str, "%d", maxwavetimer);
+	//strcat(str, tmp_str);
+	spawntimerT->RenderText(str, 900.0f, 940.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
+
+
+	sprintf(str, "Wave %d", (curWave));
 	strcat(str, "/");
-	sprintf(tmp_str, "%d", maxwavetimer);
+	sprintf(tmp_str, "%d", numWaves);
 	strcat(str, tmp_str);
-	spawntimerT->RenderText(str, 900.0f, 980.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
+	waveCounter->RenderText(str, 800.0f, 1020.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
 	
 	sprintf(str, "%d", points);
 	strcat(str, " points");
@@ -620,7 +667,7 @@ void GameWorld::update(ServertoClientData& incomingData, int id) {
 			effect->playerJumpEffect(entities[source]->getPosition());
 		}
 		else if (sound == SOUND_ID_ATTACK && !newSLogs.top().stop) {
-			if (entities[source]->getModelID() == MODEL_ID_TESLA) {
+			if (entities[source]->getModelID() == MODEL_ID_TESLA || entities[source]->getModelID() == MODEL_ID_TESLA_L2 || entities[source]->getModelID() == MODEL_ID_TESLA_L3 || entities[source]->getModelID() == MODEL_ID_TESLA_L4) {
 				effect->teslaAttackEffect(entities[source]->getPosition());
 			}
 		}

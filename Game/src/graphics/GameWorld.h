@@ -72,6 +72,7 @@ public:
     GUIElement* baseH;
     GUIElement* tower_health;
     GUIElement* base_health;
+    GUIElement* death;
     //
     void GUI_Init();
     void update(ServertoClientData& incomingData, int id);
