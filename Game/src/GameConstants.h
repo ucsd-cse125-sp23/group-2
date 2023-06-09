@@ -9,6 +9,7 @@
 #define CLOG_MAXSIZE 50
 #define SLOG_MAXSIZE 100
 const float TICK_RATE = 64;
+#define NUM_GUI 19
 
 //How many seconds until first wave spawns
 const float ENEMY_SPAWNDELAY_SEC = 60;
@@ -64,7 +65,7 @@ constexpr size_t NUM_UP_LEVELS = 3;
 const int ACTION_COOLDOWN = TICK_RATE;
 
 //ground enemy base movespeed in units/sec
-const float ENEMY_GND_MVSPD_PERSEC = 7;
+const float ENEMY_GND_MVSPD_PERSEC = 10;
 
 //ground enemy base attack damage
 const float ENEMY_GND_BASE_DMG = 30;

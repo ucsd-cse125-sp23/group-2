@@ -402,8 +402,6 @@ void ServerGame::update()
     }
 
 
-
-
     //Print debug message buffer
     printf(debug);
     debug[0] = '\0';
@@ -543,7 +541,7 @@ void ServerGame::handleInputs()
 
 void ServerGame::sendPackets()
 {
-    if (currentStatus == game) {
+    if (currentStatus == game || currentStatus == loss || currentStatus == win) {
         //Send Data to Clients
         packageData(gameState);
         network->sendActionPackets(gameState);

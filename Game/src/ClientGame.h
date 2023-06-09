@@ -18,6 +18,7 @@ private:
     static int selected; //Default 0, which weapon/tower is currently selected to use/build
     static bool upgrade; //If in upgrade mode
     static bool renderColliders;
+    bool connectionAttempted;
 public:
 
     ServertoClientData incomingData;
@@ -38,4 +39,11 @@ public:
     static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
     static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+
+    enum ServerStatus {
+        init,
+        game,
+        win,
+        loss
+    };
 };
