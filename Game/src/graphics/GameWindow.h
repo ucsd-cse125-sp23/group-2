@@ -31,6 +31,7 @@ public:
 	void setup();
 	bool initializeProgram();
 	bool initializeObjects();
+	void loadingScreen();
 	void cleanUp();
 
 

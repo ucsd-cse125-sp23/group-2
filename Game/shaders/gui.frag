@@ -9,9 +9,4 @@ uniform float transparency;
 void main()
 {
     FragColor = texture(ourTexture, TexCoord);
-    FragColor.a = transparency;
-
-   if (FragColor.rgb == vec3(0.2f, 0.8f, 0.2f)) {
-        FragColor.a = 0.0f;
-    }
 }

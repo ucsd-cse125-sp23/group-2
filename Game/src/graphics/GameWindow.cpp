@@ -66,6 +66,30 @@ GameWindow::~GameWindow() {
 void GameWindow::cleanUp() {
     shaderProgram->cleanup();
 }
+
+void GameWindow::loadingScreen() {
+
+    glfwMakeContextCurrent(window);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    stbi_set_flip_vertically_on_load(true);
+    GUIElement* loadingScreen = new GUIElement();
+    loadingScreen->SetHidden(false);
+    loadingScreen->SetName("loading screen");
+    loadingScreen->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    loadingScreen->SetSize(glm::vec2(4.0f, 2.25f));
+    loadingScreen->SetTexture("../assets/screens/loading.png");
+    loadingScreen->SetTransparency(1.0);
+    loadingScreen->draw(glm::mat4(1.0), guiProgram);
+
+    std::cout << "PRINTING LOADING SCREEN\n";
+
+    glfwPollEvents();
+    glfwSwapBuffers(window);
+    // Loading Screen
+
+}
+
 void GameWindow::setup() {
 
     // Enable depth buffering.
@@ -79,6 +103,7 @@ void GameWindow::setup() {
 
     // Initialize the shader program; exit if initialization fails.
     if (!initializeProgram()) exit(EXIT_FAILURE);
+    loadingScreen();
     // Initialize objects/pointers for rendering; exit if initialization fails.
     if (!initializeObjects()) exit(EXIT_FAILURE);
 }
