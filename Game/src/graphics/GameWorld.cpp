@@ -530,14 +530,14 @@ void GameWorld::GUI_Init() {
 	death->SetTransparency(1.0);
 	guis[23] = death;
 
-	score = guis[23];
+	score = guis[24];
 	score->SetHidden(true);
 	score->SetName("score");
 	score->SetPosition(glm::vec3(0.0f, 0.0f, -0.9f));
 	score->SetSize(glm::vec2(1.0f, 1.0f));
 	score->SetTexture("../assets/gui/Buttons/score.png");
 	score->SetTransparency(1.0);
-	guis[23] = score;
+	guis[24] = score;
 	
 }
 
