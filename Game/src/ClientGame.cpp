@@ -181,15 +181,15 @@ void ClientGame::update()
             if (incomingData.playerData.playerStates[initData.id] == PlayerState::Build) {
                 if (selected < NUM_TOWER_PREFAB && selected >= 0) {
                     moneyCost = incomingData.buildcosts[selected][ResourceType::Money];
-                    stoneCost = incomingData.buildcosts[selected][ResourceType::Wood];
-                    woodCost = incomingData.buildcosts[selected][ResourceType::Stone];
+                    stoneCost = incomingData.buildcosts[selected][ResourceType::Stone];
+                    woodCost = incomingData.buildcosts[selected][ResourceType::Wood];
                 }
             }
             else if (incomingData.playerData.playerStates[initData.id] == PlayerState::Upgrading) {
                 if (incomingData.playerData.selectedTowerUpgrade[initData.id] != INVALID_ENTITY) {
                     moneyCost = incomingData.playerData.selectedTowerUpgradeCost[initData.id][ResourceType::Money];
-                    stoneCost = incomingData.playerData.selectedTowerUpgradeCost[initData.id][ResourceType::Wood];
-                    woodCost = incomingData.playerData.selectedTowerUpgradeCost[initData.id][ResourceType::Stone];
+                    stoneCost = incomingData.playerData.selectedTowerUpgradeCost[initData.id][ResourceType::Stone];
+                    woodCost = incomingData.playerData.selectedTowerUpgradeCost[initData.id][ResourceType::Wood];
                 }
             }
             else {
