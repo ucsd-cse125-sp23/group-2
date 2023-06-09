@@ -20,10 +20,21 @@ AudioManager::AudioManager() {
     musicChannel = nullptr;
 
     AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_RESOURCE, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_RESOURCE_1, SOUND_ID_DEATH);
+
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_RESOURCE_2, SOUND_ID_DEATH);
+
     AudioManager::loadSound("../assets/sounds/PM_RI_Designed_7 Rocks Impact Hit Big LFE Heavy Designed.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DEATH);
     AudioManager::loadSound("../assets/sounds/Alarm_Fast_DDM23.wav", MODEL_ID_BASE, SOUND_ID_DAMAGE);
     AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_RESOURCE, SOUND_ID_DAMAGE);
+    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_RESOURCE_1, SOUND_ID_DAMAGE);
+
+    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_RESOURCE_2, SOUND_ID_DAMAGE);
+
     AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_BARRIER, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_BARRIER_L2, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_BARRIER_L3, SOUND_ID_DEATH);
+    AudioManager::loadSound("../assets/sounds/Bluezone_BC0279_forest_wood_log_debris_falling_3_007.wav", MODEL_ID_BARRIER_L4, SOUND_ID_DEATH);
 
     AudioManager::loadSound("../assets/sounds/PM_RI_Source_92 Rocks Impact Hit Single Stone.wav", MODEL_ID_RESOURCE_STONE, SOUND_ID_DAMAGE);
 
@@ -50,6 +61,9 @@ AudioManager::AudioManager() {
     AudioManager::loadSound("../assets/sounds/Magic_Spells_CastLong_Electricity11.wav", MODEL_ID_TESLA_L4, SOUND_ID_ATTACK);
 
     AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_BARRIER, SOUND_ID_DAMAGE); //TODO: Change
+    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_BARRIER_L2, SOUND_ID_DAMAGE); //TODO: Change
+    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_BARRIER_L3, SOUND_ID_DAMAGE); //TODO: Change
+    AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_BARRIER_L4, SOUND_ID_DAMAGE); //TODO: Change
 
     AudioManager::loopSound(MODEL_ID_TESLA, SOUND_ID_ATTACK, 1400, 2400);
     AudioManager::loadSound("../assets/sounds/MINE Placing 01.wav", MODEL_ID_ROVER_BLUE, SOUND_ID_BUILD);
