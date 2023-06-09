@@ -23,6 +23,13 @@ extern float maxbasehealth;
 extern int curWave;
 extern int numWaves;
 
+extern bool scoreShown;
+extern int score1;
+extern int score2;
+extern int score3;
+extern int score4;
+extern int max_score;
+
 //Nice to render but not required (only render when non-zero) should be a hidden element otherwise
 extern int poweruptimer;
 
@@ -231,6 +238,8 @@ void handle_win(GLFWwindow* window) {
     selected = 5;
 }
 void handle_lose(GLFWwindow* window) {
+    handle_score();
+    /*
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     menuOn = 1;
     //guis[12]->SetHidden(false);
@@ -239,10 +248,26 @@ void handle_lose(GLFWwindow* window) {
     guis[16]->SetHidden(false);
     depth = 2;
     selected = 5;
+    */
 }
 
 
+void handle_score() {
+    max_score = score1;
+    if (score2 > max_score) {
+        max_score = score2;
+    }
+    if (score3 > max_score) {
+        max_score = score3;
+    }
+    if (score4 > max_score) {
+        max_score = score4;
+    }
+    scoreShown = true;
 
+    
+
+}
 
 void handle_quit() {}
 

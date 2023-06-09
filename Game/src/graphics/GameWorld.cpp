@@ -42,7 +42,12 @@ int poweruptimer = 0;
 int moneyCost = 0;
 int woodCost = 0;
 int stoneCost = 0;
-
+int score1;
+int score2; 
+int score3;
+int score4;
+int max_score;
+bool scoreShown;
 //not necessary to render (is the time before player is allowed to complete another build or upgrade action)
 int actionCooldown = 0;
 
@@ -70,6 +75,12 @@ Text* towersBuiltT;
 Text* waveCounter;
 
 Text* buildCost;
+
+Text* p1;
+Text* p2;
+Text* p3;
+Text* p4;
+
 char str[65536];
 char tmp_str[65536];
 
@@ -250,6 +261,9 @@ void GameWorld::init(GLFWwindow* window) {
 
 	loading(window, "../assets/screens/Space.png");
 }
+
+
+
 
 void GameWorld::loading(GLFWwindow* window, char* path) {
 
@@ -512,6 +526,15 @@ void GameWorld::GUI_Init() {
 	death->SetTexture("../assets/gui/Buttons/death.jpg");
 	death->SetTransparency(1.0);
 	guis[23] = death;
+
+	score = guis[23];
+	score->SetHidden(true);
+	score->SetName("score");
+	score->SetPosition(glm::vec3(0.0f, 0.0f, -0.9f));
+	score->SetSize(glm::vec2(1.0f, 1.0f));
+	score->SetTexture("../assets/gui/Buttons/score.png");
+	score->SetTransparency(1.0);
+	guis[23] = score;
 	
 }
 
@@ -549,10 +572,29 @@ void updateLabels() {
 		stoneCostT->RenderText(str, 700.0f, 20.0f, 1.5f, glm::vec3(10.0, 0.0f, 0.0f));
 	}
 
+	if(scoreShown){
+
+		sprintf(str, "%d", (score1));
+		p1->RenderText(str, 200.0f, 940.0f * (((float)score1)/((float)(max_score))), 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+
+		sprintf(str, "%d", (score2));
+		p2->RenderText(str, 700.0f, 940.0f * (((float)score2) / ((float)(max_score))), 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+
+		sprintf(str, "%d", (score3));
+		p3->RenderText(str, 1200.0f, 940.0f * (((float)score3) / ((float)(max_score))), 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+
+		sprintf(str, "%d", (score4));
+		p4->RenderText(str, 1700.0f, 940.0f * (((float)score4) / ((float)(max_score))), 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+
+	}
+	else {
+	
+		p1->RenderText("", 200.0f, 940.0f * (((float)score1) / ((float)(max_score))), 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+		p2->RenderText("", 1700.0f, 940.0f * (((float)score1) / ((float)(max_score))), 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+		p3->RenderText("", 1200.0f, 940.0f * (((float)score1) / ((float)(max_score))), 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+		p4->RenderText("", 1500.0f, 940.0f * (((float)score1) / ((float)(max_score))), 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	}
 	sprintf(str, "%d", (wavetimer));
-	//strcat(str, "/");
-	//sprintf(tmp_str, "%d", maxwavetimer);
-	//strcat(str, tmp_str);
 	spawntimerT->RenderText(str, 900.0f, 940.0f, 1.2f, glm::vec3(10.0, 10.0f, 10.0f));
 
 
