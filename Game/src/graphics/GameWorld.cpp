@@ -299,7 +299,10 @@ void GameWorld::GUI_Init() {
 	enemiesKilledT = new Text("../assets/font.ttf");
 	towersBuiltT = new Text("../assets/font.ttf");
 	waveCounter = new Text("../assets/font.ttf");
-
+	p1 = new Text("../assets/font.ttf");
+	p2 = new Text("../assets/font.ttf");
+	p3 = new Text("../assets/font.ttf");
+	p4 = new Text("../assets/font.ttf");
 	selected = 0;
 	depth = 0;
 	menuOn = false;

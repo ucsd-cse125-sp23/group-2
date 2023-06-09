@@ -248,19 +248,7 @@ void handle_win(GLFWwindow* window) {
     depth = 2;
     selected = 5;
 }
-void handle_lose(GLFWwindow* window) {
-    handle_score();
-    /*
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    menuOn = 1;
-    //guis[12]->SetHidden(false);
-    guis[14]->SetHidden(false);
-    guis[15]->SetHidden(false);
-    guis[16]->SetHidden(false);
-    depth = 2;
-    selected = 5;
-    */
-}
+
 
 
 void handle_score() {
@@ -279,7 +267,19 @@ void handle_score() {
     
 
 }
-
+void handle_lose(GLFWwindow* window) {
+    handle_score();
+    /*
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    menuOn = 1;
+    //guis[12]->SetHidden(false);
+    guis[14]->SetHidden(false);
+    guis[15]->SetHidden(false);
+    guis[16]->SetHidden(false);
+    depth = 2;
+    selected = 5;
+    */
+}
 void handle_quit() {
     exit(0);
 }
