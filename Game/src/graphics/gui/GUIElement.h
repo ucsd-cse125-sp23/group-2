@@ -28,6 +28,10 @@ public:
 	void SetTransparency(float newTransparency);
 	void SetName(char* newName);
 
+	char* GetName() {
+		return name;
+	}
+
 	bool IsHidden();
 
 	void draw(const glm::mat4& viewProjMtx, Shader* shader);

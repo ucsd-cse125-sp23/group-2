@@ -66,6 +66,12 @@ AudioManager::AudioManager() {
     AudioManager::loadSound("../assets/sounds/Destruction_Wooden_2.wav", MODEL_ID_BARRIER_L4, SOUND_ID_DAMAGE); //TODO: Change
 
     AudioManager::loopSound(MODEL_ID_TESLA, SOUND_ID_ATTACK, 1400, 2400);
+    AudioManager::loopSound(MODEL_ID_TESLA_L2, SOUND_ID_ATTACK, 1400, 2400);
+
+    AudioManager::loopSound(MODEL_ID_TESLA_L3, SOUND_ID_ATTACK, 1400, 2400);
+
+    AudioManager::loopSound(MODEL_ID_TESLA_L4, SOUND_ID_ATTACK, 1400, 2400);
+
     AudioManager::loadSound("../assets/sounds/MINE Placing 01.wav", MODEL_ID_ROVER_BLUE, SOUND_ID_BUILD);
     AudioManager::loadSound("../assets/sounds/MINE Placing 01.wav", MODEL_ID_ROVER_RED, SOUND_ID_BUILD);
 
