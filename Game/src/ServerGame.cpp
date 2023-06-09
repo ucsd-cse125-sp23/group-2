@@ -341,8 +341,11 @@ void ServerGame::initResources()
         }
         //printf("Pos is %f, %f, %f\n", pos.x, pos.y, pos.z);
     }
-    for (Entity e : resources) {
 
+    ECS::sysDetectCollisions();
+    ECS::resolveCollisions();
+    for (Entity e : resources) {
+        /*
         for (Entity p : Paths::pathlist) {
             ECS::colCheck(e, p);
         }
@@ -352,11 +355,12 @@ void ServerGame::initResources()
         ECS::colCheck(e, MAX_ENTITIES_NOBASE);
         ECS::resolveCollisions();
 
-
+        */
         GameData::tags[e] ^= ComponentTags::DiesOnCollision;
         GameData::colliders[e].colwith ^= CollisionLayer::UIObj + CollisionLayer::StaticObj;
         GameData::models[e].modelOrientation = rand() % 360;
     }
+    
     //Clear the sound and combat logs to remove data from the resource spawning
     GameData::clogpos = 0;
     GameData::slogpos = 0;
