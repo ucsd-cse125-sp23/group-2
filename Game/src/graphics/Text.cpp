@@ -89,6 +89,9 @@ Text::Text(std::string font_name) {
     glBindVertexArray(0);
 }
 
+
+
+
 // render line of text
 // -------------------
 void Text::RenderText(std::string text, float x, float y, float scale, glm::vec3 color)
