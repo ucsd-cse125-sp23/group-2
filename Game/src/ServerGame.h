@@ -61,7 +61,7 @@ private:
 
     void playerAttack(Entity i, glm::vec3& camdir, glm::vec3& campos);
 
-    void playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos, float range);
+    void playerBuild(Entity i, glm::vec3& camdir, glm::vec3& campos);
 
     void initPlayers();
 

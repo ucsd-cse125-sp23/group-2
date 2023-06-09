@@ -1,6 +1,6 @@
 # Blender 3.4.1
 # www.blender.org
-mtllib rover.mtl
+mtllib rover_blue.mtl
 o Body
 v -0.652922 -0.478199 0.650056
 v -0.652922 -0.325256 0.955941

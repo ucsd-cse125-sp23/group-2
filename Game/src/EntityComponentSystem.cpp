@@ -33,6 +33,7 @@ namespace GameData
   AllPlayerData playerdata;
   std::array<AOEAttackModule, MAX_ENTITIES> AOEattackmodules;
   std::array<Upgradeable, MAX_ENTITIES> upgradedata;
+  std::array<Powerup, MAX_ENTITIES> powerupdata;
 }
 
 //Call all systems each update
@@ -61,6 +62,7 @@ void EntityComponentSystem::update()
     //::cout << "Resolve took " << duration.count() << " milliseconds.\n";
     sysBuild();
     sysLifeSpan();
+    sysPowerup();
 }
 
 namespace Collision {
@@ -99,7 +101,7 @@ void EntityComponentSystem::sysEnemyAI()
                 //check if players nearby
                 for (int p = 0; p < NUM_PLAYERS; p++)
                 {
-                    if (glm::distance(GameData::positions[p], GameData::positions[e]) <= AGRO_RANGE)
+                    if (glm::distance(GameData::positions[p], GameData::positions[e]) <= AGRO_RANGE && ((GameData::tags[p] & ComponentTags::Dead) != ComponentTags::Dead))
                     {
                         changeState(e, enemyState::Homing);
                         GameData::homingStructs[e].trackedEntity = p;
@@ -121,6 +123,8 @@ void EntityComponentSystem::sysEnemyAI()
                 changeState(e, enemyState::Pathing);
                 rePath(e);
             }
+            glm::vec3 dir = glm::normalize(GameData::velocities[e].velocity);
+            GameData::models[e].modelOrientation = (dir.z < 0) ? -glm::degrees(glm::acos(dir.x)) : glm::degrees(glm::acos(dir.x));
         }
         else if ((GameData::tags[e] & ComponentTags::Hunter) == ComponentTags::Hunter)
         {
@@ -133,6 +137,8 @@ void EntityComponentSystem::sysEnemyAI()
             {
                 //Check if enemy is active
                 if (!GameData::activity[i]) { continue; }
+                //Check if enemy is not dead
+                if ((GameData::tags[i] & ComponentTags::Dead) == ComponentTags::Dead) { continue; }
                 //Check if hostileto
                 if (!(GameData::hostilities[e].hostileTo & GameData::hostilities[i].team)) { continue; }
                 //Check if enemy is in range
@@ -469,7 +475,7 @@ void EntityComponentSystem::sysDetectCollisions()
         //check if this entity can can collide
         if ((GameData::tags[e] & collides) == collides)
         {
-
+            GameData::colliders[e].collided = false; //Initiall set collided to false
             int xpos = GameData::colliders[e].xpos;
             int zpos = GameData::colliders[e].zpos;
             neighbors.clear();
@@ -488,16 +494,30 @@ void EntityComponentSystem::sysDetectCollisions()
             //Check collisions with everything else
             for (Entity o : neighbors)
             {
-                colCheck(e, o);
+                if (colCheck(e, o)) {
+                    GameData::colliders[e].collided |= true;
+                }
+                
                 
             }
 
             //Check base and path collision seperatley
             for (Entity p : Paths::pathlist) {
-                colCheck(e, p);
+                if (colCheck(e, p)) {
+                    GameData::colliders[e].collided |= true;
+                }
             }
-            colCheck(e, MAX_ENTITIES_NOBASE);
+
+            if (colCheck(e, MAX_ENTITIES_NOBASE)) {
+                GameData::colliders[e].collided |= true;
+            }
             colCheck(MAX_ENTITIES_NOBASE, e);
+
+            for (Entity b : Boundry::boundlist) {
+                if (colCheck(e, b)) {
+                    GameData::colliders[e].collided |= true;
+                }
+            }
         }
 
 
@@ -541,7 +561,7 @@ bool EntityComponentSystem::applyUpgrade(Entity play, Entity target)
         }
         causeDeath(target, target);
 
-
+        float mo = GameData::models[target].modelOrientation;
         //Subtract resources
         for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
             GameData::playerdata.resources[i] -= GameData::upgradedata[target].cost[i];
@@ -553,6 +573,12 @@ bool EntityComponentSystem::applyUpgrade(Entity play, Entity target)
         //Add to collision table
         Collision::updateColTable(up);
 
+        GameData::models[up].modelOrientation = mo;
+        if ((glm::abs((GameData::models[up].modelOrientation - 90.0f)) < 0.01f) || (glm::abs(GameData::models[up].modelOrientation - 270.0f) < 0.01f)) {
+            float temp = GameData::colliders[up].AABB.x;
+            GameData::colliders[up].AABB.x = GameData::colliders[up].AABB.z;
+            GameData::colliders[up].AABB.z = temp;
+        }
         return true;
 
     }
@@ -585,10 +611,9 @@ void EntityComponentSystem::resolveCollisions()
 
         }
 
-
         //Check if dies on Collision
         if ((GameData::tags[e] & (ComponentTags::DiesOnCollision)) == ComponentTags::DiesOnCollision) {
-            causeDeath(e, e);
+            causeDeath(o, e);
             GameData::tags[e] ^= ComponentTags::Collidable;
         }
 
@@ -619,8 +644,8 @@ void EntityComponentSystem::sysDeathStatus()
         //set to inactive if dying flag
         if ((GameData::tags[e] & ComponentTags::Dead) == ComponentTags::Dead)
         {
-            if (GameData::hostilities[e].team == Teams::Players) {
-                //printf("%d should be player\n", e);
+            switch (GameData::hostilities[e].team) {
+            case Teams::Players:
                 if (GameData::playerdata.spawntimers[e] < -1.0f) {
                     GameData::playerdata.spawntimers[e] = RESPAWN_TIMER;
                     GameData::rigidbodies[e].fixed = true;
@@ -634,20 +659,28 @@ void EntityComponentSystem::sysDeathStatus()
                     Collision::updateColTable(e);
                 }
                 else {
-                    GameData::playerdata.spawntimers[e] = GameData::playerdata.spawntimers[e] - 1.0f/TICK_RATE;
+                    GameData::playerdata.spawntimers[e] = GameData::playerdata.spawntimers[e] - 1.0f / TICK_RATE;
                 }
-            }
-            else {
-                //TEST OUTPUT FOR VISUALIZER
+                break;
+            case Teams::Martians:
+                if (rand() / ((float)RAND_MAX) <= POWERUP_CHANCE) {
+                    Entity p = prefabMap[PowerupRandom]().front();
+                    if (p != INVALID_ENTITY) {
+                        GameData::positions[p] = GameData::positions[e];
+                        Collision::updateColTable(p);
+                    }
+                }
+            default:
                 GameData::models[e].asciiRep = 'X';
                 GameData::activity[e] = false;
-
-                //std::cout << "Enemy: " << e - ENEMY_START << " Died\n";
+                break;
             }
         }
 
     }
 }
+
+
 
 void EntityComponentSystem::sysAttacks()
 {
@@ -672,8 +705,12 @@ void EntityComponentSystem::sysAttacks()
                 glm::vec3 normTarget = glm::normalize(targetVec);
                 float angleY = glm::acos(glm::dot(normXZ, normTarget));
                 glm::vec3 axisXZ = glm::cross(normXZ, normTarget);
-                glm::mat4 transform = glm::translate(GameData::positions[e]) * glm::rotate(angleY, axisXZ) * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
-
+                glm::mat4 transform = glm::translate(GameData::positions[e]);  
+                if (angleY != 0.0f) {
+                    transform *= glm::rotate(angleY, axisXZ);
+                }
+                transform *= glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
+                
                 //Create entities representing attack (projectiles)
                 std::list<Entity> attacks = prefabMap[GameData::pattackmodules[e].attack]();
 
@@ -753,6 +790,20 @@ void EntityComponentSystem::sysLifeSpan()
     }
 }
 
+void EntityComponentSystem::sysPowerup()
+{
+    for (Entity e = 0; e < NUM_PLAYERS; e++) {
+        if (GameData::playerdata.powerupTimers[e] > 0) {
+            GameData::playerdata.powerupTimers[e] -= 1.0f / TICK_RATE;
+            if (GameData::playerdata.powerupTimers[e] <= 0) {
+                GameData::pattackmodules[e].attack = Prefabs::ProjectileBasic;
+            }
+        }
+    }
+}
+
+const MODEL_ID playerInvalidReticleArray[NUM_TOWER_PREFAB] = { MODEL_ID_TOWER_INVALID, MODEL_ID_RAILGUN_INVALID, MODEL_ID_TESLA_INVALID, MODEL_ID_BARRIER_INVALID };
+const MODEL_ID playerValidReticleArray[NUM_TOWER_PREFAB] = { MODEL_ID_TOWER, MODEL_ID_RAILGUN, MODEL_ID_TESLA, MODEL_ID_BARRIER };
 void EntityComponentSystem::sysBuild()
 {
     for (Entity e = 0; e < MAX_ENTITIES; e++)
@@ -764,25 +815,32 @@ void EntityComponentSystem::sysBuild()
         if ((GameData::tags[e] & ComponentTags::Builder) == ComponentTags::Builder)
         {
 
-            if (!GameData::retplaces[e].validTarget) {
-
+            //If not render, kill reticle and continue
+            if (!GameData::retplaces[e].renderRet) {
                 if (GameData::retplaces[e].reticle != INVALID_ENTITY) {
                     //printf("Deleting reticle entity %d\n", GameData::retplaces[e].reticle);
                     causeDeath(GameData::retplaces[e].reticle, GameData::retplaces[e].reticle);
-                    GameData::retplaces[e].reticle = INVALID_ENTITY;
+                    GameData::retplaces[e].reticle == INVALID_ENTITY;
                 }
-
-
                 continue;
             }
+
+
+            if (GameData::retplaces[e].reticle != INVALID_ENTITY) {
+                if (GameData::colliders[GameData::retplaces[e].reticle].collided) {
+                    GameData::retplaces[e].validTarget = false;
+                }
+            }
+
             glm::vec3 targetVec = GameData::retplaces[e].targetPos - GameData::positions[e];
             glm::vec3 normXZ = glm::normalize(glm::vec3(targetVec.x, 0, targetVec.z));
             float angleXZ = glm::acos(-normXZ.z);
             glm::vec3 normTarget = glm::normalize(targetVec);
             glm::mat4 transform = glm::translate(GameData::retplaces[e].targetPos) * glm::rotate(angleXZ, glm::vec3(0, glm::sign(-normXZ.x), 0));
 
+
             if (GameData::retplaces[e].place) {
-                if ( (GameData::retplaces[e].reticle !=INVALID_ENTITY) && (GameData::activity[GameData::retplaces[e].reticle]) && ((GameData::tags[GameData::retplaces[e].reticle] & ComponentTags::Dead) != ComponentTags::Dead)) {
+                if ( (GameData::retplaces[e].reticle !=INVALID_ENTITY) && (GameData::activity[GameData::retplaces[e].reticle]) && ((GameData::tags[GameData::retplaces[e].reticle] & ComponentTags::Dead) != ComponentTags::Dead) && GameData::retplaces[e].validTarget) {
                     //Check build costs
                     bool hasenough = true;
                     for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
@@ -800,7 +858,6 @@ void EntityComponentSystem::sysBuild()
                         else {
                             //Transform positions and velocity relative to attacker
                             GameData::positions[b] = transform * glm::vec4(GameData::positions[b], 1);
-                            GameData::velocities[b].velocity = transform * glm::vec4(GameData::velocities[b].velocity, 0);
                             //Set creator
                             GameData::tags[b] |= ComponentTags::Created;
                             GameData::creators[b] = e;
@@ -810,15 +867,19 @@ void EntityComponentSystem::sysBuild()
                             for (int i = 0; i < NUM_RESOURCE_TYPES; ++i) {
                                 GameData::playerdata.resources[i] -= buildcosts[GameData::retplaces[e].buildingPrefab][i];
                             }
-                            //Transform colider
-                            if (GameData::retplaces[e].targetOrientation != 0 || GameData::retplaces[e].targetOrientation != 180) {
-                                GameData::models[b].modelOrientation = GameData::retplaces[e].targetOrientation;
+                            //printf("Orientation is %f\n", GameData::retplaces[e].targetOrientation);
+                            GameData::models[b].modelOrientation = GameData::retplaces[e].targetOrientation;
+                            /**/
+                            if ((glm::abs((GameData::models[b].modelOrientation - 90.0f)) < 0.01f) || (glm::abs(GameData::models[b].modelOrientation - 270.0f) < 0.01f)) {
                                 float temp = GameData::colliders[b].AABB.x;
                                 GameData::colliders[b].AABB.x = GameData::colliders[b].AABB.z;
                                 GameData::colliders[b].AABB.z = temp;
                             }
+
                             // Add sound to sound log
                             logSound(e, SOUND_ID_BUILD);
+
+                            GameData::positions[b].y = GameData::colliders[b].AABB.y + GROUND_HEIGHT;
                             Collision::updateColTable(b);
                         }
                     }
@@ -829,6 +890,7 @@ void EntityComponentSystem::sysBuild()
                 }
                 GameData::retplaces[e].place = false;
             }
+
 
 
             Entity r;
@@ -858,11 +920,9 @@ void EntityComponentSystem::sysBuild()
                 //Transform positions and velocity relative to attacker
                 GameData::positions[r] = glm::vec3(0, 0, 0);
                 GameData::positions[r] = transform * glm::vec4(GameData::positions[r], 1);
-                GameData::velocities[r].velocity = transform * glm::vec4(GameData::velocities[r].velocity, 0);
-                GameData::tags[r] ^= ComponentTags::Velocity;
-                if (GameData::retplaces[e].targetOrientation != 0) {
-                    GameData::models[r].modelOrientation = GameData::retplaces[e].targetOrientation;
-                }
+                //if (GameData::retplaces[e].targetOrientation != 0) {
+                GameData::models[r].modelOrientation = GameData::retplaces[e].targetOrientation;
+                //}
                 //Set creator
                 GameData::tags[r] |= ComponentTags::Created;
                 GameData::creators[r] = e;
@@ -871,6 +931,19 @@ void EntityComponentSystem::sysBuild()
 
                 Collision::updateColTable(r);
             }
+
+
+
+            if (!GameData::retplaces[e].validTarget) {
+                if (GameData::retplaces[e].reticle != INVALID_ENTITY) {
+                    //printf("Deleting reticle entity %d\n", GameData::retplaces[e].reticle);
+                    GameData::models[GameData::retplaces[e].reticle].modelID = playerInvalidReticleArray[GameData::retplaces[e].buildingPrefab];
+                }
+            }
+            else {
+                GameData::models[GameData::retplaces[e].reticle].modelID = playerValidReticleArray[GameData::retplaces[e].buildingPrefab];
+            }
+            
         }
     }
 }
@@ -882,10 +955,14 @@ Entity EntityComponentSystem::createEntity(int begin, int end)
     for (int i = begin; i < end; ++i) {
         if (!GameData::activity[i]) {
             GameData::activity[i] = true;
+            GameData::velocities[i].velocity = glm::vec3(0, 0, 0);
             GameData::states[i] = 0;
             GameData::tags[i] = 0;
             GameData::hostilities[i].team = 0;
             GameData::hostilities[i].hostileTo = 0;
+            GameData::models[i].modelOrientation = 0;
+            GameData::models[i].scale = 1;
+            GameData::healths[i].curHealth = GameData::healths[i].maxHealth = 0;
             return i;
         }
     }
@@ -952,7 +1029,7 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
     if (GameData::tags[source] & ComponentTags::Created) {
         source = GameData::creators[source];
     }
-    printf("Ent %d dealing %f dmg to %d\n", source, damage, target);
+    //printf("Ent %d dealing %f dmg to %d\n", source, damage, target);
     if (GameData::clogpos < CLOG_MAXSIZE) {
         // Add damage to combat log
         GameData::combatLogs[GameData::clogpos].source = source;
@@ -973,7 +1050,6 @@ void EntityComponentSystem::dealDamage(Entity source, Entity target, float damag
 
 void EntityComponentSystem::causeDeath(Entity source, Entity target)
 {
-
     //Remove  from collision grid
     if ((GameData::tags[target] & ComponentTags::Collidable) == ComponentTags::Collidable) {
         Collision::cgrid[GameData::colliders[target].xpos][GameData::colliders[target].zpos].erase(target);
@@ -999,7 +1075,7 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
         GameData::clogpos++;
     }
     else{
-        printf("exceeded combatlog size\n");
+        //printf("exceeded combatlog size\n");
     }
     // Add death sound to sound log
     logSound(target, SOUND_ID_DEATH);
@@ -1015,6 +1091,10 @@ void EntityComponentSystem::causeDeath(Entity source, Entity target)
                 GameData::playerdata.resources[i] += GameData::resources[target].resources[i];
                 //printf("Gaining Resources %d\n", GameData::playerdata.resources[i]);
             }
+        }
+        if ((GameData::tags[target] & ComponentTags::Powerup) == ComponentTags::Powerup) {
+            GameData::pattackmodules[source].attack = GameData::powerupdata[target].newAttack;
+            GameData::playerdata.powerupTimers[source] = POWERUP_DURATION_SEC;
         }
         if ((GameData::tags[target] & ComponentTags::Hostility) == ComponentTags::Hostility) {
             if (GameData::hostilities[target].team == Teams::Martians) {
