@@ -244,6 +244,7 @@ void handle_lose(GLFWwindow* window) {
 
 
 
+
 void handle_quit() {}
 
 void handle_death(boolean alive) {
