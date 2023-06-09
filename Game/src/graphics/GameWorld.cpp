@@ -8,7 +8,10 @@ void GameWorld::init() {
 	env->setEnvShader(new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag"));
 
 	models[MODEL_ID_CUBE] = new ObjectModel("../assets/cube/cube.obj");
-	models[MODEL_ID_ROVER] = new ObjectModel("../assets/rover/rover.obj");
+	models[MODEL_ID_ROVER_RED] = new ObjectModel("../assets/rover/rover_red.obj");
+	models[MODEL_ID_ROVER_BLUE] = new ObjectModel("../assets/rover/rover_blue.obj");
+	models[MODEL_ID_ROVER_GREEN] = new ObjectModel("../assets/rover/rover_green.obj");
+	models[MODEL_ID_ROVER_PURPLE] = new ObjectModel("../assets/rover/rover_purple.obj");
 
 	models[MODEL_ID_MOB] = new ObjectModel("../assets/martian/martian.obj");
 	models[MODEL_ID_MOB_TANK] = new ObjectModel("../assets/martian/martian_tank.obj");
@@ -68,7 +71,10 @@ void GameWorld::init() {
 	//models[MODEL_ID_SUNGOD] = new ObjectModel("../assets/crystal_rock/crystal_rock.obj");
 
 	shaders[MODEL_ID_CUBE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
-	shaders[MODEL_ID_ROVER] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_ROVER_RED] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_ROVER_BLUE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_ROVER_GREEN] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
+	shaders[MODEL_ID_ROVER_PURPLE] = new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag");
 
 	shaders[MODEL_ID_MOB] = new Shader("../shaders/martian_shader.vert", "../shaders/model_loading.frag");
 	shaders[MODEL_ID_MOB_TANK] = new Shader("../shaders/martian_shader.vert", "../shaders/model_loading.frag"); //dunno if we want new shading for the tank and minis

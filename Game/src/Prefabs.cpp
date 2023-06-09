@@ -965,6 +965,7 @@ std::list<Entity> createHome() {
 }
 
 
+std::array<MODEL_ID, 4> playerModels = { MODEL_ID_ROVER_BLUE, MODEL_ID_ROVER_RED, MODEL_ID_ROVER_GREEN, MODEL_ID_ROVER_PURPLE };
 std::list<Entity> createPlayers() {
     std::list<Entity> createdEntities;
 
@@ -980,7 +981,7 @@ std::list<Entity> createPlayers() {
         GameData::velocities[e].velocity = glm::vec3(0, 0, 0);
         GameData::velocities[e].moveSpeed = PLAYER_MVSPD_PERSEC;
         GameData::colliders[e].AABB =  glm::vec3(1, 0.7, 1);
-        GameData::models[e].modelID = MODEL_ID_ROVER;
+        GameData::models[e].modelID = playerModels[i];
         GameData::models[e].asciiRep = 'P';
         GameData::models[i].renderCollider = true;
         GameData::healths[e].maxHealth = GameData::healths[i].curHealth = PLAYER_BASE_HEALTH;
