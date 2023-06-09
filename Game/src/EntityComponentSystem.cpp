@@ -1010,14 +1010,22 @@ glm::vec3 EntityComponentSystem::computeRaycast(glm::vec3& pos, glm::vec3& dir, 
             }
         }
     }
-    /*
+
+
+    //Ground collision
+   
+    glm::vec3 targetpos = pos + (dirNorm * tfirst);
     if (tfirst == 1024) {
-        printf("Firing at nothing\n");
+        //printf("Firing at nothing\n");
+        if (dir.y < 0) {
+            glm::vec3 dirYNorm = dir / (dir.y * -1);
+            targetpos = glm::vec3(pos.x + dirYNorm.x * (pos.y-GROUND_HEIGHT), -1, pos.z + dirYNorm.z * (pos.y-GROUND_HEIGHT));
+        }
     }
-    */
+    
 
 
-    return pos + (dirNorm * tfirst);
+    return targetpos;
 }
 
 void EntityComponentSystem::dealDamage(Entity source, Entity target, float damage)

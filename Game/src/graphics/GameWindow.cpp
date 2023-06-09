@@ -137,6 +137,7 @@ void GameWindow::win() {
 
     glfwPollEvents();
     glfwSwapBuffers(window);
+    stbi_set_flip_vertically_on_load(false);
 }
 
 void GameWindow::loss() {
@@ -155,6 +156,7 @@ void GameWindow::loss() {
 
     glfwPollEvents();
     glfwSwapBuffers(window);
+    stbi_set_flip_vertically_on_load(false);
 }
 
 void GameWindow::wait() {
@@ -173,6 +175,7 @@ void GameWindow::wait() {
 
     glfwPollEvents();
     glfwSwapBuffers(window);
+    stbi_set_flip_vertically_on_load(false);
 }
 
 

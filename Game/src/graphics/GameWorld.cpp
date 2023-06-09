@@ -31,6 +31,7 @@ void GameWorld::init(GLFWwindow* window) {
 	env = new Skybox();
 	env->setSkyShader(new Shader("../shaders/skybox.vert", "../shaders/skybox.frag"));
 	env->setEnvShader(new Shader("../shaders/model_loading.vert", "../shaders/model_loading.frag"));
+	env->setPortalShader(new Shader("../shaders/portalshader.vert", "../shaders/portalshader.frag"));
 
 	models[MODEL_ID_CUBE] = new ObjectModel("../assets/cube/cube.obj");
 	models[MODEL_ID_ROVER_RED] = new ObjectModel("../assets/rover/rover_red.obj");
@@ -216,6 +217,7 @@ void GameWorld::loading(GLFWwindow* window, char* path) {
 
 	glfwPollEvents();
 	glfwSwapBuffers(window);
+	stbi_set_flip_vertically_on_load(false);
 	// Loading Screen
 }
 
@@ -523,6 +525,8 @@ void GameWorld::draw(Shader* guiShader, float wWidth, float wHeight) {
 			h->draw(viewProjMtx);
 		}
 	}
+
+	env->drawPortals(viewProjMtx, currTime);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	for (Cube* c : AABBs) {
 		if (c->getActive()) {
