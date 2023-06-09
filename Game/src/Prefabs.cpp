@@ -1560,7 +1560,7 @@ std::list<Entity> createPathColliders()
             GameData::positions[e] = Paths::path[p][i] + progress * pathvec;
             GameData::positions[e].y = GROUND_HEIGHT + 0.01;
 
-            GameData::colliders[e].AABB = glm::vec3(PATH_WIDTH / 2, 0.01, PATH_WIDTH / 2);
+            GameData::colliders[e].AABB = glm::vec3(PATH_WIDTH / 2, 50, PATH_WIDTH / 2);
 
             GameData::models[e].modelID = MODEL_ID_PATH_STRAIGHT;
             GameData::models[e].asciiRep = 'P';
