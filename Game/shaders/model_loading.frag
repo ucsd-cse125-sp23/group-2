@@ -84,6 +84,9 @@ void main()
 
                                      
         // FragColor += 0.13f * ambient + diffuse + 0.1f* specular;
+        diffuse = vec4(clamp(diffuse.r, 0.0f, 1.0f),clamp(diffuse.g, 0.0f, 1.0f),clamp(diffuse.b, 0.0f, 1.0f), clamp(diffuse.a, 0.0f, 1.0f));
+        ambient = vec4(clamp(ambient.r, 0.0f, 1.0f),clamp(ambient.g, 0.0f, 1.0f),clamp(ambient.b, 0.0f, 1.0f), clamp(ambient.a, 0.0f, 1.0f));
+        specular = vec4(clamp(specular.r, 0.0f, 1.0f),clamp(specular.g, 0.0f, 1.0f),clamp(specular.b, 0.0f, 1.0f), clamp(specular.a, 0.0f, 1.0f));
         FragColor += (0.3f * ambient + 0.7f * diffuse + 0.05f * specular);
     }
 
