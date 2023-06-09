@@ -1,6 +1,6 @@
 //The max number of each entity type (CAN BE MODIFIED - Currently Arbitrary)
 #pragma once
-#define NUM_PLAYERS 4
+#define NUM_PLAYERS 1
 #define NUM_ENEMIES 50
 #define NUM_TOWERS 50
 #define NUM_RESOURCES 750
@@ -12,7 +12,7 @@ const float TICK_RATE = 64;
 #define NUM_GUI 19
 
 //How many seconds until first wave spawns
-const float ENEMY_SPAWNDELAY_SEC = 60;
+const float ENEMY_SPAWNDELAY_SEC = 1;
 
 //What wave to start at (prep is -1)
 const float START_WAVE = -1;

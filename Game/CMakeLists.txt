@@ -26,6 +26,7 @@ set(
     src/audio/AudioManager.cpp
     src/graphics/gui/GUIElement.cpp
     src/graphics/Text.cpp
+    src/graphics/Effects.cpp
 )
 
 # Add header files
@@ -56,6 +57,7 @@ set(
     src/graphics/Health.h
     src/graphics/gui/GUIElement.h
     src/graphics/Text.h
+    src/graphics/Effects.h
 )
 
 # Require GL
