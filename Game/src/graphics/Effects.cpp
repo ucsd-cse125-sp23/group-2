@@ -247,6 +247,9 @@ void EffectSystem::particleEffect(glm::vec3& location, int model_id) {
 		else if (model_id == MODEL_ID_PROJECTILE_SPREAD) {
 			c = glm::vec3(3.0f, 2.86f, 0.0f);
 		}
+		else {
+			c = glm::vec3(0.0f, 0.0f, 0.0f);
+		}
 		spawnParticle(location, models[0], c, shader[0], false);
 	}
 }
