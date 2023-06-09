@@ -59,6 +59,11 @@ Text* spawntimerT;
 Text* moneyResT;
 Text* woodResT;
 Text* stoneResT;
+
+Text* moneyCostT;
+Text* woodCostT;
+Text* stoneCostT;
+
 Text* pointsT;
 Text* enemiesKilledT;
 Text* towersBuiltT;
@@ -273,6 +278,9 @@ void GameWorld::GUI_Init() {
 	moneyResT = new Text("../assets/font.ttf");
 	woodResT = new Text("../assets/font.ttf");
 	stoneResT = new Text("../assets/font.ttf");
+	moneyCostT = new Text("../assets/font.ttf");
+	woodCostT = new Text("../assets/font.ttf");
+	stoneCostT = new Text("../assets/font.ttf");
 	pointsT = new Text("../assets/font.ttf");
 	enemiesKilledT = new Text("../assets/font.ttf");
 	towersBuiltT = new Text("../assets/font.ttf");
@@ -501,7 +509,7 @@ void GameWorld::GUI_Init() {
 	death->SetName("death");
 	death->SetPosition(glm::vec3(0.0f, 0.0f, -0.9f));
 	death->SetSize(glm::vec2(1.0f, 1.0f));
-	death->SetTexture("../assets/gui/Buttons/death.jpg");
+	death->SetTexture("../assets/gui/Buttons/death.png");
 	death->SetTransparency(1.0);
 	guis[23] = death;
 	
@@ -512,13 +520,34 @@ void updateLabels() {
 	guis[21]->SetSize(glm::vec2(0.2f*basehealth/maxbasehealth, 0.04f));
 
 	sprintf(str, "%d", moneyRes);
-	moneyResT->RenderText(str, 1600.0f, 20.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	moneyResT->RenderText(str, 1550.0f, 20.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
 	
 	sprintf(str, "%d", woodRes);
-	woodResT->RenderText(str, 1100.0f, 20.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+	woodResT->RenderText(str, 1050.0f, 20.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
 	
 	sprintf(str, "%d", stoneRes);
 	stoneResT->RenderText(str, 600.0f, 20.0f, 1.5f, glm::vec3(10.0, 10.0f, 10.0f));
+
+	if (stoneCost > 0 || woodCost > 0 || moneyCost > 0) {
+		sprintf(str, "-%d", moneyCost);
+		moneyCostT->RenderText(str, 1750.0f, 20.0f, 1.5f, glm::vec3(10.0, 0.0f, 0.0f));
+
+		sprintf(str, "-%d", woodCost);
+		woodCostT->RenderText(str, 1250.0f, 20.0f, 1.5f, glm::vec3(10.0, 0.0f, 0.0f));
+
+		sprintf(str, "-%d", stoneCost);
+		stoneCostT->RenderText(str, 800.0f, 20.0f, 1.5f, glm::vec3(10.0, 0.0f, 0.0f));
+	}
+	else {
+		sprintf(str, "", moneyCost);
+		moneyCostT->RenderText(str, 1700.0f, 20.0f, 1.5f, glm::vec3(10.0, 0.0f, 0.0f));
+
+		sprintf(str, "", woodCost);
+		woodCostT->RenderText(str, 1200.0f, 20.0f, 1.5f, glm::vec3(10.0, 0.0f, 0.0f));
+
+		sprintf(str, "", stoneCost);
+		stoneCostT->RenderText(str, 700.0f, 20.0f, 1.5f, glm::vec3(10.0, 0.0f, 0.0f));
+	}
 
 	sprintf(str, "%d", (wavetimer));
 	//strcat(str, "/");
