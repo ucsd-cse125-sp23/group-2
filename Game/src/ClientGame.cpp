@@ -245,6 +245,8 @@ void handle_lose(GLFWwindow* window) {
 
 void handle_quit() {}
 
+void handle_death(boolean alive) {
+}
 
 void handle_down() {
     std::cout << "depth"<< depth << std::endl;
