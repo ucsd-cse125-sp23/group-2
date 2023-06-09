@@ -1082,7 +1082,7 @@ std::list<Entity> createBossLArm()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 6;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment + Teams::Home;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players;
     GameData::resources[e].resources[ResourceType::Money] = 20;
@@ -1133,7 +1133,7 @@ std::list<Entity> createBossBody()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH*20;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment + Teams::Home;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players;
     GameData::resources[e].resources[ResourceType::Money] = 20;
@@ -1178,7 +1178,7 @@ std::list<Entity> createBossRArm()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 6;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment + Teams::Home;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players;
     GameData::resources[e].resources[ResourceType::Money] = 20;
@@ -1226,7 +1226,7 @@ std::list<Entity> createBossRLeg()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 8;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment + Teams::Home;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players;
     GameData::resources[e].resources[ResourceType::Money] = 20;
@@ -1273,7 +1273,7 @@ std::list<Entity> createBossLLeg()
     GameData::healths[e].maxHealth = GameData::healths[e].curHealth = ENEMY_BASE_HEALTH * 8;
     GameData::coldmg[e].damage = ENEMY_GND_BASE_DMG;
     GameData::hostilities[e].team = Teams::Martians;
-    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment;
+    GameData::hostilities[e].hostileTo = Teams::Players + Teams::Towers + Teams::Environment + Teams::Home;
     GameData::colliders[e].colteam = CollisionLayer::Boss;
     GameData::colliders[e].colwith = CollisionLayer::WorldObj + CollisionLayer::StaticObj + CollisionLayer::Players;
     GameData::resources[e].resources[ResourceType::Money] = 20;
