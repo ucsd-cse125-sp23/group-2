@@ -12,7 +12,7 @@ const float TICK_RATE = 64;
 #define NUM_GUI 25
 
 //How many seconds until first wave spawns
-const float ENEMY_SPAWNDELAY_SEC = 0;
+const float ENEMY_SPAWNDELAY_SEC = 30;
 
 //What wave to start at (prep is -1)
 const float START_WAVE = -1;
